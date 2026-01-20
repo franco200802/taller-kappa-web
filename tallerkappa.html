@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Kappa | Mobiliario Industrial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --rojo: #d32f2f;
+            --negro: #1a1a1a;
+            --gris-fondo: #f9f9f9;
+            --blanco: #ffffff;
+            --transicion: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background: var(--gris-fondo); color: #333; overflow-x: hidden; line-height: 1.6; }
+
+        /* --- NAVEGACIÓN RESPONSIVE --- */
+        nav {
+            background: var(--blanco);
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            height: 70px;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo { font-weight: 700; font-size: 1.6rem; color: var(--negro); text-decoration: none; cursor: pointer; }
+        .logo span { color: var(--rojo); }
+
+        .nav-links { list-style: none; display: flex; align-items: center; }
+        .nav-links li { margin-left: 25px; }
+        .nav-links a { text-decoration: none; color: var(--negro); font-weight: 400; transition: var(--transicion); cursor: pointer; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--rojo); }
+
+        /* Menú Hamburguesa */
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--negro); }
+
+        /* --- CONTENEDORES DE VISTA --- */
+        .view-section { transition: opacity var(--transicion), transform var(--transicion); opacity: 1; transform: translateY(0); }
+        .view-hidden { opacity: 0; transform: translateY(20px); pointer-events: none; position: absolute; width: 100%; }
+        .display-none { display: none !important; }
+
+        /* --- HERO --- */
+        .hero {
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--blanco);
+            text-align: center;
+            padding: 0 10%;
+        }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1.5rem; line-height: 1.2; }
+        .btn-cta { padding: 16px 40px; background: var(--rojo); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; }
+        .btn-cta:hover { background: #b71c1c; transform: translateY(-2px); }
+
+        /* --- CATALOGO --- */
+        section { padding: 80px 10%; }
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .product-card {
+            background: var(--blanco);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transicion);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; height: 260px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+
+        /* --- DETALLE PRODUCTO --- */
+        .product-detail-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: center; padding-top: 100px; }
+        .specs-list { list-style: none; margin: 25px 0; }
+        .specs-list li { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 0.95rem; }
+        .specs-list b { color: var(--rojo); }
+
+        /* --- SOBRE NOSOTROS & CONTACTO --- */
+        .about-box { background: var(--negro); color: white; padding: 60px 10%; text-align: center; border-radius: 15px; margin: 0 10%; }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; }
+        .contact-item { text-align: center; padding: 30px; background: var(--blanco); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .contact-item i { font-size: 2rem; color: var(--rojo); margin-bottom: 15px; }
+
+        /* --- FOOTER --- */
+        footer { background: #111; color: #888; padding: 40px 5%; text-align: center; font-size: 0.9rem; }
+
+        .whatsapp-float { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; z-index: 3000; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 992px) {
+            section { padding: 60px 5%; }
+            .about-box { margin: 0 5%; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 70%;
+                height: calc(100vh - 70px);
+                background: var(--blanco);
+                flex-direction: column;
+                padding-top: 50px;
+                transition: 0.4s;
+                box-shadow: -5px 0 10px rgba(0,0,0,0.05);
+            }
+            .nav-links.active { right: 0; }
+            .nav-links li { margin: 20px 0; width: 100%; text-align: center; }
+            .hero h1 { font-size: 2.2rem; }
+            .product-detail-layout { padding-top: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="navigateTo('home')">Taller <span>Kappa</span></div>
+        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="navigateTo('home'); toggleMenu();">Inicio</a></li>
+            <li><a onclick="navigateTo('home', 'catalogo'); toggleMenu();">Productos</a></li>
+            <li><a onclick="navigateTo('home', 'nosotros'); toggleMenu();">Nosotros</a></li>
+            <li><a onclick="navigateTo('home', 'contacto'); toggleMenu();">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <div id="view-home" class="view-section main-container" style="padding-top: 70px;">
+        <header class="hero">
+            <h1>La base de su negocio...</h1>
+            <p>Mobiliario industrial con 30 años de experiencia en gastronomía y hotelería.</p>
+            <button class="btn-cta" onclick="scrollToId('catalogo')">Explorar Catálogo</button>
+        </header>
+
+        <section id="catalogo">
+            <div class="section-title">
+                <h2>Catálogo de Estructuras</h2>
+                <p>Calidad industrial para uso intensivo</p>
+            </div>
+            <div class="catalog-grid" id="catalog-list"></div>
+        </section>
+
+        <div class="about-box" id="nosotros">
+            <h2 style="color: var(--rojo); margin-bottom: 20px;">Trayectoria en Hierro</h2>
+            <p>Adaptamos estructuras metálicas al concepto de calidad total de nuestros clientes. <br> <b>Seriedad, precisión y diseño nacional.</b></p>
+        </div>
+
+        <section id="contacto">
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>Llamanos</h3>
+                    <p>11 6124-2741</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <h3>WhatsApp</h3>
+                    <p>Atención inmediata</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Consultas</h3>
+                    <p>administracion@tallerkappa.com.ar</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="view-detail" class="view-section view-hidden display-none" style="padding-top: 70px;">
+        <section>
+            <button class="btn-back" onclick="navigateTo('home')" style="background:none; border:none; color:var(--rojo); font-weight:bold; cursor:pointer; font-size:1rem;">
+                <i class="fas fa-chevron-left"></i> Volver
+            </button>
+            <div class="product-detail-layout" id="detail-content"></div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Taller Kappa - Taller Kappa S.R.L. | Tel: 11 6124-2741</p>
+    </footer>
+
+    <a href="https://wa.me/541161242741" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        const products = [
+            {
+                id: 'bkf-sillon',
+                name: 'Sillón BKF',
+                image: 'https://images.unsplash.com/photo-1633184991224-2b5489e0369c?q=80&w=800', 
+                specs: {
+                    'Estructura': 'Hierro redondo macizo 12mm',
+                    'Terminación': 'Pintura Epoxi o Cromado',
+                    'Medidas': '78 x 70 x 90 cm'
+                }
+            },
+            {
+                id: 'bkf-banco',
+                name: 'Banco BKF',
+                image: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?q=80&w=800',
+                specs: {
+                    'Estructura': 'Hierro redondo macizo 12mm',
+                    'Medidas': '38 x 38 x 45 cm',
+                    'Resistencia': 'Uso intensivo'
+                }
+            },
+            {
+                id: 'bases-mesa',
+                name: 'Bases de Mesa',
+                image: 'https://i.pinimg.com/564x/a3/41/28/a34128c5553519cb19a40b17b18f4149.jpg',
+                specs: {
+                    'Base': 'Chapa torneada 10mm',
+                    'Columna': 'Caño 77mm / 101mm',
+                    'Alturas': '73 cm / 105 cm',
+                    'Modelos': 'Tulip, Recto, Doble, Oval'
+                }
+            }
+        ];
+
+        function toggleMenu() {
+            if(window.innerWidth <= 768) {
+                document.getElementById('navLinks').classList.toggle('active');
+            }
+        }
+
+        function navigateTo(viewId, sectionId = null) {
+            const currentView = viewId === 'home' ? 'view-home' : 'view-detail';
+            const otherView = viewId === 'home' ? 'view-detail' : 'view-home';
+
+            document.getElementById(otherView).classList.add('view-hidden');
+            
+            setTimeout(() => {
+                document.getElementById(otherView).classList.add('display-none');
+                document.getElementById(currentView).classList.remove('display-none');
+                setTimeout(() => {
+                    document.getElementById(currentView).classList.remove('view-hidden');
+                    if (sectionId) scrollToId(sectionId);
+                    else window.scrollTo({top: 0, behavior: 'smooth'});
+                }, 50);
+            }, 400);
+        }
+
+        function scrollToId(id) {
+            const el = document.getElementById(id);
+            window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+        }
+
+        function showDetail(id) {
+            const p = products.find(item => item.id === id);
+            const container = document.getElementById('detail-content');
+            let specsHtml = '';
+            for (const [key, value] of Object.entries(p.specs)) {
+                specsHtml += `<li><span>${key}</span> <b>${value}</b></li>`;
+            }
+
+            container.innerHTML = `
+                <div><img src="${p.image}" style="width:100%; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1);"></div>
+                <div>
+                    <h2 style="font-size:2rem; margin-bottom:15px;">${p.name}</h2>
+                    <ul class="specs-list">${specsHtml}</ul>
+                    <a href="https://wa.me/541161242741?text=Hola! Me interesa el ${p.name}" class="btn-cta" style="display:block; text-align:center;" target="_blank">Pedir Cotización</a>
+                </div>
+            `;
+            navigateTo('detail');
+        }
+
+        document.getElementById('catalog-list').innerHTML = products.map(p => `
+            <div class="product-card" onclick="showDetail('${p.id}')">
+                <img src="${p.image}">
+                <h3>${p.name}</h3>
+                <p style="color:var(--rojo); font-weight:bold; font-size:0.9rem;">Ver Especificaciones <i class="fas fa-arrow-right"></i></p>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
