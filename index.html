@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Kappa | Mobiliario Industrial</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="location.reload()">Taller <span>Kappa</span></div>
+        <ul class="nav-menu">
+            <li><a onclick="scrollToSection('hero')" class="nav-link">Inicio</a></li>
+            <li><a onclick="scrollToSection('catalogo')" class="nav-link">Colección</a></li>
+            <li><a onclick="scrollToSection('contacto')" class="nav-link">Contacto</a></li>
+        </ul>
+        <div class="cart-icon-container" onclick="toggleCart()">
+            <i class="fas fa-shopping-bag" style="font-size: 1.2rem;"></i>
+            <span class="cart-badge" id="cart-count">0</span>
+        </div>
+    </nav>
+
+    <header id="hero" class="hero">
+        <h1>La base de su negocio...</h1>
+        <p>Estructuras metálicas de alta precisión. Fabricación nacional con 30 años de experiencia.</p>
+        <button class="btn-main" onclick="scrollToSection('catalogo')">Ver Catálogo</button>
+    </header>
+
+    <section id="catalogo" class="section-padding">
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
+            <button class="filter-btn" onclick="filterProducts('asientos')">Asientos</button>
+            <button class="filter-btn" onclick="filterProducts('mesas')">Mesas</button>
+        </div>
+
+        <div class="products-grid" id="grid">
+            </div>
+    </section>
+
+    <footer id="contacto">
+        <span class="footer-logo">Taller Kappa</span>
+        <p>11 6124-2741 | ing.franciscomarotta@gmail.com.ar</p>
+        <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 Taller Kappa S.R.L. - Buenos Aires, Argentina.</p>
+    </footer>
+
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-img" id="modal-img-container">
+                </div>
+            <div class="modal-info">
+                <h2 id="modal-title">Nombre Producto</h2>
+                <p id="modal-desc" style="margin: 20px 0; color: #666;">Descripción...</p>
+                <ul id="modal-specs" style="list-style: none; margin-bottom: 30px; font-size: 0.9rem; color: #444;"></ul>
+                <button class="btn-main" id="btn-add-modal">Agregar al Presupuesto</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay">
+        <div class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Tu Presupuesto</h3>
+                <span style="cursor: pointer; font-size: 1.5rem;" onclick="toggleCart()">&times;</span>
+            </div>
+            <div class="cart-items" id="cart-items-container">
+                <p style="text-align: center; color: #999; margin-top: 50px;">Tu lista está vacía.</p>
+            </div>
+            <div id="cart-footer">
+                <a href="#" class="btn-whatsapp-checkout" id="wa-checkout-btn">
+                    <i class="fab fa-whatsapp"></i> Solicitar Cotización
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- DATOS DE PRODUCTOS --- */
+        const products = [
+            {
+                id: 1,
+                category: 'asientos',
+                name: 'Sillón BKF Premium',
+                image: 'images/bkf1.png', 
+                desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
+                specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm']
+            },
+            {
+                id: 2,
+                category: 'asientos',
+                name: 'Banco BKF',
+                image: 'images/bkfapoyapies.png',
+                desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
+                specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm']
+            },
+            {
+                id: 3,
+                category: 'mesas',
+                name: 'Base de Mesa Tulip',
+                image: 'https://i.pinimg.com/564x/a3/41/28/a34128c5553519cb19a40b17b18f4149.jpg', 
+                desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
+                specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
+            }
+        ];
+
+        /* --- LÓGICA DEL CARRITO --- */
+        let cart = [];
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            updateCartUI();
+            toggleCart(); 
+            closeModal(); 
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-count');
+            
+            badge.innerText = cart.length;
+            badge.style.opacity = cart.length > 0 ? '1' : '0';
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999; margin-top: 50px;">Tu lista está vacía.</p>';
+                document.getElementById('wa-checkout-btn').style.opacity = '0.5';
+                document.getElementById('wa-checkout-btn').style.pointerEvents = 'none';
+            } else {
+                let html = '';
+                cart.forEach((item, index) => {
+                    html += `
+                        <div class="cart-item">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <img src="${item.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                                <b>${item.name}</b>
+                            </div>
+                            <span class="remove-item" onclick="removeFromCart(${index})"><i class="fas fa-trash-alt"></i></span>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                
+                // Configurar número y mensaje de WhatsApp
+                const phone = '541161242741';
+                let msg = "Hola Taller Kappa! Quisiera cotizar los siguientes productos de su web:%0A";
+                cart.forEach(item => msg += `- ${item.name}%0A`);
+                
+                const btn = document.getElementById('wa-checkout-btn');
+                btn.href = `https://wa.me/${phone}?text=${msg}`;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'all';
+            }
+        }
+
+        function toggleCart() {
+            const overlay = document.getElementById('cart-overlay');
+            overlay.classList.toggle('open');
+            overlay.onclick = function(e) {
+                if(e.target === overlay) overlay.classList.remove('open');
+            }
+        }
+
+        /* --- LÓGICA DEL CATÁLOGO --- */
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+
+            filtered.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = 'product-card visible';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="card-img-wrapper" onclick="openModal(${p.id})">
+                        <img src="${p.image}" alt="${p.name}">
+                    </div>
+                    <div class="card-info">
+                        <h3>${p.name}</h3>
+                        <p class="card-price">Ver Detalles</p>
+                        <button class="btn-add-cart" onclick="addToCart(${p.id})">Agregar a Presupuesto</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* --- FILTROS --- */
+        function filterProducts(cat) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts(cat);
+        }
+
+        /* --- MODAL DE PRODUCTO --- */
+        function openModal(id) {
+            const p = products.find(prod => prod.id === id);
+            document.getElementById('modal-title').innerText = p.name;
+            document.getElementById('modal-desc').innerText = p.desc;
+            document.getElementById('modal-img-container').innerHTML = `<img src="${p.image}">`;
+            
+            let specsHtml = '';
+            p.specs.forEach(s => specsHtml += `<li><i class="fas fa-check" style="color:var(--primary); margin-right:10px;"></i> ${s}</li>`);
+            document.getElementById('modal-specs').innerHTML = specsHtml;
+            
+            const btn = document.getElementById('btn-add-modal');
+            btn.onclick = () => addToCart(p.id);
+
+            document.getElementById('product-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.remove('active');
+        }
+
+        /* --- SCROLL ANIMATIONS --- */
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.product-card');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 50;
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('visible');
+                }
+            }
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Inicializar
+        renderProducts();
+
+    </script>
+</body>
+</html>
