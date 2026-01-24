@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taller Kappa | Mobiliario Industrial</title>
     
-    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -48,8 +48,8 @@
         .faq-question i { margin-right: 10px; color: var(--primary); }
         .faq-answer { color: #666; line-height: 1.6; margin-left: 28px; }
 
-        /* NUEVO: Estilos Clientes (Logos) */
-        .clients-section { padding: 40px 20px; text-align: center; background: white; }
+        /* Estilos Clientes (Logos) */
+        .clients-section { padding: 40px 20px; text-align: center; background: white; border-bottom: 1px solid #eee; }
         .clients-logos { 
             display: flex; 
             justify-content: center; 
@@ -57,12 +57,12 @@
             gap: 50px; 
             flex-wrap: wrap; 
             margin-top: 30px; 
-            opacity: 0.7; 
+            opacity: 0.8; 
         }
         .clients-logos img { 
-            height: 60px; /* Tamaño del logo */
+            height: 50px; 
             object-fit: contain; 
-            filter: grayscale(100%); /* Efecto elegante en blanco y negro */
+            filter: grayscale(100%); 
             transition: 0.3s;
         }
         .clients-logos img:hover { filter: grayscale(0%); transform: scale(1.05); }
@@ -86,19 +86,26 @@
 
     <header id="hero" class="hero">
         <h1>La base de su negocio...</h1>
-        <p>Estructuras metálicas de alta precisión. Proveedores de confianza para particulares y grandes empresas.</p>
+        <p>Estructuras metálicas de alta precisión. Calidad elegida por las mejores marcas.</p>
         <div style="margin-top: 20px;">
             <button class="btn-main" onclick="scrollToSection('catalogo')">Ver Catálogo</button>
-            <button class="btn-main" onclick="window.open('https://wa.me/541161242741?text=Hola, soy una empresa y necesito cotización mayorista.', '_blank')" style="background: transparent; border: 2px solid white; margin-left: 10px;">Soy Empresa</button>
+            <button class="btn-main" onclick="window.open('https://wa.me/541161242741?text=Hola, soy una empresa y necesito cotización mayorista.', '_blank')" style="background: transparent; border: 2px solid white; margin-left: 10px;">Atención Empresas</button>
         </div>
     </header>
 
     <section class="clients-section">
-        <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: #888; font-weight: 700;">Empresas que confían en nosotros</p>
+        <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: #888; font-weight: 700;">Confían en nuestra calidad:</p>
         <div class="clients-logos">
-            <img src="images/ypf.png" alt="YPF" title="Proveedor oficial de YPF">
             
-            </div>
+            <img src="images/logoypf.jpg" alt="YPF Full" title="Equipamiento en sucursales YPF Full">
+            
+            <img src="images/mcdonaldslogo.png" alt="McDonald's" title="Equipamiento en sucursales McDonald's">
+            
+            <img src="images/burguerlogo.png" alt="Burger King" title="Equipamiento en Burger King">
+
+            <img src="images/shelllogo.png" alt="Shell" title="Equipamiento en Shell Select">
+            
+        </div>
     </section>
 
     <section id="catalogo" class="section-padding">
@@ -113,22 +120,22 @@
     </section>
 
     <section class="testimonials">
-        <h2>Lo que dicen nuestros clientes</h2>
+        <h2>Lo que dicen quienes nos eligen</h2>
         <div class="testimonial-grid">
             <div class="testimonial-card">
                 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p>"Compramos bases Tulip para nuestras oficinas. La estabilidad es increíble y la pintura epoxi impecable."</p>
-                <h4 style="margin-top: 15px;">- Gerencia YPF</h4>
+                <p>"Equipamos nuestro local de YPF Full con las Bases Flat de Taller Kappa. Soportan el alto tránsito sin problemas."</p>
+                <h4 style="margin-top: 15px;">- Franquicia YPF Full</h4>
             </div>
             <div class="testimonial-card">
                 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p>"El sillón BKF es hermoso. El cuero tiene un olor riquísimo y la estructura se nota muy firme. Llegó perfecto."</p>
-                <h4 style="margin-top: 15px;">- Sofía M. (Arquitecta)</h4>
+                <p>"Necesitábamos reposición rápida para el salón. La calidad del hierro es excelente y cumplieron con los tiempos pactados."</p>
+                <h4 style="margin-top: 15px;">- Local Gastronómico (Shell Select)</h4>
             </div>
             <div class="testimonial-card">
                 <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                 <p>"Excelente atención de Francisco. Me asesoró con las medidas para mi mesa y quedó pintada en el comedor."</p>
-                <h4 style="margin-top: 15px;">- Ricardo L.</h4>
+                <h4 style="margin-top: 15px;">- Ricardo L. (Particular)</h4>
             </div>
         </div>
     </section>
@@ -136,16 +143,16 @@
     <section id="faq" class="faq-section">
         <h2 style="text-align: center; margin-bottom: 40px;">Preguntas Frecuentes</h2>
         <div class="faq-item">
-            <div class="faq-question"><i class="fas fa-building"></i> ¿Venden a empresas?</div>
-            <div class="faq-answer">Sí, somos proveedores de grandes empresas como YPF. Realizamos Factura A y presupuestos por cantidad.</div>
+            <div class="faq-question"><i class="fas fa-building"></i> ¿Venden a empresas y locales?</div>
+            <div class="faq-answer">Sí, trabajamos con locales gastronómicos de primera línea (Burger King, McDonald's, Shell), franquicias y empresas. Hacemos Factura A.</div>
         </div>
         <div class="faq-item">
             <div class="faq-question"><i class="fas fa-truck"></i> ¿Hacen envíos al interior?</div>
-            <div class="faq-answer">Sí, realizamos envíos a todo el país mediante expreso. Embalaje bonificado.</div>
+            <div class="faq-answer">Sí, realizamos envíos a todo el país mediante expreso. Embalaje bonificado para asegurar que llegue perfecto.</div>
         </div>
         <div class="faq-item">
             <div class="faq-question"><i class="far fa-clock"></i> ¿Cuál es el tiempo de demora?</div>
-            <div class="faq-answer">Productos estándar: 24-48hs. Pedidos corporativos a medida: 15 a 20 días hábiles.</div>
+            <div class="faq-answer">Los tiempos de entrega dependen del stock disponible y del volumen del pedido. Consultanos para coordinar una fecha exacta.</div>
         </div>
     </section>
 
@@ -161,7 +168,7 @@
                 <p style="margin-top: 30px; font-size: 0.8rem; opacity: 0.6;">© 2025 Taller Kappa S.R.L.</p>
             </div>
             <div class="footer-map" style="flex: 1; min-width: 300px;">
-                <iframe src="https://maps.google.com/maps?q=Calle+28+3779,San+Martin,Villa+Lynch,Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+                <iframe src="http://maps.google.com/maps?q=Calle+28+3779,+Villa+Chacabuco&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
             </div>
         </div>
     </footer>
@@ -222,7 +229,7 @@
             {
                 id: 3,
                 category: 'mesas',
-                name: 'Base de Mesa Tulip',
+                name: 'Base de Mesa Flat',
                 image: 'images/mesabase.png', 
                 desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
                 specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
