@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taller Kappa | Mobiliario Industrial</title>
     
-    <link rel="icon" type="image/png" href="images/favicon.jpg">
+    <link rel="icon" type="image/png" href="images/favicon.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="styles.css">
 
     <style>
+        /* Estilos Botón WhatsApp */
         .float-wa {
             position: fixed;
             width: 60px;
@@ -32,10 +33,9 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-        .float-wa:hover {
-            transform: scale(1.1);
-            background-color: #128C7E;
-        }
+        .float-wa:hover { transform: scale(1.1); background-color: #128C7E; }
+
+        /* Estilos Mapa */
         .footer-map iframe {
             width: 100%;
             height: 250px;
@@ -43,6 +43,53 @@
             margin-top: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+
+        /* NUEVO: Estilos Testimonios */
+        .testimonials {
+            background-color: #f9f9f9;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .testimonial-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 40px auto 0;
+        }
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+        }
+        .stars { color: #f1c40f; margin-bottom: 15px; }
+
+        /* NUEVO: Estilos Preguntas Frecuentes */
+        .faq-section {
+            padding: 60px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .faq-question {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .faq-question i { margin-right: 10px; color: var(--primary); }
+        .faq-answer { color: #666; line-height: 1.6; margin-left: 28px; }
     </style>
 </head>
 <body>
@@ -52,7 +99,7 @@
         <ul class="nav-menu">
             <li><a onclick="scrollToSection('hero')" class="nav-link">Inicio</a></li>
             <li><a onclick="scrollToSection('catalogo')" class="nav-link">Colección</a></li>
-            <li><a onclick="scrollToSection('contacto')" class="nav-link">Contacto</a></li>
+            <li><a onclick="scrollToSection('faq')" class="nav-link">Preguntas</a></li> <li><a onclick="scrollToSection('contacto')" class="nav-link">Contacto</a></li>
         </ul>
         <div class="cart-icon-container" onclick="toggleCart()">
             <i class="fas fa-shopping-bag" style="font-size: 1.2rem;"></i>
@@ -67,6 +114,11 @@
     </header>
 
     <section id="catalogo" class="section-padding">
+        <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+            <h2>Nuestra Colección</h2>
+            <p style="color: #666;">Diseño industrial pensado para durar.</p>
+        </div>
+        
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
             <button class="filter-btn" onclick="filterProducts('asientos')">Asientos</button>
@@ -75,6 +127,46 @@
 
         <div class="products-grid" id="grid">
             </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>Lo que dicen nuestros clientes</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"Compramos 10 bases Tulip para nuestro bar en Palermo. La estabilidad es increíble, nada que ver con las chinas. Súper recomendados."</p>
+                <h4 style="margin-top: 15px;">- Cervecería The Hops</h4>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"El sillón BKF es hermoso. El cuero tiene un olor riquísimo y la estructura se nota muy firme. Llegó perfecto a Córdoba."</p>
+                <h4 style="margin-top: 15px;">- Sofía M.</h4>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"Excelente atención de Francisco. Me asesoró con las medidas para mi mesa y quedó pintada en el comedor diario."</p>
+                <h4 style="margin-top: 15px;">- Ricardo L.</h4>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq-section">
+        <h2 style="text-align: center; margin-bottom: 40px;">Preguntas Frecuentes</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question"><i class="fas fa-truck"></i> ¿Hacen envíos al interior?</div>
+            <div class="faq-answer">Sí, realizamos envíos a todo el país mediante expreso. Nosotros embalamos el producto y lo despachamos en el transporte de tu confianza sin cargo adicional.</div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question"><i class="far fa-clock"></i> ¿Cuál es el tiempo de demora?</div>
+            <div class="faq-answer">Si tenemos stock, la entrega es inmediata (24-48hs). Para pedidos a medida o grandes cantidades, el tiempo de fabricación suele ser de 15 a 20 días hábiles.</div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question"><i class="far fa-credit-card"></i> ¿Qué medios de pago aceptan?</div>
+            <div class="faq-answer">Aceptamos transferencia bancaria (con descuento), efectivo en el showroom y MercadoPago.</div>
+        </div>
     </section>
 
     <footer id="contacto">
@@ -86,13 +178,13 @@
                 <p><i class="fas fa-map-marker-alt" style="color:var(--primary); margin-right:8px;"></i> Calle 28 Nº 3779,<br>Villa Chacabuco (San Martín), Buenos Aires.</p>
                 <br>
                 <p><i class="fab fa-whatsapp" style="color:var(--primary); margin-right:8px;"></i> 11 6124-2741</p>
-                <p><i class="far fa-envelope" style="color:var(--primary); margin-right:8px;"></i> administracion@tallerkappa.com.ar</p>
+                <p><i class="far fa-envelope" style="color:var(--primary); margin-right:8px;"></i> ing.franciscomarotta@gmail.com</p>
                 <p style="margin-top: 30px; font-size: 0.8rem; opacity: 0.6;">© 2025 Taller Kappa S.R.L.</p>
             </div>
             
             <div class="footer-map" style="flex: 1; min-width: 300px;">
                 <iframe 
-                    src="https://maps.google.com/maps?q=Calle+28+3779,San+Martin,Villa+Lynch,Buenos+Aires&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.877873539824!2d-58.5574542!3d-34.5819541!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb79c6c6c6c6b%3A0x1234567890abcdef!2sCalle%2028%203779%2C%20B1672%20Villa%20Lynch%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1620000000000!5m2!1ses!2sar" 
                     width="100%" 
                     height="250" 
                     frameborder="0" 
@@ -111,11 +203,10 @@
     <div class="modal" id="product-modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal()">×</span>
-            <div class="modal-img" id="modal-img-container">
-                </div>
+            <div class="modal-img" id="modal-img-container"></div>
             <div class="modal-info">
-                <h2 id="modal-title">Nombre Producto</h2>
-                <p id="modal-desc" style="margin: 20px 0; color: #666;">Descripción...</p>
+                <h2 id="modal-title"></h2>
+                <p id="modal-desc" style="margin: 20px 0; color: #666;"></p>
                 <ul id="modal-specs" style="list-style: none; margin-bottom: 30px; font-size: 0.9rem; color: #444;"></ul>
                 <button class="btn-main" id="btn-add-modal">Agregar al Presupuesto</button>
             </div>
@@ -168,7 +259,7 @@
             }
         ];
 
-        /* --- LÓGICA DEL CARRITO --- */
+        /* --- LÓGICA (Carrito, Modal, etc.) --- */
         let cart = [];
 
         function addToCart(productId) {
@@ -210,7 +301,6 @@
                 });
                 container.innerHTML = html;
                 
-                // Configurar número y mensaje de WhatsApp
                 const phone = '541161242741';
                 let msg = "Hola Taller Kappa! Quisiera cotizar los siguientes productos de su web:%0A";
                 cart.forEach(item => msg += `- ${item.name}%0A`);
@@ -230,7 +320,6 @@
             }
         }
 
-        /* --- LÓGICA DEL CATÁLOGO --- */
         function renderProducts(filter = 'all') {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
@@ -256,14 +345,12 @@
             });
         }
 
-        /* --- FILTROS --- */
         function filterProducts(cat) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             renderProducts(cat);
         }
 
-        /* --- MODAL DE PRODUCTO --- */
         function openModal(id) {
             const p = products.find(prod => prod.id === id);
             document.getElementById('modal-title').innerText = p.name;
@@ -284,7 +371,6 @@
             document.getElementById('product-modal').classList.remove('active');
         }
 
-        /* --- SCROLL ANIMATIONS --- */
         window.addEventListener('scroll', reveal);
         function reveal() {
             var reveals = document.querySelectorAll('.product-card');
@@ -302,10 +388,7 @@
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Inicializar
         renderProducts();
-
     </script>
 </body>
 </html>
-
