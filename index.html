@@ -54,13 +54,13 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            gap: 50px; 
+            gap: 40px; /* Ajusté el espacio para que entren todos */
             flex-wrap: wrap; 
             margin-top: 30px; 
             opacity: 0.8; 
         }
         .clients-logos img { 
-            height: 50px; 
+            height: 45px; /* Un poquito más chicos para que quede elegante */
             object-fit: contain; 
             filter: grayscale(100%); 
             transition: 0.3s;
@@ -97,6 +97,8 @@
         <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: #888; font-weight: 700;">Confían en nuestra calidad:</p>
         <div class="clients-logos">
             
+            <img src="images/sandrologo.jpg" alt="Sandro Paris" title="Equipamiento en locales Sandro">
+
             <img src="images/logoypf.jpg" alt="YPF Full" title="Equipamiento en sucursales YPF Full">
             
             <img src="images/mcdonaldslogo.png" alt="McDonald's" title="Equipamiento en sucursales McDonald's">
@@ -144,7 +146,7 @@
         <h2 style="text-align: center; margin-bottom: 40px;">Preguntas Frecuentes</h2>
         <div class="faq-item">
             <div class="faq-question"><i class="fas fa-building"></i> ¿Venden a empresas y locales?</div>
-            <div class="faq-answer">Sí, trabajamos con locales gastronómicos de primera línea (Burger King, McDonald's, Shell), franquicias y empresas. Hacemos Factura A.</div>
+            <div class="faq-answer">Sí, trabajamos con locales gastronómicos de primera línea, franquicias (Burger King, McDonald's) y marcas de indumentaria como Sandro. Hacemos Factura A.</div>
         </div>
         <div class="faq-item">
             <div class="faq-question"><i class="fas fa-truck"></i> ¿Hacen envíos al interior?</div>
@@ -230,6 +232,7 @@
                 id: 3,
                 category: 'mesas',
                 name: 'Base de Mesa Flat',
+                /* ESTO FALLABA PORQUE NO SUBISTE LA FOTO A GITHUB TODAVIA 👇 */
                 image: 'images/mesabase.png', 
                 desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
                 specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
