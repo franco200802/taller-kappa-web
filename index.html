@@ -5,10 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taller Kappa | Mobiliario Industrial</title>
     
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .float-wa {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .float-wa:hover {
+            transform: scale(1.1);
+            background-color: #128C7E;
+        }
+        /* Ajuste para el mapa en el footer */
+        .footer-map iframe {
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -43,10 +78,28 @@
     </section>
 
     <footer id="contacto">
-        <span class="footer-logo">Taller Kappa</span>
-        <p>11 6124-2741 | administracion@tallerkappa.com.ar</p>
-        <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 Taller Kappa S.R.L. - Buenos Aires, Argentina.</p>
+        <div class="footer-content" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; max-width: 1200px; margin: 0 auto;">
+            
+            <div class="footer-info" style="flex: 1; min-width: 300px;">
+                <span class="footer-logo">Taller Kappa</span>
+                <p><strong>Fábrica & Showroom:</strong></p>
+                <p>Tu dirección exacta acá 1234, Buenos Aires.</p>
+                <br>
+                <p><i class="fab fa-whatsapp"></i> 11 6124-2741</p>
+                <p><i class="far fa-envelope"></i> administracion@tallerkappa.com.ar</p>
+                <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;">&copy; 2025 Taller Kappa S.R.L.</p>
+            </div>
+            
+            <div class="footer-map" style="flex: 1; min-width: 300px;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d26245.54995964654!2d-58.4563266!3d-34.6190748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcca3b4ef90cbd%3A0xa0b3812e88e88e87!2sBuenos%20Aires%2C%20CABA!5e0!3m2!1ses!2sar!4v1684356721000!5m2!1ses!2sar" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+        </div>
     </footer>
+
+    <a href="https://wa.me/541161242741" class="float-wa" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <div class="modal" id="product-modal">
         <div class="modal-content">
@@ -102,7 +155,8 @@
                 id: 3,
                 category: 'mesas',
                 name: 'Base de Mesa Tulip',
-                image: 'images/mesabase.png', /* <--- AQUÍ ESTÁ LA IMAGEN NUEVA */
+                /* ACÁ USA TU FOTO ORIGINAL (asegurate de nombrarla mesabase.png) */
+                image: 'images/mesabase.png', 
                 desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
                 specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
             }
