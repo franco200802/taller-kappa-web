@@ -48,39 +48,64 @@
         .faq-question i { margin-right: 10px; color: var(--primary); }
         .faq-answer { color: #666; line-height: 1.6; margin-left: 28px; }
 
-        /* --- ESTILOS INTELIGENTES PARA LOGOS --- */
+        /* Estilos Inteligentes para Logos (Responsive) */
         .clients-section { padding: 40px 20px; text-align: center; background: white; border-bottom: 1px solid #eee; }
-        
         .clients-logos { 
             display: flex; 
-            justify-content: center; /* Centra todo */
+            justify-content: center; 
             align-items: center; 
-            flex-wrap: wrap; /* ESTO ES CLAVE: En celular permite que bajen */
-            gap: 30px; /* Espacio entre logos en celular */
+            flex-wrap: wrap; 
+            gap: 30px; 
             margin-top: 30px; 
             opacity: 0.8; 
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
-
         .clients-logos img { 
-            height: 40px; /* Tamaño un poco más chico en celular para que entren 3 */
+            height: 40px; 
             object-fit: contain; 
             filter: grayscale(100%); 
             transition: 0.3s;
         }
         .clients-logos img:hover { filter: grayscale(0%); transform: scale(1.05); }
 
-        /* --- REGLA MÁGICA PARA PC (Pantallas de más de 900px) --- */
         @media (min-width: 900px) {
-            .clients-logos {
-                flex-wrap: nowrap; /* OBLIGA a una sola fila en PC */
-                gap: 60px; /* Más espacio entre logos en PC */
-            }
-            .clients-logos img { 
-                height: 55px; /* Logos más grandes en PC */
-            }
+            .clients-logos { flex-wrap: nowrap; gap: 60px; }
+            .clients-logos img { height: 55px; }
+        }
+
+        /* Estilos Catálogo (Altura uniforme) */
+        .card-img-wrapper {
+            height: 280px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+            background-color: #f5f5f5;
+        }
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        /* --- CORRECCIÓN DEL MODAL (Para que la foto no sea gigante) --- */
+        #modal-img-container img {
+            max-height: 300px !important; /* Límite de altura */
+            width: auto !important;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+        /* Esto asegura que si el contenido es muy largo, puedas scrollear */
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -111,19 +136,12 @@
 
     <section class="clients-section">
         <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: #888; font-weight: 700;">Confían en nuestra calidad:</p>
-        
         <div class="clients-logos">
-            
             <img src="images/sandrologo.jpg" alt="Sandro Paris" title="Equipamiento en locales Sandro">
-            
             <img src="images/logoypf.jpg" alt="YPF Full" title="Equipamiento en sucursales YPF Full">
-            
             <img src="images/mcdonaldslogo.png" alt="McDonald's" title="Equipamiento en sucursales McDonald's">
-            
             <img src="images/burguerlogo.png" alt="Burger King" title="Equipamiento en Burger King">
-
             <img src="images/shelllogo.png" alt="Shell" title="Equipamiento en Shell Select">
-            
         </div>
     </section>
 
@@ -249,8 +267,7 @@
                 id: 3,
                 category: 'mesas',
                 name: 'Base de Mesa Flat',
-                /* ACORDATE DE SUBIR ESTA FOTO A GITHUB SI NO LA SUBISTE */
-                image: 'images/mesabase.png', 
+                image: 'images/mesa.jpeg', 
                 desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
                 specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
             }
