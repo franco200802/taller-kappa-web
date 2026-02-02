@@ -86,16 +86,13 @@ nav {
     transition: var(--transition);
 }
 
-/* --- 3. HERO SECTION (ANIMADA) --- */
-@keyframes breathe {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.05); }
-}
-
+/* --- 3. HERO SECTION --- */
 .hero {
     height: 90vh;
-    position: relative;
-    overflow: hidden; /* Clave para que la imagen no se salga */
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1470&auto=format&fit=crop');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -104,31 +101,16 @@ nav {
     color: white;
     padding: 0 20px;
 }
-
-/* La imagen de fondo va en un pseudo-elemento para poder animarla sola */
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1470&auto=format&fit=crop');
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
-    animation: breathe 10s infinite alternate ease-in-out;
-}
-
 .hero h1 { 
     font-size: clamp(2.5rem, 5vw, 4.5rem); 
     color: white; 
     margin-bottom: 20px; 
-    animation: fadeInUp 1s ease; 
     text-shadow: 2px 2px 10px rgba(0,0,0,0.5); 
 }
 .hero p { 
     font-size: 1.2rem; 
     max-width: 600px; 
     margin-bottom: 40px; 
-    animation: fadeInUp 1.2s ease; 
 }
 
 .btn-main {
@@ -141,23 +123,11 @@ nav {
     border: none;
     cursor: pointer;
     transition: var(--transition);
-    animation: fadeInUp 1.4s ease;
 }
 .btn-main:hover { background: #9a1010; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(183, 28, 28, 0.3); }
 
 /* --- 4. CATÁLOGO & FILTROS --- */
 .section-padding { padding: 100px 5%; }
-
-/* ANIMACIÓN SCROLL REVEAL */
-.reveal {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s ease-out;
-}
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-}
 
 .filters { display: flex; justify-content: center; gap: 20px; margin-bottom: 50px; flex-wrap: wrap; }
 .filter-btn {
@@ -186,10 +156,7 @@ nav {
     transition: var(--transition);
     position: relative;
     cursor: pointer;
-    opacity: 0; /* Para animación scroll */
-    transform: translateY(30px);
 }
-.product-card.visible { opacity: 1; transform: translateY(0); }
 
 .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
 
@@ -271,6 +238,7 @@ nav {
     max-height: 90vh; overflow-y: auto;
 }
 .modal-img img { width: 100%; height: 100%; object-fit: cover; min-height: 400px; }
+/* Corrección Modal */
 #modal-img-container img { max-height: 300px !important; width: auto !important; max-width: 100%; display: block; margin: 0 auto; object-fit: contain; }
 
 .modal-info { padding: 40px; display: flex; flex-direction: column; justify-content: center; }
@@ -305,9 +273,4 @@ footer { background: var(--dark); color: #888; padding: 60px 5%; text-align: cen
     .modal-content { grid-template-columns: 1fr; }
     .modal-img img { height: 250px; }
     .hero { background-attachment: scroll; }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
 }
