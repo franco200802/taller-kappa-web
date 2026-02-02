@@ -44,79 +44,6 @@
         }
         .float-wa:hover { transform: scale(1.1); background-color: #128C7E; }
         .footer-map iframe { width: 100%; height: 250px; border-radius: 8px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-
-        /* Estilos Testimonios */
-        .testimonials { background-color: #f9f9f9; padding: 60px 20px; text-align: center; }
-        .testimonial-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; max-width: 1200px; margin: 40px auto 0; }
-        .testimonial-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); flex: 1; min-width: 280px; max-width: 350px; }
-        .stars { color: #f1c40f; margin-bottom: 15px; }
-
-        /* Estilos FAQ */
-        .faq-section { padding: 60px 20px; max-width: 800px; margin: 0 auto; }
-        .faq-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        .faq-question { font-weight: 700; font-size: 1.1rem; color: #333; margin-bottom: 10px; display: flex; align-items: center; }
-        .faq-question i { margin-right: 10px; color: var(--primary); }
-        .faq-answer { color: #666; line-height: 1.6; margin-left: 28px; }
-
-        /* Estilos Inteligentes para Logos (Responsive) */
-        .clients-section { padding: 40px 20px; text-align: center; background: white; border-bottom: 1px solid #eee; }
-        .clients-logos { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            flex-wrap: wrap; 
-            gap: 30px; 
-            margin-top: 30px; 
-            opacity: 0.8; 
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .clients-logos img { 
-            height: 40px; 
-            object-fit: contain; 
-            filter: grayscale(100%); 
-            transition: 0.3s;
-        }
-        .clients-logos img:hover { filter: grayscale(0%); transform: scale(1.05); }
-
-        @media (min-width: 900px) {
-            .clients-logos { flex-wrap: nowrap; gap: 60px; }
-            .clients-logos img { height: 55px; }
-        }
-
-        /* Estilos Catálogo (Altura uniforme) */
-        .card-img-wrapper {
-            height: 280px;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 8px 8px 0 0;
-            background-color: #f5f5f5;
-        }
-        .card-img-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        .product-card:hover .card-img-wrapper img {
-            transform: scale(1.05);
-        }
-
-        /* --- CORRECCIÓN DEL MODAL (Para que la foto no sea gigante) --- */
-        #modal-img-container img {
-            max-height: 300px !important; /* Límite de altura */
-            width: auto !important;
-            max-width: 100%;
-            display: block;
-            margin: 0 auto;
-            object-fit: contain;
-        }
-        /* Esto asegura que si el contenido es muy largo, puedas scrollear */
-        .modal-content {
-            max-height: 90vh;
-            overflow-y: auto;
-        }
     </style>
 </head>
 <body>
@@ -140,11 +67,11 @@
         <p>Estructuras metálicas de alta precisión. Calidad elegida por las mejores marcas.</p>
         <div style="margin-top: 20px;">
             <button class="btn-main" onclick="scrollToSection('catalogo')">Ver Catálogo</button>
-            <button class="btn-main" onclick="window.open('https://wa.me/541161242741?text=Hola, soy una empresa y necesito cotización mayorista.', '_blank')" style="background: transparent; border: 2px solid white; margin-left: 10px;">Atención Empresas</button>
+            <button class="btn-main" onclick="window.open('https://wa.me/541161242498?text=Hola, soy una empresa y necesito cotización mayorista.', '_blank')" style="background: transparent; border: 2px solid white; margin-left: 10px;">Atención Empresas</button>
         </div>
     </header>
 
-    <section class="clients-section">
+    <section class="clients-section reveal">
         <p style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: #888; font-weight: 700;">Confían en nuestra calidad:</p>
         <div class="clients-logos">
             <img src="images/sandrologo.jpg" alt="Sandro Paris" title="Equipamiento en locales Sandro">
@@ -155,7 +82,7 @@
         </div>
     </section>
 
-    <section id="catalogo" class="section-padding">
+    <section id="catalogo" class="section-padding reveal">
         <div class="filters">
             <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
             <button class="filter-btn" onclick="filterProducts('asientos')">Asientos</button>
@@ -166,7 +93,7 @@
             </div>
     </section>
 
-    <section class="testimonials">
+    <section class="testimonials reveal">
         <h2>Lo que dicen quienes nos eligen</h2>
         <div class="testimonial-grid">
             <div class="testimonial-card">
@@ -187,7 +114,7 @@
         </div>
     </section>
 
-    <section id="faq" class="faq-section">
+    <section id="faq" class="faq-section reveal">
         <h2 style="text-align: center; margin-bottom: 40px;">Preguntas Frecuentes</h2>
         <div class="faq-item">
             <div class="faq-question"><i class="fas fa-building"></i> ¿Venden a empresas y locales?</div>
@@ -203,15 +130,14 @@
         </div>
     </section>
 
-    <footer id="contacto">
+    <footer id="contacto" class="reveal">
         <div class="footer-content" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; max-width: 1200px; margin: 0 auto; text-align: left;">
             <div class="footer-info" style="flex: 1; min-width: 300px;">
                 <span class="footer-logo" style="display:block; margin-bottom:15px;">Taller Kappa</span>
                 <p style="margin-bottom: 5px;"><strong>Fábrica & Showroom:</strong></p>
                 <p><i class="fas fa-map-marker-alt" style="color:var(--primary); margin-right:8px;"></i> Calle 28 Nº 3779,<br>Villa Chacabuco (San Martín), Buenos Aires.</p>
                 <br>
-                <p><i class="fab fa-whatsapp" style="color:var(--primary); margin-right:8px;"></i> 11 6124-2741</p>
-                <p><i class="far fa-envelope" style="color:var(--primary); margin-right:8px;"></i> ing.franciscomarotta@gmail.com</p>
+                <p><i class="fab fa-whatsapp" style="color:var(--primary); margin-right:8px;"></i> 11 6124-2498</p> <p><i class="far fa-envelope" style="color:var(--primary); margin-right:8px;"></i> ing.franciscomarotta@gmail.com</p>
                 <p style="margin-top: 30px; font-size: 0.8rem; opacity: 0.6;">© 2025 Taller Kappa S.R.L.</p>
             </div>
             <div class="footer-map" style="flex: 1; min-width: 300px;">
@@ -220,8 +146,7 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/541161242741" class="float-wa" target="_blank">
-        <i class="fab fa-whatsapp"></i>
+    <a href="https://wa.me/541161242498" class="float-wa" target="_blank"> <i class="fab fa-whatsapp"></i>
     </a>
 
     <div class="modal" id="product-modal">
@@ -325,7 +250,9 @@
                 });
                 container.innerHTML = html;
                 
-                const phone = '541161242741';
+                // --- CAMBIO CLAVE AQUÍ ---
+                // Se actualizó el número de teléfono para la cotización:
+                const phone = '541161242498'; 
                 let msg = "Hola Taller Kappa! Soy una empresa/particular y quisiera cotizar:%0A";
                 cart.forEach(item => msg += `- ${item.name}%0A`);
                 
@@ -352,8 +279,7 @@
 
             filtered.forEach((p, index) => {
                 const card = document.createElement('div');
-                card.className = 'product-card visible';
-                card.style.animationDelay = `${index * 0.1}s`;
+                card.className = 'product-card reveal'; // Animación activada
                 
                 card.innerHTML = `
                     <div class="card-img-wrapper" onclick="openModal(${p.id})">
@@ -395,24 +321,27 @@
             document.getElementById('product-modal').classList.remove('active');
         }
 
-        window.addEventListener('scroll', reveal);
-        function reveal() {
-            var reveals = document.querySelectorAll('.product-card');
-            for (var i = 0; i < reveals.length; i++) {
-                var windowheight = window.innerHeight;
-                var revealtop = reveals[i].getBoundingClientRect().top;
-                var revealpoint = 50;
-                if (revealtop < windowheight - revealpoint) {
-                    reveals[i].classList.add('visible');
-                }
-            }
-        }
-
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
+        /* --- SCRIPT PARA ANIMACIONES DE SCROLL (REVEAL) --- */
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 100;
+
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
         renderProducts();
+        reveal(); // Para activar las secciones visibles al cargar
     </script>
 </body>
 </html>
