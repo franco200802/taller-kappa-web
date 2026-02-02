@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taller Kappa | Mobiliario Industrial</title>
     
-    <meta name="description" content="Fábrica de mobiliario industrial en San Martín. Muebles de hierro y madera de alta resistencia. Proveedores de YPF, McDonald's y locales gastronómicos.">
-    <meta name="keywords" content="muebles industriales, sillón bkf, mesas de hierro, fábrica de muebles, equipamiento gastronómico, san martín, taller kappa">
+    <meta name="description" content="Fábrica de mobiliario industrial en San Martín. Muebles de hierro y madera de alta resistencia.">
+    <meta name="keywords" content="muebles industriales, sillón bkf, mesas de hierro, fábrica de muebles, taller kappa">
     <meta name="author" content="Taller Kappa S.R.L.">
 
     <meta property="og:type" content="website">
@@ -250,8 +250,7 @@
                 });
                 container.innerHTML = html;
                 
-                // --- CAMBIO CLAVE AQUÍ ---
-                // Se actualizó el número de teléfono para la cotización:
+                // ACTUALIZACIÓN DE NÚMERO EN CARRITO
                 const phone = '541161242498'; 
                 let msg = "Hola Taller Kappa! Soy una empresa/particular y quisiera cotizar:%0A";
                 cart.forEach(item => msg += `- ${item.name}%0A`);
@@ -325,7 +324,7 @@
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* --- SCRIPT PARA ANIMACIONES DE SCROLL (REVEAL) --- */
+        /* --- SCRIPT PARA ANIMACIONES DE SCROLL --- */
         window.addEventListener('scroll', reveal);
         function reveal() {
             var reveals = document.querySelectorAll('.reveal');
@@ -341,7 +340,7 @@
         }
 
         renderProducts();
-        reveal(); // Para activar las secciones visibles al cargar
+        reveal(); // Activar al inicio
     </script>
 </body>
 </html>
