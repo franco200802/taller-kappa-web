@@ -1703,8 +1703,8 @@ body.dark .btn-share { color: #25d366; border-color: #25d366; }
     padding: 20px 10px;
     position: relative;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(25px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
 }
 .number-item.fade-in { opacity: 1; transform: translateY(0); }
 

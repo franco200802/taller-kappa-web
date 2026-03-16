@@ -476,7 +476,7 @@ function observeCards() {
 
 function initSectionAnimations() {
     const targets = document.querySelectorAll(
-        '.testimonial-card, .faq-item, .clients-logos img, .why-card, .process-step, .material-card, .number-item'
+        '.testimonial-card, .faq-item, .clients-logos img, .why-card, .process-step, .material-card'
     );
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
@@ -599,30 +599,36 @@ document.addEventListener('keydown', (e) => {
    NÚMEROS ANIMADOS
    ============================== */
 function initAnimatedNumbers() {
-    const items = document.querySelectorAll('.number-value');
+    const items = document.querySelectorAll('.number-item');
     if (!items.length) return;
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry, i) => {
             if (!entry.isIntersecting) return;
-            const el     = entry.target;
+
+            const item  = entry.target;
+            const el    = item.querySelector('.number-value');
             const target = parseInt(el.dataset.target, 10);
+
+            // Mostrar el item con delay escalonado
+            setTimeout(() => item.classList.add('fade-in'), i * 120);
+
+            // Animar el número
             const duration = 1800;
-            const start  = performance.now();
+            const startTime = performance.now() + i * 120;
 
             function update(now) {
-                const elapsed  = now - start;
+                const elapsed  = Math.max(0, now - startTime);
                 const progress = Math.min(elapsed / duration, 1);
-                // Easing: ease-out cubic
-                const ease = 1 - Math.pow(1 - progress, 3);
+                const ease     = 1 - Math.pow(1 - progress, 3);
                 el.textContent = Math.floor(ease * target);
                 if (progress < 1) requestAnimationFrame(update);
                 else el.textContent = target;
             }
             requestAnimationFrame(update);
-            observer.unobserve(el);
+            observer.unobserve(item);
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.2 });
 
     items.forEach(el => observer.observe(el));
 }
