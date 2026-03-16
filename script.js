@@ -5,6 +5,63 @@
 'use strict';
 
 /* ==============================
+   CHISPAS ANIMADAS DEL HERO (CSS puro, 100% offline)
+   ============================== */
+function initHeroSparks() {
+    const container = document.getElementById('hero-sparks');
+    if (!container) return;
+
+    const SPARK_COUNT = 35;
+    // Paleta de colores: blanco/amarillo/naranja/rojo — simula chispas de soldadura
+    const colors = [
+        'rgba(255,255,255,0.95)',
+        'rgba(255,220,80,0.9)',
+        'rgba(255,160,20,0.85)',
+        'rgba(255,90,10,0.8)',
+        'rgba(255,200,100,0.9)',
+    ];
+
+    for (let i = 0; i < SPARK_COUNT; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'spark';
+
+        // Posición de origen aleatoria (concentrada en la zona media-baja como una soldadora)
+        const originX = 20 + Math.random() * 60; // % horizontal
+        const originY = 40 + Math.random() * 40; // % vertical (mitad inferior)
+
+        // Dirección del vuelo — hacia arriba y los lados
+        const angle  = (Math.random() * 180) - 90; // -90° a +90° (spread horizontal)
+        const dist   = 60 + Math.random() * 180;   // px de distancia
+        const tx  = Math.cos((angle * Math.PI) / 180) * dist;
+        const ty  = -Math.abs(Math.sin((angle * Math.PI) / 180) * dist) - 30; // siempre sube
+        const tx2 = tx  + (Math.random() - 0.5) * 40; // desvío por "gravedad"
+        const ty2 = ty  + Math.random() * 60;           // cae un poco al final
+
+        const size     = 2 + Math.random() * 4;   // px
+        const duration = 1.5 + Math.random() * 3; // seg
+        const delay    = Math.random() * 4;        // seg de delay inicial
+        const color    = colors[Math.floor(Math.random() * colors.length)];
+
+        spark.style.cssText = `
+            left: ${originX}%;
+            top:  ${originY}%;
+            width:  ${size}px;
+            height: ${size}px;
+            background: ${color};
+            box-shadow: 0 0 ${size * 2}px ${color};
+            --tx: ${tx}px;
+            --ty: ${ty}px;
+            --tx2: ${tx2}px;
+            --ty2: ${ty2}px;
+            --duration: ${duration}s;
+            --delay: ${delay}s;
+        `;
+
+        container.appendChild(spark);
+    }
+}
+
+/* ==============================
    CURSOR PERSONALIZADO
    ============================== */
 function initCustomCursor() {
@@ -810,6 +867,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initColorSelector();
     initMaterialBars();
     initDarkMode();
+    initHeroSparks();
     initHeroParticles();
     initCustomCursor();
     initLiveVisitors();

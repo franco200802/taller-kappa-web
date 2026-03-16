@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <met    <link rel="stylesheet" href="styles.css?v=20260317b"> name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taller Kappa | Mobiliario Industrial - San Martín, Buenos Aires</title>
 
     <!-- SEO -->
@@ -125,24 +125,13 @@
          ============================== -->
     <header id="hero" class="hero">
 
-        <!-- Video de fondo (desktop) -->
-        <video
-            class="hero-video"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="auto"
-            aria-hidden="true"
-            poster="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1470&auto=format&fit=crop">
-            <!-- Video de herrería / taller industrial (Pexels, libre de derechos) -->
-            <source src="https://videos.pexels.com/video-files/4057417/4057417-uhd_2560_1440_24fps.mp4" type="video/mp4">
-            <source src="https://videos.pexels.com/video-files/3195394/3195394-uhd_2560_1440_30fps.mp4" type="video/mp4">
-        </video>
-        <!-- Overlay oscuro sobre el video -->
+        <!-- Fondo animado CSS (funciona offline) -->
+        <div class="hero-animated-bg" aria-hidden="true">
+            <div class="hero-bg-gradient"></div>
+            <div class="hero-sparks" id="hero-sparks"></div>
+        </div>
+        <!-- Overlay oscuro -->
         <div class="hero-video-overlay" aria-hidden="true"></div>
-        <!-- Fallback imagen estática en mobile -->
-        <div class="hero-video-fallback" aria-hidden="true"></div>
 
         <canvas class="hero-particles" id="hero-canvas"></canvas>
         <div class="hero-content">
@@ -651,6 +640,6 @@
     </div>
 
     <!-- JS separado (buena práctica) -->
-    <script src="script.js?v=20260317"></script>
+    <script src="script.js?v=20260317b"></script>
 </body>
 </html>
