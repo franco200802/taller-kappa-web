@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Kappa | Mobiliario Industrial</title>
+    <title>Taller Kappa | Mobiliario Industrial - San Martín, Buenos Aires</title>
 
     <!-- SEO -->
     <meta name="description" content="Fábrica de mobiliario industrial en San Martín. Muebles de hierro y madera de alta resistencia. Proveedores de YPF, McDonald's y locales gastronómicos.">
     <meta name="keywords" content="muebles industriales, sillón bkf, mesas de hierro, fábrica de muebles, equipamiento gastronómico, san martín, taller kappa">
     <meta name="author" content="Taller Kappa S.R.L.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tallerkappa.com.ar">
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website">
@@ -16,6 +18,48 @@
     <meta property="og:title"       content="Taller Kappa | Mobiliario Industrial - Directo Fábrica">
     <meta property="og:description" content="Calidad elegida por grandes marcas, ahora para tu casa. Mirá nuestro catálogo online.">
     <meta property="og:image"       content="https://tallerkappa.com.ar/images/bkf1.png">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#b71c1c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Taller Kappa">
+    <link rel="apple-touch-icon" href="images/favicon.jpg">
+
+    <!-- Schema.org - Negocio local -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Taller Kappa S.R.L.",
+        "description": "Fábrica de mobiliario industrial. Sillones BKF, bancos y bases de mesa de hierro macizo.",
+        "url": "https://tallerkappa.com.ar",
+        "telephone": "+541161242498",
+        "email": "ing.franciscomarotta@gmail.com",
+        "image": "https://tallerkappa.com.ar/images/bkf1.png",
+        "priceRange": "$$",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Calle 28 Nº 3779",
+            "addressLocality": "Villa Chacabuco, San Martín",
+            "addressRegion": "Buenos Aires",
+            "addressCountry": "AR"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": -34.5755,
+            "longitude": -58.5332
+        },
+        "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+            "opens": "09:00",
+            "closes": "18:00"
+        },
+        "sameAs": ["https://wa.me/541161242498"]
+    }
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
@@ -225,6 +269,34 @@
             <path d="M0,30 C360,0 1080,60 1440,20 L1440,60 L0,60 Z" fill="#f4f4f4"/>
         </svg>
     </div>
+
+    <!-- ==============================
+         NÚMEROS ANIMADOS
+         ============================== -->
+    <section class="numbers-section" aria-label="Números de Taller Kappa">
+        <div class="numbers-grid">
+            <div class="number-item">
+                <span class="number-value" data-target="15">0</span>
+                <span class="number-suffix">+</span>
+                <p class="number-label">Años de experiencia</p>
+            </div>
+            <div class="number-item">
+                <span class="number-value" data-target="500">0</span>
+                <span class="number-suffix">+</span>
+                <p class="number-label">Proyectos entregados</p>
+            </div>
+            <div class="number-item">
+                <span class="number-value" data-target="12">0</span>
+                <span class="number-suffix"></span>
+                <p class="number-label">mm de hierro macizo</p>
+            </div>
+            <div class="number-item">
+                <span class="number-value" data-target="5">0</span>
+                <span class="number-suffix"></span>
+                <p class="number-label">Grandes marcas equipadas</p>
+            </div>
+        </div>
+    </section>
 
     <!-- ==============================
          PROCESO DE COMPRA

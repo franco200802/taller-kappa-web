@@ -1,0 +1,37 @@
+{
+    "name": "Taller Kappa - Mobiliario Industrial",
+    "short_name": "Taller Kappa",
+    "description": "Fábrica de mobiliario industrial. Sillones BKF, bancos y bases de mesa de hierro macizo.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f8f9fa",
+    "theme_color": "#b71c1c",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "images/favicon.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "images/favicon.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg"
+        }
+    ],
+    "categories": ["shopping", "business"],
+    "lang": "es-AR",
+    "shortcuts": [
+        {
+            "name": "Ver Catálogo",
+            "url": "/#catalogo",
+            "description": "Ver productos disponibles"
+        },
+        {
+            "name": "Contactar por WhatsApp",
+            "url": "https://wa.me/541161242498",
+            "description": "Hablar con Francisco"
+        }
+    ]
+}

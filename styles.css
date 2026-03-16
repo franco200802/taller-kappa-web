@@ -502,7 +502,7 @@ footer { background: var(--dark); color: #888; padding: 70px 5% 40px; }
     border-radius: 50%;
     font-size: 1.7rem;
     box-shadow: 0 4px 15px rgba(37,211,102,0.4);
-    z-index: 900;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1679,4 +1679,83 @@ body.dark .btn-share { color: #25d366; border-color: #25d366; }
     .live-visitors { display: none; }
     #custom-cursor { display: none; }
     body { cursor: auto !important; }
+}
+
+/* ============================================
+   SECCIÓN DE NÚMEROS ANIMADOS
+   ============================================ */
+.numbers-section {
+    background: linear-gradient(135deg, var(--primary) 0%, #9a1010 100%);
+    padding: 70px 5%;
+    color: white;
+}
+
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.number-item {
+    padding: 20px 10px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.number-item.fade-in { opacity: 1; transform: translateY(0); }
+
+.number-item::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 20%;
+    height: 60%;
+    width: 1px;
+    background: rgba(255,255,255,0.15);
+}
+.number-item:last-child::after { display: none; }
+
+.number-value {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1;
+    color: white;
+}
+.number-suffix {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    vertical-align: super;
+}
+.number-label {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.75);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    line-height: 1.4;
+}
+
+/* Dark mode para números */
+body.dark .numbers-section {
+    background: linear-gradient(135deg, #7a1010 0%, #4a0808 100%);
+}
+
+@media (max-width: 768px) {
+    .numbers-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+    }
+    .number-item::after {
+        right: 0; top: auto;
+        bottom: 0; left: 10%;
+        width: 80%; height: 1px;
+    }
+    .number-item:nth-child(2)::after { display: block; }
+    .number-item:nth-child(4)::after { display: none; }
 }
