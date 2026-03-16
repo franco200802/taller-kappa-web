@@ -475,6 +475,7 @@ function observeCards() {
 }
 
 function initSectionAnimations() {
+    // Animación de elementos individuales (cards, items, etc.)
     const targets = document.querySelectorAll(
         '.testimonial-card, .faq-item, .clients-logos img, .why-card, .process-step, .material-card'
     );
@@ -487,18 +488,72 @@ function initSectionAnimations() {
         });
     }, { threshold: 0.12 });
     targets.forEach(el => observer.observe(el));
+
+    // Animación de secciones completas (fade-in suave al entrar en pantalla)
+    const sections = document.querySelectorAll('.section-fade');
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                sectionObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    sections.forEach(el => sectionObserver.observe(el));
 }
+
+/* ==============================
+   SECCIÓN ACTIVA EN NAVBAR
+   ============================== */
+function initActiveNavHighlight() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sectionIds = ['hero', 'catalogo', 'contacto-form', 'faq'];
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                navLinks.forEach(link => {
+                    link.classList.remove('active-section');
+                    if (link.getAttribute('onclick')?.includes(id)) {
+                        link.classList.add('active-section');
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
+
+    sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+    });
+}
+
 
 /* ==============================
    FAQ ACORDEÓN
    ============================== */
 function initFAQ() {
     document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
+        const toggle = () => {
             const item   = question.parentElement;
             const isOpen = item.classList.contains('open');
-            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-            if (!isOpen) item.classList.add('open');
+            document.querySelectorAll('.faq-item').forEach(i => {
+                i.classList.remove('open');
+                i.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+            });
+            if (!isOpen) {
+                item.classList.add('open');
+                question.setAttribute('aria-expanded', 'true');
+            }
+        };
+        question.addEventListener('click', toggle);
+        // Accesibilidad: Enter y Space abren/cierran desde teclado
+        question.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle();
+            }
         });
     });
 }
@@ -745,6 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initNavbarScroll();
     initSectionAnimations();
+    initActiveNavHighlight();
     initFAQ();
     initContactForm();
     initBackToTop();
