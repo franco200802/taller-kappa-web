@@ -257,8 +257,20 @@ nav.scrolled {
     filter: grayscale(100%);
     opacity: 0.65;
     transition: var(--transition);
+    mix-blend-mode: multiply;
 }
 .clients-logos img:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.08); }
+
+/* En modo oscuro usamos screen para que el fondo negro no se note */
+body.dark .clients-logos img {
+    mix-blend-mode: screen;
+    filter: grayscale(100%) invert(1);
+    opacity: 0.7;
+}
+body.dark .clients-logos img:hover {
+    filter: grayscale(0%) invert(1);
+    opacity: 1;
+}
 
 /* ============================================
    6. CATÁLOGO
