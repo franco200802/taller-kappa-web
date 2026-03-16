@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Kappa | Mobiliario Industrial</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Fábrica de mobiliario industrial en San Martín. Muebles de hierro y madera de alta resistencia. Proveedores de YPF, McDonald's y locales gastronómicos.">
+    <meta name="keywords" content="muebles industriales, sillón bkf, mesas de hierro, fábrica de muebles, equipamiento gastronómico, san martín, taller kappa">
+    <meta name="author" content="Taller Kappa S.R.L.">
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://tallerkappa.com.ar">
+    <meta property="og:title"       content="Taller Kappa | Mobiliario Industrial - Directo Fábrica">
+    <meta property="og:description" content="Calidad elegida por grandes marcas, ahora para tu casa. Mirá nuestro catálogo online.">
+    <meta property="og:image"       content="https://tallerkappa.com.ar/images/bkf1.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ==============================
+         NAVBAR
+         ============================== -->
+    <nav>
+        <div class="logo" onclick="scrollToSection('hero')" role="button" tabindex="0" aria-label="Inicio">
+            Taller <span>Kappa</span>
+        </div>
+
+        <ul class="nav-menu" id="nav-menu" role="list">
+            <li><button class="nav-link" onclick="scrollToSection('hero')">Inicio</button></li>
+            <li><button class="nav-link" onclick="scrollToSection('catalogo')">Colección</button></li>
+            <li><button class="nav-link" onclick="scrollToSection('contacto-form')">Contacto</button></li>
+            <li><button class="nav-link" onclick="scrollToSection('faq')">Preguntas</button></li>
+        </ul>
+
+        <div style="display:flex; align-items:center; gap:15px;">
+            <div class="cart-icon-container" onclick="toggleCart()" role="button" tabindex="0" aria-label="Abrir presupuesto">
+                <i class="fas fa-shopping-bag" style="font-size:1.2rem;"></i>
+                <span class="cart-badge" id="cart-count">0</span>
+            </div>
+            <button class="dark-toggle" id="dark-toggle" aria-label="Cambiar modo oscuro/claro" title="Modo oscuro">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==============================
+         HERO
+         ============================== -->
+    <header id="hero" class="hero">
+        <canvas class="hero-particles" id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1>La base de <span class="hero-typed" id="hero-typed"></span></h1>
+            <p>Estructuras metálicas de alta precisión. Calidad elegida por las mejores marcas.</p>
+            <div class="hero-buttons">
+                <button class="btn-main" onclick="scrollToSection('catalogo')">
+                    <i class="fas fa-th-large" style="margin-right:8px;"></i> Ver Catálogo
+                </button>
+                <button class="btn-outline" onclick="window.open('https://wa.me/541161242498?text=Hola%2C+soy+una+empresa+y+necesito+cotizaci%C3%B3n+mayorista.', '_blank')">
+                    <i class="fab fa-whatsapp" style="margin-right:8px;"></i> Atención Empresas
+                </button>
+            </div>
+        </div>
+        <div class="hero-scroll-hint">
+            <span>Explorá</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- ==============================
+         BANNER DE URGENCIA
+         ============================== -->
+    <div class="urgency-banner" id="urgency-banner">
+        <i class="fas fa-bolt"></i>
+        <span>Consultá hoy y obtené <strong>envío bonificado</strong> en tu primer pedido. Oferta válida por:</span>
+        <span class="countdown" id="countdown">--:--:--</span>
+        <button class="urgency-close" onclick="this.parentElement.style.display='none'" aria-label="Cerrar banner">×</button>
+    </div>
+
+    <!-- ==============================
+         CLIENTES
+         ============================== -->
+    <section class="clients-section" aria-label="Empresas que confían en nosotros">
+        <p class="clients-label">Confían en nuestra calidad:</p>
+        <div class="clients-logos">
+            <img src="images/sandrologo.jpg"    alt="Sandro Paris"  title="Equipamiento en locales Sandro" loading="lazy">
+            <img src="images/logoypf.jpg"       alt="YPF Full"      title="Equipamiento en sucursales YPF Full" loading="lazy">
+            <img src="images/mcdonaldslogo.png" alt="McDonald's"    title="Equipamiento en sucursales McDonald's" loading="lazy">
+            <img src="images/burguerlogo.png"   alt="Burger King"   title="Equipamiento en Burger King" loading="lazy">
+            <img src="images/shelllogo.png"     alt="Shell"         title="Equipamiento en Shell Select" loading="lazy">
+        </div>
+    </section>
+
+    <!-- SEPARADOR OLA -->
+    <div class="wave-divider wave-light">
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f8f9fa"/>
+        </svg>
+    </div>
+
+    <!-- ==============================
+         POR QUÉ ELEGIRNOS
+         ============================== -->
+    <section class="why-section" aria-label="Por qué elegirnos">
+        <h2 class="section-title">¿Por qué elegirnos?</h2>
+        <p class="section-subtitle">Más de 15 años fabricando para los más exigentes del mercado.</p>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-industry"></i></div>
+                <h3>Directo de Fábrica</h3>
+                <p>Sin intermediarios. Comprás al productor y ahorrás entre un 30% y 50% respecto al precio de retail.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>Garantía de Resistencia</h3>
+                <p>Hierro macizo de primera calidad. Nuestras piezas soportan el uso gastronómico intensivo sin deformarse.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-pencil-ruler"></i></div>
+                <h3>Fabricación a Medida</h3>
+                <p>Adaptamos cada pieza a tus necesidades. Medidas, colores y acabados personalizados sin costo adicional.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-file-invoice"></i></div>
+                <h3>Factura A y B</h3>
+                <p>Somos contribuyentes responsables. Emitimos cualquier tipo de comprobante para personas y empresas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================
+         CATÁLOGO
+         ============================== -->
+    <main id="catalogo" class="section-padding">
+        <h2 class="section-title">Nuestra Colección</h2>
+        <p class="section-subtitle">Mobiliario industrial fabricado a mano en San Martín, Buenos Aires.</p>
+
+        <div class="filters" role="group" aria-label="Filtrar productos">
+            <button class="filter-btn active" onclick="filterProducts('all', this)">Todos</button>
+            <button class="filter-btn" onclick="filterProducts('asientos', this)">Asientos</button>
+            <button class="filter-btn" onclick="filterProducts('mesas', this)">Mesas</button>
+        </div>
+
+        <div class="products-grid" id="grid" aria-live="polite"></div>
+    </main>
+
+    <!-- SEPARADOR OLA -->
+    <div class="wave-divider wave-white">
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="white"/>
+        </svg>
+    </div>
+
+    <!-- ==============================
+         GALERÍA DE MATERIALES
+         ============================== -->
+    <section class="materials-section" aria-label="Nuestros materiales">
+        <h2 class="section-title">Calidad que se ve y se toca</h2>
+        <p class="section-subtitle">Cada pieza fabricada con los mejores materiales disponibles en el mercado.</p>
+        <div class="materials-grid">
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#555;"></i></div>
+                <h3>Hierro Macizo</h3>
+                <p>Varilla redonda de <strong>12mm</strong>, sin costuras ni rellenos. Indeformable ante el uso intensivo.</p>
+                <div class="material-bar"><div class="material-fill" style="width:95%"></div></div>
+                <span class="material-label">Resistencia: 95%</span>
+            </div>
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#8B4513;"></i></div>
+                <h3>Cuero Vacuno</h3>
+                <p>Cuero de primera selección, curtido al <strong>vegetal</strong>. Natural, durable y de aspecto premium.</p>
+                <div class="material-bar"><div class="material-fill" style="width:90%"></div></div>
+                <span class="material-label">Calidad: Premium</span>
+            </div>
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#b71c1c;"></i></div>
+                <h3>Pintura Epoxi</h3>
+                <p>Tratamiento anticorrosivo de <strong>doble capa</strong>. Resistente a humedad, ralladuras y UV.</p>
+                <div class="material-bar"><div class="material-fill" style="width:88%"></div></div>
+                <span class="material-label">Durabilidad: Alta</span>
+            </div>
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#aaa;"></i></div>
+                <h3>Cromado Industrial</h3>
+                <p>Acabado espejado de <strong>nivel industrial</strong>. Resistente a la corrosión, fácil de limpiar.</p>
+                <div class="material-bar"><div class="material-fill" style="width:85%"></div></div>
+                <span class="material-label">Acabado: Brillante</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEPARADOR OLA -->
+    <div class="wave-divider wave-gray">
+        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,30 C360,0 1080,60 1440,20 L1440,60 L0,60 Z" fill="#f4f4f4"/>
+        </svg>
+    </div>
+
+    <!-- ==============================
+         PROCESO DE COMPRA
+         ============================== -->
+    <section class="process-section" aria-label="Cómo comprar">
+        <h2 class="section-title">¿Cómo funciona?</h2>
+        <p class="section-subtitle">Comprar en Taller Kappa es simple y seguro.</p>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-icon"><i class="fas fa-th-large"></i></div>
+                <h3>Elegís tu producto</h3>
+                <p>Explorá el catálogo, filtrá por categoría y agregá los artículos que te interesan a tu presupuesto.</p>
+            </div>
+            <div class="process-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-icon"><i class="fab fa-whatsapp"></i></div>
+                <h3>Recibís la cotización</h3>
+                <p>Enviamos tu lista directamente por WhatsApp. Francisco te responde con precio final y tiempo de entrega.</p>
+            </div>
+            <div class="process-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-icon"><i class="fas fa-truck"></i></div>
+                <h3>Fabricamos y entregamos</h3>
+                <p>Producimos tu pedido a medida y coordinamos el envío a todo el país o retiro en el showroom.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================
+         TESTIMONIOS
+         ============================== -->
+    <section class="testimonials" aria-label="Testimonios de clientes">
+        <h2>Lo que dicen quienes nos eligen</h2>
+        <div class="testimonial-grid">
+            <article class="testimonial-card">
+                <div class="stars" aria-label="5 estrellas">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p>"Equipamos nuestro local de YPF Full con las Bases Flat de Taller Kappa. Soportan el alto tránsito sin problemas."</p>
+                <p class="testimonial-author">— Franquicia YPF Full</p>
+            </article>
+            <article class="testimonial-card">
+                <div class="stars" aria-label="5 estrellas">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p>"Necesitábamos reposición rápida para el salón. La calidad del hierro es excelente y cumplieron con los tiempos pactados."</p>
+                <p class="testimonial-author">— Local Gastronómico (Shell Select)</p>
+            </article>
+            <article class="testimonial-card">
+                <div class="stars" aria-label="5 estrellas">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p>"Excelente atención de Francisco. Me asesoró con las medidas para mi mesa y quedó pintada en el comedor."</p>
+                <p class="testimonial-author">— Ricardo L. (Particular)</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- ==============================
+         FAQ
+         ============================== -->
+    <section id="faq" class="faq-section" aria-label="Preguntas frecuentes">
+        <h2>Preguntas Frecuentes</h2>
+
+        <div class="faq-item">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                <span><i class="fas fa-building faq-icon-left"></i> ¿Venden a empresas y locales?</span>
+                <i class="fas fa-chevron-down faq-icon-right"></i>
+            </div>
+            <div class="faq-answer">
+                Sí, trabajamos con locales gastronómicos de primera línea, franquicias (Burger King, McDonald's) y marcas de indumentaria como Sandro. Emitimos Factura A.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                <span><i class="fas fa-truck faq-icon-left"></i> ¿Hacen envíos al interior?</span>
+                <i class="fas fa-chevron-down faq-icon-right"></i>
+            </div>
+            <div class="faq-answer">
+                Sí, realizamos envíos a todo el país mediante expreso. Embalaje bonificado para asegurar que el producto llegue en perfectas condiciones.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                <span><i class="far fa-clock faq-icon-left"></i> ¿Cuál es el tiempo de demora?</span>
+                <i class="fas fa-chevron-down faq-icon-right"></i>
+            </div>
+            <div class="faq-answer">
+                Los tiempos de entrega dependen del stock disponible y del volumen del pedido. Consultanos para coordinar una fecha exacta.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                <span><i class="fas fa-paint-roller faq-icon-left"></i> ¿Puedo elegir el color de pintura?</span>
+                <i class="fas fa-chevron-down faq-icon-right"></i>
+            </div>
+            <div class="faq-answer">
+                Absolutamente. Ofrecemos acabados en pintura epoxi (negro mate, blanco, colores a pedido) y cromado. Consultanos tu preferencia al hacer el pedido.
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================
+         FORMULARIO DE CONTACTO
+         ============================== -->
+    <section id="contacto-form" class="contact-section" aria-label="Formulario de contacto">
+        <h2>Contactanos</h2>
+        <p class="section-subtitle">Completá el formulario y te respondemos a la brevedad por WhatsApp.</p>
+
+        <form class="contact-form" id="contact-form" novalidate>
+            <div class="form-group">
+                <label for="form-name">Tu nombre</label>
+                <input type="text" id="form-name" name="name" placeholder="Ej: Juan García" required autocomplete="name">
+            </div>
+            <div class="form-group">
+                <label for="form-interest">¿Qué te interesa?</label>
+                <select id="form-interest" name="interest">
+                    <option value="">Seleccioná una opción...</option>
+                    <option value="Sillón BKF Premium">Sillón BKF Premium</option>
+                    <option value="Banco BKF">Banco BKF</option>
+                    <option value="Base de Mesa Flat">Base de Mesa Flat</option>
+                    <option value="Equipamiento para local">Equipamiento para local</option>
+                    <option value="Consulta general">Consulta general</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="form-msg">Tu mensaje</label>
+                <textarea id="form-msg" name="message" placeholder="Contanos tu consulta o lo que necesitás..." required></textarea>
+            </div>
+            <div class="form-submit">
+                <button type="submit" class="btn-main">
+                    <i class="fab fa-whatsapp"></i> Enviar por WhatsApp
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- ==============================
+         GALERÍA DE TRABAJOS
+         ============================== -->
+    <section class="gallery-section" aria-label="Galería de trabajos">
+        <h2 class="section-title">Nuestros trabajos</h2>
+        <p class="section-subtitle">Cada pieza sale de nuestras manos directo a tu espacio.</p>
+        <div class="gallery-grid" id="gallery-grid">
+            <div class="gallery-item gallery-tall" onclick="openLightbox(0)">
+                <img src="images/bkf1.png" alt="Sillón BKF" loading="lazy">
+                <div class="gallery-overlay"><i class="fas fa-search-plus"></i><span>Sillón BKF Premium</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(1)">
+                <img src="images/bkfapoyapies.png" alt="Banco BKF" loading="lazy">
+                <div class="gallery-overlay"><i class="fas fa-search-plus"></i><span>Banco BKF</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox(2)">
+                <img src="images/mesa.jpeg" alt="Base de Mesa Flat" loading="lazy">
+                <div class="gallery-overlay"><i class="fas fa-search-plus"></i><span>Base de Mesa Flat</span></div>
+            </div>
+            <div class="gallery-item gallery-wide" onclick="openLightbox(1)">
+                <img src="images/bkfapoyapies.png" alt="Banco BKF detalle" loading="lazy">
+                <div class="gallery-overlay"><i class="fas fa-search-plus"></i><span>Detalle de soldadura</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Cerrar">×</button>
+        <button class="lightbox-prev" onclick="event.stopPropagation(); shiftLightbox(-1)" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="">
+        <button class="lightbox-next" onclick="event.stopPropagation(); shiftLightbox(1)" aria-label="Siguiente"><i class="fas fa-chevron-right"></i></button>
+        <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+
+    <!-- ==============================
+         FOOTER
+         ============================== -->
+    <footer id="contacto" aria-label="Información de contacto">
+        <div class="footer-content">
+            <div class="footer-col">
+                <span class="footer-logo">Taller Kappa</span>
+                <div class="footer-info">
+                    <p><strong>Fábrica &amp; Showroom</strong></p>
+                    <p>
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        Calle 28 Nº 3779, Villa Chacabuco (San Martín), Buenos Aires.
+                    </p>
+                    <p>
+                        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        <a href="https://wa.me/541161242498" target="_blank" rel="noopener">11 6124-2498</a>
+                    </p>
+                    <p>
+                        <i class="far fa-envelope" aria-hidden="true"></i>
+                        <a href="mailto:ing.franciscomarotta@gmail.com">ing.franciscomarotta@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <div class="footer-map">
+                    <iframe
+                        src="https://maps.google.com/maps?q=Calle+28+3779,+Villa+Chacabuco&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        title="Ubicación Taller Kappa en Google Maps"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        <p class="footer-copy">© 2025 Taller Kappa S.R.L. — Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- ==============================
+         ELEMENTOS FLOTANTES
+         ============================== -->
+    <a href="https://wa.me/541161242498" class="float-wa" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    </a>
+
+    <button id="back-to-top" aria-label="Volver al inicio">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- ==============================
+         MODAL DETALLE PRODUCTO
+         ============================== -->
+    <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()" aria-label="Cerrar modal">×</button>
+            <div class="modal-img" id="modal-img-container"></div>
+            <div class="modal-info">
+                <div class="modal-badge-row" id="modal-badge-row"></div>
+                <h2 id="modal-title"></h2>
+                <div class="modal-stock"><span class="stock-dot"></span> En stock — Entrega coordinada</div>
+                <p id="modal-desc"></p>
+                <ul class="modal-specs" id="modal-specs"></ul>
+
+                <!-- Selector de color -->
+                <div class="color-selector" id="color-selector">
+                    <p class="color-label">Acabado: <strong id="color-chosen">Negro Mate</strong></p>
+                    <div class="color-options">
+                        <button class="color-swatch active" data-color="Negro Mate"    style="background:#1a1a1a;"  aria-label="Negro Mate"    title="Negro Mate"></button>
+                        <button class="color-swatch"        data-color="Blanco Crema"  style="background:#f5f0e8;"  aria-label="Blanco Crema"  title="Blanco Crema"></button>
+                        <button class="color-swatch"        data-color="Cromado"       style="background:linear-gradient(135deg,#ccc,#fff,#aaa);" aria-label="Cromado" title="Cromado"></button>
+                        <button class="color-swatch"        data-color="Verde Oliva"   style="background:#556b2f;"  aria-label="Verde Oliva"   title="Verde Oliva"></button>
+                        <button class="color-swatch"        data-color="Rojo Kappa"    style="background:#b71c1c;"  aria-label="Rojo Kappa"    title="Rojo Kappa"></button>
+                    </div>
+                </div>
+
+                <button class="btn-main" id="btn-add-modal">
+                    <i class="fas fa-plus" style="margin-right:8px;"></i> Agregar al Presupuesto
+                </button>
+                <p class="modal-hint"><i class="fab fa-whatsapp"></i> Recibís el precio en minutos por WhatsApp</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================
+         CARRITO LATERAL
+         ============================== -->
+    <div class="cart-overlay" id="cart-overlay" role="dialog" aria-modal="true" aria-label="Presupuesto">
+        <div class="cart-sidebar">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-bag" style="margin-right:8px; color:var(--primary);"></i> Tu Presupuesto</h3>
+                <button class="cart-close" onclick="toggleCart()" aria-label="Cerrar presupuesto">×</button>
+            </div>
+            <div class="cart-items" id="cart-items-container">
+                <p class="cart-empty">
+                    <i class="fas fa-box-open" style="font-size:2.5rem; color:#ddd; display:block; margin-bottom:15px;"></i>
+                    Tu lista está vacía.<br>
+                    <small>Explorá el catálogo y agregá productos.</small>
+                </p>
+            </div>
+            <div id="cart-footer">
+                <div class="cart-total" id="cart-total-container" style="display:none;">
+                    <span>Total de artículos:</span>
+                    <span id="cart-total-qty">0</span>
+                </div>
+                <a href="#" class="btn-whatsapp-checkout" id="wa-checkout-btn" target="_blank" rel="noopener" style="opacity:0.5; pointer-events:none;">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i> Solicitar Cotización
+                </a>
+                <p class="cart-hint">Te respondemos en minutos con el precio final.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================
+         POPUP ACTIVIDAD SOCIAL
+         ============================== -->
+    <div class="social-proof-popup" id="social-popup" aria-live="polite">
+        <div class="social-popup-avatar"><i class="fas fa-user"></i></div>
+        <div class="social-popup-text">
+            <strong id="social-popup-name">Alguien</strong>
+            <span id="social-popup-msg"> consultó el Sillón BKF</span>
+        </div>
+        <button class="social-popup-close" onclick="this.closest('.social-proof-popup').classList.remove('show')" aria-label="Cerrar">×</button>
+    </div>
+
+    <!-- ==============================
+         TOAST
+         ============================== -->
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <!-- JS separado (buena práctica) -->
+    <script src="script.js"></script>
+</body>
+</html>
