@@ -94,6 +94,7 @@
         <i class="fas fa-bolt"></i>
         <span>Consultá hoy y obtené <strong>envío bonificado</strong> en tu primer pedido. Oferta válida por:</span>
         <span class="countdown" id="countdown">--:--:--</span>
+        <span class="live-visitors"><i class="fas fa-circle" style="color:#4cff91;font-size:0.5rem;"></i> <span id="live-visitors-count">-</span> personas viendo ahora</span>
         <button class="urgency-close" onclick="this.parentElement.style.display='none'" aria-label="Cerrar banner">×</button>
     </div>
 
@@ -505,6 +506,9 @@
                 <a href="#" class="btn-whatsapp-checkout" id="wa-checkout-btn" target="_blank" rel="noopener" style="opacity:0.5; pointer-events:none;">
                     <i class="fab fa-whatsapp" aria-hidden="true"></i> Solicitar Cotización
                 </a>
+                <button class="btn-print-budget" onclick="printBudget()" title="Descargar presupuesto en PDF">
+                    <i class="fas fa-file-pdf"></i> Descargar presupuesto
+                </button>
                 <p class="cart-hint">Te respondemos en minutos con el precio final.</p>
             </div>
         </div>
@@ -526,6 +530,21 @@
          TOAST
          ============================== -->
     <div id="toast" role="status" aria-live="polite"></div>
+
+    <!-- ==============================
+         POPUP RECORDATORIO WHATSAPP
+         ============================== -->
+    <div class="wa-reminder-popup" id="wa-reminder-popup" role="alertdialog" aria-label="Recordatorio WhatsApp">
+        <button class="wa-reminder-close" onclick="closeWaReminder()" aria-label="Cerrar">×</button>
+        <div class="wa-reminder-icon"><i class="fab fa-whatsapp"></i></div>
+        <div class="wa-reminder-body">
+            <strong>¿Necesitás ayuda?</strong>
+            <p>Francisco te responde en minutos.</p>
+            <a href="https://wa.me/541161242498?text=Hola%2C+vi+su+página+y+me+interesa+consultar+por+sus+productos." target="_blank" class="btn-main" onclick="closeWaReminder()">
+                <i class="fab fa-whatsapp"></i> Consultá ahora
+            </a>
+        </div>
+    </div>
 
     <!-- JS separado (buena práctica) -->
     <script src="script.js"></script>

@@ -1518,3 +1518,165 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
     .lightbox-next { right: 8px; }
     .product-badge { top: 12px; left: -30px; width: 110px; font-size: 0.6rem; }
 }
+
+/* ============================================
+   NUEVAS MEJORAS
+   ============================================ */
+
+/* --- CURSOR PERSONALIZADO --- */
+#custom-cursor { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999; }
+.cursor-dot {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    will-change: transform;
+}
+.cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 2px solid rgba(183,28,28,0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s;
+    will-change: transform;
+}
+#custom-cursor.hover .cursor-dot { width: 14px; height: 14px; background: #e53935; }
+#custom-cursor.hover .cursor-ring { width: 50px; height: 50px; border-color: rgba(183,28,28,0.8); }
+
+/* Ocultar cursor personalizado en mobile */
+@media (hover: none) { #custom-cursor { display: none !important; } body { cursor: auto !important; } }
+
+/* --- PRECIOS EN CARDS --- */
+.card-price {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+.price-note {
+    font-size: 0.72rem;
+    color: #bbb;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* --- BOTÓN COMPARTIR --- */
+.btn-share {
+    width: 100%;
+    margin-top: 10px;
+    padding: 9px;
+    background: transparent;
+    color: #25d366;
+    border: 1.5px solid #25d366;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.btn-share:hover { background: #25d366; color: white; }
+
+/* --- VISITANTES EN VIVO (BANNER) --- */
+.live-visitors {
+    background: rgba(0,0,0,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+/* --- BOTÓN IMPRIMIR PRESUPUESTO --- */
+.btn-print-budget {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: transparent;
+    color: #888;
+    border: 1.5px dashed #ddd;
+    border-radius: var(--radius);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Lato', sans-serif;
+}
+.btn-print-budget:hover { border-color: var(--primary); color: var(--primary); background: #fff5f5; }
+.btn-print-budget i { color: #e74c3c; }
+
+/* --- POPUP RECORDATORIO WHATSAPP --- */
+.wa-reminder-popup {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    z-index: 8500;
+    width: 290px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    border-top: 4px solid #25d366;
+}
+.wa-reminder-popup.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+.wa-reminder-icon {
+    width: 44px; height: 44px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+.wa-reminder-body { flex: 1; }
+.wa-reminder-body strong { display: block; font-size: 0.95rem; color: var(--dark); margin-bottom: 4px; }
+.wa-reminder-body p { font-size: 0.82rem; color: #888; margin-bottom: 12px; }
+.wa-reminder-body .btn-main { padding: 10px 16px; font-size: 0.78rem; width: 100%; display: flex; }
+.wa-reminder-close {
+    position: absolute;
+    top: 10px; right: 12px;
+    background: none; border: none;
+    color: #bbb; font-size: 1.1rem;
+    cursor: pointer; line-height: 1;
+    transition: color 0.2s;
+}
+.wa-reminder-close:hover { color: var(--primary); }
+
+/* Dark mode para nuevos elementos */
+body.dark .btn-print-budget { border-color: #2a2a4a; color: #666; }
+body.dark .btn-print-budget:hover { border-color: var(--primary); color: var(--primary); background: #1c1c35; }
+body.dark .wa-reminder-popup { background: #1c1c35; }
+body.dark .wa-reminder-body strong { color: #eee; }
+body.dark .btn-share { color: #25d366; border-color: #25d366; }
+
+@media (max-width: 768px) {
+    .wa-reminder-popup { width: calc(100vw - 30px); right: 15px; bottom: 15px; }
+    .live-visitors { display: none; }
+    #custom-cursor { display: none; }
+    body { cursor: auto !important; }
+}

@@ -4,6 +4,71 @@
 
 'use strict';
 
+/* ==============================
+   CURSOR PERSONALIZADO
+   ============================== */
+function initCustomCursor() {
+    const cursor = document.createElement('div');
+    cursor.id = 'custom-cursor';
+    cursor.innerHTML = '<div class="cursor-dot"></div><div class="cursor-ring"></div>';
+    document.body.appendChild(cursor);
+
+    const dot  = cursor.querySelector('.cursor-dot');
+    const ring = cursor.querySelector('.cursor-ring');
+    let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+
+    document.addEventListener('mousemove', e => {
+        dotX = e.clientX; dotY = e.clientY;
+        dot.style.transform  = `translate(${dotX}px, ${dotY}px)`;
+    });
+
+    function animateRing() {
+        ringX += (dotX - ringX) * 0.13;
+        ringY += (dotY - ringY) * 0.13;
+        ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
+        requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Efecto hover en elementos clickeables
+    const clickables = 'a, button, .product-card, .gallery-item, .color-swatch, .faq-question, .cart-icon-container';
+    document.querySelectorAll(clickables).forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // Ocultar cursor nativo
+    document.body.style.cursor = 'none';
+}
+
+/* ==============================
+   VISITANTES EN TIEMPO REAL (SIMULADO)
+   ============================== */
+function initLiveVisitors() {
+    const el = document.getElementById('live-visitors-count');
+    if (!el) return;
+
+    // Número base realista para una web de este tipo
+    let count = Math.floor(Math.random() * 8) + 5;
+    el.textContent = count;
+
+    setInterval(() => {
+        const delta = Math.random() < 0.5 ? 1 : -1;
+        count = Math.max(3, Math.min(18, count + delta));
+        el.textContent = count;
+    }, 8000);
+}
+
+/* ==============================
+   COMPARTIR POR WHATSAPP (CARD)
+   ============================== */
+function shareProduct(name) {
+    const text = encodeURIComponent(
+        `Mirá este producto de Taller Kappa: *${name}*\n👉 tallerkappa.com.ar\n¡Calidad industrial directo de fábrica!`
+    );
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
 /* --- DATOS DE PRODUCTOS --- */
 const products = [
     {
@@ -13,6 +78,7 @@ const products = [
         image: 'images/bkf1.png',
         badge: 'Más vendido',
         stock: true,
+        priceFrom: 'Desde $280.000',
         desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
         specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm']
     },
@@ -23,6 +89,7 @@ const products = [
         image: 'images/bkfapoyapies.png',
         badge: 'Ideal para regalo',
         stock: true,
+        priceFrom: 'Desde $140.000',
         desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
         specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm']
     },
@@ -33,6 +100,7 @@ const products = [
         image: 'images/mesa.jpeg',
         badge: 'Uso gastronómico',
         stock: true,
+        priceFrom: 'Desde $95.000',
         desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
         specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
     }
@@ -164,7 +232,10 @@ function renderProducts(filter = 'all') {
             <div class="card-info">
                 <h3>${p.name}</h3>
                 <p class="card-specs-preview">${p.specs[0]}</p>
-                <p class="card-price"><i class="fas fa-tag"></i> Precio a consultar</p>
+                <p class="card-price">
+                    <i class="fas fa-tag"></i> ${p.priceFrom}
+                    <span class="price-note">· Precio final por consulta</span>
+                </p>
                 <div class="card-actions">
                     <button class="btn-detail" onclick="openModal(${p.id})">
                         <i class="fas fa-info-circle"></i> Ver detalles
@@ -173,6 +244,9 @@ function renderProducts(filter = 'all') {
                         <i class="fas fa-plus"></i> Presupuestar
                     </button>
                 </div>
+                <button class="btn-share" onclick="shareProduct('${p.name}')" title="Compartir por WhatsApp">
+                    <i class="fab fa-whatsapp"></i> Compartir
+                </button>
             </div>
         </article>
     `).join('');
@@ -522,6 +596,101 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ==============================
+   RECORDATORIO WHATSAPP (2 min inactividad)
+   ============================== */
+function initWhatsAppReminder() {
+    let timer = null;
+    const DELAY = 2 * 60 * 1000; // 2 minutos
+    let shown = false;
+
+    function resetTimer() {
+        clearTimeout(timer);
+        if (shown) return;
+        timer = setTimeout(() => {
+            shown = true;
+            const popup = document.getElementById('wa-reminder-popup');
+            if (popup) popup.classList.add('show');
+        }, DELAY);
+    }
+
+    ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'].forEach(evt =>
+        document.addEventListener(evt, resetTimer, { passive: true })
+    );
+    resetTimer();
+}
+
+function closeWaReminder() {
+    const popup = document.getElementById('wa-reminder-popup');
+    if (popup) popup.classList.remove('show');
+}
+
+/* ==============================
+   IMPRIMIR / DESCARGAR PRESUPUESTO
+   ============================== */
+function printBudget() {
+    if (cart.length === 0) {
+        showToast('Tu presupuesto está vacío. Agregá productos primero.');
+        return;
+    }
+
+    const lines = cart.map(({ product, color, qty }) =>
+        `<tr>
+            <td>${product.name}</td>
+            <td>${color}</td>
+            <td style="text-align:center">${qty}</td>
+            <td>${product.priceFrom}</td>
+        </tr>`
+    ).join('');
+
+    const win = window.open('', '_blank');
+    win.document.write(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Presupuesto - Taller Kappa</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; color: #222; }
+                h1 { color: #b71c1c; font-size: 1.8rem; margin-bottom: 4px; }
+                .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 30px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                th { background: #b71c1c; color: white; padding: 12px; text-align: left; font-size: 0.85rem; }
+                td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+                tr:nth-child(even) td { background: #fafafa; }
+                .footer { margin-top: 30px; font-size: 0.8rem; color: #999; border-top: 1px solid #eee; padding-top: 15px; }
+                .footer strong { color: #444; }
+                .note { background: #fff5f5; border-left: 4px solid #b71c1c; padding: 12px 16px; font-size: 0.85rem; margin-bottom: 20px; color: #555; }
+                @media print { body { padding: 20px; } }
+            </style>
+        </head>
+        <body>
+            <h1>Taller Kappa S.R.L.</h1>
+            <p class="subtitle">Calle 28 Nº 3779, Villa Chacabuco, San Martín · WhatsApp: 11 6124-2498 · tallerkappa.com.ar</p>
+            <p class="note">⚠️ Este presupuesto es orientativo. Los precios finales se confirman por WhatsApp según disponibilidad y volumen de pedido.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Acabado / Color</th>
+                        <th style="text-align:center">Cant.</th>
+                        <th>Precio desde</th>
+                    </tr>
+                </thead>
+                <tbody>${lines}</tbody>
+            </table>
+            <div class="footer">
+                <strong>Fecha:</strong> ${new Date().toLocaleDateString('es-AR', { day:'2-digit', month:'long', year:'numeric' })}<br>
+                <strong>Válido sujeto a disponibilidad de stock.</strong><br><br>
+                Para confirmar este pedido contactanos por WhatsApp al <strong>11 6124-2498</strong> o al mail <strong>ing.franciscomarotta@gmail.com</strong>
+            </div>
+            <script>window.onload = () => { window.print(); }<\/script>
+        </body>
+        </html>
+    `);
+    win.document.close();
+}
+
+/* ==============================
    INICIALIZACIÓN
    ============================== */
 document.addEventListener('DOMContentLoaded', () => {
@@ -539,6 +708,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initMaterialBars();
     initDarkMode();
     initHeroParticles();
+    initCustomCursor();
+    initLiveVisitors();
+    initWhatsAppReminder();
 
     document.getElementById('cart-overlay').addEventListener('click', (e) => {
         if (e.target === e.currentTarget) toggleCart();
