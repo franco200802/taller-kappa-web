@@ -64,40 +64,7 @@ function initHeroSparks() {
 /* ==============================
    CURSOR PERSONALIZADO
    ============================== */
-function initCustomCursor() {
-    const cursor = document.createElement('div');
-    cursor.id = 'custom-cursor';
-    cursor.innerHTML = '<div class="cursor-dot"></div><div class="cursor-ring"></div>';
-    document.body.appendChild(cursor);
-
-    const dot  = cursor.querySelector('.cursor-dot');
-    const ring = cursor.querySelector('.cursor-ring');
-    let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
-
-    document.addEventListener('mousemove', e => {
-        dotX = e.clientX; dotY = e.clientY;
-        dot.style.transform  = `translate(${dotX}px, ${dotY}px)`;
-    });
-
-    function animateRing() {
-        ringX += (dotX - ringX) * 0.13;
-        ringY += (dotY - ringY) * 0.13;
-        ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
-        requestAnimationFrame(animateRing);
-    }
-    animateRing();
-
-    // Efecto hover en elementos clickeables
-    const clickables = 'a, button, .product-card, .gallery-item, .color-swatch, .faq-question, .cart-icon-container';
-    document.querySelectorAll(clickables).forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
-
-    // Ocultar cursor nativo
-    document.body.style.cursor = 'none';
-}
-
+// Eliminado — cursor nativo restaurado
 /* ==============================
    VISITANTES EN TIEMPO REAL (SIMULADO)
    ============================== */
@@ -631,8 +598,9 @@ function showToast(message) {
 function scrollToSection(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    const navHeight    = document.querySelector('nav').offsetHeight;
-    const bannerHeight = document.getElementById('urgency-banner')?.offsetHeight || 0;
+    const navHeight = document.querySelector('nav').offsetHeight;
+    const banner    = document.getElementById('urgency-banner');
+    const bannerHeight = (banner && banner.style.display !== 'none') ? banner.offsetHeight : 0;
     const top = el.getBoundingClientRect().top + window.scrollY - navHeight - bannerHeight;
     window.scrollTo({ top, behavior: 'smooth' });
 }
@@ -751,7 +719,7 @@ function initAnimatedNumbers() {
 function initPWA() {
     if (!('serviceWorker' in navigator)) return;
 
-    navigator.serviceWorker.register('/sw.js').then(reg => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
 
         // Cuando el SW detecta una nueva versión, la activa y recarga
         reg.addEventListener('updatefound', () => {
@@ -820,6 +788,10 @@ function printBudget() {
     ).join('');
 
     const win = window.open('', '_blank');
+    if (!win) {
+        showToast('El navegador bloqueó la ventana emergente. Permitila en la barra de dirección.');
+        return;
+    }
     win.document.write(`
         <!DOCTYPE html>
         <html lang="es">

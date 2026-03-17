@@ -124,6 +124,13 @@ nav.scrolled {
     transition: var(--transition);
 }
 
+/* Acciones del navbar (carrito, dark toggle, hamburguesa) */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 /* Hamburguesa */
 .hamburger {
     display: none;
