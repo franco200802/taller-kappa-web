@@ -869,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDarkMode();
     initHeroSparks();
     initHeroParticles();
-    initCustomCursor();
+    // initCustomCursor(); // Eliminado el puntero personalizado
     initLiveVisitors();
     initWhatsAppReminder();
     initAnimatedNumbers();
