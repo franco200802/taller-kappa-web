@@ -749,9 +749,27 @@ function initAnimatedNumbers() {
    PWA - Service Worker
    ============================== */
 function initPWA() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-    }
+    if (!('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+
+        // Cuando el SW detecta una nueva versión, la activa y recarga
+        reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // Hay una versión nueva — activarla sin esperar
+                    newWorker.postMessage('SKIP_WAITING');
+                }
+            });
+        });
+
+        // Cuando el SW nuevo toma el control, recargar la página automáticamente
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            window.location.reload();
+        });
+
+    }).catch(() => {});
 }
 
 /* ==============================
