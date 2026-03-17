@@ -275,6 +275,19 @@ nav.scrolled {
     margin-bottom: 40px;
     opacity: 0.9;
 }
+
+/* Tag SEO visible en el hero — palabras clave legibles por Google y por el usuario */
+.hero-seo-tag {
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 24px !important;
+    margin-top: -28px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+}
+
 .hero-buttons {
     display: flex;
     gap: 15px;
