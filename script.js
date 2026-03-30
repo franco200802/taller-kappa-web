@@ -93,10 +93,14 @@ function shareProduct(name) {
     window.open(`https://wa.me/?text=${text}`, '_blank');
 }
 
-/* --- MODO 100% ESTÁTICO (GitHub Pages) ---
-   No hay backend. Todos los datos están hardcodeados abajo. */
+/* --- URL DE LA API ---
+   En local apunta a localhost:3000.
+   En producción (Railway/Render) apunta al mismo dominio del servidor. */
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : '/api';
 
-/* --- DATOS DE PRODUCTOS (estáticos) --- */
+/* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
 const productosFallback = [
     {
         id: 1,
@@ -240,19 +244,41 @@ function toggleCart() {
 }
 
 /* ==============================
-   CARGA DE DATOS (estática — sin backend)
+   CARGA DE DATOS DESDE LA API
    ============================== */
-function loadProductsFromAPI() {
-    products = [...productosFallback];
+async function loadProductsFromAPI() {
+    try {
+        const res = await fetch(`${API_URL}/productos`);
+        if (!res.ok) throw new Error('No se pudo conectar al servidor');
+        products = await res.json();
+        console.log(`✅ ${products.length} producto(s) cargados desde la base de datos.`);
+    } catch (err) {
+        console.warn('⚠️ Servidor no disponible, usando datos locales:', err.message);
+        products = [...productosFallback];
+    }
     renderProducts('all');
 }
 
-function loadFAQsFromAPI() {
-    // Los FAQs estáticos ya están en el HTML — no hace falta hacer nada
+async function loadFAQsFromAPI() {
+    try {
+        const res = await fetch(`${API_URL}/faqs`);
+        if (!res.ok) throw new Error();
+        const faqs = await res.json();
+        renderFAQs(faqs);
+    } catch {
+        // Si falla, el HTML estático ya tiene las FAQs, no hacemos nada
+    }
 }
 
-function loadTestimoniosFromAPI() {
-    // Los testimonios estáticos ya están en el HTML — no hace falta hacer nada
+async function loadTestimoniosFromAPI() {
+    try {
+        const res = await fetch(`${API_URL}/testimonios`);
+        if (!res.ok) throw new Error();
+        const testimonios = await res.json();
+        renderTestimonios(testimonios);
+    } catch {
+        // Si falla, el HTML estático ya tiene los testimonios
+    }
 }
 
 /* ==============================
@@ -362,7 +388,20 @@ function renderProducts(filter = 'all') {
 function filterProducts(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderProducts(cat);
+
+    // Intentar filtrar desde la API; si falla, filtrar sobre los datos ya cargados
+    fetch(`${API_URL}/productos${cat !== 'all' ? '?category=' + cat : ''}`)
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(data => {
+            // La API devuelve datos YA filtrados → renderizar con 'all' para no filtrar de nuevo
+            const grid = document.getElementById('grid');
+            grid.innerHTML = data.map(p => buildProductCard(p)).join('');
+            observeCards();
+        })
+        .catch(() => {
+            // Fallback: filtrar localmente sobre el array completo
+            renderProducts(cat);
+        });
 }
 
 /* ==============================
@@ -688,16 +727,16 @@ function scrollToSection(id) {
 }
 
 /* ==============================
-   FORMULARIO DE CONTACTO (estático — abre WhatsApp)
+   FORMULARIO DE CONTACTO
    ============================== */
 function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name     = form.querySelector('#form-name').value.trim();
-        const interest = form.querySelector('#form-interest')?.value || '';
+        const interest = form.querySelector('#form-interest').value;
         const msg      = form.querySelector('#form-msg').value.trim();
 
         if (!name || !msg) {
@@ -705,6 +744,21 @@ function initContactForm() {
             return;
         }
 
+        // Guardar en la base de datos (si el servidor está disponible)
+        try {
+            const res = await fetch(`${API_URL}/contactos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, interest, message: msg })
+            });
+            if (res.ok) {
+                console.log('✅ Mensaje guardado en la base de datos.');
+            }
+        } catch {
+            console.warn('⚠️ No se pudo guardar en la base de datos (servidor no disponible).');
+        }
+
+        // Abrir WhatsApp igual (siempre)
         const phone        = '541161242498';
         const interestLine = interest ? `\nProducto de interés: ${interest}` : '';
         const text = encodeURIComponent(`Hola, soy ${name}.${interestLine}\n\n${msg}`);
