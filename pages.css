@@ -1,277 +1,200 @@
 /* ============================================
-   TALLER KAPPA — pages.css
-   Estilos para páginas internas (no index.html):
-   page-hero, breadcrumb, about, contact, cta, etc.
+   TALLER KAPPA — pages.css  (v2 world-class)
    ============================================ */
 
-/* ── Espacio para el navbar fijo (solo en páginas internas, no en index) ── */
+/* ─── Offset navbar fijo (páginas internas) ─── */
 body.inner-page { padding-top: var(--nav-height); }
 
 /* ============================================
-   PAGE HERO (reemplaza al hero de index)
+   PAGE HERO
    ============================================ */
 .page-hero {
-    background: linear-gradient(135deg, #1a1a1a 0%, #b71c1c 60%, #7f0000 100%);
+    background: linear-gradient(135deg, #0d0d0d 0%, #b71c1c 55%, #7a0000 100%);
     color: #fff;
-    padding: 5rem 5% 4rem;
-    margin-top: 0;
+    padding: 72px 6% 60px;
     position: relative;
     overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    align-items: flex-end;
 }
-
 .page-hero::before {
     content: '';
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M40 40v-8h-4v8h-8v4h8v8h4v-8h8v-4h-8z'/%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
 }
-
-.page-hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
+.page-hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+    z-index: 0;
 }
-
+.page-hero-content { position: relative; z-index: 1; max-width: 900px; }
 .page-hero h1 {
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    color: #fff;
-    margin-bottom: 0.6rem;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    color: #fff; margin-bottom: 10px;
+    text-shadow: 0 3px 20px rgba(0,0,0,0.4);
 }
+.page-hero h1 i { color: rgba(255,255,255,0.65); margin-right: 12px; font-size: 0.85em; }
+.page-hero p  { font-size: 1.05rem; opacity: 0.8; margin-bottom: 18px; max-width: 600px; }
 
-.page-hero h1 i {
-    color: rgba(255,255,255,0.7);
-    margin-right: 12px;
-    font-size: 0.85em;
-}
-
-.page-hero p {
-    font-size: 1.1rem;
-    opacity: 0.85;
-    margin-bottom: 1.2rem;
-}
-
-/* ── Breadcrumb ── */
+/* ─── Breadcrumb ─── */
 .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    opacity: 0.75;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; opacity: 0.65;
 }
 .breadcrumb a { color: #fff; text-decoration: underline; }
 .breadcrumb a:hover { opacity: 1; }
-.breadcrumb i { font-size: 0.65rem; }
+.breadcrumb i { font-size: 0.6rem; }
 .breadcrumb span { color: rgba(255,255,255,0.9); }
 
 /* ============================================
-   SECCIÓN NOSOTROS
+   NOSOTROS — sección
    ============================================ */
 .about-section { background: #fff; }
-
 .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+    max-width: 1100px; margin: 0 auto;
 }
-
-.about-text h2 { margin-bottom: 1.2rem; }
-.about-text p  { color: #555; margin-bottom: 1rem; line-height: 1.8; }
-
+.about-text h2 { margin-bottom: 18px; }
+.about-text p  { color: #666; margin-bottom: 14px; line-height: 1.85; font-size: 0.97rem; }
+.about-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(183,28,28,0.08); color: var(--primary);
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; padding: 6px 14px; border-radius: 20px;
+    margin-bottom: 18px;
+}
 .about-img-wrap {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.14);
     position: relative;
 }
-
-.about-img-wrap::after {
+.about-img-wrap::before {
     content: '';
-    position: absolute;
-    inset: 0;
-    border: 3px solid var(--primary);
-    border-radius: 16px;
-    pointer-events: none;
-    opacity: 0.3;
+    position: absolute; top: -14px; left: -14px; right: 14px; bottom: 14px;
+    border: 2px solid rgba(183,28,28,0.25); border-radius: 20px;
+    z-index: -1;
 }
-
 .about-img-wrap img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
+    width: 100%; height: 420px; object-fit: cover;
+    display: block; transition: transform 0.55s ease;
 }
-.about-img-wrap:hover img { transform: scale(1.03); }
+.about-img-wrap:hover img { transform: scale(1.04); }
+
+/* ─── Why choose us (tabla de logros) ─── */
+.about-checklist { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.about-checklist li {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.93rem; color: #555;
+}
+.about-checklist li i { color: var(--primary); font-size: 0.85rem; flex-shrink: 0; }
 
 /* ============================================
    CTA SECTION
    ============================================ */
 .cta-section {
-    background: linear-gradient(135deg, #1a1a1a, #b71c1c);
-    padding: 5rem 5%;
-}
-
-.cta-box {
+    background: linear-gradient(135deg, #0d0d0d 0%, #b71c1c 60%, #7a0000 100%);
+    padding: 80px 6%;
     text-align: center;
-    color: #fff;
-    max-width: 700px;
-    margin: 0 auto;
 }
-
-.cta-box h2 {
-    color: #fff;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    margin-bottom: 0.8rem;
-}
-
-.cta-box p {
-    opacity: 0.85;
-    font-size: 1.05rem;
-    margin-bottom: 2rem;
-}
-
-.cta-btns {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+.cta-box { max-width: 720px; margin: 0 auto; color: #fff; }
+.cta-box h2 { color: #fff; font-size: clamp(1.7rem, 3vw, 2.6rem); margin-bottom: 12px; }
+.cta-box p  { opacity: 0.82; font-size: 1.05rem; margin-bottom: 32px; }
+.cta-btns   { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
 /* ============================================
    CONTACTO PAGE
    ============================================ */
 .contact-page-section { background: var(--light); }
-
 .contact-page-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    max-width: 1100px;
-    margin: 0 auto 4rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; max-width: 1100px; margin: 0 auto 56px;
 }
-
 .contact-form-col h2,
-.contact-info-col h2 { margin-bottom: 0.5rem; }
+.contact-info-col h2 { margin-bottom: 8px; }
+.contact-form-col .section-subtitle,
+.contact-info-col  .section-subtitle { text-align: left; margin-bottom: 32px; }
 
 /* Info cards */
-.contact-info-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
+.contact-info-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
 .contact-info-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    background: #fff;
-    padding: 1.2rem 1.4rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
+    display: flex; align-items: flex-start; gap: 16px;
+    background: #fff; padding: 20px 22px;
+    border-radius: 12px; box-shadow: var(--shadow-sm);
+    transition: var(--transition); border-left: 3px solid transparent;
 }
-.contact-info-card:hover { box-shadow: var(--shadow-md); transform: translateX(4px); }
-
+.contact-info-card:hover { box-shadow: var(--shadow-md); transform: translateX(6px); border-left-color: var(--primary); }
 .contact-info-icon {
-    width: 42px; height: 42px;
-    background: var(--primary);
-    color: #fff;
-    border-radius: 50%;
+    width: 44px; height: 44px; background: var(--primary);
+    color: #fff; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
+    font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 4px 14px var(--primary-glow);
 }
-
-.contact-info-card h3 { font-size: 0.95rem; margin-bottom: 0.2rem; font-family: 'Lato', sans-serif; }
-.contact-info-card p  { color: #555; font-size: 0.9rem; line-height: 1.5; }
-.contact-info-card small { color: #999; font-size: 0.8rem; }
+.contact-info-card h3 { font-size: 0.92rem; margin-bottom: 4px; font-family: var(--sans); font-weight: 700; }
+.contact-info-card p  { color: #666; font-size: 0.88rem; line-height: 1.6; }
+.contact-info-card small { color: #aaa; font-size: 0.78rem; }
 .contact-info-card a  { color: var(--primary); font-weight: 700; }
 
 /* Botón WA grande */
 .btn-whatsapp-big {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #25d366;
-    color: #fff;
-    padding: 1rem 1.6rem;
-    border-radius: 50px;
-    font-weight: 700;
-    text-decoration: none;
+    display: flex; align-items: center; gap: 14px;
+    background: #25d366; color: #fff;
+    padding: 16px 24px; border-radius: 50px;
+    font-weight: 700; font-size: 1rem;
     transition: var(--transition);
-    box-shadow: 0 4px 15px rgba(37,211,102,0.3);
+    box-shadow: 0 6px 20px rgba(37,211,102,0.35);
 }
-.btn-whatsapp-big:hover {
-    background: #1da851;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(37,211,102,0.4);
-}
-.btn-whatsapp-big i { font-size: 1.8rem; }
+.btn-whatsapp-big:hover { background: #1da851; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(37,211,102,0.45); }
+.btn-whatsapp-big i { font-size: 2rem; }
 .btn-whatsapp-big span { display: flex; flex-direction: column; }
 .btn-whatsapp-big strong { font-size: 1rem; }
-.btn-whatsapp-big small { font-size: 0.8rem; opacity: 0.85; font-weight: 400; }
+.btn-whatsapp-big small { font-size: 0.8rem; opacity: 0.8; font-weight: 400; }
 
-/* Mapa en contacto */
+/* Mapa */
 .contact-map { max-width: 1100px; margin: 0 auto; }
 
 /* ============================================
-   FOOTER NAV (links en el footer)
+   FAQ PAGE
    ============================================ */
-.footer-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem 1.2rem;
-    margin-top: 1rem;
+.faq-page-section { background: var(--light); }
+.faq-cats {
+    display: flex; justify-content: center; gap: 10px;
+    flex-wrap: wrap; margin-bottom: 44px;
 }
-.footer-nav a {
-    color: rgba(255,255,255,0.65);
-    font-size: 0.85rem;
-    transition: color 0.2s;
+.faq-cat-btn {
+    background: transparent; border: 1.5px solid #ddd;
+    padding: 8px 20px; border-radius: 30px;
+    cursor: pointer; font-weight: 700; font-size: 0.8rem;
+    color: #aaa; transition: var(--transition);
 }
-.footer-nav a:hover { color: #fff; }
-
-/* ============================================
-   NAV-LINK ACTIVE (página actual)
-   ============================================ */
-.nav-link.active-page {
-    color: var(--primary) !important;
-}
-.nav-link.active-page::after {
-    width: 100% !important;
-}
+.faq-cat-btn.active,
+.faq-cat-btn:hover { border-color: var(--primary); background: var(--primary); color: #fff; box-shadow: 0 4px 14px var(--primary-glow); }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
     .about-grid,
-    .contact-page-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-    }
-
-    .about-img-wrap img { height: 260px; }
-
-    .page-hero { padding: 4rem 5% 3rem; }
-
+    .contact-page-grid { grid-template-columns: 1fr; gap: 36px; }
+    .about-img-wrap img { height: 280px; }
+    .page-hero { min-height: 220px; padding: 54px 6% 40px; }
     .cta-btns { flex-direction: column; align-items: center; }
-
-    .contact-map { margin-top: 2rem; }
 }
 
 /* ============================================
    MODO OSCURO
    ============================================ */
-body.dark .page-hero {
-    background: linear-gradient(135deg, #0a0a0a 0%, #8a0000 60%, #5c0000 100%);
-}
+body.dark .page-hero { background: linear-gradient(135deg, #080808 0%, #8a0000 55%, #4a0000 100%); }
 body.dark .about-section,
-body.dark .contact-page-section { background: #1a1a1a; }
-body.dark .contact-info-card    { background: #2a2a2a; }
-body.dark .about-text p,
-body.dark .contact-info-card p  { color: #bbb; }
-body.dark .cta-section { background: linear-gradient(135deg, #0a0a0a, #8a0000); }
+body.dark .contact-page-section,
+body.dark .faq-page-section { background: var(--mid); }
+body.dark .contact-info-card { background: #1d1d2a; }
+body.dark .about-text p, body.dark .contact-info-card p { color: #aaa; }
+body.dark .contact-info-card small { color: #666; }
+body.dark .cta-section { background: linear-gradient(135deg, #080808 0%, #8a0000 60%, #4a0000 100%); }
+body.dark .faq-cat-btn { border-color: #2a2a3a; color: #666; }

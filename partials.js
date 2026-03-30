@@ -55,16 +55,16 @@
     <footer id="contacto" aria-label="Información de contacto">
         <div class="footer-content">
             <div class="footer-col">
-                <span class="footer-logo">Taller Kappa</span>
+                <a href="index.html" class="footer-logo">Taller <span>Kappa</span></a>
                 <div class="footer-info">
-                    <p><strong>Fábrica &amp; Showroom</strong></p>
                     <p><i class="fas fa-map-marker-alt"></i> Calle 28 Nº 3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
                     <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/541161242498" target="_blank" rel="noopener">11 6124-2498</a></p>
                     <p><i class="far fa-envelope"></i> <a href="mailto:ing.franciscomarotta@gmail.com">ing.franciscomarotta@gmail.com</a></p>
+                    <p><i class="far fa-clock"></i> Lunes a Viernes 9:00–18:00</p>
                 </div>
-                <div class="footer-nav">
+                <nav class="footer-nav" aria-label="Links del footer">
                     ${navLinks.map(l => `<a href="${l.href}">${l.label}</a>`).join('')}
-                </div>
+                </nav>
             </div>
             <div class="footer-col">
                 <div class="footer-map">
@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-        <p class="footer-copy">© 2026 Taller Kappa S.R.L. — Todos los derechos reservados.</p>
+        <p class="footer-copy">© 2026 Taller Kappa S.R.L. — Todos los derechos reservados. Hecho en Argentina. 🇦🇷</p>
     </footer>`;
 
     /* ── Elementos flotantes ── */

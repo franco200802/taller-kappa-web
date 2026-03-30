@@ -4,14 +4,20 @@
    Cada deploy actualiza CACHE_VERSION para invalidar todo.
    ============================================ */
 
-const CACHE_VERSION = 'taller-kappa-v20260317';
-const STATIC_CACHE  = `${CACHE_VERSION}-static`;
+const CACHE_VERSION = 'taller-kappa-v20260401-static';
+const STATIC_CACHE  = `${CACHE_VERSION}-cache`;
 
 const ASSETS = [
     '/',
     '/index.html',
+    '/catalogo.html',
+    '/nosotros.html',
+    '/faq.html',
+    '/contacto.html',
     '/styles.css',
+    '/pages.css',
     '/script.js',
+    '/partials.js',
     '/manifest.json',
     '/images/bkf1.png',
     '/images/bkfapoyapies.png',
@@ -22,8 +28,6 @@ const ASSETS = [
     '/images/sandrologo.png',
     '/images/logoypf.png',
     '/images/favicon.ico',
-    '/images/favicon-32.png',
-    '/images/favicon-16.png',
 ];
 
 /* --- Instalar: pre-cachear assets estáticos --- */
@@ -62,9 +66,6 @@ self.addEventListener('fetch', e => {
     // Solo manejar requests del mismo origen
     const url = new URL(e.request.url);
     if (url.origin !== location.origin) return;
-
-    // No cachear las llamadas a la API (siempre deben ir a la red)
-    if (url.pathname.startsWith('/api/')) return;
 
     e.respondWith(
         fetch(e.request)
