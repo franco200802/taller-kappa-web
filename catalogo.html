@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo — Sillones BKF, Mesas y Bancos | Taller Kappa</title>
+    <meta name="description" content="Catálogo completo de muebles de hierro y cuero. Sillón BKF Premium, Banco BKF y Bases de Mesa Flat. Directo de fábrica en San Martín, Buenos Aires.">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <link rel="canonical" href="https://tallerkappa.com.ar/catalogo.html">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon"  href="images/favicon.ico?v=3">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png?v=3">
+
+    <!-- Fuentes e iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css?v=20260330">
+    <link rel="stylesheet" href="pages.css?v=20260330">
+</head>
+<body>
+    <!-- partials.js inyecta navbar y footer -->
+
+    <!-- ==============================
+         PAGE HERO
+         ============================== -->
+    <div class="page-hero">
+        <div class="page-hero-content">
+            <h1><i class="fas fa-th-large"></i> Catálogo</h1>
+            <p>Mobiliario industrial fabricado a mano en San Martín, Buenos Aires.</p>
+            <nav class="breadcrumb" aria-label="Ruta de navegación">
+                <a href="index.html">Inicio</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Catálogo</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ==============================
+         FILTROS + GRILLA
+         ============================== -->
+    <main id="catalogo" class="section-padding">
+        <div class="filters" role="group" aria-label="Filtrar productos">
+            <button class="filter-btn active" onclick="setFilter('all', this)">
+                <i class="fas fa-border-all"></i> Todos
+            </button>
+            <button class="filter-btn" onclick="setFilter('asientos', this)">
+                <i class="fas fa-chair"></i> Asientos
+            </button>
+            <button class="filter-btn" onclick="setFilter('mesas', this)">
+                <i class="fas fa-table"></i> Mesas
+            </button>
+        </div>
+
+        <div class="products-grid" id="grid" aria-live="polite"></div>
+    </main>
+
+    <!-- ==============================
+         MATERIALES
+         ============================== -->
+    <section class="materials-section section-fade" aria-label="Nuestros materiales">
+        <h2 class="section-title">Calidad que se ve y se toca</h2>
+        <p class="section-subtitle">Cada pieza fabricada con los mejores materiales del mercado.</p>
+        <div class="materials-grid">
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#555;"></i></div>
+                <h3>Hierro Macizo</h3>
+                <p>Varilla redonda de <strong>12mm</strong>, sin costuras ni rellenos. Indeformable ante el uso intensivo.</p>
+                <div class="material-bar"><div class="material-fill" style="width:95%"></div></div>
+                <span class="material-label">Resistencia: 95%</span>
+            </div>
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#8B4513;"></i></div>
+                <h3>Cuero Vacuno</h3>
+                <p>Cuero de primera selección, curtido al <strong>vegetal</strong>. Natural, durable y de aspecto premium.</p>
+                <div class="material-bar"><div class="material-fill" style="width:90%"></div></div>
+                <span class="material-label">Calidad: Premium</span>
+            </div>
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#b71c1c;"></i></div>
+                <h3>Pintura Epoxi</h3>
+                <p>Tratamiento anticorrosivo de <strong>doble capa</strong>. Resistente a humedad, ralladuras y UV.</p>
+                <div class="material-bar"><div class="material-fill" style="width:88%"></div></div>
+                <span class="material-label">Durabilidad: Alta</span>
+            </div>
+            <div class="material-card">
+                <div class="material-icon"><i class="fas fa-circle" style="color:#aaa;"></i></div>
+                <h3>Cromado Industrial</h3>
+                <p>Acabado espejado de <strong>nivel industrial</strong>. Resistente a la corrosión, fácil de limpiar.</p>
+                <div class="material-bar"><div class="material-fill" style="width:85%"></div></div>
+                <span class="material-label">Acabado: Brillante</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==============================
+         MODAL DETALLE PRODUCTO
+         ============================== -->
+    <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()" aria-label="Cerrar modal">×</button>
+            <div class="modal-img" id="modal-img-container"></div>
+            <div class="modal-info">
+                <div class="modal-badge-row" id="modal-badge-row"></div>
+                <h2 id="modal-title"></h2>
+                <div class="modal-stock"><span class="stock-dot"></span> En stock — Entrega coordinada</div>
+                <p id="modal-desc"></p>
+                <ul class="modal-specs" id="modal-specs"></ul>
+                <div class="color-selector" id="color-selector">
+                    <p class="color-label">Acabado: <strong id="color-chosen">Negro Mate</strong></p>
+                    <div class="color-options">
+                        <button class="color-swatch active" data-color="Negro Mate"   style="background:#1a1a1a;" aria-label="Negro Mate"   title="Negro Mate"></button>
+                        <button class="color-swatch"        data-color="Blanco Crema" style="background:#f5f0e8;" aria-label="Blanco Crema" title="Blanco Crema"></button>
+                        <button class="color-swatch"        data-color="Cromado"      style="background:linear-gradient(135deg,#ccc,#fff,#aaa);" aria-label="Cromado" title="Cromado"></button>
+                        <button class="color-swatch"        data-color="Verde Oliva"  style="background:#556b2f;" aria-label="Verde Oliva"  title="Verde Oliva"></button>
+                        <button class="color-swatch"        data-color="Rojo Kappa"   style="background:#b71c1c;" aria-label="Rojo Kappa"   title="Rojo Kappa"></button>
+                    </div>
+                </div>
+                <button class="btn-main" id="btn-add-modal">
+                    <i class="fas fa-plus" style="margin-right:8px;"></i> Agregar al Presupuesto
+                </button>
+                <p class="modal-hint"><i class="fab fa-whatsapp"></i> Recibís el precio en minutos por WhatsApp</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social proof popup -->
+    <div class="social-proof-popup" id="social-popup" aria-live="polite">
+        <div class="social-popup-avatar"><i class="fas fa-user"></i></div>
+        <div class="social-popup-text">
+            <strong id="social-popup-name">Alguien</strong>
+            <span id="social-popup-msg"> consultó el Sillón BKF</span>
+        </div>
+        <button class="social-popup-close" onclick="this.closest('.social-proof-popup').classList.remove('show')" aria-label="Cerrar">×</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="partials.js?v=20260330"></script>
+    <script src="script.js?v=20260330"></script>
+    <script>
+        // En esta página el carrito usa la función global de partials.js
+        // Sobrescribir addToCart local para usar el del carrito persistente
+        document.addEventListener('DOMContentLoaded', () => {
+            window.addToCart = function(productId) {
+                const p = products.find(pr => Number(pr.id) === Number(productId));
+                if (!p) return;
+                window.addToCartGlobal(p, window.selectedColor || 'Negro Mate');
+                closeModal();
+            };
+        });
+
+        // Función de filtro para esta página
+        function setFilter(cat, btn) {
+            filterProducts(cat, btn);
+        }
+    </script>
+</body>
+</html>

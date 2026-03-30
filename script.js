@@ -93,8 +93,15 @@ function shareProduct(name) {
     window.open(`https://wa.me/?text=${text}`, '_blank');
 }
 
-/* --- DATOS DE PRODUCTOS --- */
-const products = [
+/* --- URL DE LA API ---
+   En local apunta a localhost:3000.
+   En producción (Railway/Render) apunta al mismo dominio del servidor. */
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : '/api';
+
+/* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
+const productosFallback = [
     {
         id: 1,
         category: 'asientos',
@@ -131,6 +138,7 @@ const products = [
 ];
 
 /* --- ESTADO GLOBAL --- */
+let products = [...productosFallback]; // se reemplaza con datos de la API al cargar
 let cart = [];
 let selectedColor = 'Negro Mate';
 
@@ -138,7 +146,7 @@ let selectedColor = 'Negro Mate';
    CARRITO CON CANTIDADES
    ============================== */
 function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => Number(p.id) === Number(productId));
     if (!product) return;
 
     const color = selectedColor || 'Negro Mate';
@@ -236,20 +244,113 @@ function toggleCart() {
 }
 
 /* ==============================
+   CARGA DE DATOS DESDE LA API
+   ============================== */
+async function loadProductsFromAPI() {
+    try {
+        const res = await fetch(`${API_URL}/productos`);
+        if (!res.ok) throw new Error('No se pudo conectar al servidor');
+        products = await res.json();
+        console.log(`✅ ${products.length} producto(s) cargados desde la base de datos.`);
+    } catch (err) {
+        console.warn('⚠️ Servidor no disponible, usando datos locales:', err.message);
+        products = [...productosFallback];
+    }
+    renderProducts('all');
+}
+
+async function loadFAQsFromAPI() {
+    try {
+        const res = await fetch(`${API_URL}/faqs`);
+        if (!res.ok) throw new Error();
+        const faqs = await res.json();
+        renderFAQs(faqs);
+    } catch {
+        // Si falla, el HTML estático ya tiene las FAQs, no hacemos nada
+    }
+}
+
+async function loadTestimoniosFromAPI() {
+    try {
+        const res = await fetch(`${API_URL}/testimonios`);
+        if (!res.ok) throw new Error();
+        const testimonios = await res.json();
+        renderTestimonios(testimonios);
+    } catch {
+        // Si falla, el HTML estático ya tiene los testimonios
+    }
+}
+
+/* ==============================
+   RENDER DINÁMICO DE FAQs
+   ============================== */
+function renderFAQs(faqs) {
+    const section = document.getElementById('faq');
+    if (!section || !faqs.length) return;
+
+    // Conservar el título
+    const title = section.querySelector('h2');
+    const titleHTML = title ? title.outerHTML : '<h2>Preguntas Frecuentes</h2>';
+
+    section.innerHTML = titleHTML + faqs.map(f => `
+        <div class="faq-item">
+            <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                <span><i class="${f.icon} faq-icon-left"></i> ${f.question}</span>
+                <i class="fas fa-chevron-down faq-icon-right"></i>
+            </div>
+            <div class="faq-answer">${f.answer}</div>
+        </div>
+    `).join('');
+
+    // Reinicializar el acordeón
+    initFAQ();
+}
+
+/* ==============================
+   RENDER DINÁMICO DE TESTIMONIOS
+   ============================== */
+function renderTestimonios(testimonios) {
+    const grid = document.querySelector('.testimonial-grid');
+    if (!grid || !testimonios.length) return;
+
+    const stars = (n) => Array(n).fill('<i class="fas fa-star"></i>').join('');
+
+    grid.innerHTML = testimonios.map(t => `
+        <article class="testimonial-card">
+            <div class="stars" aria-label="${t.stars} estrellas">${stars(t.stars)}</div>
+            <p>"${t.text}"</p>
+            <p class="testimonial-author">— ${t.author}</p>
+        </article>
+    `).join('');
+
+    // Re-observar las nuevas cards para que reciban la animación fade-in
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('fade-in'), i * 100);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+    grid.querySelectorAll('.testimonial-card').forEach(el => observer.observe(el));
+}
+
+/* ==============================
    CATÁLOGO Y FILTROS
    ============================== */
-function renderProducts(filter = 'all') {
-    const grid     = document.getElementById('grid');
-    const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
 
-    grid.innerHTML = filtered.map(p => `
+// Construye el HTML de una card de producto
+function buildProductCard(p) {
+    // Asegurar que el id sea siempre número (por si la API devuelve string)
+    const id = Number(p.id);
+    return `
         <article class="product-card" data-category="${p.category}">
             ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
             <div class="stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}">
                 <span class="stock-dot-small"></span>
                 ${p.stock ? 'En stock' : 'Consultar'}
             </div>
-            <div class="card-img-wrapper" onclick="openModal(${p.id})" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
+            <div class="card-img-wrapper" onclick="openModal(${id})" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
                 <img src="${p.image}" alt="${p.name}" loading="lazy">
                 <div class="card-overlay"><i class="fas fa-search-plus"></i> Ver detalle</div>
             </div>
@@ -261,34 +362,54 @@ function renderProducts(filter = 'all') {
                     <span class="price-note">· Precio final por consulta</span>
                 </p>
                 <div class="card-actions">
-                    <button class="btn-detail" onclick="openModal(${p.id})">
+                    <button class="btn-detail" onclick="openModal(${id})">
                         <i class="fas fa-info-circle"></i> Ver detalles
                     </button>
-                    <button class="btn-add-cart" onclick="addToCart(${p.id})">
+                    <button class="btn-add-cart" onclick="addToCart(${id})">
                         <i class="fas fa-plus"></i> Presupuestar
                     </button>
                 </div>
-                <button class="btn-share" onclick="shareProduct('${p.name}')" title="Compartir por WhatsApp">
+                <button class="btn-share" onclick="shareProduct('${p.name.replace(/'/g, "\\'")}')" title="Compartir por WhatsApp">
                     <i class="fab fa-whatsapp"></i> Compartir
                 </button>
             </div>
         </article>
-    `).join('');
+    `;
+}
 
+function renderProducts(filter = 'all') {
+    const grid     = document.getElementById('grid');
+    const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+
+    grid.innerHTML = filtered.map(p => buildProductCard(p)).join('');
     observeCards();
 }
 
 function filterProducts(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderProducts(cat);
+
+    // Intentar filtrar desde la API; si falla, filtrar sobre los datos ya cargados
+    fetch(`${API_URL}/productos${cat !== 'all' ? '?category=' + cat : ''}`)
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(data => {
+            // La API devuelve datos YA filtrados → renderizar con 'all' para no filtrar de nuevo
+            const grid = document.getElementById('grid');
+            grid.innerHTML = data.map(p => buildProductCard(p)).join('');
+            observeCards();
+        })
+        .catch(() => {
+            // Fallback: filtrar localmente sobre el array completo
+            renderProducts(cat);
+        });
 }
 
 /* ==============================
    MODAL CON SELECTOR DE COLOR
    ============================== */
 function openModal(id) {
-    const p = products.find(prod => prod.id === id);
+    // Normalizar a número por si el id viene como string desde la API
+    const p = products.find(prod => Number(prod.id) === Number(id));
     if (!p) return;
 
     // Resetear color seleccionado
@@ -612,7 +733,7 @@ function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name     = form.querySelector('#form-name').value.trim();
         const interest = form.querySelector('#form-interest').value;
@@ -623,6 +744,21 @@ function initContactForm() {
             return;
         }
 
+        // Guardar en la base de datos (si el servidor está disponible)
+        try {
+            const res = await fetch(`${API_URL}/contactos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, interest, message: msg })
+            });
+            if (res.ok) {
+                console.log('✅ Mensaje guardado en la base de datos.');
+            }
+        } catch {
+            console.warn('⚠️ No se pudo guardar en la base de datos (servidor no disponible).');
+        }
+
+        // Abrir WhatsApp igual (siempre)
         const phone        = '541161242498';
         const interestLine = interest ? `\nProducto de interés: ${interest}` : '';
         const text = encodeURIComponent(`Hola, soy ${name}.${interestLine}\n\n${msg}`);
@@ -843,7 +979,11 @@ function printBudget() {
    INICIALIZACIÓN
    ============================== */
 document.addEventListener('DOMContentLoaded', () => {
-    renderProducts();
+    // Cargar datos desde la base de datos (con fallback automático a datos locales)
+    loadProductsFromAPI();
+    loadFAQsFromAPI();
+    loadTestimoniosFromAPI();
+
     initMobileMenu();
     initNavbarScroll();
     initSectionAnimations();

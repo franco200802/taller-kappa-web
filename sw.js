@@ -63,6 +63,9 @@ self.addEventListener('fetch', e => {
     const url = new URL(e.request.url);
     if (url.origin !== location.origin) return;
 
+    // No cachear las llamadas a la API (siempre deben ir a la red)
+    if (url.pathname.startsWith('/api/')) return;
+
     e.respondWith(
         fetch(e.request)
             .then(networkResponse => {

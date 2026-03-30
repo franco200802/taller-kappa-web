@@ -226,7 +226,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="styles.css?v=20260317c">
+    <link rel="stylesheet" href="styles.css?v=20260330">
+    <link rel="stylesheet" href="pages.css?v=20260330">
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FDMN51XDY"></script>
@@ -242,36 +243,7 @@
     <!-- SKIP LINK accesibilidad (teclado) -->
     <a href="#catalogo" class="skip-link">Saltar al contenido principal</a>
 
-    <!-- ==============================
-         NAVBAR
-         ============================== -->
-    <nav>
-        <div class="logo" onclick="scrollToSection('hero')" role="button" tabindex="0" aria-label="Inicio">
-            Taller <span>Kappa</span>
-        </div>
-
-        <ul class="nav-menu" id="nav-menu" role="list">
-            <li><button class="nav-link" onclick="scrollToSection('hero')">Inicio</button></li>
-            <li><button class="nav-link" onclick="scrollToSection('catalogo')">Colección</button></li>
-            <li><button class="nav-link" onclick="scrollToSection('contacto-form')">Contacto</button></li>
-            <li><button class="nav-link" onclick="scrollToSection('faq')">Preguntas</button></li>
-        </ul>
-
-        <div class="nav-actions">
-            <div class="cart-icon-container" onclick="toggleCart()" role="button" tabindex="0" aria-label="Abrir presupuesto">
-                <i class="fas fa-shopping-bag" style="font-size:1.2rem;"></i>
-                <span class="cart-badge" id="cart-count">0</span>
-            </div>
-            <button class="dark-toggle" id="dark-toggle" aria-label="Cambiar modo oscuro/claro" title="Modo oscuro">
-                <i class="fas fa-moon"></i>
-            </button>
-            <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </nav>
+    <!-- Navbar inyectado por partials.js -->
 
     <!-- ==============================
          HERO
@@ -293,12 +265,13 @@
             <!-- Texto SEO visible para Google -->
             <p class="hero-seo-tag">Sillones BKF · Mesas de Hierro · Cuero Vacuno · San Martín, Buenos Aires</p>
             <div class="hero-buttons">
-                <button class="btn-main" onclick="scrollToSection('catalogo')">
+                <a href="catalogo.html" class="btn-main">
                     <i class="fas fa-th-large" style="margin-right:8px;"></i> Ver Catálogo
-                </button>
-                <button class="btn-outline" onclick="window.open('https://wa.me/541161242498?text=Hola%2C+soy+una+empresa+y+necesito+cotizaci%C3%B3n+mayorista.', '_blank')">
+                </a>
+                <a href="https://wa.me/541161242498?text=Hola%2C+soy+una+empresa+y+necesito+cotizaci%C3%B3n+mayorista."
+                   target="_blank" rel="noopener" class="btn-outline">
                     <i class="fab fa-whatsapp" style="margin-right:8px;"></i> Atención Empresas
-                </button>
+                </a>
             </div>
         </div>
         <div class="hero-scroll-hint">
@@ -685,86 +658,7 @@
         <p class="footer-copy">© 2026 Taller Kappa S.R.L. — Todos los derechos reservados.</p>
     </footer>
 
-    <!-- ==============================
-         ELEMENTOS FLOTANTES
-         ============================== -->
-    <a href="https://wa.me/541161242498" class="float-wa" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
-        <i class="fab fa-whatsapp" aria-hidden="true"></i>
-    </a>
-
-    <button id="back-to-top" aria-label="Volver al inicio">
-        <i class="fas fa-chevron-up" aria-hidden="true"></i>
-    </button>
-
-    <!-- ==============================
-         MODAL DETALLE PRODUCTO
-         ============================== -->
-    <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()" aria-label="Cerrar modal">×</button>
-            <div class="modal-img" id="modal-img-container"></div>
-            <div class="modal-info">
-                <div class="modal-badge-row" id="modal-badge-row"></div>
-                <h2 id="modal-title"></h2>
-                <div class="modal-stock"><span class="stock-dot"></span> En stock — Entrega coordinada</div>
-                <p id="modal-desc"></p>
-                <ul class="modal-specs" id="modal-specs"></ul>
-
-                <!-- Selector de color -->
-                <div class="color-selector" id="color-selector">
-                    <p class="color-label">Acabado: <strong id="color-chosen">Negro Mate</strong></p>
-                    <div class="color-options">
-                        <button class="color-swatch active" data-color="Negro Mate"    style="background:#1a1a1a;"  aria-label="Negro Mate"    title="Negro Mate"></button>
-                        <button class="color-swatch"        data-color="Blanco Crema"  style="background:#f5f0e8;"  aria-label="Blanco Crema"  title="Blanco Crema"></button>
-                        <button class="color-swatch"        data-color="Cromado"       style="background:linear-gradient(135deg,#ccc,#fff,#aaa);" aria-label="Cromado" title="Cromado"></button>
-                        <button class="color-swatch"        data-color="Verde Oliva"   style="background:#556b2f;"  aria-label="Verde Oliva"   title="Verde Oliva"></button>
-                        <button class="color-swatch"        data-color="Rojo Kappa"    style="background:#b71c1c;"  aria-label="Rojo Kappa"    title="Rojo Kappa"></button>
-                    </div>
-                </div>
-
-                <button class="btn-main" id="btn-add-modal">
-                    <i class="fas fa-plus" style="margin-right:8px;"></i> Agregar al Presupuesto
-                </button>
-                <p class="modal-hint"><i class="fab fa-whatsapp"></i> Recibís el precio en minutos por WhatsApp</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==============================
-         CARRITO LATERAL
-         ============================== -->
-    <div class="cart-overlay" id="cart-overlay" role="dialog" aria-modal="true" aria-label="Presupuesto">
-        <div class="cart-sidebar">
-            <div class="cart-header">
-                <h3><i class="fas fa-shopping-bag" style="margin-right:8px; color:var(--primary);"></i> Tu Presupuesto</h3>
-                <button class="cart-close" onclick="toggleCart()" aria-label="Cerrar presupuesto">×</button>
-            </div>
-            <div class="cart-items" id="cart-items-container">
-                <p class="cart-empty">
-                    <i class="fas fa-box-open" style="font-size:2.5rem; color:#ddd; display:block; margin-bottom:15px;"></i>
-                    Tu lista está vacía.<br>
-                    <small>Explorá el catálogo y agregá productos.</small>
-                </p>
-            </div>
-            <div id="cart-footer">
-                <div class="cart-total" id="cart-total-container" style="display:none;">
-                    <span>Total de artículos:</span>
-                    <span id="cart-total-qty">0</span>
-                </div>
-                <a href="#" class="btn-whatsapp-checkout" id="wa-checkout-btn" target="_blank" rel="noopener" style="opacity:0.5; pointer-events:none;">
-                    <i class="fab fa-whatsapp" aria-hidden="true"></i> Solicitar Cotización
-                </a>
-                <button class="btn-print-budget" onclick="printBudget()" title="Descargar presupuesto en PDF">
-                    <i class="fas fa-file-pdf"></i> Descargar presupuesto
-                </button>
-                <p class="cart-hint">Te respondemos en minutos con el precio final.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==============================
-         POPUP ACTIVIDAD SOCIAL
-         ============================== -->
+    <!-- Social proof popup -->
     <div class="social-proof-popup" id="social-popup" aria-live="polite">
         <div class="social-popup-avatar"><i class="fas fa-user"></i></div>
         <div class="social-popup-text">
@@ -774,27 +668,9 @@
         <button class="social-popup-close" onclick="this.closest('.social-proof-popup').classList.remove('show')" aria-label="Cerrar">×</button>
     </div>
 
-    <!-- ==============================
-         TOAST
-         ============================== -->
-    <div id="toast" role="status" aria-live="polite"></div>
-
-    <!-- ==============================
-         POPUP RECORDATORIO WHATSAPP
-         ============================== -->
-    <div class="wa-reminder-popup" id="wa-reminder-popup" role="alertdialog" aria-label="Recordatorio WhatsApp">
-        <button class="wa-reminder-close" onclick="closeWaReminder()" aria-label="Cerrar">×</button>
-        <div class="wa-reminder-icon"><i class="fab fa-whatsapp"></i></div>
-        <div class="wa-reminder-body">
-            <strong>¿Necesitás ayuda?</strong>
-            <p>Francisco te responde en minutos.</p>
-            <a href="https://wa.me/541161242498?text=Hola%2C+vi+su+página+y+me+interesa+consultar+por+sus+productos." target="_blank" class="btn-main" onclick="closeWaReminder()">
-                <i class="fab fa-whatsapp"></i> Consultá ahora
-            </a>
-        </div>
-    </div>
-
-    <!-- JS separado (buena práctica) -->
-    <script src="script.js?v=20260317c"></script>
+    <!-- partials.js inyecta: float-wa, back-to-top, carrito, toast, wa-reminder -->
+    <script src="partials.js?v=20260330"></script>
+    <!-- script.js maneja: hero, catálogo, modal, FAQ, formulario, etc. -->
+    <script src="script.js?v=20260330"></script>
 </body>
 </html>
