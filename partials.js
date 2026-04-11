@@ -69,7 +69,7 @@
             <div class="footer-col">
                 <div class="footer-map">
                     <iframe
-                        src="https://maps.google.com/maps?q=Calle+28+3779,+Villa+Chacabuco&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        src="https://maps.google.com/maps?q=-34.5851938,-58.5281526&t=&z=16&ie=UTF8&iwloc=&output=embed"
                         title="Ubicación Taller Kappa en Google Maps"
                         allowfullscreen loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
@@ -282,7 +282,7 @@
     document.getElementById('btn-print-budget').addEventListener('click', () => {
         if (cart.length === 0) { showToastGlobal('Tu presupuesto está vacío.'); return; }
         const lines = cart.map(({ product, color, qty }) =>
-            `<tr><td>${product.name}</td><td>${color}</td><td style="text-align:center">${qty}</td><td>${product.priceFrom}</td></tr>`
+            `<tr><td>${product.name}</td><td>${color}</td><td style="text-align:center">${qty}</td><td style="color:#888;font-style:italic">A cotizar</td></tr>`
         ).join('');
         const win = window.open('', '_blank');
         if (!win) { showToastGlobal('El navegador bloqueó la ventana emergente. Permitila en la barra de dirección.'); return; }
@@ -298,7 +298,7 @@
             <h1>Taller Kappa S.R.L.</h1>
             <p style="color:#888;font-size:.9rem;margin-bottom:20px">Calle 28 Nº 3779 · San Martín · 11 6124-2498 · tallerkappa.com.ar</p>
             <p class="note">⚠️ Presupuesto orientativo. Precios finales se confirman por WhatsApp.</p>
-            <table><thead><tr><th>Producto</th><th>Acabado</th><th>Cant.</th><th>Precio desde</th></tr></thead>
+            <table><thead><tr><th>Producto</th><th>Acabado</th><th>Cant.</th><th>Precio</th></tr></thead>
             <tbody>${lines}</tbody></table>
             <div class="footer"><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}<br>
             Confirmá el pedido por WhatsApp al <strong>11 6124-2498</strong></div>

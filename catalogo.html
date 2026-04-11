@@ -142,17 +142,6 @@
     <script src="partials.js?v=20260330"></script>
     <script src="script.js?v=20260330"></script>
     <script>
-        // En esta página el carrito usa la función global de partials.js
-        // Sobrescribir addToCart local para usar el del carrito persistente
-        document.addEventListener('DOMContentLoaded', () => {
-            window.addToCart = function(productId) {
-                const p = products.find(pr => Number(pr.id) === Number(productId));
-                if (!p) return;
-                window.addToCartGlobal(p, window.selectedColor || 'Negro Mate');
-                closeModal();
-            };
-        });
-
         // Función de filtro para esta página
         function setFilter(cat, btn) {
             filterProducts(cat, btn);

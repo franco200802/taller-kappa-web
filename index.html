@@ -645,7 +645,7 @@
             <div class="footer-col">
                 <div class="footer-map">
                     <iframe
-                        src="https://maps.google.com/maps?q=Calle+28+3779,+Villa+Chacabuco&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        src="https://maps.google.com/maps?q=-34.5851938,-58.5281526&t=&z=16&ie=UTF8&iwloc=&output=embed"
                         title="Ubicación Taller Kappa en Google Maps"
                         allowfullscreen
                         loading="lazy"
@@ -657,6 +657,37 @@
 
         <p class="footer-copy">© 2026 Taller Kappa S.R.L. — Todos los derechos reservados.</p>
     </footer>
+
+    <!-- ==============================
+         MODAL DETALLE PRODUCTO
+         ============================== -->
+    <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()" aria-label="Cerrar modal">×</button>
+            <div class="modal-img" id="modal-img-container"></div>
+            <div class="modal-info">
+                <div class="modal-badge-row" id="modal-badge-row"></div>
+                <h2 id="modal-title"></h2>
+                <div class="modal-stock"><span class="stock-dot"></span> En stock — Entrega coordinada</div>
+                <p id="modal-desc"></p>
+                <ul class="modal-specs" id="modal-specs"></ul>
+                <div class="color-selector" id="color-selector">
+                    <p class="color-label">Acabado: <strong id="color-chosen">Negro Mate</strong></p>
+                    <div class="color-options">
+                        <button class="color-swatch active" data-color="Negro Mate"   style="background:#1a1a1a;" aria-label="Negro Mate"   title="Negro Mate"></button>
+                        <button class="color-swatch"        data-color="Blanco Crema" style="background:#f5f0e8;" aria-label="Blanco Crema" title="Blanco Crema"></button>
+                        <button class="color-swatch"        data-color="Cromado"      style="background:linear-gradient(135deg,#ccc,#fff,#aaa);" aria-label="Cromado" title="Cromado"></button>
+                        <button class="color-swatch"        data-color="Verde Oliva"  style="background:#556b2f;" aria-label="Verde Oliva"  title="Verde Oliva"></button>
+                        <button class="color-swatch"        data-color="Rojo Kappa"   style="background:#b71c1c;" aria-label="Rojo Kappa"   title="Rojo Kappa"></button>
+                    </div>
+                </div>
+                <button class="btn-main" id="btn-add-modal">
+                    <i class="fas fa-plus" style="margin-right:8px;"></i> Agregar al Presupuesto
+                </button>
+                <p class="modal-hint"><i class="fab fa-whatsapp"></i> Recibís el precio en minutos por WhatsApp</p>
+            </div>
+        </div>
+    </div>
 
     <!-- Social proof popup -->
     <div class="social-proof-popup" id="social-popup" aria-live="polite">

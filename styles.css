@@ -449,17 +449,29 @@ body.dark .clients-logos img:hover {
 
 .card-info { padding: 25px; text-align: center; }
 .card-info h3 { font-size: 1.2rem; margin-bottom: 8px; }
-.card-price {
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    margin-bottom: 15px;
-    display: flex;
+.card-consult {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 7px;
+    background: #25d366;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 7px 16px;
+    border-radius: 50px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(37,211,102,0.25);
+    white-space: nowrap;
 }
+.card-consult:hover {
+    background: #1da851;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(37,211,102,0.38);
+}
+.card-consult i { font-size: 1rem; }
 .btn-add-cart {
     width: 100%;
     padding: 12px;
@@ -1493,7 +1505,6 @@ nav {
 .testimonial-author { color: #444; }
 .faq-answer { color: #555; }
 .clients-label { color: #777; }
-.price-note { color: #999; }
 
 /* Texto del footer más legible */
 footer { color: #aaa; }
@@ -1829,18 +1840,9 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
 /* Restaurar cursor nativo en todos los dispositivos */
 body { cursor: auto !important; }
 
-/* --- PRECIOS EN CARDS --- */
-.card-price {
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-}
-.price-note {
-    font-size: 0.72rem;
-    color: #bbb;
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
+/* --- DARK MODE CARD-CONSULT --- */
+body.dark .card-consult {
+    box-shadow: 0 2px 10px rgba(37,211,102,0.15);
 }
 
 /* --- BOTÓN COMPARTIR --- */

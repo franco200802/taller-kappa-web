@@ -139,108 +139,16 @@ const productosFallback = [
 
 /* --- ESTADO GLOBAL --- */
 let products = [...productosFallback]; // se reemplaza con datos de la API al cargar
-let cart = [];
 let selectedColor = 'Negro Mate';
 
 /* ==============================
-   CARRITO CON CANTIDADES
+   CARRITO — Delegado a partials.js (addToCartGlobal)
    ============================== */
 function addToCart(productId) {
     const product = products.find(p => Number(p.id) === Number(productId));
-    if (!product) return;
-
-    const color = selectedColor || 'Negro Mate';
-    const key   = `${productId}-${color}`;
-
-    const existing = cart.find(item => item.key === key);
-    if (existing) {
-        existing.qty += 1;
-    } else {
-        cart.push({ key, product, color, qty: 1 });
-    }
-
-    updateCartUI();
-    showToast(`"${product.name}" (${color}) agregado al presupuesto`);
+    if (!product || typeof window.addToCartGlobal !== 'function') return;
+    window.addToCartGlobal(product, selectedColor || 'Negro Mate');
     closeModal();
-}
-
-function changeQty(key, delta) {
-    const item = cart.find(i => i.key === key);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) cart = cart.filter(i => i.key !== key);
-    updateCartUI();
-}
-
-function removeFromCart(key) {
-    cart = cart.filter(i => i.key !== key);
-    updateCartUI();
-}
-
-function updateCartUI() {
-    const container      = document.getElementById('cart-items-container');
-    const badge          = document.getElementById('cart-count');
-    const checkoutBtn    = document.getElementById('wa-checkout-btn');
-    const totalContainer = document.getElementById('cart-total-container');
-    const totalQty       = document.getElementById('cart-total-qty');
-
-    const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
-
-    badge.textContent = totalItems;
-    badge.style.opacity = totalItems > 0 ? '1' : '0';
-
-    if (cart.length === 0) {
-        container.innerHTML = `
-            <p class="cart-empty">
-                <i class="fas fa-box-open" style="font-size:2.5rem;color:#ddd;display:block;margin-bottom:15px;"></i>
-                Tu lista está vacía.<br>
-                <small>Explorá el catálogo y agregá productos.</small>
-            </p>`;
-        checkoutBtn.style.opacity = '0.5';
-        checkoutBtn.style.pointerEvents = 'none';
-        totalContainer.style.display = 'none';
-        return;
-    }
-
-    container.innerHTML = cart.map(({ key, product, color, qty }) => `
-        <div class="cart-item">
-            <div class="cart-item-info">
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
-                <div>
-                    <b>${product.name}</b>
-                    <small class="cart-item-color"><i class="fas fa-palette"></i> ${color}</small>
-                </div>
-            </div>
-            <div class="cart-item-qty">
-                <button class="qty-btn" onclick="changeQty('${key}', -1)" aria-label="Reducir">−</button>
-                <span class="qty-value">${qty}</span>
-                <button class="qty-btn" onclick="changeQty('${key}', +1)" aria-label="Aumentar">+</button>
-                <button class="remove-item" onclick="removeFromCart('${key}')" aria-label="Eliminar">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-        </div>
-    `).join('');
-
-    totalQty.textContent = totalItems;
-    totalContainer.style.display = 'flex';
-
-    const phone = '541161242498';
-    const lines = cart.map(({ product, color, qty }) =>
-        `- ${product.name} x${qty} (Acabado: ${color})`
-    ).join('\n');
-    const msg = encodeURIComponent(
-        `Hola Taller Kappa! Quisiera cotizar:\n${lines}\n\nPor favor indicarme precio y tiempo de entrega.`
-    );
-    checkoutBtn.href = `https://wa.me/${phone}?text=${msg}`;
-    checkoutBtn.style.opacity = '1';
-    checkoutBtn.style.pointerEvents = 'all';
-}
-
-function toggleCart() {
-    const overlay = document.getElementById('cart-overlay');
-    const isOpen  = overlay.classList.toggle('open');
-    document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 
 /* ==============================
@@ -350,17 +258,16 @@ function buildProductCard(p) {
                 <span class="stock-dot-small"></span>
                 ${p.stock ? 'En stock' : 'Consultar'}
             </div>
-            <div class="card-img-wrapper" onclick="openModal(${id})" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
+            <div class="card-img-wrapper" onclick="openModal(${id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(${id});}" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
                 <img src="${p.image}" alt="${p.name}" loading="lazy">
                 <div class="card-overlay"><i class="fas fa-search-plus"></i> Ver detalle</div>
             </div>
             <div class="card-info">
                 <h3>${p.name}</h3>
                 <p class="card-specs-preview">${p.specs[0]}</p>
-                <p class="card-price">
-                    <i class="fas fa-tag"></i> ${p.priceFrom}
-                    <span class="price-note">· Precio final por consulta</span>
-                </p>
+                <a class="card-consult" href="https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}" target="_blank" rel="noopener">
+                    <i class="fab fa-whatsapp"></i> Consultar precio
+                </a>
                 <div class="card-actions">
                     <button class="btn-detail" onclick="openModal(${id})">
                         <i class="fas fa-info-circle"></i> Ver detalles
@@ -378,9 +285,9 @@ function buildProductCard(p) {
 }
 
 function renderProducts(filter = 'all') {
-    const grid     = document.getElementById('grid');
+    const grid = document.getElementById('grid');
+    if (!grid) return;
     const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-
     grid.innerHTML = filtered.map(p => buildProductCard(p)).join('');
     observeCards();
 }
@@ -444,7 +351,9 @@ function openModal(id) {
 }
 
 function closeModal() {
-    document.getElementById('product-modal').classList.remove('active');
+    const modal = document.getElementById('product-modal');
+    if (!modal) return;
+    modal.classList.remove('active');
     document.body.style.overflow = '';
 }
 
@@ -571,37 +480,7 @@ function initMaterialBars() {
     bars.forEach(bar => observer.observe(bar));
 }
 
-/* ==============================
-   MENÚ HAMBURGUESA
-   ============================== */
-function initMobileMenu() {
-    const hamburger = document.getElementById('hamburger');
-    const navMenu   = document.querySelector('.nav-menu');
-
-    hamburger.addEventListener('click', () => {
-        const isOpen = navMenu.classList.toggle('open');
-        hamburger.setAttribute('aria-expanded', isOpen);
-        hamburger.classList.toggle('active');
-    });
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('open');
-            hamburger.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', false);
-        });
-    });
-}
-
-/* ==============================
-   NAVBAR SCROLL
-   ============================== */
-function initNavbarScroll() {
-    const nav = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
-        nav.classList.toggle('scrolled', window.scrollY > 50);
-    }, { passive: true });
-}
+/* initMobileMenu y initNavbarScroll se manejan en partials.js — no duplicar */
 
 /* ==============================
    ANIMACIONES (IntersectionObserver)
@@ -789,26 +668,13 @@ function initCountdown() {
     setInterval(update, 1000);
 }
 
-/* ==============================
-   BOTÓN VOLVER ARRIBA
-   ============================== */
-function initBackToTop() {
-    const btn = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-        btn.classList.toggle('visible', window.scrollY > 400);
-    }, { passive: true });
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-}
+/* initBackToTop se maneja en partials.js — no duplicar */
 
 /* ==============================
-   CERRAR CON ESCAPE
+   CERRAR MODAL CON ESCAPE
    ============================== */
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeModal();
-        const overlay = document.getElementById('cart-overlay');
-        if (overlay.classList.contains('open')) toggleCart();
-    }
+    if (e.key === 'Escape') closeModal(); // null-safe; partials.js cierra el carrito
 });
 
 /* ==============================
@@ -876,162 +742,43 @@ function initPWA() {
     }).catch(() => {});
 }
 
-/* ==============================
-   RECORDATORIO WHATSAPP (2 min inactividad)
-   ============================== */
-function initWhatsAppReminder() {
-    let timer = null;
-    const DELAY = 2 * 60 * 1000; // 2 minutos
-    let shown = false;
-
-    function resetTimer() {
-        clearTimeout(timer);
-        if (shown) return;
-        timer = setTimeout(() => {
-            shown = true;
-            const popup = document.getElementById('wa-reminder-popup');
-            if (popup) popup.classList.add('show');
-        }, DELAY);
-    }
-
-    ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'].forEach(evt =>
-        document.addEventListener(evt, resetTimer, { passive: true })
-    );
-    resetTimer();
-}
-
-function closeWaReminder() {
-    const popup = document.getElementById('wa-reminder-popup');
-    if (popup) popup.classList.remove('show');
-}
-
-/* ==============================
-   IMPRIMIR / DESCARGAR PRESUPUESTO
-   ============================== */
-function printBudget() {
-    if (cart.length === 0) {
-        showToast('Tu presupuesto está vacío. Agregá productos primero.');
-        return;
-    }
-
-    const lines = cart.map(({ product, color, qty }) =>
-        `<tr>
-            <td>${product.name}</td>
-            <td>${color}</td>
-            <td style="text-align:center">${qty}</td>
-            <td>${product.priceFrom}</td>
-        </tr>`
-    ).join('');
-
-    const win = window.open('', '_blank');
-    if (!win) {
-        showToast('El navegador bloqueó la ventana emergente. Permitila en la barra de dirección.');
-        return;
-    }
-    win.document.write(`
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <title>Presupuesto - Taller Kappa</title>
-            <style>
-                body { font-family: Arial, sans-serif; padding: 40px; color: #222; }
-                h1 { color: #b71c1c; font-size: 1.8rem; margin-bottom: 4px; }
-                .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 30px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-                th { background: #b71c1c; color: white; padding: 12px; text-align: left; font-size: 0.85rem; }
-                td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-                tr:nth-child(even) td { background: #fafafa; }
-                .footer { margin-top: 30px; font-size: 0.8rem; color: #999; border-top: 1px solid #eee; padding-top: 15px; }
-                .footer strong { color: #444; }
-                .note { background: #fff5f5; border-left: 4px solid #b71c1c; padding: 12px 16px; font-size: 0.85rem; margin-bottom: 20px; color: #555; }
-                @media print { body { padding: 20px; } }
-            </style>
-        </head>
-        <body>
-            <h1>Taller Kappa S.R.L.</h1>
-            <p class="subtitle">Calle 28 Nº 3779, Villa Chacabuco, San Martín · WhatsApp: 11 6124-2498 · tallerkappa.com.ar</p>
-            <p class="note">⚠️ Este presupuesto es orientativo. Los precios finales se confirman por WhatsApp según disponibilidad y volumen de pedido.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Acabado / Color</th>
-                        <th style="text-align:center">Cant.</th>
-                        <th>Precio desde</th>
-                    </tr>
-                </thead>
-                <tbody>${lines}</tbody>
-            </table>
-            <div class="footer">
-                <strong>Fecha:</strong> ${new Date().toLocaleDateString('es-AR', { day:'2-digit', month:'long', year:'numeric' })}<br>
-                <strong>Válido sujeto a disponibilidad de stock.</strong><br><br>
-                Para confirmar este pedido contactanos por WhatsApp al <strong>11 6124-2498</strong> o al mail <strong>ing.franciscomarotta@gmail.com</strong>
-            </div>
-            <script>window.onload = () => { window.print(); }<\/script>
-        </body>
-        </html>
-    `);
-    win.document.close();
-}
+/* initWhatsAppReminder, closeWaReminder y printBudget se manejan en partials.js — no duplicar */
 
 /* ==============================
    INICIALIZACIÓN
    ============================== */
 document.addEventListener('DOMContentLoaded', () => {
-    // Cargar datos desde la base de datos (con fallback automático a datos locales)
+    // Cargar datos (fallback automático a datos locales si el servidor no está disponible)
     loadProductsFromAPI();
     loadFAQsFromAPI();
     loadTestimoniosFromAPI();
 
-    initMobileMenu();
-    initNavbarScroll();
+    // Nav, dark mode, back-to-top y WA reminder los maneja partials.js
     initSectionAnimations();
     initActiveNavHighlight();
     initFAQ();
     initContactForm();
-    initBackToTop();
     initCountdown();
     initTypingEffect();
     initSocialProof();
     initColorSelector();
     initMaterialBars();
-    initDarkMode();
     initHeroSparks();
     initHeroParticles();
-    // initCustomCursor(); // Eliminado el puntero personalizado
     initLiveVisitors();
-    initWhatsAppReminder();
     initAnimatedNumbers();
     initPWA();
 
-    document.getElementById('cart-overlay').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) toggleCart();
-    });
-    document.getElementById('product-modal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeModal();
-    });
+    // Cerrar modal al hacer click fuera (solo en páginas con modal)
+    const modal = document.getElementById('product-modal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    }
 });
 
-/* ==============================
-   MODO OSCURO
-   ============================== */
-function initDarkMode() {
-    const btn  = document.getElementById('dark-toggle');
-    const icon = btn.querySelector('i');
-
-    // Recordar preferencia
-    if (localStorage.getItem('darkMode') === 'on') {
-        document.body.classList.add('dark');
-        icon.className = 'fas fa-sun';
-    }
-
-    btn.addEventListener('click', () => {
-        const isDark = document.body.classList.toggle('dark');
-        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        localStorage.setItem('darkMode', isDark ? 'on' : 'off');
-    });
-}
+/* initDarkMode se maneja en partials.js — no duplicar */
 
 /* ==============================
    PARTÍCULAS EN EL HERO
