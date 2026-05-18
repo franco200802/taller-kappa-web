@@ -94,16 +94,12 @@ function shareProduct(name) {
 }
 
 /* --- URL DE LA API ---
-   En GitHub Pages no hay backend → se usan los datos locales directamente.
-   En local apunta a localhost:3000. En producción con servidor, al mismo dominio. */
+   En GitHub Pages sin backend → datos locales. tallerkappa.com.ar usa Render. */
 const isStaticHost = window.location.hostname.includes('github.io') ||
-                     window.location.hostname === 'tallerkappa.com.ar' ||
                      window.location.protocol === 'file:';
 const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:3000/api'
-    : isStaticHost
-        ? 'https://taller-kappa-api.onrender.com/api'
-        : '/api';
+    : 'https://taller-kappa-api.onrender.com/api';
 
 /* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
 const productosFallback = [
