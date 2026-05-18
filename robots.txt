@@ -5,6 +5,9 @@ Disallow: /manifest.json
 Disallow: /server.js
 Disallow: /db.json
 Disallow: /package.json
+Disallow: /seed.js
+Disallow: /models.js
+Disallow: /node_modules/
 
 # Crawl-delay sugerido para bots no prioritarios
 User-agent: AhrefsBot
@@ -12,5 +15,9 @@ Crawl-delay: 10
 
 User-agent: SemrushBot
 Crawl-delay: 10
+
+# Googlebot — sin restricciones de crawl-delay
+User-agent: Googlebot
+Allow: /
 
 Sitemap: https://tallerkappa.com.ar/sitemap.xml
