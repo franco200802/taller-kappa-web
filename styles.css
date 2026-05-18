@@ -1730,7 +1730,7 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
 /* Flecha scroll hint */
 .hero-scroll-hint {
     position: absolute;
-    bottom: 30px;
+    bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
     color: rgba(255,255,255,0.6);
@@ -1744,7 +1744,10 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
     z-index: 3;
     animation: bounce-arrow 2s infinite;
     cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s;
 }
+.hero-scroll-hint:hover { color: rgba(255,255,255,0.95); }
 @keyframes bounce-arrow {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50%       { transform: translateX(-50%) translateY(6px); }
