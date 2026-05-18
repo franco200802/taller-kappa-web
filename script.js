@@ -149,7 +149,7 @@ let selectedColor = 'Negro Mate';
    CARRITO — Delegado a partials.js (addToCartGlobal)
    ============================== */
 function addToCart(productId) {
-    const product = products.find(p => Number(p.id) === Number(productId));
+    const product = products.find(p => String(p.id) === String(productId));
     if (!product || typeof window.addToCartGlobal !== 'function') return;
     window.addToCartGlobal(product, selectedColor || 'Negro Mate');
     closeModal();
@@ -261,8 +261,7 @@ function renderTestimonios(testimonios) {
 
 // Construye el HTML de una card de producto
 function buildProductCard(p) {
-    // Asegurar que el id sea siempre número (por si la API devuelve string)
-    const id = Number(p.id);
+    const id = p.id || p._id;
     return `
         <article class="product-card" data-category="${p.category}">
             ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
@@ -270,7 +269,7 @@ function buildProductCard(p) {
                 <span class="stock-dot-small"></span>
                 ${p.stock ? 'En stock' : 'Consultar'}
             </div>
-            <div class="card-img-wrapper" onclick="openModal(${id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal(${id});}" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
+            <div class="card-img-wrapper" onclick="openModal('${id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openModal('${id}');}" role="button" tabindex="0" aria-label="Ver detalles de ${p.name}">
                 <img src="${p.image}" alt="${p.name}" loading="lazy">
                 <div class="card-overlay"><i class="fas fa-search-plus"></i> Ver detalle</div>
             </div>
@@ -282,10 +281,10 @@ function buildProductCard(p) {
                     <i class="fab fa-whatsapp"></i> Consultar precio
                 </a>
                 <div class="card-actions">
-                    <button class="btn-detail" onclick="openModal(${id})">
+                    <button class="btn-detail" onclick="openModal('${id}')">
                         <i class="fas fa-info-circle"></i> Ver detalles
                     </button>
-                    <button class="btn-add-cart" onclick="addToCart(${id})">
+                    <button class="btn-add-cart" onclick="addToCart('${id}')">
                         <i class="fas fa-plus"></i> Presupuestar
                     </button>
                 </div>
@@ -334,8 +333,7 @@ function filterProducts(cat, btn) {
    MODAL CON SELECTOR DE COLOR
    ============================== */
 function openModal(id) {
-    // Normalizar a número por si el id viene como string desde la API
-    const p = products.find(prod => Number(prod.id) === Number(id));
+    const p = products.find(prod => String(prod.id || prod._id) === String(id));
     if (!p) return;
 
     // Resetear color seleccionado
