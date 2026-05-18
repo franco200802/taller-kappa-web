@@ -2,6 +2,9 @@ User-agent: *
 Allow: /
 Disallow: /sw.js
 Disallow: /manifest.json
+Disallow: /server.js
+Disallow: /db.json
+Disallow: /package.json
 
 # Crawl-delay sugerido para bots no prioritarios
 User-agent: AhrefsBot

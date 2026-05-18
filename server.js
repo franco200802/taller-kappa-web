@@ -1,215 +1,206 @@
 /**
- * TALLER KAPPA — server.js
- * Backend simple con Express + base de datos en db.json
- * Ejecutar: node server.js
- * API disponible en: http://localhost:3000/api/...
+ * TALLER KAPPA — server.js v2
+ * Express + MongoDB + MercadoPago
+ *
+ * Setup:
+ *   1. Create free MongoDB Atlas cluster → get connection string
+ *   2. Create MercadoPago app → get access token
+ *   3. Copy .env.example → .env, fill in values
+ *   4. npm install
+ *   5. node seed.js  (once, to populate DB)
+ *   6. node server.js
  */
 
+require('dotenv').config();
 const express  = require('express');
 const cors     = require('cors');
-const fs       = require('fs');
-const path     = require('path');
+const mongoose = require('mongoose');
+const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
+const { Product, FAQ, Testimonio, Contacto, Order } = require('./models');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
-const DB   = path.join(__dirname, 'db.json');
 
 /* ---- Middleware ---- */
-app.use(cors());
+app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
-
-// Servir archivos estáticos (HTML, CSS, JS, imágenes) desde la raíz del proyecto
 app.use(express.static(__dirname));
 
-/* ---- Helpers ---- */
-function readDB() {
-    return JSON.parse(fs.readFileSync(DB, 'utf8'));
-}
+/* ---- MongoDB ---- */
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch(err => console.error('❌ MongoDB failed:', err.message));
 
-function writeDB(data) {
-    fs.writeFileSync(DB, JSON.stringify(data, null, 2), 'utf8');
-}
+/* ---- MercadoPago ---- */
+const mpClient = new MercadoPagoConfig({
+    accessToken: process.env.MP_ACCESS_TOKEN || '',
+});
 
 /* ================================================================
-   PRODUCTOS
+   PRODUCTS
    ================================================================ */
+app.get('/api/productos', async (req, res) => {
+    try {
+        const filter = req.query.category && req.query.category !== 'all'
+            ? { category: req.query.category } : {};
+        const productos = await Product.find(filter).lean();
+        res.json(productos.map(p => ({ ...p, id: p._id })));
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
 
-// GET /api/productos          → todos los productos
-// GET /api/productos?category=asientos  → filtrados por categoría
-app.get('/api/productos', (req, res) => {
-    const { category } = req.query;
-    let { productos } = readDB();
+app.get('/api/productos/:id', async (req, res) => {
+    try {
+        const p = await Product.findById(req.params.id).lean();
+        if (!p) return res.status(404).json({ error: 'No encontrado' });
+        res.json({ ...p, id: p._id });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
 
-    if (category && category !== 'all') {
-        productos = productos.filter(p => p.category === category);
+app.post('/api/productos', async (req, res) => {
+    try {
+        const p = await Product.create(req.body);
+        res.status(201).json({ ...p.toObject(), id: p._id });
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.put('/api/productos/:id', async (req, res) => {
+    try {
+        const p = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true }).lean();
+        if (!p) return res.status(404).json({ error: 'No encontrado' });
+        res.json({ ...p, id: p._id });
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.delete('/api/productos/:id', async (req, res) => {
+    try {
+        const p = await Product.findByIdAndDelete(req.params.id);
+        if (!p) return res.status(404).json({ error: 'No encontrado' });
+        res.json({ message: 'Eliminado' });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+/* ================================================================
+   FAQs + TESTIMONIOS
+   ================================================================ */
+app.get('/api/faqs', async (req, res) => {
+    try { res.json(await FAQ.find().sort('order').lean()); }
+    catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/testimonios', async (req, res) => {
+    try { res.json(await Testimonio.find().lean()); }
+    catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+/* ================================================================
+   CONTACTOS
+   ================================================================ */
+app.post('/api/contactos', async (req, res) => {
+    try { res.status(201).json(await Contacto.create(req.body)); }
+    catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.get('/api/contactos', async (req, res) => {
+    try { res.json(await Contacto.find().sort('-createdAt').lean()); }
+    catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+/* ================================================================
+   CHECKOUT — MercadoPago
+   ================================================================ */
+app.post('/api/checkout', async (req, res) => {
+    try {
+        const { items, buyer } = req.body;
+        if (!items?.length) return res.status(400).json({ error: 'Carrito vacío' });
+
+        // Validate products & build order
+        const validatedItems = [];
+        let total = 0;
+        for (const item of items) {
+            const product = await Product.findById(item.productId);
+            if (!product) return res.status(400).json({ error: `Producto no encontrado: ${item.name}` });
+            validatedItems.push({
+                productId: product._id,
+                name: product.name,
+                color: item.color || 'Negro Mate',
+                qty: item.qty,
+                unitPrice: product.price,
+            });
+            total += product.price * item.qty;
+        }
+
+        // Save order
+        const order = await Order.create({ items: validatedItems, total, buyer: buyer || {}, status: 'pending' });
+
+        // Create MP preference
+        const FRONT = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
+        const preference = new Preference(mpClient);
+        const mpPref = await preference.create({ body: {
+            items: validatedItems.map(i => ({
+                title: `${i.name} (${i.color})`,
+                quantity: i.qty,
+                unit_price: i.unitPrice,
+                currency_id: 'ARS',
+            })),
+            payer: buyer ? { name: buyer.name, email: buyer.email } : undefined,
+            back_urls: {
+                success: `${FRONT}/checkout-result.html?status=approved&order=${order._id}`,
+                failure: `${FRONT}/checkout-result.html?status=rejected&order=${order._id}`,
+                pending: `${FRONT}/checkout-result.html?status=pending&order=${order._id}`,
+            },
+            auto_return: 'approved',
+            external_reference: order._id.toString(),
+        }});
+
+        order.mpPreferenceId = mpPref.id;
+        await order.save();
+
+        res.json({
+            preferenceId: mpPref.id,
+            initPoint: mpPref.init_point,
+            sandboxInitPoint: mpPref.sandbox_init_point,
+            orderId: order._id,
+        });
+    } catch (err) {
+        console.error('Checkout error:', err);
+        res.status(500).json({ error: err.message });
     }
-
-    res.json(productos);
 });
 
-// GET /api/productos/:id      → un producto específico
-app.get('/api/productos/:id', (req, res) => {
-    const { productos } = readDB();
-    const product = productos.find(p => p.id === parseInt(req.params.id));
-
-    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
-    res.json(product);
+/* Order status */
+app.get('/api/orders/:id', async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id).lean();
+        if (!order) return res.status(404).json({ error: 'Orden no encontrada' });
+        res.json(order);
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// POST /api/productos         → crear nuevo producto (admin)
-app.post('/api/productos', (req, res) => {
-    const db = readDB();
-    const newProduct = {
-        id: Date.now(),
-        ...req.body
-    };
-    db.productos.push(newProduct);
-    writeDB(db);
-    res.status(201).json(newProduct);
-});
-
-// PUT /api/productos/:id      → actualizar producto
-app.put('/api/productos/:id', (req, res) => {
-    const db = readDB();
-    const idx = db.productos.findIndex(p => p.id === parseInt(req.params.id));
-
-    if (idx === -1) return res.status(404).json({ error: 'Producto no encontrado' });
-
-    db.productos[idx] = { ...db.productos[idx], ...req.body };
-    writeDB(db);
-    res.json(db.productos[idx]);
-});
-
-// DELETE /api/productos/:id   → eliminar producto
-app.delete('/api/productos/:id', (req, res) => {
-    const db = readDB();
-    const idx = db.productos.findIndex(p => p.id === parseInt(req.params.id));
-
-    if (idx === -1) return res.status(404).json({ error: 'Producto no encontrado' });
-
-    const deleted = db.productos.splice(idx, 1)[0];
-    writeDB(db);
-    res.json({ message: 'Producto eliminado', producto: deleted });
-});
-
-/* ================================================================
-   FAQs
-   ================================================================ */
-
-// GET /api/faqs
-app.get('/api/faqs', (req, res) => {
-    const { faqs } = readDB();
-    res.json(faqs);
-});
-
-// POST /api/faqs
-app.post('/api/faqs', (req, res) => {
-    const db = readDB();
-    const newFaq = { id: Date.now(), ...req.body };
-    db.faqs.push(newFaq);
-    writeDB(db);
-    res.status(201).json(newFaq);
-});
-
-// PUT /api/faqs/:id
-app.put('/api/faqs/:id', (req, res) => {
-    const db = readDB();
-    const idx = db.faqs.findIndex(f => f.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'FAQ no encontrada' });
-    db.faqs[idx] = { ...db.faqs[idx], ...req.body };
-    writeDB(db);
-    res.json(db.faqs[idx]);
-});
-
-// DELETE /api/faqs/:id
-app.delete('/api/faqs/:id', (req, res) => {
-    const db = readDB();
-    const idx = db.faqs.findIndex(f => f.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'FAQ no encontrada' });
-    const deleted = db.faqs.splice(idx, 1)[0];
-    writeDB(db);
-    res.json({ message: 'FAQ eliminada', faq: deleted });
-});
-
-/* ================================================================
-   TESTIMONIOS
-   ================================================================ */
-
-// GET /api/testimonios
-app.get('/api/testimonios', (req, res) => {
-    const { testimonios } = readDB();
-    res.json(testimonios);
-});
-
-/* ================================================================
-   CONTACTOS (formulario de la web)
-   ================================================================ */
-
-// GET /api/contactos          → ver todos los mensajes recibidos
-app.get('/api/contactos', (req, res) => {
-    const { contactos } = readDB();
-    res.json(contactos);
-});
-
-// POST /api/contactos         → guardar nuevo mensaje del formulario
-app.post('/api/contactos', (req, res) => {
-    const { name, interest, message } = req.body;
-
-    if (!name || !message) {
-        return res.status(400).json({ error: 'Nombre y mensaje son obligatorios' });
+/* MercadoPago webhook */
+app.post('/api/webhooks/mercadopago', async (req, res) => {
+    try {
+        if (req.body.type === 'payment') {
+            const payment = new Payment(mpClient);
+            const pd = await payment.get({ id: req.body.data.id });
+            const order = await Order.findById(pd.external_reference);
+            if (order) {
+                order.status = pd.status;
+                order.mpPaymentId = pd.id.toString();
+                await order.save();
+                console.log(`💰 Order ${order._id} → ${order.status}`);
+            }
+        }
+        res.sendStatus(200);
+    } catch (err) {
+        console.error('Webhook error:', err.message);
+        res.sendStatus(200);
     }
-
-    const db = readDB();
-    const newContact = {
-        id: Date.now(),
-        name,
-        interest: interest || 'Consulta general',
-        message,
-        fecha: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),
-        leido: false
-    };
-
-    db.contactos.push(newContact);
-    writeDB(db);
-
-    res.status(201).json({ message: 'Mensaje guardado correctamente', contacto: newContact });
-});
-
-// PATCH /api/contactos/:id/leido  → marcar como leído
-app.patch('/api/contactos/:id/leido', (req, res) => {
-    const db = readDB();
-    const contacto = db.contactos.find(c => c.id === parseInt(req.params.id));
-    if (!contacto) return res.status(404).json({ error: 'Contacto no encontrado' });
-    contacto.leido = true;
-    writeDB(db);
-    res.json(contacto);
-});
-
-// DELETE /api/contactos/:id   → eliminar mensaje
-app.delete('/api/contactos/:id', (req, res) => {
-    const db = readDB();
-    const idx = db.contactos.findIndex(c => c.id === parseInt(req.params.id));
-    if (idx === -1) return res.status(404).json({ error: 'Contacto no encontrado' });
-    db.contactos.splice(idx, 1);
-    writeDB(db);
-    res.json({ message: 'Contacto eliminado' });
 });
 
 /* ================================================================
-   INICIO
+   START
    ================================================================ */
 app.listen(PORT, () => {
-    console.log('');
-    console.log('  ╔══════════════════════════════════════╗');
-    console.log('  ║   🔩  TALLER KAPPA — Backend        ║');
-    console.log(`  ║   Servidor corriendo en              ║`);
-    console.log(`  ║   http://localhost:${PORT}             ║`);
-    console.log('  ╠══════════════════════════════════════╣');
-    console.log('  ║   ENDPOINTS DISPONIBLES:             ║');
-    console.log(`  ║   GET  /api/productos                ║`);
-    console.log(`  ║   GET  /api/faqs                     ║`);
-    console.log(`  ║   GET  /api/testimonios              ║`);
-    console.log(`  ║   POST /api/contactos                ║`);
-    console.log('  ╚══════════════════════════════════════╝');
-    console.log('');
+    console.log(`\n  🔩 TALLER KAPPA v2 — http://localhost:${PORT}`);
+    console.log('  MongoDB + MercadoPago\n');
 });

@@ -104,16 +104,20 @@
             </div>
             <div id="cart-footer">
                 <div class="cart-total" id="cart-total-container" style="display:none;">
-                    <span>Total de artículos:</span>
-                    <span id="cart-total-qty">0</span>
+                    <span>Total:</span>
+                    <span id="cart-total-price">$0</span>
+                    <small style="color:#999;margin-left:4px;">(<span id="cart-total-qty">0</span> artículos)</small>
                 </div>
+                <button class="btn-mp-checkout" id="mp-checkout-btn" disabled>
+                    <i class="fas fa-credit-card"></i> Pagar con MercadoPago
+                </button>
                 <a href="#" class="btn-whatsapp-checkout" id="wa-checkout-btn" target="_blank" rel="noopener" style="opacity:.5;pointer-events:none;">
-                    <i class="fab fa-whatsapp"></i> Solicitar Cotización
+                    <i class="fab fa-whatsapp"></i> Cotizar por WhatsApp
                 </a>
                 <button class="btn-print-budget" id="btn-print-budget">
                     <i class="fas fa-file-pdf"></i> Descargar presupuesto
                 </button>
-                <p class="cart-hint">Te respondemos en minutos con el precio final.</p>
+                <p class="cart-hint">Pagá online o consultá por WhatsApp.</p>
             </div>
         </div>
     </div>
@@ -195,10 +199,13 @@
         const container      = document.getElementById('cart-items-container');
         const badge          = document.getElementById('cart-count');
         const checkoutBtn    = document.getElementById('wa-checkout-btn');
+        const mpBtn          = document.getElementById('mp-checkout-btn');
         const totalContainer = document.getElementById('cart-total-container');
         const totalQty       = document.getElementById('cart-total-qty');
+        const totalPrice     = document.getElementById('cart-total-price');
 
         const totalItems = cart.reduce((s, i) => s + i.qty, 0);
+        const totalARS   = cart.reduce((s, i) => s + (i.product.price || 0) * i.qty, 0);
         badge.textContent = totalItems;
         badge.style.opacity = totalItems > 0 ? '1' : '0';
 
@@ -208,6 +215,7 @@
                 Tu lista está vacía.<br><small>Explorá el catálogo y agregá productos.</small></p>`;
             checkoutBtn.style.opacity = '0.5';
             checkoutBtn.style.pointerEvents = 'none';
+            if (mpBtn) mpBtn.disabled = true;
             totalContainer.style.display = 'none';
             return;
         }
@@ -216,8 +224,11 @@
             <div class="cart-item">
                 <div class="cart-item-info">
                     <img src="${product.image}" alt="${product.name}" loading="lazy">
-                    <div><b>${product.name}</b>
-                    <small class="cart-item-color"><i class="fas fa-palette"></i> ${color}</small></div>
+                    <div>
+                        <b>${product.name}</b>
+                        <small class="cart-item-color"><i class="fas fa-palette"></i> ${color}</small>
+                        ${product.price ? `<small class="cart-item-price">$${(product.price * qty).toLocaleString('es-AR')}</small>` : ''}
+                    </div>
                 </div>
                 <div class="cart-item-qty">
                     <button class="qty-btn" onclick="partialChangeQty('${key}',-1)">−</button>
@@ -228,12 +239,18 @@
             </div>`).join('');
 
         totalQty.textContent = totalItems;
+        if (totalPrice) totalPrice.textContent = totalARS > 0 ? `$${totalARS.toLocaleString('es-AR')}` : 'A cotizar';
         totalContainer.style.display = 'flex';
 
+        // Enable MP button only if all products have prices
+        const allHavePrices = cart.every(i => i.product.price > 0);
+        if (mpBtn) mpBtn.disabled = !allHavePrices;
+
         const lines = cart.map(({ product, color, qty }) =>
-            `- ${product.name} x${qty} (Acabado: ${color})`).join('\n');
+            `- ${product.name} x${qty} (Acabado: ${color})${product.price ? ' — $' + (product.price * qty).toLocaleString('es-AR') : ''}`).join('\n');
+        const totalLine = totalARS > 0 ? `\nTotal: $${totalARS.toLocaleString('es-AR')}` : '';
         const msg = encodeURIComponent(
-            `Hola Taller Kappa! Quisiera cotizar:\n${lines}\n\nPor favor indicarme precio y tiempo de entrega.`);
+            `Hola Taller Kappa! Quisiera cotizar:\n${lines}${totalLine}\n\nPor favor indicarme precio final y tiempo de entrega.`);
         checkoutBtn.href = `https://wa.me/541161242498?text=${msg}`;
         checkoutBtn.style.opacity = '1';
         checkoutBtn.style.pointerEvents = 'all';
@@ -304,6 +321,44 @@
             Confirmá el pedido por WhatsApp al <strong>11 6124-2498</strong></div>
             <script>window.onload=()=>{window.print();}<\/script></body></html>`);
         win.document.close();
+    });
+
+    /* MercadoPago checkout */
+    document.getElementById('mp-checkout-btn').addEventListener('click', async () => {
+        if (cart.length === 0) { showToastGlobal('Tu carrito está vacío.'); return; }
+
+        const mpBtn = document.getElementById('mp-checkout-btn');
+        mpBtn.disabled = true;
+        mpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
+        try {
+            const apiBase = typeof API_URL !== 'undefined' ? API_URL : '/api';
+            const res = await fetch(apiBase.replace('/api', '') + '/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    items: cart.map(({ product, color, qty }) => ({
+                        productId: product.id || product._id,
+                        name: product.name,
+                        color,
+                        qty,
+                        unitPrice: product.price,
+                    })),
+                    buyer: {} // Could collect from a form
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Error al crear el pago');
+
+            // Redirect to MercadoPago
+            window.location.href = data.initPoint || data.sandboxInitPoint;
+
+        } catch (err) {
+            showToastGlobal('Error: ' + err.message);
+            mpBtn.disabled = false;
+            mpBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pagar con MercadoPago';
+        }
     });
 
     /* Toast global */

@@ -9,6 +9,9 @@ npm-debug.log*
 .env
 .env.local
 
+# Backup
+server.old.js
+
 # Sistema operativo
 .DS_Store
 Thumbs.db

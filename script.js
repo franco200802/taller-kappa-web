@@ -94,11 +94,16 @@ function shareProduct(name) {
 }
 
 /* --- URL DE LA API ---
-   En local apunta a localhost:3000.
-   En producción (Railway/Render) apunta al mismo dominio del servidor. */
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+   En GitHub Pages no hay backend → se usan los datos locales directamente.
+   En local apunta a localhost:3000. En producción con servidor, al mismo dominio. */
+const isStaticHost = window.location.hostname.includes('github.io') ||
+                     window.location.hostname === 'tallerkappa.com.ar' ||
+                     window.location.protocol === 'file:';
+const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:3000/api'
-    : '/api';
+    : isStaticHost
+        ? 'https://taller-kappa-api.onrender.com/api'
+        : '/api';
 
 /* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
 const productosFallback = [
@@ -109,6 +114,7 @@ const productosFallback = [
         image: 'images/bkf1.png',
         badge: 'Más vendido',
         stock: true,
+        price: 280000,
         priceFrom: 'Desde $280.000',
         desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
         specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm']
@@ -120,6 +126,7 @@ const productosFallback = [
         image: 'images/bkfapoyapies.png',
         badge: 'Ideal para regalo',
         stock: true,
+        price: 140000,
         priceFrom: 'Desde $140.000',
         desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
         specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm']
@@ -131,6 +138,7 @@ const productosFallback = [
         image: 'images/mesa.jpeg',
         badge: 'Uso gastronómico',
         stock: true,
+        price: 95000,
         priceFrom: 'Desde $95.000',
         desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
         specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
@@ -155,6 +163,12 @@ function addToCart(productId) {
    CARGA DE DATOS DESDE LA API
    ============================== */
 async function loadProductsFromAPI() {
+    if (isStaticHost) {
+        // GitHub Pages: usar datos locales directamente (no hay backend)
+        products = [...productosFallback];
+        renderProducts('all');
+        return;
+    }
     try {
         const res = await fetch(`${API_URL}/productos`);
         if (!res.ok) throw new Error('No se pudo conectar al servidor');
@@ -168,6 +182,7 @@ async function loadProductsFromAPI() {
 }
 
 async function loadFAQsFromAPI() {
+    if (isStaticHost) return; // Sin backend en GitHub Pages
     try {
         const res = await fetch(`${API_URL}/faqs`);
         if (!res.ok) throw new Error();
@@ -179,6 +194,7 @@ async function loadFAQsFromAPI() {
 }
 
 async function loadTestimoniosFromAPI() {
+    if (isStaticHost) return; // Sin backend en GitHub Pages
     try {
         const res = await fetch(`${API_URL}/testimonios`);
         if (!res.ok) throw new Error();
@@ -264,6 +280,7 @@ function buildProductCard(p) {
             </div>
             <div class="card-info">
                 <h3>${p.name}</h3>
+                ${p.price ? `<p class="card-price">$${p.price.toLocaleString('es-AR')}</p>` : ''}
                 <p class="card-specs-preview">${p.specs[0]}</p>
                 <a class="card-consult" href="https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i> Consultar precio
@@ -295,6 +312,12 @@ function renderProducts(filter = 'all') {
 function filterProducts(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+
+    if (isStaticHost) {
+        // GitHub Pages: filtrar localmente
+        renderProducts(cat);
+        return;
+    }
 
     // Intentar filtrar desde la API; si falla, filtrar sobre los datos ya cargados
     fetch(`${API_URL}/productos${cat !== 'all' ? '?category=' + cat : ''}`)
@@ -624,17 +647,19 @@ function initContactForm() {
         }
 
         // Guardar en la base de datos (si el servidor está disponible)
-        try {
-            const res = await fetch(`${API_URL}/contactos`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, interest, message: msg })
-            });
-            if (res.ok) {
-                console.log('✅ Mensaje guardado en la base de datos.');
+        if (!isStaticHost) {
+            try {
+                const res = await fetch(`${API_URL}/contactos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, interest, message: msg })
+                });
+                if (res.ok) {
+                    console.log('✅ Mensaje guardado en la base de datos.');
+                }
+            } catch {
+                console.warn('⚠️ No se pudo guardar en la base de datos (servidor no disponible).');
             }
-        } catch {
-            console.warn('⚠️ No se pudo guardar en la base de datos (servidor no disponible).');
         }
 
         // Abrir WhatsApp igual (siempre)
@@ -780,6 +805,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* initDarkMode se maneja en partials.js — no duplicar */
 
+/* Alias para catalogo.html que usa setFilter */
+window.setFilter = filterProducts;
+
 /* ==============================
    PARTÍCULAS EN EL HERO
    ============================== */
@@ -805,7 +833,18 @@ function initHeroParticles() {
         alpha: Math.random() * 0.5 + 0.15,
     }));
 
+    let animId;
+    let isVisible = true;
+
+    // Pausar partículas cuando el hero no es visible (ahorro de CPU)
+    const heroObserver = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animId) draw();
+    }, { threshold: 0.05 });
+    heroObserver.observe(canvas.closest('.hero') || canvas);
+
     function draw() {
+        if (!isVisible) { animId = null; return; }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
             // Mover
@@ -840,7 +879,7 @@ function initHeroParticles() {
             }
         }
 
-        requestAnimationFrame(draw);
+        animId = requestAnimationFrame(draw);
     }
     draw();
 }

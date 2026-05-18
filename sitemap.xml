@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     <url>
         <loc>https://tallerkappa.com.ar/</loc>
-        <lastmod>2026-03-17</lastmod>
+        <lastmod>2026-05-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <image:image>
@@ -19,31 +19,31 @@
         <image:image>
             <image:loc>https://tallerkappa.com.ar/images/mesa.jpeg</image:loc>
             <image:title>Base de Mesa Flat — Taller Kappa</image:title>
-            <image:caption>Base de mesa de hierro para uso gastronómico, disponible en altura mesa y barra</image:caption>
+            <image:caption>Base de mesa de hierro para uso gastronómico</image:caption>
         </image:image>
     </url>
     <url>
-        <loc>https://tallerkappa.com.ar/#catalogo</loc>
-        <lastmod>2026-03-17</lastmod>
+        <loc>https://tallerkappa.com.ar/catalogo.html</loc>
+        <lastmod>2026-05-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.95</priority>
     </url>
     <url>
-        <loc>https://tallerkappa.com.ar/#faq</loc>
-        <lastmod>2026-03-17</lastmod>
+        <loc>https://tallerkappa.com.ar/nosotros.html</loc>
+        <lastmod>2026-05-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://tallerkappa.com.ar/#contacto-form</loc>
-        <lastmod>2026-03-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.75</priority>
-    </url>
-    <url>
-        <loc>https://tallerkappa.com.ar/#contacto</loc>
-        <lastmod>2026-03-17</lastmod>
+        <loc>https://tallerkappa.com.ar/faq.html</loc>
+        <lastmod>2026-05-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://tallerkappa.com.ar/contacto.html</loc>
+        <lastmod>2026-05-11</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
     </url>
 </urlset>
