@@ -12,11 +12,12 @@
 
     /* ── Navbar ── */
     const navLinks = [
-        { href: 'index.html',    label: 'Inicio',    icon: 'fas fa-home' },
-        { href: 'catalogo.html', label: 'Catálogo',  icon: 'fas fa-th-large' },
-        { href: 'nosotros.html', label: 'Nosotros',  icon: 'fas fa-users' },
-        { href: 'faq.html',      label: 'Preguntas', icon: 'fas fa-question-circle' },
-        { href: 'contacto.html', label: 'Contacto',  icon: 'fas fa-envelope' },
+        { href: 'index.html',     label: 'Inicio',     icon: 'fas fa-home' },
+        { href: 'catalogo.html',  label: 'Catálogo',   icon: 'fas fa-th-large' },
+        { href: 'proyectos.html', label: 'Proyectos',  icon: 'fas fa-briefcase' },
+        { href: 'nosotros.html',  label: 'Nosotros',   icon: 'fas fa-users' },
+        { href: 'faq.html',       label: 'Preguntas',  icon: 'fas fa-question-circle' },
+        { href: 'contacto.html',  label: 'Contacto',   icon: 'fas fa-envelope' },
     ];
 
     const navHTML = `
