@@ -865,15 +865,18 @@ footer { background: var(--dark); color: #888; padding: 70px 5% 40px; }
         top: var(--nav-height);
         left: 0;
         width: 100%;
-        background: white;
+        background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: center;
         padding: 30px 0;
         gap: 25px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         transform: translateY(-120%);
-        transition: transform 0.4s ease;
+        transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
         z-index: 999;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
     }
     .nav-menu.open { transform: translateY(0); }
 
@@ -2344,4 +2347,194 @@ body.dark .cart-item:hover { background: rgba(255,255,255,0.03); }
     background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
+}
+
+/* ============================================
+   FULL RESPONSIVE — All breakpoints
+   ============================================ */
+
+/* --- Extra small (phones < 480px) --- */
+@media (max-width: 480px) {
+    .hero { min-height: 100vh; min-height: 100dvh; }
+    .hero h1 { font-size: 1.7rem; padding: 0 10px; }
+    .hero p { font-size: 0.9rem; padding: 0 15px; }
+    .hero-seo-tag { font-size: 0.65rem; letter-spacing: 1px; }
+    .hero-buttons { max-width: 100%; padding: 0 20px; }
+    .hero-buttons .btn-main,
+    .hero-buttons .btn-outline { padding: 13px 20px; font-size: 0.78rem; }
+
+    .section-padding { padding: 60px 4%; }
+    .section-title { font-size: 1.5rem !important; }
+    .section-subtitle { font-size: 0.88rem; margin-bottom: 30px; }
+
+    .products-grid { gap: 18px; padding: 0; }
+    .product-card { border-radius: var(--radius); }
+    .card-img-wrapper { height: 220px; }
+    .card-info { padding: 18px 15px; }
+    .card-info h3 { font-size: 1.05rem; }
+    .card-price { font-size: 1.15rem; }
+    .card-actions { grid-template-columns: 1fr; gap: 6px; }
+    .card-consult { font-size: 0.75rem; padding: 7px 14px; }
+    .btn-share { font-size: 0.72rem; padding: 7px; }
+
+    .filters { gap: 8px; }
+    .filter-btn { padding: 8px 16px; font-size: 0.78rem; }
+
+    .why-grid { gap: 15px; }
+    .why-card { padding: 25px 18px; }
+    .why-icon { width: 50px; height: 50px; font-size: 1.1rem; }
+    .why-card h3 { font-size: 0.95rem; }
+    .why-card p { font-size: 0.82rem; }
+
+    .testimonials { padding: 60px 15px; }
+    .testimonial-card { padding: 25px 20px; min-width: unset; }
+    .testimonial-card p { font-size: 0.88rem; }
+
+    .faq-section { padding: 60px 15px; }
+    .faq-question { font-size: 0.9rem; padding: 16px 0; }
+    .faq-answer { font-size: 0.85rem; }
+
+    .contact-section { padding: 60px 4%; }
+    .contact-form { gap: 15px; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select { padding: 11px 14px; font-size: 0.9rem; }
+
+    .process-steps { gap: 10px; }
+    .process-step { padding: 20px 10px; min-width: unset; }
+    .process-step h3 { font-size: 0.9rem; }
+    .process-step p { font-size: 0.8rem; }
+    .step-icon { width: 55px; height: 55px; font-size: 1.2rem; }
+
+    .materials-section { padding: 60px 4%; }
+    .material-card { padding: 22px 18px; }
+    .material-card h3 { font-size: 0.95rem; }
+    .material-card p { font-size: 0.82rem; }
+
+    .numbers-section { padding: 50px 4%; }
+    .number-value { font-size: 2.2rem; }
+    .number-label { font-size: 0.72rem; letter-spacing: 1px; }
+
+    .gallery-grid { grid-template-columns: 1fr; grid-template-rows: auto; gap: 10px; }
+    .gallery-item.gallery-tall,
+    .gallery-item.gallery-wide { grid-row: auto; grid-column: auto; }
+
+    footer { padding: 50px 4% 30px; }
+    .footer-logo { font-size: 1.3rem; }
+    .footer-info p { font-size: 0.85rem; }
+    .footer-map iframe { height: 200px; }
+    .footer-copy { font-size: 0.72rem; }
+
+    .cart-sidebar { padding: 20px 15px; }
+    .cart-header h3 { font-size: 1.1rem; }
+    .cart-item-info { font-size: 0.82rem; }
+    .cart-item-info img { width: 38px; height: 38px; }
+
+    .modal-info { padding: 20px 15px; }
+    .modal-info h2 { font-size: 1.3rem; }
+    .color-swatch { width: 28px; height: 28px; }
+
+    .urgency-banner { font-size: 0.72rem; padding: 10px 35px 10px 10px; gap: 6px; }
+    .countdown { font-size: 0.85rem; padding: 3px 8px; }
+
+    .clients-section { padding: 35px 15px; }
+    .clients-logos { gap: 15px; }
+    .clients-logos img { height: 28px; }
+
+    .float-wa { width: 52px; height: 52px; font-size: 1.4rem; bottom: 18px; right: 18px; }
+    #back-to-top { width: 38px; height: 38px; font-size: 0.85rem; bottom: 85px; right: 18px; }
+
+    .wa-reminder-popup { width: calc(100vw - 20px); right: 10px; bottom: 10px; padding: 15px; }
+    .wa-reminder-icon { width: 36px; height: 36px; font-size: 1.1rem; }
+
+    .social-proof-popup { max-width: 200px; padding: 8px 10px; font-size: 0.7rem; left: 8px; bottom: 80px; }
+
+    .lightbox-prev,
+    .lightbox-next { width: 36px; height: 36px; font-size: 0.85rem; }
+    .lightbox-close { font-size: 1.5rem; top: 12px; right: 12px; }
+}
+
+/* --- Small tablets / large phones (481px - 768px) --- */
+@media (min-width: 481px) and (max-width: 768px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .card-img-wrapper { height: 200px; }
+    .card-info { padding: 18px; }
+
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .materials-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .testimonial-grid { gap: 20px; }
+    .testimonial-card { min-width: 240px; }
+}
+
+/* --- Tablets (769px - 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero h1 { font-size: 2.8rem; }
+    
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 25px; }
+
+    .modal-content { max-width: 90vw; }
+    .modal-img { min-height: 300px; }
+
+    .process-steps { gap: 10px; }
+    .process-step { min-width: 180px; }
+    .process-arrow { font-size: 1rem; }
+
+    .numbers-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    
+    .footer-content { gap: 30px; }
+}
+
+/* --- Large screens (1025px+) --- */
+@media (min-width: 1025px) {
+    .products-grid { grid-template-columns: repeat(3, 1fr); }
+    .hero h1 { font-size: clamp(3rem, 5vw, 5rem); }
+}
+
+/* --- Ultra wide (1400px+) --- */
+@media (min-width: 1400px) {
+    .section-padding { padding: 100px 8%; }
+    .products-grid { max-width: 1300px; margin: 0 auto; }
+    .why-grid { max-width: 1300px; }
+    .testimonial-grid { max-width: 1300px; }
+    .process-steps { max-width: 1200px; }
+}
+
+/* --- Fix for iOS notch / safe areas --- */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .float-wa { bottom: calc(18px + env(safe-area-inset-bottom)); }
+    #back-to-top { bottom: calc(85px + env(safe-area-inset-bottom)); }
+    footer { padding-bottom: calc(30px + env(safe-area-inset-bottom)); }
+}
+
+/* --- Touch device improvements --- */
+@media (hover: none) and (pointer: coarse) {
+    .product-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+    .product-card:active { transform: scale(0.98); }
+    .card-overlay { display: none; }
+    .btn-main:hover { transform: none; }
+    .btn-main:active { transform: scale(0.97); }
+    .btn-outline:hover { transform: none; }
+    .btn-outline:active { transform: scale(0.97); }
+    .why-card:hover { transform: none; }
+    .testimonial-card:hover { transform: none; }
+    .float-wa:hover { transform: none; }
+    .float-wa:active { transform: scale(0.9); }
+    .gallery-item:hover { transform: none; }
+    .gallery-item:hover img { transform: none; }
+    .gallery-overlay { opacity: 0.7; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%); }
+    .gallery-overlay span { position: absolute; bottom: 12px; }
+    .gallery-overlay i { display: none; }
+}
+
+/* --- Landscape phones --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero { min-height: 100vh; min-height: 100dvh; }
+    .hero h1 { font-size: 1.6rem; margin-bottom: 10px; }
+    .hero p { margin-bottom: 20px; font-size: 0.85rem; }
+    .hero-seo-tag { display: none; }
+    .hero-scroll-hint { display: none; }
+    .urgency-banner { font-size: 0.7rem; padding: 8px 35px 8px 10px; }
 }
