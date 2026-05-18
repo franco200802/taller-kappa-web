@@ -174,12 +174,11 @@ nav.scrolled {
     background: #0a0a0a;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     text-align: center;
     color: white;
-    padding: 0 20px;
-    padding-top: var(--nav-height);
+    padding: var(--nav-height) 20px 30px;
 }
 
 /* ============================================
@@ -1730,14 +1729,12 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
     flex-direction: column;
     align-items: center;
     text-align: center;
+    flex: 1;
+    justify-content: center;
 }
 
 /* Flecha scroll hint */
 .hero-scroll-hint {
-    position: absolute;
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
     color: rgba(255,255,255,0.6);
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -1751,11 +1748,12 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
     cursor: pointer;
     text-decoration: none;
     transition: color 0.3s;
+    flex-shrink: 0;
 }
 .hero-scroll-hint:hover { color: rgba(255,255,255,0.95); }
 @keyframes bounce-arrow {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50%       { transform: translateX(-50%) translateY(6px); }
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(6px); }
 }
 
 /* --- SHIMMER EN CARDS AL HOVER --- */
