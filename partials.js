@@ -280,7 +280,8 @@
     /* Exponer addToCart globalmente (lo llaman las páginas de catálogo) */
     window.addToCartGlobal = function (product, color) {
         color = color || 'Negro Mate';
-        const key = `${product.id}-${color}`;
+        const pid = product._id || product.id;
+        const key = `${pid}-${color}`;
         const existing = cart.find(i => i.key === key);
         if (existing) { existing.qty += 1; }
         else { cart.push({ key, product, color, qty: 1 }); }

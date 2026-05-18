@@ -169,6 +169,8 @@ async function loadProductsFromAPI() {
         const res = await fetch(`${API_URL}/productos`);
         if (!res.ok) throw new Error('No se pudo conectar al servidor');
         products = await res.json();
+        // Normalizar: asegurar que cada producto tenga .id (MongoDB usa _id)
+        products.forEach(p => { if (!p.id) p.id = p._id; });
         console.log(`✅ ${products.length} producto(s) cargados desde la base de datos.`);
     } catch (err) {
         console.warn('⚠️ Servidor no disponible, usando datos locales:', err.message);
