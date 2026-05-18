@@ -206,7 +206,8 @@
     <script src="script.js?v=20260518"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            loadFAQsFromAPI && loadFAQsFromAPI();
+            // Las FAQs están en el HTML — no reemplazar con API para evitar que queden vacías
+            initFAQ && initFAQ();
             initSectionAnimations && initSectionAnimations();
         });
     </script>
