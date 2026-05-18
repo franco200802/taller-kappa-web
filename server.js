@@ -142,7 +142,7 @@ app.post('/api/checkout', async (req, res) => {
                 unit_price: i.unitPrice,
                 currency_id: 'ARS',
             })),
-            payer: buyer ? { name: buyer.name, email: buyer.email } : undefined,
+            payer: buyer && buyer.email ? { email: buyer.email } : { email: 'comprador@tallerkappa.com.ar' },
             back_urls: {
                 success: `${FRONT}/checkout-result.html?status=approved&order=${order._id}`,
                 failure: `${FRONT}/checkout-result.html?status=rejected&order=${order._id}`,

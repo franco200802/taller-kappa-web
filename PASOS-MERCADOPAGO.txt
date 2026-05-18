@@ -1,0 +1,92 @@
+============================================
+TALLER KAPPA — Pasos para activar MercadoPago
+============================================
+
+PASO 1: Crear cuenta de desarrollador en MercadoPago (2 min)
+-------------------------------------------------------------
+1. Andá a https://www.mercadopago.com.ar/developers
+2. Logueate con tu cuenta de MercadoPago (la misma donde recibís plata)
+3. Andá a "Tus integraciones" → "Crear aplicación"
+4. Nombre: Taller Kappa — Modelo: Checkout Pro
+5. En la app creada, andá a "Credenciales":
+   - Primero usá las de prueba (TEST) para probar
+   - Cuando funcione, cambiás a las de producción
+6. Copiá el Access Token (empieza con APP_USR- o TEST-)
+
+
+PASO 2: Crear base de datos en MongoDB Atlas (2 min)
+-----------------------------------------------------
+1. Andá a https://mongodb.com/atlas → Creá cuenta gratis
+2. Creá un cluster M0 Free (región São Paulo)
+3. Database Access → Creá usuario con contraseña
+4. Network Access → Agregá 0.0.0.0/0
+5. Connect → Drivers → Copiá el connection string:
+   mongodb+srv://USUARIO:PASSWORD@cluster0.xxxxx.mongodb.net/tallerkappa
+
+
+PASO 3: Deployar el backend en Render.com (3 min)
+---------------------------------------------------
+1. Andá a https://render.com → Registrate con GitHub
+2. New → Web Service → Conectá el repo franco200802/taller-kappa-web
+3. Configurá:
+   - Name: taller-kappa-api
+   - Build Command: npm install
+   - Start Command: npm start
+   - Plan: Free
+4. En Environment Variables agregá:
+   - MONGODB_URI = (el string de MongoDB Atlas del paso 2)
+   - MP_ACCESS_TOKEN = (el token de MercadoPago del paso 1)
+   - FRONTEND_URL = https://tallerkappa.com.ar
+5. Click "Create Web Service" → esperá ~2 min a que deployee
+
+
+PASO 4: Verificar la URL de Render
+------------------------------------
+Si Render te da una URL diferente a taller-kappa-api.onrender.com,
+hay que cambiarla en script.js (línea ~104). Si es esa exacta, ya está.
+
+
+PASO 5: Sembrar la base de datos
+----------------------------------
+Una vez que Render esté corriendo, desde tu terminal local:
+
+1. Editá tu archivo .env y poné el MONGODB_URI de producción (el de Atlas)
+2. Ejecutá: npm run seed
+
+Esto carga los 3 productos con precios, las FAQs y los testimonios.
+
+
+PASO 6: Probar el flujo
+-------------------------
+1. Entrá a tallerkappa.com.ar
+2. Agregá un producto al carrito
+3. Clickeá "Pagar con MercadoPago"
+4. Te redirige al checkout de MP (sandbox si usás credenciales TEST)
+5. Para probar con tarjeta de prueba:
+   - Número: 5031 7557 3453 0604
+   - Vencimiento: 11/25
+   - CVV: 123
+   - DNI: 12345678
+   - Nombre: cualquiera
+
+
+PASO 7: Pasar a producción (cuando estés listo para cobrar de verdad)
+----------------------------------------------------------------------
+1. En MercadoPago Developers → cambiá a "Credenciales de Producción"
+2. Copiá el nuevo Access Token (el de producción)
+3. En Render → Environment → actualizá MP_ACCESS_TOKEN con el de producción
+4. ¡Listo! Ya cobrás de verdad.
+
+
+NOTAS IMPORTANTES
+------------------
+- El plan Free de Render duerme el server tras 15 min sin uso.
+  La primera compra puede tardar ~30 seg en "despertar".
+  Solución: usá UptimeRobot (https://uptimerobot.com, gratis) para
+  pingear tu URL cada 5 min.
+
+- MercadoPago cobra una comisión del ~4.5% + IVA por cada venta con tarjeta.
+
+- Si necesitás cambiar la URL de Render en el código, buscá en script.js:
+  'https://taller-kappa-api.onrender.com/api'
+  y reemplazala por tu URL real.
