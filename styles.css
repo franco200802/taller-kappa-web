@@ -174,12 +174,34 @@ nav.scrolled {
     background: #0a0a0a;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     text-align: center;
     color: white;
-    padding: var(--nav-height) 20px 30px;
+    padding: var(--nav-height) 20px 0;
 }
+
+/* Barra con botón Explorá — FUERA del hero, nunca se superpone */
+.scroll-down-bar {
+    background: #111;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 12px;
+}
+.scroll-down-btn {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    animation: bounce-arrow 2s infinite;
+    transition: color 0.3s;
+}
+.scroll-down-btn:hover { color: #fff; }
 
 /* ============================================
    FONDO ANIMADO CSS DEL HERO (100% offline)
@@ -1729,28 +1751,10 @@ body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
     flex-direction: column;
     align-items: center;
     text-align: center;
-    flex: 1;
-    justify-content: center;
 }
 
-/* Flecha scroll hint */
-.hero-scroll-hint {
-    color: rgba(255,255,255,0.6);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    z-index: 3;
-    animation: bounce-arrow 2s infinite;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.3s;
-    flex-shrink: 0;
-}
-.hero-scroll-hint:hover { color: rgba(255,255,255,0.95); }
+/* Flecha scroll hint — oculta, reemplazada por scroll-down-bar */
+.hero-scroll-hint { display: none; }
 @keyframes bounce-arrow {
     0%, 100% { transform: translateY(0); }
     50%       { transform: translateY(6px); }
