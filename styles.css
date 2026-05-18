@@ -668,6 +668,8 @@ footer { background: var(--dark); color: #888; padding: 70px 5% 40px; }
 .footer-nav a:hover { color: var(--primary); }
 .footer-map iframe { width: 100%; height: 250px; border-radius: var(--radius); margin-top: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 0; }
 .footer-copy { text-align: center; margin-top: 50px; padding-top: 25px; border-top: 1px solid #2a2a2a; font-size: 0.8rem; color: #555; }
+.footer-seo-text { text-align: center; margin-top: 20px; padding: 15px 20px; font-size: 0.75rem; color: #666; line-height: 1.6; max-width: 900px; margin-left: auto; margin-right: auto; }
+.footer-seo-text strong { color: #888; }
 
 /* ============================================
    12. BOTÓN FLOTANTE WHATSAPP
