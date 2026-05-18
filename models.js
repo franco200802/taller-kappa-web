@@ -44,9 +44,10 @@ const orderItemSchema = new mongoose.Schema({
 const orderSchema = new mongoose.Schema({
     items:         [orderItemSchema],
     total:         { type: Number, required: true },
-    status:        { type: String, enum: ['pending', 'approved', 'rejected', 'in_process'], default: 'pending' },
+    status:        { type: String, enum: ['pending', 'approved', 'rejected', 'in_process', 'confirmed'], default: 'pending' },
     mpPaymentId:   String,                                // MercadoPago payment ID
     mpPreferenceId:String,                                // MercadoPago preference ID
+    adminNotes:    String,                                // Notas del administrador
     buyer: {
         name:  String,
         email: String,

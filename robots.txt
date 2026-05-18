@@ -8,6 +8,7 @@ Disallow: /package.json
 Disallow: /seed.js
 Disallow: /models.js
 Disallow: /node_modules/
+Disallow: /admin.html
 
 # Crawl-delay sugerido para bots no prioritarios
 User-agent: AhrefsBot

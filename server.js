@@ -205,6 +205,66 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
 });
 
 /* ================================================================
+   ADMIN AUTH & ORDERS
+   ================================================================ */
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'tallerkappa-admin-secret-2026';
+const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'kappa2026';
+
+function authMiddleware(req, res, next) {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) return res.status(401).json({ error: 'No autorizado' });
+    try {
+        req.admin = jwt.verify(token, JWT_SECRET);
+        next();
+    } catch { return res.status(401).json({ error: 'Token inválido' }); }
+}
+
+app.post('/api/admin/login', (req, res) => {
+    const { username, password } = req.body;
+    if (username === ADMIN_USER && password === ADMIN_PASS) {
+        const token = jwt.sign({ user: ADMIN_USER }, JWT_SECRET, { expiresIn: '8h' });
+        res.json({ token, user: ADMIN_USER });
+    } else {
+        res.status(401).json({ error: 'Credenciales incorrectas' });
+    }
+});
+
+app.get('/api/admin/orders', authMiddleware, async (req, res) => {
+    try {
+        const filter = req.query.status ? { status: req.query.status } : {};
+        const orders = await Order.find(filter).sort('-createdAt').lean();
+        res.json(orders);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.patch('/api/admin/orders/:id', authMiddleware, async (req, res) => {
+    try {
+        const { status, notes } = req.body;
+        const update = {};
+        if (status) update.status = status;
+        if (notes) update.adminNotes = notes;
+        const order = await Order.findByIdAndUpdate(req.params.id, update, { new: true }).lean();
+        if (!order) return res.status(404).json({ error: 'Orden no encontrada' });
+        res.json(order);
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.get('/api/admin/stats', authMiddleware, async (req, res) => {
+    try {
+        const total = await Order.countDocuments();
+        const approved = await Order.countDocuments({ status: 'approved' });
+        const pending = await Order.countDocuments({ status: 'pending' });
+        const revenue = await Order.aggregate([
+            { $match: { status: 'approved' } },
+            { $group: { _id: null, total: { $sum: '$total' } } }
+        ]);
+        res.json({ total, approved, pending, revenue: revenue[0]?.total || 0 });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+/* ================================================================
    START
    ================================================================ */
 app.listen(PORT, () => {
