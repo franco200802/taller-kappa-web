@@ -591,6 +591,9 @@ body.dark .clients-logos img:hover {
    ============================================ */
 .faq-section { padding: 80px 20px; max-width: 820px; margin: 0 auto; }
 .faq-section h2 { text-align: center; font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: 50px; }
+.faq-category-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent, #b8860b); border-bottom: 2px solid var(--accent, #b8860b); padding-bottom: 8px; margin: 50px 0 20px; display: flex; align-items: center; gap: 10px; }
+.faq-category-title i { font-size: 1rem; }
+body.dark .faq-category-title { color: #d4a017; border-color: #d4a017; }
 
 .faq-item {
     border-bottom: 1px solid #e8e8e8;
