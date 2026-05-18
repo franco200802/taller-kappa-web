@@ -11,7 +11,12 @@
  *   6. node server.js
  */
 
-require('dotenv').config();
+// Only load .env file in local development (Render injects env vars directly)
+const path = require('path');
+const fs = require('fs');
+if (fs.existsSync(path.join(__dirname, '.env'))) {
+    require('dotenv').config();
+}
 const express  = require('express');
 const cors     = require('cors');
 const mongoose = require('mongoose');
@@ -27,7 +32,9 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 /* ---- MongoDB ---- */
-mongoose.connect(process.env.MONGODB_URI)
+const MONGO_URI = process.env.MONGODB_URI;
+console.log('🔗 MongoDB URI:', MONGO_URI ? MONGO_URI.substring(0, 30) + '...' : '❌ NOT SET');
+mongoose.connect(MONGO_URI)
     .then(() => console.log('✅ MongoDB connected'))
     .catch(err => console.error('❌ MongoDB failed:', err.message));
 
