@@ -180,14 +180,15 @@ async function loadProductsFromAPI() {
 }
 
 async function loadFAQsFromAPI() {
-    if (isStaticHost) return; // Sin backend en GitHub Pages
+    if (isStaticHost) return;
     try {
         const res = await fetch(`${API_URL}/faqs`);
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const faqs = await res.json();
-        renderFAQs(faqs);
-    } catch {
-        // Si falla, el HTML estático ya tiene las FAQs, no hacemos nada
+        if (faqs.length) renderFAQs(faqs);
+    } catch (err) {
+        console.warn('FAQs API error:', err.message);
+        // Deja el HTML estático intacto
     }
 }
 
@@ -212,7 +213,7 @@ function renderFAQs(faqs) {
 
     // Conservar el título
     const title = section.querySelector('h2');
-    const titleHTML = title ? title.outerHTML : '<h2>Preguntas Frecuentes</h2>';
+    const titleHTML = title ? title.outerHTML : '<h2 class="section-title">Preguntas Frecuentes</h2>';
 
     section.innerHTML = titleHTML + faqs.map(f => `
         <div class="faq-item">
@@ -223,6 +224,11 @@ function renderFAQs(faqs) {
             <div class="faq-answer">${f.answer}</div>
         </div>
     `).join('');
+
+    // Asegurar que la sección sea visible (puede estar hidden por section-fade)
+    section.style.opacity = '1';
+    section.style.transform = 'none';
+    section.classList.add('visible');
 
     // Reinicializar el acordeón
     initFAQ();
