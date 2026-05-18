@@ -501,3 +501,121 @@ body.dark .care-card li { color: #bbb; }
     .care-grid,
     .info-grid { grid-template-columns: 1fr; padding: 0 4%; }
 }
+
+/* ============================================
+   SILLÓN BKF — Landing page producto
+   ============================================ */
+.bkf-product-section { padding: 3rem 5% 4rem; }
+.bkf-product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: start;
+}
+.bkf-img-col img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+.bkf-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.bkf-badge {
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+}
+.bkf-info-col h2 { font-size: 2rem; margin-bottom: 0.4rem; }
+.bkf-tagline { color: #666; font-size: 1rem; margin-bottom: 1rem; }
+.bkf-rating { color: #f5a623; font-size: 1rem; margin-bottom: 1rem; }
+.bkf-rating span { color: #888; font-size: 0.85rem; margin-left: 6px; }
+.bkf-price-box {
+    background: linear-gradient(135deg, #fff5f5, #fff);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.bkf-price { font-size: 2rem; font-weight: 700; color: var(--primary); display: block; }
+.bkf-price-note { font-size: 0.8rem; color: #888; }
+.bkf-specs { list-style: none; padding: 0; margin-bottom: 1.5rem; }
+.bkf-specs li { font-size: 0.9rem; padding: 0.35rem 0; color: #444; }
+.bkf-specs li i { color: #4caf50; margin-right: 8px; }
+.bkf-actions { display: flex; flex-direction: column; gap: 0.8rem; }
+.bkf-actions .btn-main,
+.bkf-actions .btn-outline { text-align: center; }
+
+.bkf-about { padding: 2rem 5% 3rem; background: #f9f9f9; }
+.bkf-about-inner { max-width: 960px; margin: 0 auto; }
+.bkf-about h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+.bkf-about p { color: #555; line-height: 1.8; margin-bottom: 1rem; }
+.bkf-history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.bkf-history-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+.bkf-history-card i { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+.bkf-history-card h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
+.bkf-history-card p { font-size: 0.82rem; color: #666; }
+
+.bkf-comparison { padding: 3rem 5%; }
+.bkf-comparison h2 { text-align: center; font-size: 1.8rem; margin-bottom: 0.5rem; }
+.comparison-table-wrapper { overflow-x: auto; margin-top: 1.5rem; }
+.comparison-table {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+.comparison-table th,
+.comparison-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+.comparison-table thead th {
+    background: #1a1a1a;
+    color: #fff;
+    font-family: var(--font-heading);
+}
+.comparison-table .our-col {
+    background: #fff5f5;
+    color: var(--primary);
+}
+.comparison-table thead .our-col {
+    background: var(--primary);
+    color: #fff;
+}
+.comparison-table tbody tr:hover td { background: #fafafa; }
+
+/* Dark mode BKF */
+body.dark .bkf-about { background: #1a1a1a; }
+body.dark .bkf-about p { color: #bbb; }
+body.dark .bkf-history-card { background: #2a2a2a; }
+body.dark .bkf-price-box { background: #2a1a1a; border-color: var(--primary); }
+body.dark .bkf-specs li { color: #bbb; }
+body.dark .comparison-table .our-col { background: #2a1a1a; }
+body.dark .comparison-table tbody tr:hover td { background: #1e1e1e; }
+body.dark .comparison-table td { border-color: #333; color: #ccc; }
+
+@media (max-width: 768px) {
+    .bkf-product-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .bkf-info-col h2 { font-size: 1.5rem; }
+}
