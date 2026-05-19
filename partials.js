@@ -536,43 +536,69 @@
     window.submitLogin = async function (e) {
         e.preventDefault();
         const errEl = document.getElementById('login-error');
+        const btn = e.target.querySelector('button[type=submit]');
         errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Ingresando...';
         const email    = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 8000);
             const res = await fetch(`${AUTH_API}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }),
+                signal: controller.signal,
             });
+            clearTimeout(timeout);
             const data = await res.json();
             if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
             setSession(data.token, data.user);
             closeAuthModal();
             showToastGlobal(`¡Bienvenido, ${data.user.name}!`);
-        } catch { errEl.textContent = 'Error de conexión'; errEl.style.display = 'block'; }
+        } catch (err) {
+            errEl.textContent = err.name === 'AbortError' ? 'El servidor tardó demasiado. Intentá de nuevo.' : 'Error de conexión';
+            errEl.style.display = 'block';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Iniciar sesión';
+        }
     };
 
     window.submitRegister = async function (e) {
         e.preventDefault();
         const errEl = document.getElementById('reg-error');
+        const btn = e.target.querySelector('button[type=submit]');
         errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Creando cuenta...';
         const name     = document.getElementById('reg-name').value;
         const email    = document.getElementById('reg-email').value;
         const phone    = document.getElementById('reg-phone').value;
         const password = document.getElementById('reg-password').value;
         try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 8000);
             const res = await fetch(`${AUTH_API}/users/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, phone, password })
+                body: JSON.stringify({ name, email, phone, password }),
+                signal: controller.signal,
             });
+            clearTimeout(timeout);
             const data = await res.json();
             if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
             setSession(data.token, data.user);
             closeAuthModal();
             showToastGlobal(`¡Cuenta creada! Bienvenido, ${data.user.name}`);
-        } catch { errEl.textContent = 'Error de conexión'; errEl.style.display = 'block'; }
+        } catch (err) {
+            errEl.textContent = err.name === 'AbortError' ? 'El servidor tardó demasiado. Intentá de nuevo en 10 segundos.' : 'Error de conexión';
+            errEl.style.display = 'block';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Crear cuenta';
+        }
     };
 
     // Inicializar estado del usuario en el navbar

@@ -549,6 +549,10 @@ function initSectionAnimations() {
    ============================== */
 function initFAQ() {
     document.querySelectorAll('.faq-question').forEach(question => {
+        // Evitar doble-init (si ya tiene listener, no agregar otro)
+        if (question.dataset.faqInit) return;
+        question.dataset.faqInit = '1';
+
         const toggle = () => {
             const item   = question.parentElement;
             const isOpen = item.classList.contains('open');
@@ -562,7 +566,6 @@ function initFAQ() {
             }
         };
         question.addEventListener('click', toggle);
-        // Accesibilidad: Enter y Space abren/cierran desde teclado
         question.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
