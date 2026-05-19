@@ -61,4 +61,11 @@ module.exports = {
     Testimonio: mongoose.model('Testimonio', testimonioSchema),
     Contacto:   mongoose.model('Contacto', contactoSchema),
     Order:      mongoose.model('Order', orderSchema),
+    User:       mongoose.model('User', new mongoose.Schema({
+        name:      { type: String, required: true },
+        email:     { type: String, required: true, unique: true, lowercase: true },
+        password:  { type: String, required: true }, // bcrypt hash
+        phone:     { type: String, default: '' },
+        active:    { type: Boolean, default: true },
+    }, { timestamps: true })),
 };

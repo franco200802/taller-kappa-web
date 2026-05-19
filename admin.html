@@ -111,6 +111,12 @@
         .modal-btns button { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
         .modal-btns .btn-cancel { background: var(--surface2); color: var(--text2); }
         .modal-btns .btn-save { background: var(--accent); color: #000; }
+        /* TABS */
+        .admin-tabs { display: flex; gap: 0; border-bottom: 2px solid #2a2a2a; margin-bottom: 30px; }
+        .admin-tab { padding: 12px 24px; background: none; border: none; color: var(--text2); cursor: pointer; font-size: .9rem; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+        .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .admin-tab-panel { display: none; }
+        .admin-tab-panel.active { display: block; }
     </style>
 </head>
 <body>
@@ -171,20 +177,35 @@
             </div>
         </div>
 
-        <!-- FILTERS -->
-        <div class="filters">
-            <h3><i class="fas fa-filter"></i> Filtrar:</h3>
-            <button class="filter-btn active" data-filter="">Todos</button>
-            <button class="filter-btn" data-filter="approved">✅ Pagados</button>
-            <button class="filter-btn" data-filter="pending">⏳ Pendientes</button>
-            <button class="filter-btn" data-filter="confirmed">📦 Confirmados</button>
-            <button class="filter-btn" data-filter="rejected">❌ Rechazados</button>
+        <!-- TABS -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="showTab('orders')"><i class="fas fa-list-alt"></i> Pedidos</button>
+            <button class="admin-tab" onclick="showTab('users')"><i class="fas fa-users"></i> Clientes</button>
         </div>
 
-        <!-- ORDERS -->
-        <div class="orders-section">
-            <h2><i class="fas fa-list-alt"></i> Pedidos</h2>
-            <div id="ordersContainer"></div>
+        <!-- TAB: PEDIDOS -->
+        <div class="admin-tab-panel active" id="tab-orders">
+            <!-- FILTERS -->
+            <div class="filters">
+                <h3><i class="fas fa-filter"></i> Filtrar:</h3>
+                <button class="filter-btn active" data-filter="">Todos</button>
+                <button class="filter-btn" data-filter="approved">✅ Pagados</button>
+                <button class="filter-btn" data-filter="pending">⏳ Pendientes</button>
+                <button class="filter-btn" data-filter="confirmed">📦 Confirmados</button>
+                <button class="filter-btn" data-filter="rejected">❌ Rechazados</button>
+            </div>
+            <div class="orders-section">
+                <h2><i class="fas fa-list-alt"></i> Pedidos</h2>
+                <div id="ordersContainer"></div>
+            </div>
+        </div>
+
+        <!-- TAB: CLIENTES -->
+        <div class="admin-tab-panel" id="tab-users">
+            <div class="orders-section">
+                <h2><i class="fas fa-users"></i> Clientes registrados</h2>
+                <div id="usersContainer"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -366,6 +387,53 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
         loadOrders();
     });
 });
+
+// TABS
+function showTab(name) {
+    document.querySelectorAll('.admin-tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('.admin-tab')[name === 'orders' ? 0 : 1].classList.add('active');
+    if (name === 'users') loadUsers();
+}
+
+// USUARIOS
+async function loadUsers() {
+    try {
+        const res = await fetch(`${API}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } });
+        if (res.status === 401) return logout();
+        const users = await res.json();
+        renderUsers(users);
+    } catch (err) { console.error(err); }
+}
+
+function renderUsers(users) {
+    const container = document.getElementById('usersContainer');
+    if (!users.length) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>No hay clientes registrados aún</p></div>`;
+        return;
+    }
+    let html = `<table class="orders-table">
+        <thead><tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Registrado</th>
+            <th>Estado</th>
+        </tr></thead><tbody>`;
+    for (const u of users) {
+        const date = new Date(u.createdAt).toLocaleDateString('es-AR');
+        html += `<tr>
+            <td><strong>${u.name}</strong></td>
+            <td>${u.email}</td>
+            <td>${u.phone || '—'}</td>
+            <td>${date}</td>
+            <td><span class="badge ${u.active ? 'badge-approved' : 'badge-rejected'}">${u.active ? 'Activo' : 'Suspendido'}</span></td>
+        </tr>`;
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
 </script>
 </body>
 </html>

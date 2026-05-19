@@ -39,6 +39,10 @@
         </ul>
 
         <div class="nav-actions">
+            <div id="nav-user-btn" style="cursor:pointer;display:flex;align-items:center;gap:6px;font-size:.85rem;color:#ccc;" title="Mi cuenta">
+                <i class="fas fa-user-circle" style="font-size:1.2rem;"></i>
+                <span id="nav-user-label">Ingresar</span>
+            </div>
             <div class="cart-icon-container" id="cart-toggle-btn" role="button" tabindex="0" aria-label="Abrir presupuesto">
                 <i class="fas fa-shopping-bag" style="font-size:1.2rem;"></i>
                 <span class="cart-badge" id="cart-count">0</span>
@@ -136,6 +140,53 @@
                target="_blank" class="btn-main" id="wa-reminder-link">
                 <i class="fab fa-whatsapp"></i> Consultá ahora
             </a>
+        </div>
+    </div>
+    <!-- Modal Login / Registro -->
+    <div id="auth-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
+        <div id="auth-box" style="background:#1a1a1a;border-radius:14px;padding:36px 32px;width:90%;max-width:420px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+            <button onclick="closeAuthModal()" style="position:absolute;top:14px;right:18px;background:none;border:none;color:#aaa;font-size:1.5rem;cursor:pointer;">×</button>
+            <!-- TABS -->
+            <div style="display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid #333;">
+                <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:10px;background:none;border:none;color:#b8860b;font-weight:700;font-size:1rem;cursor:pointer;border-bottom:2px solid #b8860b;margin-bottom:-2px;">Iniciar sesión</button>
+                <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:10px;background:none;border:none;color:#777;font-size:1rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;">Registrarse</button>
+            </div>
+            <!-- LOGIN FORM -->
+            <form id="login-form" onsubmit="submitLogin(event)">
+                <p style="color:#ccc;margin-bottom:20px;font-size:.9rem;">Para pagar necesitás iniciar sesión.</p>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;color:#aaa;font-size:.8rem;margin-bottom:6px;text-transform:uppercase;">Email</label>
+                    <input id="login-email" type="email" required style="width:100%;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:8px;color:#eee;font-size:.95rem;" placeholder="tu@email.com">
+                </div>
+                <div style="margin-bottom:22px;">
+                    <label style="display:block;color:#aaa;font-size:.8rem;margin-bottom:6px;text-transform:uppercase;">Contraseña</label>
+                    <input id="login-password" type="password" required style="width:100%;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:8px;color:#eee;font-size:.95rem;" placeholder="••••••••">
+                </div>
+                <button type="submit" style="width:100%;padding:13px;background:#b8860b;color:#000;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;">Iniciar sesión</button>
+                <p id="login-error" style="color:#e74c3c;text-align:center;margin-top:12px;font-size:.85rem;display:none;"></p>
+            </form>
+            <!-- REGISTER FORM -->
+            <form id="register-form" style="display:none;" onsubmit="submitRegister(event)">
+                <p style="color:#ccc;margin-bottom:20px;font-size:.9rem;">Creá tu cuenta para realizar compras.</p>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block;color:#aaa;font-size:.8rem;margin-bottom:6px;text-transform:uppercase;">Nombre completo</label>
+                    <input id="reg-name" type="text" required style="width:100%;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:8px;color:#eee;font-size:.95rem;" placeholder="Juan García">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block;color:#aaa;font-size:.8rem;margin-bottom:6px;text-transform:uppercase;">Email</label>
+                    <input id="reg-email" type="email" required style="width:100%;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:8px;color:#eee;font-size:.95rem;" placeholder="tu@email.com">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block;color:#aaa;font-size:.8rem;margin-bottom:6px;text-transform:uppercase;">Teléfono (opcional)</label>
+                    <input id="reg-phone" type="tel" style="width:100%;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:8px;color:#eee;font-size:.95rem;" placeholder="11 6124-0000">
+                </div>
+                <div style="margin-bottom:22px;">
+                    <label style="display:block;color:#aaa;font-size:.8rem;margin-bottom:6px;text-transform:uppercase;">Contraseña</label>
+                    <input id="reg-password" type="password" required minlength="6" style="width:100%;padding:11px 14px;background:#252525;border:1px solid #444;border-radius:8px;color:#eee;font-size:.95rem;" placeholder="Mínimo 6 caracteres">
+                </div>
+                <button type="submit" style="width:100%;padding:13px;background:#b8860b;color:#000;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;">Crear cuenta</button>
+                <p id="reg-error" style="color:#e74c3c;text-align:center;margin-top:12px;font-size:.85rem;display:none;"></p>
+            </form>
         </div>
     </div>`;
 
@@ -330,6 +381,13 @@
     document.getElementById('mp-checkout-btn').addEventListener('click', async () => {
         if (cart.length === 0) { showToastGlobal('Tu carrito está vacío.'); return; }
 
+        // Requerir login antes de pagar
+        const userData = getLoggedUser();
+        if (!userData) {
+            openAuthModal();
+            return;
+        }
+
         const mpBtn = document.getElementById('mp-checkout-btn');
         mpBtn.disabled = true;
         mpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
@@ -347,14 +405,13 @@
                         qty,
                         unitPrice: product.price,
                     })),
-                    buyer: {} // Could collect from a form
+                    buyer: { name: userData.name, email: userData.email, phone: userData.phone || '' }
                 }),
             });
 
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Error al crear el pago');
 
-            // Redirect to MercadoPago
             window.location.href = data.initPoint || data.sandboxInitPoint;
 
         } catch (err) {
@@ -396,5 +453,129 @@
 
     /* Inicializar badge al cargar */
     updateCartUI();
+
+    /* ─────────────────────────────────────────────
+       AUTENTICACIÓN DE USUARIOS
+    ───────────────────────────────────────────── */
+    const AUTH_API = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000/api'
+        : 'https://taller-kappa-api.onrender.com/api';
+
+    function getLoggedUser() {
+        try { return JSON.parse(localStorage.getItem('kappa-user') || 'null'); } catch { return null; }
+    }
+    function getAuthToken() { return localStorage.getItem('kappa-token') || null; }
+    function setSession(token, user) {
+        localStorage.setItem('kappa-token', token);
+        localStorage.setItem('kappa-user', JSON.stringify(user));
+        updateNavUser();
+    }
+    function clearSession() {
+        localStorage.removeItem('kappa-token');
+        localStorage.removeItem('kappa-user');
+        updateNavUser();
+    }
+
+    function updateNavUser() {
+        const user = getLoggedUser();
+        const label = document.getElementById('nav-user-label');
+        if (!label) return;
+        if (user) {
+            label.textContent = user.name.split(' ')[0];
+            document.getElementById('nav-user-btn').title = `Sesión de ${user.name} — clic para cerrar sesión`;
+            document.getElementById('nav-user-btn').querySelector('i').style.color = '#b8860b';
+        } else {
+            label.textContent = 'Ingresar';
+            document.getElementById('nav-user-btn').title = 'Iniciar sesión o registrarse';
+            document.getElementById('nav-user-btn').querySelector('i').style.color = '#ccc';
+        }
+    }
+
+    document.getElementById('nav-user-btn').addEventListener('click', () => {
+        if (getLoggedUser()) {
+            if (confirm(`¿Cerrar sesión de ${getLoggedUser().name}?`)) {
+                clearSession();
+                showToastGlobal('Sesión cerrada.');
+            }
+        } else {
+            openAuthModal();
+        }
+    });
+
+    window.openAuthModal = function (tab) {
+        switchAuthTab(tab || 'login');
+        const m = document.getElementById('auth-modal');
+        m.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+    window.closeAuthModal = function () {
+        document.getElementById('auth-modal').style.display = 'none';
+        document.body.style.overflow = '';
+    };
+    window.switchAuthTab = function (tab) {
+        const loginForm = document.getElementById('login-form');
+        const regForm   = document.getElementById('register-form');
+        const tabLogin  = document.getElementById('tab-login');
+        const tabReg    = document.getElementById('tab-register');
+        if (tab === 'login') {
+            loginForm.style.display = ''; regForm.style.display = 'none';
+            tabLogin.style.color = '#b8860b'; tabLogin.style.borderBottomColor = '#b8860b';
+            tabReg.style.color = '#777'; tabReg.style.borderBottomColor = 'transparent';
+        } else {
+            loginForm.style.display = 'none'; regForm.style.display = '';
+            tabReg.style.color = '#b8860b'; tabReg.style.borderBottomColor = '#b8860b';
+            tabLogin.style.color = '#777'; tabLogin.style.borderBottomColor = 'transparent';
+        }
+    };
+
+    // Cerrar al hacer click en el fondo
+    document.getElementById('auth-modal').addEventListener('click', e => {
+        if (e.target === document.getElementById('auth-modal')) closeAuthModal();
+    });
+
+    window.submitLogin = async function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById('login-error');
+        errEl.style.display = 'none';
+        const email    = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        try {
+            const res = await fetch(`${AUTH_API}/users/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+            setSession(data.token, data.user);
+            closeAuthModal();
+            showToastGlobal(`¡Bienvenido, ${data.user.name}!`);
+        } catch { errEl.textContent = 'Error de conexión'; errEl.style.display = 'block'; }
+    };
+
+    window.submitRegister = async function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById('reg-error');
+        errEl.style.display = 'none';
+        const name     = document.getElementById('reg-name').value;
+        const email    = document.getElementById('reg-email').value;
+        const phone    = document.getElementById('reg-phone').value;
+        const password = document.getElementById('reg-password').value;
+        try {
+            const res = await fetch(`${AUTH_API}/users/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, phone, password })
+            });
+            const data = await res.json();
+            if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
+            setSession(data.token, data.user);
+            closeAuthModal();
+            showToastGlobal(`¡Cuenta creada! Bienvenido, ${data.user.name}`);
+        } catch { errEl.textContent = 'Error de conexión'; errEl.style.display = 'block'; }
+    };
+
+    // Inicializar estado del usuario en el navbar
+    updateNavUser();
 
 })();

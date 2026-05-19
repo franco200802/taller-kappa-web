@@ -21,7 +21,8 @@ const express  = require('express');
 const cors     = require('cors');
 const mongoose = require('mongoose');
 const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
-const { Product, FAQ, Testimonio, Contacto, Order } = require('./models');
+const bcrypt = require('bcryptjs');
+const { Product, FAQ, Testimonio, Contacto, Order, User } = require('./models');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -202,6 +203,69 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
         console.error('Webhook error:', err.message);
         res.sendStatus(200);
     }
+});
+
+/* ================================================================
+   USUARIOS — Registro, Login, Perfil
+   ================================================================ */
+app.post('/api/users/register', async (req, res) => {
+    try {
+        const { name, email, password, phone } = req.body;
+        if (!name || !email || !password) return res.status(400).json({ error: 'Nombre, email y contraseña son obligatorios' });
+        if (password.length < 6) return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+        const existing = await User.findOne({ email: email.toLowerCase() });
+        if (existing) return res.status(409).json({ error: 'Ya existe una cuenta con ese email' });
+        const hash = await bcrypt.hash(password, 10);
+        const user = await User.create({ name, email, password: hash, phone: phone || '' });
+        const token = require('jsonwebtoken').sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '30d' });
+        res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email, phone: user.phone } });
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.post('/api/users/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) return res.status(400).json({ error: 'Email y contraseña requeridos' });
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user || !user.active) return res.status(401).json({ error: 'Email o contraseña incorrectos' });
+        const ok = await bcrypt.compare(password, user.password);
+        if (!ok) return res.status(401).json({ error: 'Email o contraseña incorrectos' });
+        const token = require('jsonwebtoken').sign({ userId: user._id, email: user.email }, JWT_SECRET, { expiresIn: '30d' });
+        res.json({ token, user: { id: user._id, name: user.name, email: user.email, phone: user.phone } });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/users/me', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        if (!token) return res.status(401).json({ error: 'No autorizado' });
+        const { userId } = require('jsonwebtoken').verify(token, JWT_SECRET);
+        const user = await User.findById(userId).select('-password').lean();
+        if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+        res.json({ id: user._id, name: user.name, email: user.email, phone: user.phone });
+    } catch { res.status(401).json({ error: 'Token inválido' }); }
+});
+
+app.get('/api/users/my-orders', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        if (!token) return res.status(401).json({ error: 'No autorizado' });
+        const { userId } = require('jsonwebtoken').verify(token, JWT_SECRET);
+        const user = await User.findById(userId).lean();
+        if (!user) return res.status(401).json({ error: 'Usuario no encontrado' });
+        const orders = await Order.find({ 'buyer.email': user.email }).sort('-createdAt').lean();
+        res.json(orders);
+    } catch { res.status(401).json({ error: 'Token inválido' }); }
+});
+
+/* ================================================================
+   ADMIN — Lista de usuarios registrados
+   ================================================================ */
+app.get('/api/admin/users', authMiddleware, async (req, res) => {
+    try {
+        const users = await User.find().select('-password').sort('-createdAt').lean();
+        res.json(users);
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 /* ================================================================
