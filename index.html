@@ -226,25 +226,27 @@
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png?v=3">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png?v=3">
 
-    <!-- Fuentes -->
+    <!-- Fuentes: display=swap evita FOIT (flash of invisible text) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Iconos: cargar sin bloquear render -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="styles.css?v=20260519b">
-    <link rel="stylesheet" href="pages.css?v=20260519b">
+    <link rel="stylesheet" href="styles.css?v=20260520">
+    <link rel="stylesheet" href="pages.css?v=20260520">
 
-    <!-- Google Analytics -->
+    <!-- Google Analytics (async, no bloquea) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FDMN51XDY"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-2FDMN51XDY');
+        gtag('config', 'G-2FDMN51XDY', { send_page_view: false });
+        window.addEventListener('load', () => gtag('event', 'page_view'));
     </script>
 </head>
 <body>

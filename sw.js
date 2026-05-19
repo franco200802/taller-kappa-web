@@ -4,7 +4,7 @@
    Cada deploy actualiza CACHE_VERSION para invalidar todo.
    ============================================ */
 
-const CACHE_VERSION = 'taller-kappa-v20260518';
+const CACHE_VERSION = 'taller-kappa-v20260520';
 const STATIC_CACHE  = `${CACHE_VERSION}-static`;
 
 const ASSETS = [

@@ -5,63 +5,6 @@
 'use strict';
 
 /* ==============================
-   CHISPAS ANIMADAS DEL HERO (CSS puro, 100% offline)
-   ============================== */
-function initHeroSparks() {
-    const container = document.getElementById('hero-sparks');
-    if (!container) return;
-
-    const SPARK_COUNT = 35;
-    // Paleta de colores: blanco/amarillo/naranja/rojo — simula chispas de soldadura
-    const colors = [
-        'rgba(255,255,255,0.95)',
-        'rgba(255,220,80,0.9)',
-        'rgba(255,160,20,0.85)',
-        'rgba(255,90,10,0.8)',
-        'rgba(255,200,100,0.9)',
-    ];
-
-    for (let i = 0; i < SPARK_COUNT; i++) {
-        const spark = document.createElement('div');
-        spark.className = 'spark';
-
-        // Posición de origen aleatoria (concentrada en la zona media-baja como una soldadora)
-        const originX = 20 + Math.random() * 60; // % horizontal
-        const originY = 40 + Math.random() * 40; // % vertical (mitad inferior)
-
-        // Dirección del vuelo — hacia arriba y los lados
-        const angle  = (Math.random() * 180) - 90; // -90° a +90° (spread horizontal)
-        const dist   = 60 + Math.random() * 180;   // px de distancia
-        const tx  = Math.cos((angle * Math.PI) / 180) * dist;
-        const ty  = -Math.abs(Math.sin((angle * Math.PI) / 180) * dist) - 30; // siempre sube
-        const tx2 = tx  + (Math.random() - 0.5) * 40; // desvío por "gravedad"
-        const ty2 = ty  + Math.random() * 60;           // cae un poco al final
-
-        const size     = 2 + Math.random() * 4;   // px
-        const duration = 1.5 + Math.random() * 3; // seg
-        const delay    = Math.random() * 4;        // seg de delay inicial
-        const color    = colors[Math.floor(Math.random() * colors.length)];
-
-        spark.style.cssText = `
-            left: ${originX}%;
-            top:  ${originY}%;
-            width:  ${size}px;
-            height: ${size}px;
-            background: ${color};
-            box-shadow: 0 0 ${size * 2}px ${color};
-            --tx: ${tx}px;
-            --ty: ${ty}px;
-            --tx2: ${tx2}px;
-            --ty2: ${ty2}px;
-            --duration: ${duration}s;
-            --delay: ${delay}s;
-        `;
-
-        container.appendChild(spark);
-    }
-}
-
-/* ==============================
    VISITANTES EN TIEMPO REAL (SIMULADO)
    ============================== */
 function initLiveVisitors() {
@@ -743,28 +686,26 @@ function initPWA() {
    INICIALIZACIÓN
    ============================== */
 document.addEventListener('DOMContentLoaded', () => {
-    // Cargar datos (fallback automático a datos locales si el servidor no está disponible)
     loadProductsFromAPI();
-    // FAQs dinámicas solo si la sección existe en la página actual
     if (document.getElementById('faq')) loadFAQsFromAPI();
     loadTestimoniosFromAPI();
 
-    // Nav, dark mode, back-to-top y WA reminder los maneja partials.js
     initSectionAnimations();
     initFAQ();
     initContactForm();
     initCountdown();
     initTypingEffect();
-    initSocialProof();
     initColorSelector();
     initMaterialBars();
-    initHeroSparks();
-    initHeroParticles();
-    initLiveVisitors();
     initAnimatedNumbers();
     initPWA();
 
-    // Cerrar modal al hacer click fuera (solo en páginas con modal)
+    // Efectos no críticos: inicializar después de 3s para no trabar el render inicial
+    setTimeout(() => {
+        initSocialProof();
+        initLiveVisitors();
+    }, 3000);
+
     const modal = document.getElementById('product-modal');
     if (modal) {
         modal.addEventListener('click', (e) => {
@@ -779,59 +720,11 @@ document.addEventListener('DOMContentLoaded', () => {
 window.setFilter = filterProducts;
 
 /* ==============================
-   PARTÍCULAS EN EL HERO
+   PARTÍCULAS EN EL HERO — eliminadas por rendimiento
+   El hero usa CSS gradient como fondo, sin canvas.
    ============================== */
-function initHeroParticles() {
-    const canvas = document.getElementById('hero-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    function resize() {
-        canvas.width  = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    const TOTAL = 30; // reducido de 55 → 30
-    const particles = Array.from({ length: TOTAL }, () => ({
-        x:    Math.random() * canvas.width,
-        y:    Math.random() * canvas.height,
-        r:    Math.random() * 2 + 0.5,
-        vx:   (Math.random() - 0.5) * 0.4,
-        vy:   (Math.random() - 0.5) * 0.4,
-        alpha: Math.random() * 0.5 + 0.15,
-    }));
-
-    let animId;
-    let isVisible = true;
-
-    const heroObserver = new IntersectionObserver(([entry]) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible && !animId) draw();
-    }, { threshold: 0.05 });
-    heroObserver.observe(canvas.closest('.hero') || canvas);
-
-    function draw() {
-        if (!isVisible) { animId = null; return; }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0) p.x = canvas.width;
-            if (p.x > canvas.width) p.x = 0;
-            if (p.y < 0) p.y = canvas.height;
-            if (p.y > canvas.height) p.y = 0;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
-            ctx.fill();
-        });
-        animId = requestAnimationFrame(draw);
-    }
-    draw();
-}
+function initHeroParticles() { /* desactivado */ }
+function initHeroSparks()    { /* desactivado */ }
 
 /* ==============================
    LIGHTBOX DE GALERÍA
