@@ -35,9 +35,16 @@ app.use(express.static(__dirname));
 /* ---- MongoDB ---- */
 const MONGO_URI = process.env.MONGODB_URI;
 console.log('🔗 MongoDB URI:', MONGO_URI ? MONGO_URI.substring(0, 30) + '...' : '❌ NOT SET');
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, {
+    maxPoolSize: 5,       // Máx conexiones simultáneas (free tier Atlas: 500 total, pero con 5 sobra)
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 30000,
+})
     .then(() => console.log('✅ MongoDB connected'))
     .catch(err => console.error('❌ MongoDB failed:', err.message));
+
+/* ---- Wake-up endpoint (para que GitHub Pages despierte el servidor antes de que llegue el usuario) ---- */
+app.get('/api/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
 /* ---- MercadoPago ---- */
 const mpClient = new MercadoPagoConfig({

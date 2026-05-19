@@ -97,6 +97,11 @@ const API_URL = (window.location.hostname === 'localhost' || window.location.hos
     ? 'http://localhost:3000/api'
     : 'https://taller-kappa-api.onrender.com/api';
 
+/* Despertar Render en segundo plano ni bien carga la página */
+if (!isStaticHost) {
+    fetch(API_URL.replace('/api', '/api/ping'), { method: 'GET' }).catch(() => {});
+}
+
 /* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
 const productosFallback = [
     {
@@ -316,26 +321,8 @@ function renderProducts(filter = 'all') {
 function filterProducts(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
-    if (isStaticHost) {
-        // GitHub Pages: filtrar localmente
-        renderProducts(cat);
-        return;
-    }
-
-    // Intentar filtrar desde la API; si falla, filtrar sobre los datos ya cargados
-    fetch(`${API_URL}/productos${cat !== 'all' ? '?category=' + cat : ''}`)
-        .then(res => res.ok ? res.json() : Promise.reject())
-        .then(data => {
-            // La API devuelve datos YA filtrados → renderizar con 'all' para no filtrar de nuevo
-            const grid = document.getElementById('grid');
-            grid.innerHTML = data.map(p => buildProductCard(p)).join('');
-            observeCards();
-        })
-        .catch(() => {
-            // Fallback: filtrar localmente sobre el array completo
-            renderProducts(cat);
-        });
+    // Filtrar siempre sobre el array ya cargado en memoria — no hacer fetch extra
+    renderProducts(cat);
 }
 
 /* ==============================
