@@ -228,13 +228,25 @@
                 </ul>
 
                 <div class="bkf-actions">
+                    <button class="btn-main" onclick="agregarBKFAlCarrito()" id="btn-bkf-cart">
+                        <i class="fas fa-plus"></i> Agregar al presupuesto
+                    </button>
                     <a href="https://wa.me/541161242498?text=Hola%2C+quiero+cotizar+el+Sillón+BKF+Premium."
-                       target="_blank" rel="noopener" class="btn-main">
+                       target="_blank" rel="noopener" class="btn-outline">
                         <i class="fab fa-whatsapp"></i> Cotizar por WhatsApp
                     </a>
-                    <a href="catalogo.html" class="btn-outline">
-                        <i class="fas fa-th-large"></i> Ver catálogo completo
-                    </a>
+                </div>
+
+                <!-- Selector de color -->
+                <div style="margin-top:16px;">
+                    <p style="font-size:.85rem;color:#999;margin-bottom:8px;">Acabado: <strong id="bkf-color-chosen">Negro Mate</strong></p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="bkf-color-btn active" data-color="Negro Mate"   style="width:32px;height:32px;border-radius:50%;background:#1a1a1a;border:3px solid #b8860b;cursor:pointer;" title="Negro Mate"></button>
+                        <button class="bkf-color-btn"        data-color="Blanco Crema" style="width:32px;height:32px;border-radius:50%;background:#f5f0e8;border:3px solid transparent;cursor:pointer;" title="Blanco Crema"></button>
+                        <button class="bkf-color-btn"        data-color="Cromado"      style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ccc,#fff,#aaa);border:3px solid transparent;cursor:pointer;" title="Cromado"></button>
+                        <button class="bkf-color-btn"        data-color="Verde Oliva"  style="width:32px;height:32px;border-radius:50%;background:#556b2f;border:3px solid transparent;cursor:pointer;" title="Verde Oliva"></button>
+                        <button class="bkf-color-btn"        data-color="Rojo Kappa"   style="width:32px;height:32px;border-radius:50%;background:#b71c1c;border:3px solid transparent;cursor:pointer;" title="Rojo Kappa"></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -397,6 +409,34 @@
         document.addEventListener('DOMContentLoaded', () => {
             initSectionAnimations && initSectionAnimations();
             initFAQ && initFAQ();
+
+            // Selector de color del BKF
+            let bkfColor = 'Negro Mate';
+            document.querySelectorAll('.bkf-color-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.bkf-color-btn').forEach(b => b.style.borderColor = 'transparent');
+                    btn.style.borderColor = '#b8860b';
+                    bkfColor = btn.dataset.color;
+                    document.getElementById('bkf-color-chosen').textContent = bkfColor;
+                });
+            });
+
+            // Agregar al carrito
+            window.agregarBKFAlCarrito = function () {
+                const producto = {
+                    _id: 'bkf-landing',
+                    id:  'bkf-landing',
+                    name: 'Sillón BKF Premium',
+                    image: 'images/bkf1.png',
+                    price: 280000,
+                    specs: ['Hierro macizo 12mm', 'Cuero vacuno de 1ra'],
+                };
+                if (typeof window.addToCartGlobal === 'function') {
+                    window.addToCartGlobal(producto, bkfColor);
+                } else {
+                    showToastGlobal && showToastGlobal('Cargando carrito, intentá de nuevo en un momento.');
+                }
+            };
         });
     </script>
 </body>
