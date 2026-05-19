@@ -264,19 +264,6 @@ body.inner-page { padding-top: var(--nav-height); }
 }
 
 /* ============================================
-   MODO OSCURO
-   ============================================ */
-body.dark .page-hero {
-    background: linear-gradient(135deg, #0a0a0a 0%, #8a0000 60%, #5c0000 100%);
-}
-body.dark .about-section,
-body.dark .contact-page-section { background: #1a1a1a; }
-body.dark .contact-info-card    { background: #2a2a2a; }
-body.dark .about-text p,
-body.dark .contact-info-card p  { color: #bbb; }
-body.dark .cta-section { background: linear-gradient(135deg, #0a0a0a, #8a0000); }
-
-/* ============================================
    PROYECTOS
    ============================================ */
 .projects-grid {
@@ -478,21 +465,6 @@ body.dark .cta-section { background: linear-gradient(135deg, #0a0a0a, #8a0000); 
 .care-card li .fa-check-circle { color: #4caf50; margin-right: 8px; }
 .care-card li .fa-times-circle { color: #e53935; margin-right: 8px; }
 
-/* ── Dark mode para nuevas páginas ── */
-body.dark .project-card { background: #1e1e1e; border-color: #333; }
-body.dark .project-card-img { background: #2a2a2a; }
-body.dark .project-card-body p,
-body.dark .project-specs li { color: #bbb; }
-body.dark .shipping-card { background: #1e1e1e; border-color: #333; }
-body.dark .shipping-card.featured { background: linear-gradient(135deg, #2a1a1a, #1e1e1e); }
-body.dark .shipping-card p { color: #bbb; }
-body.dark .info-card { background: #1e1e1e; }
-body.dark .info-card p { color: #bbb; }
-body.dark .warranty-card { background: #1e1e1e; border-color: #333; }
-body.dark .warranty-card p { color: #bbb; }
-body.dark .care-card { background: #1e1e1e; }
-body.dark .care-card li { color: #bbb; }
-
 /* ── Responsive nuevas páginas ── */
 @media (max-width: 600px) {
     .projects-grid,
@@ -604,16 +576,6 @@ body.dark .care-card li { color: #bbb; }
     color: #fff;
 }
 .comparison-table tbody tr:hover td { background: #fafafa; }
-
-/* Dark mode BKF */
-body.dark .bkf-about { background: #1a1a1a; }
-body.dark .bkf-about p { color: #bbb; }
-body.dark .bkf-history-card { background: #2a2a2a; }
-body.dark .bkf-price-box { background: #2a1a1a; border-color: var(--primary); }
-body.dark .bkf-specs li { color: #bbb; }
-body.dark .comparison-table .our-col { background: #2a1a1a; }
-body.dark .comparison-table tbody tr:hover td { background: #1e1e1e; }
-body.dark .comparison-table td { border-color: #333; color: #ccc; }
 
 @media (max-width: 768px) {
     .bkf-product-grid { grid-template-columns: 1fr; gap: 1.5rem; }

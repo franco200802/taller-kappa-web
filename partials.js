@@ -47,9 +47,6 @@
                 <i class="fas fa-shopping-bag" style="font-size:1.2rem;"></i>
                 <span class="cart-badge" id="cart-count">0</span>
             </div>
-            <button class="dark-toggle" id="dark-toggle" aria-label="Cambiar modo oscuro/claro" title="Modo oscuro">
-                <i class="fas fa-moon"></i>
-            </button>
             <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
@@ -221,19 +218,6 @@
             hamburger.classList.remove('active');
             hamburger.setAttribute('aria-expanded', false);
         });
-    });
-
-    /* ── Modo oscuro ── */
-    const darkBtn  = document.getElementById('dark-toggle');
-    const darkIcon = darkBtn.querySelector('i');
-    if (localStorage.getItem('darkMode') === 'on') {
-        document.body.classList.add('dark');
-        darkIcon.className = 'fas fa-sun';
-    }
-    darkBtn.addEventListener('click', () => {
-        const isDark = document.body.classList.toggle('dark');
-        darkIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        localStorage.setItem('darkMode', isDark ? 'on' : 'off');
     });
 
     /* ── Volver arriba ── */

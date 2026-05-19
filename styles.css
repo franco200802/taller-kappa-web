@@ -419,17 +419,6 @@ nav.scrolled {
 }
 .clients-logos img:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.08); }
 
-/* En modo oscuro usamos screen para que el fondo negro no se note */
-body.dark .clients-logos img {
-    mix-blend-mode: screen;
-    filter: grayscale(100%) invert(1);
-    opacity: 0.7;
-}
-body.dark .clients-logos img:hover {
-    filter: grayscale(0%) invert(1);
-    opacity: 1;
-}
-
 /* ============================================
    6. CATÁLOGO
    ============================================ */
@@ -593,7 +582,6 @@ body.dark .clients-logos img:hover {
 .faq-section h2 { text-align: center; font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: 50px; }
 .faq-category-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent, #b8860b); border-bottom: 2px solid var(--accent, #b8860b); padding-bottom: 8px; margin: 50px 0 20px; display: flex; align-items: center; gap: 10px; }
 .faq-category-title i { font-size: 1rem; }
-body.dark .faq-category-title { color: #d4a017; border-color: #d4a017; }
 
 .faq-item {
     border-bottom: 1px solid #e8e8e8;
@@ -1658,84 +1646,6 @@ footer { color: #aaa; }
     text-decoration: none;
 }
 .skip-link:focus { top: 0; }
-
-/* Dark mode para skip-link */
-body.dark #back-to-top::after {
-    background: #eee;
-    color: #111;
-}
-
-/* ============================================
-   MEJORAS VISUALES AVANZADAS
-   ============================================ */
-
-/* --- MODO OSCURO --- */
-body.dark {
-    --light: #1a1a2e;
-    --glass: rgba(26, 26, 46, 0.97);
-    background-color: #0f0f1a;
-    color: #ccc;
-}
-body.dark nav { background: rgba(15,15,26,0.97); box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
-body.dark nav.scrolled { background: rgba(15,15,26,1); }
-body.dark .logo, body.dark .nav-link { color: #ddd; }
-body.dark h1, body.dark h2, body.dark h3 { color: #f0f0f0; }
-body.dark .clients-section { background: #13132a; border-color: #222; }
-body.dark .why-section { background: #13132a; }
-body.dark .why-card { background: #1c1c35; box-shadow: none; border-color: #2a2a4a; }
-body.dark .why-card h3 { color: #eee; }
-body.dark .why-card p { color: #999; }
-body.dark .section-padding { background: #0f0f1a; }
-body.dark .product-card { background: #1c1c35; box-shadow: none; }
-body.dark .card-info h3 { color: #eee; }
-body.dark .process-section { background: #13132a; }
-body.dark .process-step h3 { color: #eee; }
-body.dark .process-step p { color: #999; }
-body.dark .step-icon { background: #1c1c35; border-color: #2a2a4a; }
-body.dark .testimonials { background: #13132a; }
-body.dark .testimonial-card { background: #1c1c35; box-shadow: none; }
-body.dark .testimonial-card p { color: #aaa; }
-body.dark .faq-section { color: #ddd; }
-body.dark .faq-question { color: #ddd; }
-body.dark .faq-answer { color: #999; }
-body.dark .faq-item { border-color: #2a2a4a; }
-body.dark .contact-section { background: #13132a; }
-body.dark .form-group input,
-body.dark .form-group textarea,
-body.dark .form-group select { background: #1c1c35; border-color: #2a2a4a; color: #ddd; }
-body.dark .cart-sidebar { background: #1c1c35; }
-body.dark .cart-header { border-color: #2a2a4a; }
-body.dark .cart-item { border-color: #2a2a4a; }
-body.dark #cart-footer { border-color: #2a2a4a; }
-body.dark .cart-hint { color: #666; }
-body.dark .modal-content { background: #1c1c35; }
-body.dark .modal-info h2 { color: #f0f0f0; }
-body.dark .modal-info p { color: #aaa; }
-body.dark .modal-specs li { color: #bbb; }
-body.dark .close-modal { color: #aaa; }
-body.dark .gallery-section { background: #0f0f1a; }
-body.dark .wave-light svg path { fill: #13132a !important; }
-body.dark .wave-white svg path { fill: #13132a !important; }
-body.dark .wave-gray svg path  { fill: #13132a !important; }
-
-/* Toggle modo oscuro */
-.dark-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #666;
-    padding: 8px;
-    border-radius: 50%;
-    transition: color 0.3s, background 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px; height: 36px;
-}
-.dark-toggle:hover { color: var(--primary); background: rgba(183,28,28,0.08); }
-body.dark .dark-toggle { color: #f1c40f; }
-body.dark .dark-toggle:hover { background: rgba(241,196,15,0.1); }
 
 /* --- HERO CON PARTÍCULAS --- */
 .hero { position: relative; overflow: hidden; }
