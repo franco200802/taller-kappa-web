@@ -62,10 +62,6 @@ function initHeroSparks() {
 }
 
 /* ==============================
-   CURSOR PERSONALIZADO
-   ============================== */
-// Eliminado — cursor nativo restaurado
-/* ==============================
    VISITANTES EN TIEMPO REAL (SIMULADO)
    ============================== */
 function initLiveVisitors() {
@@ -554,30 +550,7 @@ function initSectionAnimations() {
 /* ==============================
    SECCIÓN ACTIVA EN NAVBAR
    ============================== */
-function initActiveNavHighlight() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sectionIds = ['hero', 'catalogo', 'contacto-form', 'faq'];
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const id = entry.target.id;
-                navLinks.forEach(link => {
-                    link.classList.remove('active-section');
-                    if (link.getAttribute('onclick')?.includes(id)) {
-                        link.classList.add('active-section');
-                    }
-                });
-            }
-        });
-    }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
-
-    sectionIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) observer.observe(el);
-    });
-}
-
+// Manejado por partials.js con active-page en el link actual
 
 /* ==============================
    FAQ ACORDEÓN
@@ -695,7 +668,7 @@ function initCountdown() {
     setInterval(update, 1000);
 }
 
-/* initBackToTop se maneja en partials.js — no duplicar */
+/* initBackToTop se maneja en partials.js */
 
 /* ==============================
    CERRAR MODAL CON ESCAPE
@@ -769,7 +742,7 @@ function initPWA() {
     }).catch(() => {});
 }
 
-/* initWhatsAppReminder, closeWaReminder y printBudget se manejan en partials.js — no duplicar */
+/* initWhatsAppReminder, closeWaReminder y printBudget se manejan en partials.js */
 
 /* ==============================
    INICIALIZACIÓN
@@ -777,12 +750,12 @@ function initPWA() {
 document.addEventListener('DOMContentLoaded', () => {
     // Cargar datos (fallback automático a datos locales si el servidor no está disponible)
     loadProductsFromAPI();
-    loadFAQsFromAPI();
+    // FAQs dinámicas solo si la sección existe en la página actual
+    if (document.getElementById('faq')) loadFAQsFromAPI();
     loadTestimoniosFromAPI();
 
     // Nav, dark mode, back-to-top y WA reminder los maneja partials.js
     initSectionAnimations();
-    initActiveNavHighlight();
     initFAQ();
     initContactForm();
     initCountdown();
@@ -805,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-/* initDarkMode se maneja en partials.js — no duplicar */
+/* initDarkMode se maneja en partials.js */
 
 /* Alias para catalogo.html que usa setFilter */
 window.setFilter = filterProducts;
@@ -825,7 +798,7 @@ function initHeroParticles() {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const TOTAL = 55;
+    const TOTAL = 30; // reducido de 55 → 30
     const particles = Array.from({ length: TOTAL }, () => ({
         x:    Math.random() * canvas.width,
         y:    Math.random() * canvas.height,
@@ -838,7 +811,6 @@ function initHeroParticles() {
     let animId;
     let isVisible = true;
 
-    // Pausar partículas cuando el hero no es visible (ahorro de CPU)
     const heroObserver = new IntersectionObserver(([entry]) => {
         isVisible = entry.isIntersecting;
         if (isVisible && !animId) draw();
@@ -849,7 +821,6 @@ function initHeroParticles() {
         if (!isVisible) { animId = null; return; }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles.forEach(p => {
-            // Mover
             p.x += p.vx;
             p.y += p.vy;
             if (p.x < 0) p.x = canvas.width;
@@ -857,30 +828,11 @@ function initHeroParticles() {
             if (p.y < 0) p.y = canvas.height;
             if (p.y > canvas.height) p.y = 0;
 
-            // Dibujar punto
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
             ctx.fill();
         });
-
-        // Líneas entre partículas cercanas
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx   = particles[i].x - particles[j].x;
-                const dy   = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 110) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(255,255,255,${0.12 * (1 - dist / 110)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-
         animId = requestAnimationFrame(draw);
     }
     draw();

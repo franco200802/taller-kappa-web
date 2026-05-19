@@ -195,14 +195,6 @@
     /* ── Carrito (estado persistido en sessionStorage para mantenerlo entre páginas) ── */
     let cart = JSON.parse(sessionStorage.getItem('kappa-cart') || '[]');
 
-    // Clean stale cart items with numeric IDs (from before MongoDB migration)
-    const hadStale = cart.length;
-    cart = cart.filter(item => {
-        const pid = item.product._id || item.product.id;
-        return typeof pid === 'string' && pid.length > 10;
-    });
-    if (cart.length !== hadStale) sessionStorage.setItem('kappa-cart', JSON.stringify(cart));
-
     function saveCart() { sessionStorage.setItem('kappa-cart', JSON.stringify(cart)); }
 
     function updateCartUI() {
