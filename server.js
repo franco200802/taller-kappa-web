@@ -280,8 +280,8 @@ app.get('/api/admin/users', authMiddleware, async (req, res) => {
    ================================================================ */
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'tallerkappa-admin-secret-2026';
-const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-const ADMIN_PASS = process.env.ADMIN_PASS || 'kappa2026';
+const ADMIN_USER = process.env.ADMIN_USER || 'Franco Marotta';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'Plat@901';
 
 function authMiddleware(req, res, next) {
     const token = req.headers.authorization?.replace('Bearer ', '');
