@@ -3,46 +3,56 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     <url>
         <loc>https://tallerkappa.com.ar/</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <image:image>
             <image:loc>https://tallerkappa.com.ar/images/bkf1.png</image:loc>
-            <image:title>Sillón BKF Premium — Taller Kappa</image:title>
-            <image:caption>Sillón BKF de hierro macizo y cuero vacuno, fabricado en San Martín, Buenos Aires</image:caption>
+            <image:title>Sillón BKF Buenos Aires — Taller Kappa</image:title>
+            <image:caption>Sillón BKF de hierro macizo y cuero vacuno, fabricado en San Martín, Buenos Aires. Directo de fábrica.</image:caption>
         </image:image>
         <image:image>
             <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.png</image:loc>
-            <image:title>Banco BKF — Taller Kappa</image:title>
-            <image:caption>Banco BKF de hierro y cuero, ideal como pie de cama o auxiliar</image:caption>
+            <image:title>Banco BKF hierro y cuero Buenos Aires — Taller Kappa</image:title>
+            <image:caption>Banco BKF de hierro y cuero, ideal como pie de cama o auxiliar. Envíos a Capital Federal y GBA.</image:caption>
         </image:image>
         <image:image>
             <image:loc>https://tallerkappa.com.ar/images/mesa.jpeg</image:loc>
-            <image:title>Base de Mesa Flat — Taller Kappa</image:title>
-            <image:caption>Base de mesa de hierro para uso gastronómico</image:caption>
+            <image:title>Base de Mesa de hierro para restaurante Buenos Aires — Taller Kappa</image:title>
+            <image:caption>Base de mesa de hierro para uso gastronómico, fabricada en San Martín, Buenos Aires.</image:caption>
         </image:image>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/catalogo.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.95</priority>
+        <image:image>
+            <image:loc>https://tallerkappa.com.ar/images/bkf1.png</image:loc>
+            <image:title>Sillas de hierro y cuero Buenos Aires — Sillón BKF Taller Kappa</image:title>
+            <image:caption>Sillón BKF Premium, sillas de hierro y cuero vacuno. Fábrica en San Martín, Buenos Aires.</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.png</image:loc>
+            <image:title>Banco BKF — sillas de hierro y cuero</image:title>
+            <image:caption>Banco BKF de hierro macizo 12mm. Envíos a CABA y Gran Buenos Aires.</image:caption>
+        </image:image>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/nosotros.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/faq.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/sillon-bkf.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <image:image>
@@ -53,25 +63,25 @@
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/contacto.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.85</priority>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/proyectos.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.85</priority>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/envios.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/garantia.html</loc>
-        <lastmod>2026-05-18</lastmod>
+        <lastmod>2026-05-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
