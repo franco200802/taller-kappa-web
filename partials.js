@@ -507,6 +507,8 @@
         const m = document.getElementById('auth-modal');
         m.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        // Despertar el servidor en segundo plano mientras el usuario llena el form
+        fetch(`${AUTH_API}/ping`).catch(() => {});
     };
     window.closeAuthModal = function () {
         document.getElementById('auth-modal').style.display = 'none';
@@ -533,6 +535,38 @@
         if (e.target === document.getElementById('auth-modal')) closeAuthModal();
     });
 
+    /* Función que intenta conectar con reintentos automáticos (para Render free tier) */
+    async function fetchWithWakeup(url, options, errEl, btn, btnOriginalText) {
+        // Primer intento rápido (5s)
+        try {
+            const c1 = new AbortController();
+            const t1 = setTimeout(() => c1.abort(), 5000);
+            const res = await fetch(url, { ...options, signal: c1.signal });
+            clearTimeout(t1);
+            return res;
+        } catch (e1) {
+            if (e1.name !== 'AbortError') throw e1;
+        }
+        // El servidor estaba dormido — avisar y reintentar con 35s
+        errEl.style.color = '#f39c12';
+        errEl.textContent = '⏳ El servidor está despertando... esperá unos segundos.';
+        errEl.style.display = 'block';
+        btn.textContent = 'Conectando...';
+
+        const c2 = new AbortController();
+        const t2 = setTimeout(() => c2.abort(), 35000);
+        try {
+            const res = await fetch(url, { ...options, signal: c2.signal });
+            clearTimeout(t2);
+            errEl.style.display = 'none';
+            errEl.style.color = '#e74c3c';
+            return res;
+        } catch (e2) {
+            errEl.style.color = '#e74c3c';
+            throw e2;
+        }
+    }
+
     window.submitLogin = async function (e) {
         e.preventDefault();
         const errEl = document.getElementById('login-error');
@@ -543,22 +577,20 @@
         const email    = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         try {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 8000);
-            const res = await fetch(`${AUTH_API}/users/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-                signal: controller.signal,
-            });
-            clearTimeout(timeout);
+            const res = await fetchWithWakeup(
+                `${AUTH_API}/users/login`,
+                { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) },
+                errEl, btn, 'Iniciar sesión'
+            );
             const data = await res.json();
             if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
             setSession(data.token, data.user);
             closeAuthModal();
             showToastGlobal(`¡Bienvenido, ${data.user.name}!`);
         } catch (err) {
-            errEl.textContent = err.name === 'AbortError' ? 'El servidor tardó demasiado. Intentá de nuevo.' : 'Error de conexión';
+            errEl.textContent = err.name === 'AbortError'
+                ? '⚠️ El servidor no respondió. Intentá de nuevo en 30 segundos.'
+                : '⚠️ Error de conexión. Verificá tu internet.';
             errEl.style.display = 'block';
         } finally {
             btn.disabled = false;
@@ -573,27 +605,44 @@
         errEl.style.display = 'none';
         btn.disabled = true;
         btn.textContent = 'Creando cuenta...';
-        const name     = document.getElementById('reg-name').value;
-        const email    = document.getElementById('reg-email').value;
-        const phone    = document.getElementById('reg-phone').value;
+        const name     = document.getElementById('reg-name').value.trim();
+        const email    = document.getElementById('reg-email').value.trim();
+        const phone    = document.getElementById('reg-phone').value.trim();
         const password = document.getElementById('reg-password').value;
+
+        // Validación local antes de llamar al servidor
+        if (!name || !email || !password) {
+            errEl.textContent = 'Completá todos los campos obligatorios.';
+            errEl.style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Crear cuenta'; return;
+        }
+        if (password.length < 6) {
+            errEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+            errEl.style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Crear cuenta'; return;
+        }
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!emailOk) {
+            errEl.textContent = 'Ingresá un email válido.';
+            errEl.style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Crear cuenta'; return;
+        }
+
         try {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 8000);
-            const res = await fetch(`${AUTH_API}/users/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, phone, password }),
-                signal: controller.signal,
-            });
-            clearTimeout(timeout);
+            const res = await fetchWithWakeup(
+                `${AUTH_API}/users/register`,
+                { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, phone, password }) },
+                errEl, btn, 'Crear cuenta'
+            );
             const data = await res.json();
             if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
             setSession(data.token, data.user);
             closeAuthModal();
-            showToastGlobal(`¡Cuenta creada! Bienvenido, ${data.user.name}`);
+            showToastGlobal(`¡Cuenta creada! Bienvenido, ${data.user.name} 🎉`);
         } catch (err) {
-            errEl.textContent = err.name === 'AbortError' ? 'El servidor tardó demasiado. Intentá de nuevo en 10 segundos.' : 'Error de conexión';
+            errEl.textContent = err.name === 'AbortError'
+                ? '⚠️ El servidor no respondió. Intentá de nuevo en 30 segundos.'
+                : '⚠️ Error de conexión. Verificá tu internet.';
             errEl.style.display = 'block';
         } finally {
             btn.disabled = false;
