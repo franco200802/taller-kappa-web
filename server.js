@@ -32,19 +32,52 @@ app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
 app.use(express.static(__dirname));
 
+/* Middleware: si MongoDB no está listo, esperar hasta 20s antes de responder 503 */
+app.use((req, res, next) => {
+    if (req.path === '/api/ping' || !req.path.startsWith('/api/')) return next();
+    if (mongoose.connection.readyState === 1) return next();
+    let attempts = 0;
+    const wait = setInterval(() => {
+        attempts++;
+        if (mongoose.connection.readyState === 1) { clearInterval(wait); return next(); }
+        if (attempts >= 20) { clearInterval(wait); return res.status(503).json({ error: 'Base de datos no disponible, intentá en unos segundos.' }); }
+    }, 1000);
+});
+
 /* ---- MongoDB ---- */
 const MONGO_URI = process.env.MONGODB_URI;
 console.log('🔗 MongoDB URI:', MONGO_URI ? MONGO_URI.substring(0, 30) + '...' : '❌ NOT SET');
-mongoose.connect(MONGO_URI, {
-    maxPoolSize: 5,       // Máx conexiones simultáneas (free tier Atlas: 500 total, pero con 5 sobra)
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 30000,
-})
-    .then(() => console.log('✅ MongoDB connected'))
-    .catch(err => console.error('❌ MongoDB failed:', err.message));
 
-/* ---- Wake-up endpoint (para que GitHub Pages despierte el servidor antes de que llegue el usuario) ---- */
-app.get('/api/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
+async function connectDB() {
+    try {
+        await mongoose.connect(MONGO_URI, {
+            maxPoolSize: 5,
+            serverSelectionTimeoutMS: 30000,  // 30s para que Render + Atlas tengan tiempo de despertar
+            socketTimeoutMS: 45000,
+            bufferCommands: true,              // Encolar comandos mientras conecta
+            connectTimeoutMS: 30000,
+        });
+        console.log('✅ MongoDB connected');
+    } catch (err) {
+        console.error('❌ MongoDB failed:', err.message);
+        // Reintentar en 5 segundos
+        setTimeout(connectDB, 5000);
+    }
+}
+connectDB();
+
+// Reconectar automáticamente si se cae la conexión
+mongoose.connection.on('disconnected', () => {
+    console.warn('⚠️  MongoDB disconnected — reconectando...');
+    setTimeout(connectDB, 3000);
+});
+
+/* ---- Wake-up endpoint ---- */
+app.get('/api/ping', (req, res) => {
+    const dbState = mongoose.connection.readyState;
+    // 0=disconnected, 1=connected, 2=connecting, 3=disconnecting
+    res.json({ ok: true, ts: Date.now(), db: dbState === 1 ? 'connected' : 'connecting' });
+});
 
 /* ---- MercadoPago ---- */
 const mpClient = new MercadoPagoConfig({
