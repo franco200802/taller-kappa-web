@@ -32,18 +32,6 @@ app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json());
 app.use(express.static(__dirname));
 
-/* Middleware: si MongoDB no está listo, esperar hasta 20s antes de responder 503 */
-app.use((req, res, next) => {
-    if (req.path === '/api/ping' || !req.path.startsWith('/api/')) return next();
-    if (mongoose.connection.readyState === 1) return next();
-    let attempts = 0;
-    const wait = setInterval(() => {
-        attempts++;
-        if (mongoose.connection.readyState === 1) { clearInterval(wait); return next(); }
-        if (attempts >= 20) { clearInterval(wait); return res.status(503).json({ error: 'Base de datos no disponible, intentá en unos segundos.' }); }
-    }, 1000);
-});
-
 /* ---- MongoDB ---- */
 const MONGO_URI = process.env.MONGODB_URI;
 console.log('🔗 MongoDB URI:', MONGO_URI ? MONGO_URI.substring(0, 30) + '...' : '❌ NOT SET');
@@ -52,11 +40,12 @@ async function connectDB() {
     try {
         await mongoose.connect(MONGO_URI, {
             maxPoolSize: 5,
-            serverSelectionTimeoutMS: 30000,  // 30s para que Render + Atlas tengan tiempo de despertar
+            serverSelectionTimeoutMS: 30000,
             socketTimeoutMS: 45000,
-            bufferCommands: true,              // Encolar comandos mientras conecta
+            bufferCommands: true,
             connectTimeoutMS: 30000,
         });
+        mongoose.set('bufferTimeoutMS', 45000); // encolar queries hasta 45s
         console.log('✅ MongoDB connected');
     } catch (err) {
         console.error('❌ MongoDB failed:', err.message);
