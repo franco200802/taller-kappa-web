@@ -156,13 +156,15 @@ function addToCart(productId) {
    ============================== */
 async function loadProductsFromAPI() {
     if (isStaticHost) {
-        // GitHub Pages: usar datos locales directamente (no hay backend)
         products = [...productosFallback];
         renderProducts('all');
         return;
     }
     try {
-        const res = await fetch(`${API_URL}/productos`);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
+        const res = await fetch(`${API_URL}/productos`, { signal: controller.signal });
+        clearTimeout(timeout);
         if (!res.ok) throw new Error('No se pudo conectar al servidor');
         products = await res.json();
         // Normalizar: asegurar que cada producto tenga .id (MongoDB usa _id)
@@ -178,20 +180,23 @@ async function loadProductsFromAPI() {
 async function loadFAQsFromAPI() {
     if (isStaticHost) return;
     try {
-        const res = await fetch(`${API_URL}/faqs`);
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 5000);
+        const res = await fetch(`${API_URL}/faqs`, { signal: controller.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const faqs = await res.json();
         if (faqs.length) renderFAQs(faqs);
     } catch (err) {
         console.warn('FAQs API error:', err.message);
-        // Deja el HTML estático intacto
     }
 }
 
 async function loadTestimoniosFromAPI() {
-    if (isStaticHost) return; // Sin backend en GitHub Pages
+    if (isStaticHost) return;
     try {
-        const res = await fetch(`${API_URL}/testimonios`);
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 5000);
+        const res = await fetch(`${API_URL}/testimonios`, { signal: controller.signal });
         if (!res.ok) throw new Error();
         const testimonios = await res.json();
         renderTestimonios(testimonios);
