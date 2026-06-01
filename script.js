@@ -33,17 +33,13 @@ function shareProduct(name) {
 }
 
 /* --- URL DE LA API ---
-   En GitHub Pages sin backend → datos locales. tallerkappa.com.ar usa Render. */
-const isStaticHost = window.location.hostname.includes('github.io') ||
-                     window.location.protocol === 'file:';
+   Solo se usa para el checkout (Netlify Function) */
+const isStaticHost = false; // Ya no hay fallback estático, siempre usamos Firebase
 const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:3000/api'
-    : 'https://taller-kappa-api.onrender.com/api';
+    ? 'http://localhost:8888/api'
+    : '/api';
 
-/* Despertar Render en segundo plano ni bien carga la página */
-if (!isStaticHost) {
-    fetch(API_URL.replace('/api', '/api/ping'), { method: 'GET' }).catch(() => {});
-}
+/* Carga datos desde Firebase (ya no necesita despertar Render) */
 
 /* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
 const productosFallback = [
@@ -103,50 +99,29 @@ function addToCart(productId) {
    CARGA DE DATOS DESDE LA API
    ============================== */
 async function loadProductsFromAPI() {
-    if (isStaticHost) {
-        products = [...productosFallback];
-        renderProducts('all');
-        return;
-    }
     try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 6000); // 6s timeout
-        const res = await fetch(`${API_URL}/productos`, { signal: controller.signal });
-        clearTimeout(timeout);
-        if (!res.ok) throw new Error('No se pudo conectar al servidor');
-        products = await res.json();
-        // Normalizar: asegurar que cada producto tenga .id (MongoDB usa _id)
+        products = await FireDB.getProducts();
         products.forEach(p => { if (!p.id) p.id = p._id; });
-        console.log(`✅ ${products.length} producto(s) cargados desde la base de datos.`);
+        console.log(`✅ ${products.length} producto(s) cargados desde Firestore.`);
     } catch (err) {
-        console.warn('⚠️ Servidor no disponible, usando datos locales:', err.message);
+        console.warn('⚠️ Firestore no disponible, usando datos locales:', err.message);
         products = [...productosFallback];
     }
     renderProducts('all');
 }
 
 async function loadFAQsFromAPI() {
-    if (isStaticHost) return;
     try {
-        const controller = new AbortController();
-        setTimeout(() => controller.abort(), 5000);
-        const res = await fetch(`${API_URL}/faqs`, { signal: controller.signal });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const faqs = await res.json();
+        const faqs = await FireDB.getFAQs();
         if (faqs.length) renderFAQs(faqs);
     } catch (err) {
-        console.warn('FAQs API error:', err.message);
+        console.warn('FAQs Firestore error:', err.message);
     }
 }
 
 async function loadTestimoniosFromAPI() {
-    if (isStaticHost) return;
     try {
-        const controller = new AbortController();
-        setTimeout(() => controller.abort(), 5000);
-        const res = await fetch(`${API_URL}/testimonios`, { signal: controller.signal });
-        if (!res.ok) throw new Error();
-        const testimonios = await res.json();
+        const testimonios = await FireDB.getTestimonios();
         renderTestimonios(testimonios);
     } catch {
         // Si falla, el HTML estático ya tiene los testimonios

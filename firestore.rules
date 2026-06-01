@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // PRODUCTOS — cualquiera lee, solo admin escribe
+    match /productos/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // FAQs — cualquiera lee, solo admin escribe
+    match /faqs/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // TESTIMONIOS — cualquiera lee, solo admin escribe
+    match /testimonios/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // CONTACTOS — cualquiera crea, solo admin lee
+    match /contactos/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ÓRDENES — usuario logueado crea, admin lee todo
+    match /orders/{docId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null && 
+        (resource.data.buyer.email == request.auth.token.email || isAdmin());
+      allow update: if isAdmin();
+    }
+
+    // USUARIOS — solo el propio usuario o admin
+    match /users/{userId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Helper: verificar si es admin
+    // Definí el admin email en Firebase Console → Authentication → Custom Claims
+    // O simplemente compará con tu email
+    function isAdmin() {
+      return request.auth != null && 
+        request.auth.token.email == 'ing.franciscomarotta@gmail.com';
+    }
+  }
+}

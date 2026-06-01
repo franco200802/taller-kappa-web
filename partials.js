@@ -346,19 +346,38 @@
         mpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
 
         try {
-            const apiBase = typeof API_URL !== 'undefined' ? API_URL : '/api';
-            const res = await fetch(apiBase.replace('/api', '') + '/api/checkout', {
+            // Guardar orden en Firestore primero
+            const orderItems = cart.map(({ product, color, qty }) => ({
+                productId: product.id || product._id,
+                name: product.name,
+                color,
+                qty,
+                unitPrice: product.price,
+            }));
+            const total = cart.reduce((s, i) => s + (i.product.price || 0) * i.qty, 0);
+            
+            let orderId = 'direct';
+            if (typeof FireDB !== 'undefined') {
+                const order = await FireDB.createOrder({
+                    items: orderItems,
+                    total,
+                    buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone },
+                });
+                orderId = order.id;
+            }
+
+            // Llamar a Netlify Function para crear preferencia de MercadoPago
+            const checkoutUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                ? 'http://localhost:8888/api/checkout'
+                : '/api/checkout';
+
+            const res = await fetch(checkoutUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    items: cart.map(({ product, color, qty }) => ({
-                        productId: product._id || product.id,
-                        name: product.name,
-                        color,
-                        qty,
-                        unitPrice: product.price,
-                    })),
-                    buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone }
+                    items: orderItems,
+                    buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone },
+                    orderId,
                 }),
             });
 

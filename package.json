@@ -1,13 +1,12 @@
 {
-  "name": "taller-kappa-web-main",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "name": "taller-kappa-web",
+  "version": "2.0.0",
+  "description": "Taller Kappa — Firebase Firestore + Netlify Functions",
+  "main": "index.html",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "seed": "node seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed": "node seed-firestore.js",
+    "dev": "npx netlify dev",
+    "test": "echo \"No tests\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -16,18 +15,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/franco200802/taller-kappa-web/issues"
   },
   "homepage": "https://github.com/franco200802/taller-kappa-web#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mercadopago": "^2.12.0",
-    "mongoose": "^9.6.2"
+    "mercadopago": "^2.12.0"
+  },
+  "devDependencies": {
+    "firebase-admin": "^12.0.0"
   }
 }

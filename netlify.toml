@@ -1,0 +1,18 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Redirigir /api/checkout a la Netlify Function
+[[redirects]]
+  from = "/api/checkout"
+  to = "/.netlify/functions/checkout"
+  status = 200
+
+# SPA fallback (no aplica en este caso porque es multi-page, pero por si acaso)
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404

@@ -9,8 +9,14 @@ npm-debug.log*
 .env
 .env.local
 
-# Backup
+# Firebase Service Account (SECRETO)
+serviceAccountKey.json
+
+# Backup / legacy
 server.old.js
+server.js
+models.js
+seed.js
 
 # Sistema operativo
 .DS_Store

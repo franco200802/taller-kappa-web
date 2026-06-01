@@ -222,42 +222,35 @@
     </div>
 </div>
 
-<script>
-const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? `http://localhost:3000`
-    : 'https://taller-kappa-api.onrender.com';
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-db.js"></script>
+<script src="firebase-auth.js"></script>
 
-let token = localStorage.getItem('admin_token');
+<script>
 let currentFilter = '';
 let notesOrderId = null;
 
-// Check if already logged in
-if (token) showDashboard();
-
-// LOGIN
+// LOGIN con Firebase Auth (email del admin)
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('username').value;
+    const email = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     try {
-        const res = await fetch(`${API}/api/admin/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await res.json();
-        if (res.ok) {
-            token = data.token;
-            localStorage.setItem('admin_token', token);
-            showDashboard();
-        } else {
-            document.getElementById('loginError').style.display = 'block';
-        }
+        await auth.signInWithEmailAndPassword(email, password);
+        showDashboard();
     } catch (err) {
-        document.getElementById('loginError').textContent = 'Error de conexión';
+        document.getElementById('loginError').textContent = 'Email o contraseña incorrectos';
         document.getElementById('loginError').style.display = 'block';
     }
+});
+
+// Check if already logged in
+auth.onAuthStateChanged(user => {
+    if (user) showDashboard();
 });
 
 function showDashboard() {
@@ -268,16 +261,13 @@ function showDashboard() {
 }
 
 function logout() {
-    localStorage.removeItem('admin_token');
-    token = null;
+    auth.signOut();
     location.reload();
 }
 
 async function loadStats() {
     try {
-        const res = await fetch(`${API}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } });
-        if (res.status === 401) return logout();
-        const stats = await res.json();
+        const stats = await FireDB.getStats();
         document.getElementById('statTotal').textContent = stats.total;
         document.getElementById('statApproved').textContent = stats.approved;
         document.getElementById('statPending').textContent = stats.pending;
@@ -287,10 +277,7 @@ async function loadStats() {
 
 async function loadOrders() {
     try {
-        const url = currentFilter ? `${API}/api/admin/orders?status=${currentFilter}` : `${API}/api/admin/orders`;
-        const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-        if (res.status === 401) return logout();
-        const orders = await res.json();
+        const orders = await FireDB.getOrders(currentFilter || null);
         renderOrders(orders);
     } catch (err) { console.error(err); }
 }
@@ -313,23 +300,24 @@ function renderOrders(orders) {
         </tr></thead><tbody>`;
 
     for (const order of orders) {
-        const date = new Date(order.createdAt).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+        const ts = order.createdAt?.toDate ? order.createdAt.toDate() : new Date(order.createdAt);
+        const date = ts.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
         const buyer = order.buyer?.email || order.buyer?.name || 'Sin datos';
-        const items = order.items.map(i => `<li>• ${i.qty}x ${i.name} (${i.color})</li>`).join('');
+        const items = (order.items||[]).map(i => `<li>• ${i.qty}x ${i.name} (${i.color})</li>`).join('');
         const statusClass = `badge-${order.status}`;
 
         html += `<tr>
             <td>${date}</td>
             <td>${buyer}${order.buyer?.phone ? '<br><small>' + order.buyer.phone + '</small>' : ''}</td>
             <td><ul class="order-items">${items}</ul></td>
-            <td><strong>$${order.total.toLocaleString('es-AR')}</strong></td>
+            <td><strong>$${(order.total||0).toLocaleString('es-AR')}</strong></td>
             <td><span class="badge ${statusClass}">${translateStatus(order.status)}</span>
                 ${order.adminNotes ? '<br><small style="color:#888;margin-top:4px;display:inline-block"><i class="fas fa-sticky-note"></i> ' + order.adminNotes + '</small>' : ''}
             </td>
             <td>
-                ${order.status === 'approved' ? `<button class="btn-action btn-confirm" onclick="updateOrder('${order._id}','confirmed')"><i class="fas fa-check"></i> Confirmar</button>` : ''}
-                ${order.status === 'pending' ? `<button class="btn-action btn-reject" onclick="updateOrder('${order._id}','rejected')"><i class="fas fa-times"></i> Rechazar</button>` : ''}
-                <button class="btn-action btn-notes" onclick="openNotesModal('${order._id}','${(order.adminNotes||'').replace(/'/g,'')}')"><i class="fas fa-pen"></i></button>
+                ${order.status === 'approved' ? `<button class="btn-action btn-confirm" onclick="updateOrder('${order.id}','confirmed')"><i class="fas fa-check"></i> Confirmar</button>` : ''}
+                ${order.status === 'pending' ? `<button class="btn-action btn-reject" onclick="updateOrder('${order.id}','rejected')"><i class="fas fa-times"></i> Rechazar</button>` : ''}
+                <button class="btn-action btn-notes" onclick="openNotesModal('${order.id}','${(order.adminNotes||'').replace(/'/g,'')}')"><i class="fas fa-pen"></i></button>
             </td>
         </tr>`;
     }
@@ -345,12 +333,9 @@ function translateStatus(s) {
 async function updateOrder(id, status) {
     if (!confirm(`¿Cambiar estado a "${translateStatus(status)}"?`)) return;
     try {
-        const res = await fetch(`${API}/api/admin/orders/${id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ status })
-        });
-        if (res.ok) { loadOrders(); loadStats(); }
+        await FireDB.updateOrder(id, { status });
+        loadOrders();
+        loadStats();
     } catch (err) { alert('Error: ' + err.message); }
 }
 
@@ -368,11 +353,7 @@ function closeNotesModal() {
 async function saveNotes() {
     const notes = document.getElementById('notesText').value;
     try {
-        await fetch(`${API}/api/admin/orders/${notesOrderId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ notes })
-        });
+        await FireDB.updateOrder(notesOrderId, { adminNotes: notes });
         closeNotesModal();
         loadOrders();
     } catch (err) { alert('Error: ' + err.message); }
@@ -400,9 +381,7 @@ function showTab(name) {
 // USUARIOS
 async function loadUsers() {
     try {
-        const res = await fetch(`${API}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } });
-        if (res.status === 401) return logout();
-        const users = await res.json();
+        const users = await FireDB.getUsers();
         renderUsers(users);
     } catch (err) { console.error(err); }
 }
@@ -422,13 +401,14 @@ function renderUsers(users) {
             <th>Estado</th>
         </tr></thead><tbody>`;
     for (const u of users) {
-        const date = new Date(u.createdAt).toLocaleDateString('es-AR');
+        const ts = u.createdAt?.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
+        const date = ts.toLocaleDateString('es-AR');
         html += `<tr>
             <td><strong>${u.name}</strong></td>
             <td>${u.email}</td>
             <td>${u.phone || '—'}</td>
             <td>${date}</td>
-            <td><span class="badge ${u.active ? 'badge-approved' : 'badge-rejected'}">${u.active ? 'Activo' : 'Suspendido'}</span></td>
+            <td><span class="badge ${u.active !== false ? 'badge-approved' : 'badge-rejected'}">${u.active !== false ? 'Activo' : 'Suspendido'}</span></td>
         </tr>`;
     }
     html += '</tbody></table>';
