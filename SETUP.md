@@ -163,8 +163,15 @@ node seed-firestore.js
 
 | Key | Value |
 |-----|-------|
-| `MP_ACCESS_TOKEN` | `APP_USR-1999436599991327-051814-f390e47b2fe438f7090e8baa1b1ac080-1064216624` |
+| `MP_ACCESS_TOKEN` | Tu Access Token de MercadoPago (ver abajo) |
 | `FRONTEND_URL` | `https://tallerkappa.com.ar` |
+
+**Dónde encontrar el `MP_ACCESS_TOKEN`:**
+1. Entrá a [mercadopago.com.ar/developers/panel](https://www.mercadopago.com.ar/developers/panel)
+2. Tu aplicación → **Credenciales de producción**
+3. Copiá el valor de **Access Token** (empieza con `APP_USR-...`)
+
+> ⚠️ Nunca pongas el token en el código ni en documentos del repositorio.
 
 3. Hacer **redeploy** desde Netlify → Deploys → Trigger deploy
 
@@ -189,20 +196,58 @@ Entrá a `tallerkappa.com.ar/admin.html` con:
 
 ---
 
+## 🚀 Deploy — Flujo cotidiano
+
+El deploy es **automático**: cualquier push a `main` redeploya el sitio en Netlify en ~30 segundos.
+
+```bash
+# Editás un archivo, por ejemplo styles.css, y luego:
+git add styles.css
+git commit -m "descripción del cambio"
+git push
+```
+
+Netlify detecta el push y redeploya solo. Podés ver el estado en [app.netlify.com](https://app.netlify.com).
+
+### Checklist antes de hacer push a producción
+
+- [ ] Actualizar la versión en las URLs de CSS/JS (`?v=YYYYMMDD`) en todos los HTML y en `sw.js`
+- [ ] Verificar que no hay tokens ni secrets en el código
+- [ ] Probar el flujo completo localmente con `npm run dev`
+- [ ] Si cambiaste `firestore.rules`: republicar manualmente en Firebase Console → Firestore → Reglas
+
+### Actualizar reglas de Firestore
+
+Las reglas **no se deployean con el push de git** — hay que subirlas a mano:
+
+1. Firebase Console → **Firestore Database** → **Reglas**
+2. Pegás el contenido actualizado de `firestore.rules`
+3. Clic en **Publicar**
+
+---
+
 ## 🛠️ Desarrollo local
 
 ```bash
+# Primera vez: crear .env copiando el ejemplo
+cp .env.example .env
+# Editar .env con el MP_ACCESS_TOKEN real
+
 # Instalar dependencias
 npm install
 
 # Instalar Netlify CLI (para probar la función de checkout localmente)
 npm install -g netlify-cli
 
-# Levantar el sitio con funciones serverless
-netlify dev
+# Levantar el sitio con funciones serverless en http://localhost:8888
+npm run dev
 ```
 
-El sitio se abre en `http://localhost:8888` con la función de checkout funcionando.
+**Variables necesarias en `.env` para desarrollo:**
+- `MP_ACCESS_TOKEN`: podés usar credenciales de prueba de MercadoPago (empiezan con `TEST-`)
+- `FRONTEND_URL`: `http://localhost:8888`
+
+> El archivo `.env` está en `.gitignore` y nunca se sube a GitHub.
 
 ---
 
@@ -217,13 +262,24 @@ El sitio se abre en `http://localhost:8888` con la función de checkout funciona
 
 ---
 
+## 🔧 Troubleshooting
+
+| Síntoma | Causa probable | Solución |
+|---------|---------------|----------|
+| El checkout no redirige a MercadoPago | `MP_ACCESS_TOKEN` no configurado en Netlify | Site settings → Environment variables → agregar el token → Redeploy |
+| Firestore "permission denied" en browser | Las reglas de Firestore no están publicadas | Firebase Console → Firestore → Reglas → Publicar |
+| Los productos no cargan | `firebase-config.js` tiene placeholders | Reemplazar los valores con los del proyecto Firebase |
+| El Service Worker sirve contenido viejo | Cache del SW no se invalidó | Actualizar `CACHE_VERSION` en `sw.js` con la fecha actual |
+| `netlify dev` no levanta la función | Falta el `.env` con `MP_ACCESS_TOKEN` | Crear `.env` desde `.env.example` y completarlo |
+| Error 404 en páginas internas | No existe `_redirects` o problema con toml | Verificar que `netlify.toml` tiene el redirect `/* → /404.html` con status 404 |
+
+---
+
 ## ❌ Ya NO se necesita
 
 - ~~Render.com~~ → reemplazado por Netlify Functions
 - ~~MongoDB Atlas~~ → reemplazado por Firebase Firestore
 - ~~Express / Node server~~ → reemplazado por Firebase SDK directo
-- ~~server.js~~ → eliminado
-- ~~models.js~~ → eliminado (Firestore no necesita schemas)
 
 ---
 

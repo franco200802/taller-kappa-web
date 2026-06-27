@@ -7,7 +7,7 @@
 
     <!-- Preload recursos críticos -->
     <link rel="preload" href="styles.css?v=20260519b" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400&family=Playfair+Display:wght@700&display=swap" as="style">
 
     <!-- SEO principal -->
     <meta name="description" content="Fabricamos sillones BKF, bancos y bases de mesa de hierro y cuero en San Martín, Buenos Aires. Directo de fábrica: sillas industriales, mesas de hierro, mobiliario para locales gastronómicos. Envíos a Capital Federal, Devoto, Zona Norte y todo el país.">
@@ -179,48 +179,6 @@
     }
     </script>
 
-    <!-- Schema.org — FAQ (mejora aparición en Google como "Pregunta destacada") -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "¿Venden sillones BKF a empresas y locales?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Sí, trabajamos con locales gastronómicos, franquicias (Burger King, McDonald's) y marcas de indumentaria como Sandro. Emitimos Factura A y B."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "¿Hacen envíos de muebles de hierro al interior del país?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Sí, realizamos envíos a todo el país mediante expreso. Embalaje bonificado para asegurar que el producto llegue en perfectas condiciones."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "¿Cuánto tarda en fabricarse un sillón BKF?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Los tiempos de entrega dependen del stock disponible y del volumen del pedido. Consultanos por WhatsApp al 11 6124-2498 para coordinar una fecha exacta."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "¿Puedo elegir el color de la pintura del sillón BKF?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Absolutamente. Ofrecemos acabados en pintura epoxi (negro mate, blanco, colores a pedido) y cromado. El cuero también se puede elegir en distintos colores."
-                }
-            }
-        ]
-    }
-    </script>
-
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon"  href="images/favicon.ico?v=3">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png?v=3">
@@ -229,7 +187,7 @@
     <!-- Fuentes: display=swap evita FOIT (flash of invisible text) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
     <!-- Iconos: cargar sin bloquear render -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -273,6 +231,7 @@
     <!-- Estilos -->
     <link rel="stylesheet" href="styles.css?v=20260520">
     <link rel="stylesheet" href="pages.css?v=20260520">
+    <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting.css"/>
 
     <!-- Google Analytics (async, no bloquea) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2FDMN51XDY"></script>
@@ -285,6 +244,13 @@
     </script>
 </head>
 <body>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-logo">TALLER KAPPA</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <div class="loader-num">00%</div>
+    </div>
 
     <!-- SKIP LINK accesibilidad (teclado) -->
     <a href="#catalogo" class="skip-link">Saltar al contenido principal</a>
@@ -306,7 +272,7 @@
 
         <canvas class="hero-particles" id="hero-canvas"></canvas>
         <div class="hero-content">
-            <h1>Sillones BKF y Sillas de Hierro en <span class="hero-highlight">Buenos Aires</span></h1>
+            <h1 data-split>Sillones BKF y Sillas de Hierro en <span class="hero-highlight">Buenos Aires</span></h1>
             <p>Fabricamos sillones BKF, sillas y mesas de hierro y cuero directo de fábrica. Calidad elegida por YPF, McDonald's y Burger King.</p>
             <!-- Texto SEO visible para Google -->
             <p class="hero-seo-tag">Sillón BKF · Sillas de Hierro Buenos Aires · Cuero Vacuno · San Martín, GBA</p>
@@ -359,11 +325,17 @@
         </div>
     </section>
 
-    <!-- SEPARADOR OLA -->
-    <div class="wave-divider wave-light">
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f8f9fa"/>
-        </svg>
+    <!-- ==============================
+         MARQUEE
+         ============================== -->
+    <div class="marquee-section" aria-hidden="true">
+        <div class="marquee-track" data-marquee>
+            <span>TALLER KAPPA</span><span class="marquee-dot">·</span>
+            <span>MUEBLES DE HIERRO</span><span class="marquee-dot">·</span>
+            <span>SILLÓN BKF</span><span class="marquee-dot">·</span>
+            <span>DIRECTO DE FÁBRICA</span><span class="marquee-dot">·</span>
+            <span>SAN MARTÍN, BUENOS AIRES</span><span class="marquee-dot">·</span>
+        </div>
     </div>
 
     <!-- ==============================
@@ -372,7 +344,7 @@
     <section class="why-section section-fade" aria-label="Por qué elegirnos">
         <h2 class="section-title">¿Por qué elegirnos?</h2>
         <p class="section-subtitle">Más de 15 años fabricando para los más exigentes del mercado.</p>
-        <div class="why-grid">
+        <div class="why-grid card-group">
             <div class="why-card">
                 <div class="why-icon"><i class="fas fa-industry"></i></div>
                 <h3>Directo de Fábrica</h3>
@@ -425,7 +397,7 @@
     <section class="materials-section section-fade" aria-label="Nuestros materiales">
         <h2 class="section-title">Calidad que se ve y se toca</h2>
         <p class="section-subtitle">Cada pieza fabricada con los mejores materiales disponibles en el mercado.</p>
-        <div class="materials-grid">
+        <div class="materials-grid card-group">
             <div class="material-card">
                 <div class="material-icon"><i class="fas fa-circle" style="color:#555;"></i></div>
                 <h3>Hierro Macizo</h3>
@@ -470,23 +442,19 @@
     <section class="numbers-section section-fade" aria-label="Números de Taller Kappa">
         <div class="numbers-grid">
             <div class="number-item">
-                <span class="number-value" data-target="15">0</span>
-                <span class="number-suffix">+</span>
+                <span class="number-value" data-count="15" data-suffix="+">0</span>
                 <p class="number-label">Años de experiencia</p>
             </div>
             <div class="number-item">
-                <span class="number-value" data-target="500">0</span>
-                <span class="number-suffix">+</span>
+                <span class="number-value" data-count="500" data-suffix="+">0</span>
                 <p class="number-label">Proyectos entregados</p>
             </div>
             <div class="number-item">
-                <span class="number-value" data-target="12">0</span>
-                <span class="number-suffix"></span>
+                <span class="number-value" data-count="12" data-suffix="">0</span>
                 <p class="number-label">mm de hierro macizo</p>
             </div>
             <div class="number-item">
-                <span class="number-value" data-target="5">0</span>
-                <span class="number-suffix"></span>
+                <span class="number-value" data-count="5" data-suffix="">0</span>
                 <p class="number-label">Grandes marcas equipadas</p>
             </div>
         </div>
@@ -527,7 +495,7 @@
          ============================== -->
     <section class="testimonials section-fade" aria-label="Testimonios de clientes">
         <h2>Lo que dicen quienes nos eligen</h2>
-        <div class="testimonial-grid">
+        <div class="testimonial-grid card-group">
             <article class="testimonial-card">
                 <div class="stars" aria-label="5 estrellas">
                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
@@ -783,5 +751,10 @@
     <script src="partials.js?v=20260601"></script>
     <!-- script.js maneja: hero, catálogo, modal, FAQ, formulario, etc. -->
     <script src="script.js?v=20260601"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+    <script src="js/animations.js" defer></script>
 </body>
 </html>

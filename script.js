@@ -32,16 +32,7 @@ function shareProduct(name) {
     window.open(`https://wa.me/?text=${text}`, '_blank');
 }
 
-/* --- URL DE LA API ---
-   Solo se usa para el checkout (Netlify Function) */
-const isStaticHost = false; // Ya no hay fallback estático, siempre usamos Firebase
-const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:8888/api'
-    : '/api';
-
-/* Carga datos desde Firebase (ya no necesita despertar Render) */
-
-/* --- DATOS LOCALES DE FALLBACK (se usan si el servidor no está corriendo) --- */
+/* --- DATOS LOCALES DE FALLBACK (se usan si Firestore no está disponible) --- */
 const productosFallback = [
     {
         id: 1,
@@ -208,7 +199,7 @@ function buildProductCard(p) {
             <div class="card-info">
                 <h3>${p.name}</h3>
                 ${p.price ? `<p class="card-price">$${p.price.toLocaleString('es-AR')}</p>` : ''}
-                <p class="card-specs-preview">${p.specs[0]}</p>
+                <p class="card-specs-preview">${(p.specs && p.specs[0]) || ''}</p>
                 <a class="card-consult" href="https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i> Consultar precio
                 </a>
@@ -534,20 +525,11 @@ function initContactForm() {
             return;
         }
 
-        // Guardar en la base de datos (si el servidor está disponible)
-        if (!isStaticHost) {
-            try {
-                const res = await fetch(`${API_URL}/contactos`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, interest, message: msg })
-                });
-                if (res.ok) {
-                    console.log('✅ Mensaje guardado en la base de datos.');
-                }
-            } catch {
-                console.warn('⚠️ No se pudo guardar en la base de datos (servidor no disponible).');
-            }
+        // Guardar en Firestore
+        try {
+            await FireDB.createContacto({ name, interest, message: msg });
+        } catch {
+            // Si falla Firestore, el mensaje igual se envía por WhatsApp
         }
 
         // Abrir WhatsApp igual (siempre)
