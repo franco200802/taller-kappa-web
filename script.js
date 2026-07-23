@@ -80,7 +80,7 @@ let selectedColor = 'Negro Mate';
    CARRITO — Delegado a partials.js (addToCartGlobal)
    ============================== */
 function addToCart(productId) {
-    const product = products.find(p => String(p.id) === String(productId));
+    const product = products.find(p => String(p.id || p._id) === String(productId));
     if (!product || typeof window.addToCartGlobal !== 'function') return;
     window.addToCartGlobal(product, selectedColor || 'Negro Mate');
     closeModal();
@@ -198,7 +198,6 @@ function buildProductCard(p) {
             </div>
             <div class="card-info">
                 <h3>${p.name}</h3>
-                ${p.price ? `<p class="card-price">$${p.price.toLocaleString('es-AR')}</p>` : ''}
                 <p class="card-specs-preview">${(p.specs && p.specs[0]) || ''}</p>
                 <a class="card-consult" href="https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i> Consultar precio
@@ -257,7 +256,8 @@ function openModal(id) {
         : '';
 
     // Specs
-    document.getElementById('modal-specs').innerHTML = p.specs
+    const specs = Array.isArray(p.specs) ? p.specs : [];
+    document.getElementById('modal-specs').innerHTML = specs
         .map(s => `<li><i class="fas fa-check" aria-hidden="true"></i> ${s}</li>`)
         .join('');
 
@@ -267,7 +267,7 @@ function openModal(id) {
         sw.classList.toggle('active', sw.dataset.color === selectedColor);
     });
 
-    document.getElementById('btn-add-modal').onclick = () => addToCart(p.id);
+    document.getElementById('btn-add-modal').onclick = () => addToCart(id);
     document.getElementById('product-modal').classList.add('active');
     document.body.style.overflow = 'hidden';
 }

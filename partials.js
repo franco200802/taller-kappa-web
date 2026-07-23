@@ -103,9 +103,8 @@
             </div>
             <div id="cart-footer">
                 <div class="cart-total" id="cart-total-container" style="display:none;">
-                    <span>Total:</span>
-                    <span id="cart-total-price">$0</span>
-                    <small style="color:#999;margin-left:4px;">(<span id="cart-total-qty">0</span> artículos)</small>
+                    <span>Productos:</span>
+                    <span id="cart-total-qty">0</span>
                 </div>
                 <div id="buyer-info-form" style="display:none;margin-bottom:12px;">
                     <p style="font-size:.85rem;font-weight:600;margin-bottom:8px;">📋 Tus datos para coordinar el envío:</p>
@@ -195,10 +194,8 @@
         const mpBtn          = document.getElementById('mp-checkout-btn');
         const totalContainer = document.getElementById('cart-total-container');
         const totalQty       = document.getElementById('cart-total-qty');
-        const totalPrice     = document.getElementById('cart-total-price');
 
         const totalItems = cart.reduce((s, i) => s + i.qty, 0);
-        const totalARS   = cart.reduce((s, i) => s + (i.product.price || 0) * i.qty, 0);
         badge.textContent = totalItems;
         badge.style.opacity = totalItems > 0 ? '1' : '0';
 
@@ -221,7 +218,6 @@
                     <div>
                         <b>${product.name}</b>
                         <small class="cart-item-color"><i class="fas fa-palette"></i> ${color}</small>
-                        ${product.price ? `<small class="cart-item-price">$${(product.price * qty).toLocaleString('es-AR')}</small>` : ''}
                     </div>
                 </div>
                 <div class="cart-item-qty">
@@ -233,7 +229,6 @@
             </div>`).join('');
 
         totalQty.textContent = totalItems;
-        if (totalPrice) totalPrice.textContent = totalARS > 0 ? `$${totalARS.toLocaleString('es-AR')}` : 'A cotizar';
         totalContainer.style.display = 'flex';
 
         // Enable MP button only if all products have prices
@@ -242,10 +237,9 @@
         document.getElementById('buyer-info-form').style.display = allHavePrices ? 'block' : 'none';
 
         const lines = cart.map(({ product, color, qty }) =>
-            `- ${product.name} x${qty} (Acabado: ${color})${product.price ? ' — $' + (product.price * qty).toLocaleString('es-AR') : ''}`).join('\n');
-        const totalLine = totalARS > 0 ? `\nTotal: $${totalARS.toLocaleString('es-AR')}` : '';
+            `- ${product.name} x${qty} (Acabado: ${color})`).join('\n');
         const msg = encodeURIComponent(
-            `Hola Taller Kappa! Quisiera cotizar:\n${lines}${totalLine}\n\nPor favor indicarme precio final y tiempo de entrega.`);
+            `Hola Taller Kappa! Quisiera cotizar:\n${lines}\n\nPor favor indicarme precio final y tiempo de entrega.`);
         checkoutBtn.href = `https://wa.me/541161242498?text=${msg}`;
         checkoutBtn.style.opacity = '1';
         checkoutBtn.style.pointerEvents = 'all';
