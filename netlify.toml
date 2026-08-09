@@ -1,15 +1,5 @@
 [build]
   publish = "."
-  functions = "netlify/functions"
-
-[functions]
-  node_bundler = "esbuild"
-
-# /api/checkout → Netlify Function
-[[redirects]]
-  from = "/api/checkout"
-  to = "/.netlify/functions/checkout"
-  status = 200
 
 # Páginas no encontradas → 404.html
 [[redirects]]

@@ -13,16 +13,16 @@ tallerkappa.com.ar (Netlify)
 │
 ├── Frontend (HTML/CSS/JS) → se sirve estático desde Netlify
 ├── Firebase Firestore    → base de datos (directo desde el browser)
-├── Firebase Auth         → registro y login de usuarios
-└── Netlify Function      → 1 sola función para MercadoPago checkout
+└── Firebase Auth         → registro y login de usuarios
 ```
+
+No hay pago electrónico ni funciones serverless: todo pedido se cotiza por WhatsApp.
 
 | Capa | Tecnología | Plan |
 |------|-----------|------|
 | Frontend + Hosting | Netlify | **Gratis** (100GB/mes) |
 | Base de datos | Firebase Firestore | **Gratis** (Spark: 50K reads/día) |
 | Autenticación | Firebase Auth | **Gratis** (50K users/mes) |
-| Pagos | MercadoPago via Netlify Function | **Gratis** (125K invocaciones/mes) |
 
 **Costo mensual total: $0**
 
@@ -41,7 +41,6 @@ taller-kappa-web/
 ├── envios.html             # Info de envíos
 ├── garantia.html           # Garantía
 ├── contacto.html           # Formulario
-├── checkout-result.html    # Post-pago
 ├── admin.html              # Panel admin
 ├── 404.html                # Error
 │
@@ -57,10 +56,8 @@ taller-kappa-web/
 ├── seed-firestore.js       # 🔥 Script para poblar Firestore (se ejecuta 1 vez)
 │
 ├── netlify.toml            # Configuración de Netlify
-├── netlify/functions/
-│   └── checkout.js         # Función serverless para MercadoPago
 │
-├── package.json            # Dependencias (solo mercadopago + firebase-admin)
+├── package.json            # Dependencias (solo firebase-admin)
 ├── sw.js                   # Service Worker (PWA)
 ├── manifest.json           # Web App Manifest
 ├── sitemap.xml             # SEO
@@ -156,26 +153,7 @@ node seed-firestore.js
    - **Publish directory:** `.`
 5. Clic en **"Deploy"**
 
-### Paso 9: Variables de entorno en Netlify (2 min)
-
-1. En Netlify → tu sitio → **Site settings** → **Environment variables**
-2. Agregar:
-
-| Key | Value |
-|-----|-------|
-| `MP_ACCESS_TOKEN` | Tu Access Token de MercadoPago (ver abajo) |
-| `FRONTEND_URL` | `https://tallerkappa.com.ar` |
-
-**Dónde encontrar el `MP_ACCESS_TOKEN`:**
-1. Entrá a [mercadopago.com.ar/developers/panel](https://www.mercadopago.com.ar/developers/panel)
-2. Tu aplicación → **Credenciales de producción**
-3. Copiá el valor de **Access Token** (empieza con `APP_USR-...`)
-
-> ⚠️ Nunca pongas el token en el código ni en documentos del repositorio.
-
-3. Hacer **redeploy** desde Netlify → Deploys → Trigger deploy
-
-### Paso 10: Dominio personalizado en Netlify (5 min)
+### Paso 9: Dominio personalizado en Netlify (5 min)
 
 1. En Netlify → **Domain settings** → **Add custom domain**
 2. Agregar `tallerkappa.com.ar`
@@ -229,25 +207,15 @@ Las reglas **no se deployean con el push de git** — hay que subirlas a mano:
 ## 🛠️ Desarrollo local
 
 ```bash
-# Primera vez: crear .env copiando el ejemplo
-cp .env.example .env
-# Editar .env con el MP_ACCESS_TOKEN real
-
 # Instalar dependencias
 npm install
 
-# Instalar Netlify CLI (para probar la función de checkout localmente)
+# Instalar Netlify CLI (opcional, para simular headers/redirects de Netlify en local)
 npm install -g netlify-cli
 
-# Levantar el sitio con funciones serverless en http://localhost:8888
+# Levantar el sitio en http://localhost:8888
 npm run dev
 ```
-
-**Variables necesarias en `.env` para desarrollo:**
-- `MP_ACCESS_TOKEN`: podés usar credenciales de prueba de MercadoPago (empiezan con `TEST-`)
-- `FRONTEND_URL`: `http://localhost:8888`
-
-> El archivo `.env` está en `.gitignore` y nunca se sube a GitHub.
 
 ---
 
@@ -256,8 +224,7 @@ npm run dev
 | Servicio | Link | Para qué |
 |----------|------|----------|
 | Firebase Console | [console.firebase.google.com](https://console.firebase.google.com) | DB + Auth |
-| Netlify | [app.netlify.com](https://app.netlify.com) | Hosting + Functions |
-| MercadoPago Developers | [mercadopago.com.ar/developers](https://www.mercadopago.com.ar/developers/panel) | Token de pagos |
+| Netlify | [app.netlify.com](https://app.netlify.com) | Hosting |
 | GitHub | [github.com/franco200802/taller-kappa-web](https://github.com/franco200802/taller-kappa-web) | Código fuente |
 
 ---
@@ -266,11 +233,9 @@ npm run dev
 
 | Síntoma | Causa probable | Solución |
 |---------|---------------|----------|
-| El checkout no redirige a MercadoPago | `MP_ACCESS_TOKEN` no configurado en Netlify | Site settings → Environment variables → agregar el token → Redeploy |
 | Firestore "permission denied" en browser | Las reglas de Firestore no están publicadas | Firebase Console → Firestore → Reglas → Publicar |
 | Los productos no cargan | `firebase-config.js` tiene placeholders | Reemplazar los valores con los del proyecto Firebase |
 | El Service Worker sirve contenido viejo | Cache del SW no se invalidó | Actualizar `CACHE_VERSION` en `sw.js` con la fecha actual |
-| `netlify dev` no levanta la función | Falta el `.env` con `MP_ACCESS_TOKEN` | Crear `.env` desde `.env.example` y completarlo |
 | Error 404 en páginas internas | No existe `_redirects` o problema con toml | Verificar que `netlify.toml` tiene el redirect `/* → /404.html` con status 404 |
 
 ---
@@ -288,7 +253,6 @@ npm run dev
 | Servicio | Límite gratis | Tu uso estimado |
 |----------|---------------|-----------------|
 | Netlify hosting | 100 GB bandwidth/mes | ~1 GB |
-| Netlify functions | 125,000 invocaciones/mes | ~100 |
 | Firestore reads | 50,000/día | ~500 |
 | Firestore writes | 20,000/día | ~50 |
 | Firebase Auth | 50,000 users/mes | ~10 |

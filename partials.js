@@ -106,23 +106,13 @@
                     <span>Productos:</span>
                     <span id="cart-total-qty">0</span>
                 </div>
-                <div id="buyer-info-form" style="display:none;margin-bottom:12px;">
-                    <p style="font-size:.85rem;font-weight:600;margin-bottom:8px;">📋 Tus datos para coordinar el envío:</p>
-                    <input type="text" id="buyer-name" placeholder="Nombre completo *" style="width:100%;padding:8px 10px;margin-bottom:6px;border:1px solid #ddd;border-radius:6px;font-size:.88rem;">
-                    <input type="email" id="buyer-email" placeholder="Email *" style="width:100%;padding:8px 10px;margin-bottom:6px;border:1px solid #ddd;border-radius:6px;font-size:.88rem;">
-                    <input type="tel" id="buyer-phone" placeholder="Teléfono / WhatsApp *" style="width:100%;padding:8px 10px;margin-bottom:6px;border:1px solid #ddd;border-radius:6px;font-size:.88rem;">
-                    <p id="buyer-error" style="display:none;color:#e74c3c;font-size:.8rem;margin-top:4px;"></p>
-                </div>
-                <button class="btn-mp-checkout" id="mp-checkout-btn" disabled>
-                    <i class="fas fa-credit-card"></i> Pagar con MercadoPago
-                </button>
                 <a href="#" class="btn-whatsapp-checkout" id="wa-checkout-btn" target="_blank" rel="noopener" style="opacity:.5;pointer-events:none;">
                     <i class="fab fa-whatsapp"></i> Cotizar por WhatsApp
                 </a>
                 <button class="btn-print-budget" id="btn-print-budget">
                     <i class="fas fa-file-pdf"></i> Descargar presupuesto
                 </button>
-                <p class="cart-hint">Pagá online o consultá por WhatsApp.</p>
+                <p class="cart-hint">Consultá por WhatsApp para coordinar tu pedido.</p>
             </div>
         </div>
     </div>
@@ -191,7 +181,6 @@
         const container      = document.getElementById('cart-items-container');
         const badge          = document.getElementById('cart-count');
         const checkoutBtn    = document.getElementById('wa-checkout-btn');
-        const mpBtn          = document.getElementById('mp-checkout-btn');
         const totalContainer = document.getElementById('cart-total-container');
         const totalQty       = document.getElementById('cart-total-qty');
 
@@ -205,9 +194,7 @@
                 Tu lista está vacía.<br><small>Explorá el catálogo y agregá productos.</small></p>`;
             checkoutBtn.style.opacity = '0.5';
             checkoutBtn.style.pointerEvents = 'none';
-            if (mpBtn) mpBtn.disabled = true;
             totalContainer.style.display = 'none';
-            document.getElementById('buyer-info-form').style.display = 'none';
             return;
         }
 
@@ -230,11 +217,6 @@
 
         totalQty.textContent = totalItems;
         totalContainer.style.display = 'flex';
-
-        // Enable MP button only if all products have prices
-        const allHavePrices = cart.every(i => i.product.price > 0);
-        if (mpBtn) mpBtn.disabled = !allHavePrices;
-        document.getElementById('buyer-info-form').style.display = allHavePrices ? 'block' : 'none';
 
         const lines = cart.map(({ product, color, qty }) =>
             `- ${product.name} x${qty} (Acabado: ${color})`).join('\n');
@@ -311,80 +293,6 @@
             Confirmá el pedido por WhatsApp al <strong>11 6124-2498</strong></div>
             <script>window.onload=()=>{window.print();}<\/script></body></html>`);
         win.document.close();
-    });
-
-    /* MercadoPago checkout */
-    document.getElementById('mp-checkout-btn').addEventListener('click', async () => {
-        if (cart.length === 0) { showToastGlobal('Tu carrito está vacío.'); return; }
-
-        // Validar datos de contacto del comprador
-        const buyerName  = document.getElementById('buyer-name').value.trim();
-        const buyerEmail = document.getElementById('buyer-email').value.trim();
-        const buyerPhone = document.getElementById('buyer-phone').value.trim();
-        const buyerErr   = document.getElementById('buyer-error');
-        buyerErr.style.display = 'none';
-
-        if (!buyerName || !buyerEmail || !buyerPhone) {
-            buyerErr.textContent = 'Completá nombre, email y teléfono para continuar.';
-            buyerErr.style.display = 'block';
-            return;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)) {
-            buyerErr.textContent = 'Ingresá un email válido.';
-            buyerErr.style.display = 'block';
-            return;
-        }
-
-        const mpBtn = document.getElementById('mp-checkout-btn');
-        mpBtn.disabled = true;
-        mpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-
-        try {
-            // Guardar orden en Firestore primero
-            const orderItems = cart.map(({ product, color, qty }) => ({
-                productId: product.id || product._id,
-                name: product.name,
-                color,
-                qty,
-                unitPrice: product.price,
-            }));
-            const total = cart.reduce((s, i) => s + (i.product.price || 0) * i.qty, 0);
-            
-            let orderId = 'direct';
-            if (typeof FireDB !== 'undefined') {
-                const order = await FireDB.createOrder({
-                    items: orderItems,
-                    total,
-                    buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone },
-                });
-                orderId = order.id;
-            }
-
-            // Llamar a Netlify Function para crear preferencia de MercadoPago
-            const checkoutUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-                ? 'http://localhost:8888/api/checkout'
-                : '/api/checkout';
-
-            const res = await fetch(checkoutUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    items: orderItems,
-                    buyer: { name: buyerName, email: buyerEmail, phone: buyerPhone },
-                    orderId,
-                }),
-            });
-
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Error al crear el pago');
-
-            window.location.href = data.initPoint || data.sandboxInitPoint;
-
-        } catch (err) {
-            showToastGlobal('Error: ' + err.message);
-            mpBtn.disabled = false;
-            mpBtn.innerHTML = '<i class="fas fa-credit-card"></i> Pagar con MercadoPago';
-        }
     });
 
     /* Toast global */

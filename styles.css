@@ -2101,51 +2101,6 @@ body { cursor: auto !important; }
 }
 
 
-/* --- CARD PRICE --- */
-.card-price {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin: 4px 0 2px;
-}
-
-/* --- MP CHECKOUT BUTTON --- */
-.btn-mp-checkout {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #009ee3, #2d3277);
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 4px 15px rgba(0, 158, 227, 0.25);
-    margin-bottom: 10px;
-}
-.btn-mp-checkout:hover:not(:disabled) {
-    background: linear-gradient(135deg, #007bb5, #1a1f5e);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 158, 227, 0.4);
-}
-.btn-mp-checkout:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-/* --- CART ITEM PRICE --- */
-.cart-item-price {
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: 2px;
-}
-
 @media (max-width: 768px) {
     .numbers-grid {
         grid-template-columns: repeat(2, 1fr);

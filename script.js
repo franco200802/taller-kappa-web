@@ -41,8 +41,6 @@ const productosFallback = [
         image: 'images/bkf1.png',
         badge: 'Más vendido',
         stock: true,
-        price: 280000,
-        priceFrom: 'Desde $280.000',
         desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
         specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm']
     },
@@ -53,8 +51,6 @@ const productosFallback = [
         image: 'images/bkfapoyapies.png',
         badge: 'Ideal para regalo',
         stock: true,
-        price: 140000,
-        priceFrom: 'Desde $140.000',
         desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
         specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm']
     },
@@ -65,8 +61,6 @@ const productosFallback = [
         image: 'images/mesa.jpeg',
         badge: 'Uso gastronómico',
         stock: true,
-        price: 95000,
-        priceFrom: 'Desde $95.000',
         desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
         specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes']
     }
