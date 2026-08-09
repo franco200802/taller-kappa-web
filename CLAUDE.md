@@ -6,13 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Desarrollo local — sitio estático en localhost:8888
-npm run dev      # alias de: npx netlify dev
+npm run dev      # alias de: npx serve .
 
 # Poblar Firestore con productos/faqs/testimonios (solo primera vez)
 # Requiere serviceAccountKey.json en la raíz (NO commitear)
 npm run seed     # alias de: node seed-firestore.js
 
-# Deploy: push a main → Netlify redeploya automáticamente
+# Deploy: push a main → GitHub Pages redeploya automáticamente
 git push
 ```
 
@@ -23,15 +23,15 @@ No hay tests ni linter configurados.
 Stack 100% gratuito y sin servidor propio. No hay pago electrónico ni precios visibles en el sitio: todo se cotiza por WhatsApp.
 
 ```
-tallerkappa.com.ar (Netlify)
+tallerkappa.com.ar (GitHub Pages)
 ├── Frontend estático — HTML/CSS/JS vanilla, sin framework ni bundler
 ├── Firebase Firestore — base de datos accedida directo desde el browser via CDN SDK
 └── Firebase Auth     — autenticación del panel admin
 ```
 
-No hay funciones serverless (se eliminó `/api/checkout` y la integración con MercadoPago).
+No hay funciones serverless (se eliminó `/api/checkout` y la integración con MercadoPago). El hosting es GitHub Pages, configurado en el repo (Settings → Pages, rama `main`, carpeta `/`) con el dominio custom en el archivo `CNAME`. GitHub Pages no soporta headers ni redirects custom (a diferencia de Netlify); `404.html` en la raíz cubre las páginas no encontradas automáticamente.
 
-`server.js` y `models.js` son restos del sistema anterior (Express + MongoDB) y **no se usan**.
+`server.js` y `models.js` son restos del sistema anterior (Express + MongoDB) y **no se usan**. Tampoco se usa más Netlify — si ves un `netlify.toml` en el historial es de la config anterior.
 
 ## Globals — cómo se comunican los archivos JS
 

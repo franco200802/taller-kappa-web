@@ -1329,6 +1329,12 @@ footer { background: var(--dark); color: #888; padding: 70px 5% 40px; }
 }
 .marquee-track span { padding: 0 1.5rem; }
 .marquee-dot { color: rgba(255,255,255,0.4); padding: 0 0.5rem !important; }
+.marquee-track.marquee-css {
+    animation: marquee-scroll 25s linear infinite;
+}
+.marquee-track.marquee-css:hover {
+    animation-play-state: paused;
+}
 @keyframes marquee-scroll {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }

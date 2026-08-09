@@ -1,6 +1,6 @@
 /* ============================================================
    TALLER KAPPA — animations.js
-   Stack: Lenis (smooth scroll) + GSAP + ScrollTrigger + Splitting
+   Stack: GSAP + ScrollTrigger + Splitting
    ============================================================ */
 
 /* ── Reduced motion: desactivar todo ── */
@@ -12,23 +12,6 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     });
     // No inicializar nada más
     throw new Error('prefers-reduced-motion: animations disabled');
-}
-
-/* ── Lenis smooth scroll ── */
-const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-let lenis;
-if (!isMobile) {
-    lenis = new Lenis({
-        duration: 1.4,
-        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        wheelMultiplier: 0.8,
-    });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(time => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-    window.lenis = lenis;
 }
 
 /* ── GSAP plugins ── */
@@ -168,14 +151,10 @@ function initScrollAnimations() {
         });
     });
 
-    /* Marquee GSAP */
+    /* Marquee — animación CSS pura (compositor), no depende del ticker de GSAP */
     document.querySelectorAll('[data-marquee]').forEach(el => {
         el.innerHTML = el.innerHTML.repeat(4);
-        const tween = gsap.to(el, {
-            xPercent: -50, duration: 25, ease: 'none', repeat: -1
-        });
-        el.addEventListener('mouseenter', () => tween.timeScale(0.2));
-        el.addEventListener('mouseleave', () => tween.timeScale(1));
+        el.classList.add('marquee-css');
     });
 }
 

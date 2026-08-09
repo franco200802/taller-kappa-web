@@ -9,18 +9,18 @@ Sitio web de e-commerce para **Taller Kappa S.R.L.**, fábrica de muebles de hie
 ## 🏗️ Arquitectura v2 (100% gratuita)
 
 ```
-tallerkappa.com.ar (Netlify)
+tallerkappa.com.ar (GitHub Pages)
 │
-├── Frontend (HTML/CSS/JS) → se sirve estático desde Netlify
+├── Frontend (HTML/CSS/JS) → se sirve estático desde GitHub Pages
 ├── Firebase Firestore    → base de datos (directo desde el browser)
-└── Firebase Auth         → registro y login de usuarios
+└── Firebase Auth         → login del panel admin
 ```
 
 No hay pago electrónico ni funciones serverless: todo pedido se cotiza por WhatsApp.
 
 | Capa | Tecnología | Plan |
 |------|-----------|------|
-| Frontend + Hosting | Netlify | **Gratis** (100GB/mes) |
+| Frontend + Hosting | GitHub Pages | **Gratis** |
 | Base de datos | Firebase Firestore | **Gratis** (Spark: 50K reads/día) |
 | Autenticación | Firebase Auth | **Gratis** (50K users/mes) |
 
@@ -55,8 +55,7 @@ taller-kappa-web/
 ├── firestore.rules         # 🔥 Reglas de seguridad
 ├── seed-firestore.js       # 🔥 Script para poblar Firestore (se ejecuta 1 vez)
 │
-├── netlify.toml            # Configuración de Netlify
-│
+├── CNAME                   # Dominio personalizado para GitHub Pages
 ├── package.json            # Dependencias (solo firebase-admin)
 ├── sw.js                   # Service Worker (PWA)
 ├── manifest.json           # Web App Manifest
@@ -143,26 +142,28 @@ node seed-firestore.js
 
 5. Verificar en Firebase Console → Firestore que aparecen las colecciones: `productos`, `faqs`, `testimonios`
 
-### Paso 8: Configurar Netlify (5 min)
+### Paso 8: Activar GitHub Pages (2 min)
 
-1. Ir a **[app.netlify.com](https://app.netlify.com)** → Crear cuenta (gratis, con GitHub)
-2. Clic en **"Add new site"** → **"Import an existing project"**
-3. Seleccionar GitHub → repo `franco200802/taller-kappa-web`
-4. Configuración de build:
-   - **Build command:** (dejarlo vacío)
-   - **Publish directory:** `.`
-5. Clic en **"Deploy"**
+1. En GitHub → repo `franco200802/taller-kappa-web` → **Settings** → **Pages**
+2. **Source:** Deploy from a branch → rama `main`, carpeta `/ (root)`
+3. Guardar. GitHub va a publicar el sitio en `https://franco200802.github.io/taller-kappa-web/`
+4. El dominio custom ya está seteado por el archivo `CNAME` en la raíz del repo (contiene `tallerkappa.com.ar`)
 
-### Paso 9: Dominio personalizado en Netlify (5 min)
+### Paso 9: Dominio personalizado — DNS (5 min + propagación)
 
-1. En Netlify → **Domain settings** → **Add custom domain**
-2. Agregar `tallerkappa.com.ar`
-3. En tu proveedor de DNS (Cloudflare, NIC.ar, etc.) crear:
-   - **CNAME** `@` → `tu-sitio-netlify.netlify.app`
-   - O los registros que Netlify te indique
-4. Esperar propagación DNS (puede tardar 5-30 min)
+En tu proveedor de DNS (Cloudflare, NIC.ar, etc.), configurar:
 
-> **Si usás Cloudflare:** En el registro DNS poné el proxy en "DNS only" (nube gris) para que funcione el SSL de Netlify.
+| Tipo | Host | Valor |
+|------|------|-------|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `franco200802.github.io` |
+
+> **Si usás Cloudflare:** poné el proxy en "DNS only" (nube gris) mientras GitHub verifica el dominio y emite el certificado SSL; después podés volver a activar el proxy si querés.
+
+Una vez que el DNS propaga (puede tardar de minutos a algunas horas), en GitHub → Settings → Pages vas a ver el dominio verificado y vas a poder tildar **"Enforce HTTPS"**.
 
 ---
 
@@ -176,7 +177,7 @@ Entrá a `tallerkappa.com.ar/admin.html` con:
 
 ## 🚀 Deploy — Flujo cotidiano
 
-El deploy es **automático**: cualquier push a `main` redeploya el sitio en Netlify en ~30 segundos.
+El deploy es **automático**: cualquier push a `main` redeploya el sitio en GitHub Pages en menos de un minuto.
 
 ```bash
 # Editás un archivo, por ejemplo styles.css, y luego:
@@ -185,7 +186,7 @@ git commit -m "descripción del cambio"
 git push
 ```
 
-Netlify detecta el push y redeploya solo. Podés ver el estado en [app.netlify.com](https://app.netlify.com).
+GitHub Pages detecta el push y redeploya solo. Podés ver el estado en la pestaña **Actions** del repo o en Settings → Pages.
 
 ### Checklist antes de hacer push a producción
 
@@ -210,9 +211,6 @@ Las reglas **no se deployean con el push de git** — hay que subirlas a mano:
 # Instalar dependencias
 npm install
 
-# Instalar Netlify CLI (opcional, para simular headers/redirects de Netlify en local)
-npm install -g netlify-cli
-
 # Levantar el sitio en http://localhost:8888
 npm run dev
 ```
@@ -224,8 +222,7 @@ npm run dev
 | Servicio | Link | Para qué |
 |----------|------|----------|
 | Firebase Console | [console.firebase.google.com](https://console.firebase.google.com) | DB + Auth |
-| Netlify | [app.netlify.com](https://app.netlify.com) | Hosting |
-| GitHub | [github.com/franco200802/taller-kappa-web](https://github.com/franco200802/taller-kappa-web) | Código fuente |
+| GitHub | [github.com/franco200802/taller-kappa-web](https://github.com/franco200802/taller-kappa-web) | Código fuente + Hosting (Pages) |
 
 ---
 
@@ -236,15 +233,20 @@ npm run dev
 | Firestore "permission denied" en browser | Las reglas de Firestore no están publicadas | Firebase Console → Firestore → Reglas → Publicar |
 | Los productos no cargan | `firebase-config.js` tiene placeholders | Reemplazar los valores con los del proyecto Firebase |
 | El Service Worker sirve contenido viejo | Cache del SW no se invalidó | Actualizar `CACHE_VERSION` en `sw.js` con la fecha actual |
-| Error 404 en páginas internas | No existe `_redirects` o problema con toml | Verificar que `netlify.toml` tiene el redirect `/* → /404.html` con status 404 |
+| El dominio no verifica en Settings → Pages | El DNS todavía no propagó, o los A records/CNAME no coinciden con los de GitHub Pages | Revisar los registros DNS (ver Paso 9) y esperar propagación |
+| Sitio no actualiza tras un push | El workflow de Pages falló | Repo → pestaña **Actions**, ver el log del deploy |
+
+> Nota: GitHub Pages no soporta headers ni redirects custom (a diferencia de Netlify). El único "redirect" que existe es el `404.html` de la raíz, que GitHub sirve automáticamente para rutas inexistentes.
 
 ---
 
 ## ❌ Ya NO se necesita
 
-- ~~Render.com~~ → reemplazado por Netlify Functions
+- ~~Render.com~~ → reemplazado por Firebase + GitHub Pages
+- ~~Netlify~~ → reemplazado por GitHub Pages (ya no hay funciones serverless que justifiquen Netlify)
 - ~~MongoDB Atlas~~ → reemplazado por Firebase Firestore
 - ~~Express / Node server~~ → reemplazado por Firebase SDK directo
+- ~~MercadoPago~~ → reemplazado por cotización directa por WhatsApp
 
 ---
 
@@ -252,7 +254,7 @@ npm run dev
 
 | Servicio | Límite gratis | Tu uso estimado |
 |----------|---------------|-----------------|
-| Netlify hosting | 100 GB bandwidth/mes | ~1 GB |
+| GitHub Pages | 100 GB bandwidth/mes, 10 builds/hora | ~1 GB |
 | Firestore reads | 50,000/día | ~500 |
 | Firestore writes | 20,000/día | ~50 |
 | Firebase Auth | 50,000 users/mes | ~10 |
