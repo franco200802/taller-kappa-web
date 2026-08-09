@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "seed": "node seed-firestore.js",
+    "fix-images": "node fix-image-urls.js",
     "dev": "npx --yes serve -l 8888 .",
     "test": "echo \"No tests\" && exit 0"
   },
