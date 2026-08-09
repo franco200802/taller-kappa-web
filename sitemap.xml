@@ -7,12 +7,12 @@
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <image:image>
-            <image:loc>https://tallerkappa.com.ar/images/bkf1.png</image:loc>
+            <image:loc>https://tallerkappa.com.ar/images/bkf1.jpg</image:loc>
             <image:title>Sillón BKF Buenos Aires — Taller Kappa</image:title>
             <image:caption>Sillón BKF de hierro macizo y cuero vacuno, fabricado en San Martín, Buenos Aires. Directo de fábrica.</image:caption>
         </image:image>
         <image:image>
-            <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.png</image:loc>
+            <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.jpg</image:loc>
             <image:title>Banco BKF hierro y cuero Buenos Aires — Taller Kappa</image:title>
             <image:caption>Banco BKF de hierro y cuero, ideal como pie de cama o auxiliar. Envíos a Capital Federal y GBA.</image:caption>
         </image:image>
@@ -28,12 +28,12 @@
         <changefreq>weekly</changefreq>
         <priority>0.95</priority>
         <image:image>
-            <image:loc>https://tallerkappa.com.ar/images/bkf1.png</image:loc>
+            <image:loc>https://tallerkappa.com.ar/images/bkf1.jpg</image:loc>
             <image:title>Sillas de hierro y cuero Buenos Aires — Sillón BKF Taller Kappa</image:title>
             <image:caption>Sillón BKF Premium, sillas de hierro y cuero vacuno. Fábrica en San Martín, Buenos Aires.</image:caption>
         </image:image>
         <image:image>
-            <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.png</image:loc>
+            <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.jpg</image:loc>
             <image:title>Banco BKF — sillas de hierro y cuero</image:title>
             <image:caption>Banco BKF de hierro macizo 12mm. Envíos a CABA y Gran Buenos Aires.</image:caption>
         </image:image>
@@ -56,7 +56,7 @@
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <image:image>
-            <image:loc>https://tallerkappa.com.ar/images/bkf1.png</image:loc>
+            <image:loc>https://tallerkappa.com.ar/images/bkf1.jpg</image:loc>
             <image:title>Sillón BKF Premium de hierro macizo y cuero vacuno — Taller Kappa</image:title>
             <image:caption>Sillón BKF original fabricado en Argentina con hierro macizo 12mm y cuero vacuno</image:caption>
         </image:image>

@@ -38,7 +38,7 @@ const productosFallback = [
         id: 1,
         category: 'asientos',
         name: 'Sillón BKF Premium',
-        image: 'images/bkf1.png',
+        image: 'images/bkf1.jpg',
         badge: 'Más vendido',
         stock: true,
         desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
@@ -48,7 +48,7 @@ const productosFallback = [
         id: 2,
         category: 'asientos',
         name: 'Banco BKF',
-        image: 'images/bkfapoyapies.png',
+        image: 'images/bkfapoyapies.jpg',
         badge: 'Ideal para regalo',
         stock: true,
         desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
@@ -681,8 +681,8 @@ function initHeroSparks()    { /* desactivado */ }
    LIGHTBOX DE GALERÍA
    ============================== */
 const galleryImages = [
-    { src: 'images/bkf1.png',         caption: 'Sillón BKF Premium' },
-    { src: 'images/bkfapoyapies.png',  caption: 'Banco BKF' },
+    { src: 'images/bkf1.jpg',         caption: 'Sillón BKF Premium' },
+    { src: 'images/bkfapoyapies.jpg',  caption: 'Banco BKF' },
     { src: 'images/mesa.jpeg',         caption: 'Base de Mesa Flat' },
 ];
 let lightboxIdx = 0;

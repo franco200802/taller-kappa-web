@@ -23,7 +23,7 @@ const SEED_DATA = {
         {
             name: 'Sillón BKF Premium',
             category: 'asientos',
-            image: 'images/bkf1.png',
+            image: 'images/bkf1.jpg',
             badge: 'Más vendido',
             stock: true,
             price: 280000,
@@ -35,7 +35,7 @@ const SEED_DATA = {
         {
             name: 'Banco BKF',
             category: 'asientos',
-            image: 'images/bkfapoyapies.png',
+            image: 'images/bkfapoyapies.jpg',
             badge: 'Ideal para regalo',
             stock: true,
             price: 140000,
