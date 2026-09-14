@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Seo, { breadcrumbList } from '../components/Seo';
+import { useStaggerReveal } from '../lib/useReveal';
 
 const FALLBACK_FAQS = [
   { id: '1', question: '¿Dónde comprar un sillón BKF en Buenos Aires?', answer: 'En Taller Kappa, fábrica ubicada en San Martín, Buenos Aires.' },
@@ -22,6 +23,10 @@ function FaqItem({ f }) {
 
 export default function FAQ() {
   const [faqs, setFaqs] = useState(FALLBACK_FAQS);
+  // useStaggerReveal anima vía estilos inline (anime.js), por eso es inmune
+  // a que React reescriba el className de cada .faq-item al abrir/cerrar
+  // el acordeón (a diferencia del sistema global de reveal por classList).
+  const listRef = useStaggerReveal('.faq-item', { staggerMs: 60 });
 
   useEffect(() => {
     import('../lib/firedb')
@@ -49,7 +54,7 @@ export default function FAQ() {
         jsonLd={[faqSchema, breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Preguntas Frecuentes', path: '/faq' }])]}
       />
       <h1>Preguntas Frecuentes sobre Sillones BKF y Envíos en Buenos Aires</h1>
-      <div id="faq">
+      <div id="faq" ref={listRef}>
         {faqs.map((f) => <FaqItem key={f.id} f={f} />)}
       </div>
     </section>

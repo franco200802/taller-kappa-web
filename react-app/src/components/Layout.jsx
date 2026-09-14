@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useAutoReveal } from '../lib/useAutoReveal';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -38,6 +39,9 @@ export default function Layout() {
 
   // Scroll al top en cada cambio de ruta (SPA no lo hace solo)
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+
+  // Revela secciones/cards con opacity:0 por defecto (heredado del CSS viejo)
+  useAutoReveal();
 
   return (
     <div className={isHome ? '' : 'inner-page'}>

@@ -23,6 +23,21 @@ const FALLBACK_PRODUCTS = [
   },
 ];
 
+const COLORS = [
+  { name: 'Negro Mate', swatch: '#1a1a1a' },
+  { name: 'Blanco Crema', swatch: '#f5f0e8' },
+  { name: 'Cromado', swatch: 'linear-gradient(135deg,#ccc,#fff,#aaa)' },
+  { name: 'Verde Oliva', swatch: '#556b2f' },
+  { name: 'Rojo Kappa', swatch: '#b71c1c' },
+];
+
+const MATERIALS = [
+  { color: '#555', title: 'Hierro Macizo', desc: 'Varilla redonda de 12mm, sin costuras ni rellenos. Indeformable ante el uso intensivo.', pct: 95, label: 'Resistencia: 95%' },
+  { color: '#8B4513', title: 'Cuero Vacuno', desc: 'Cuero de primera selección, curtido al vegetal. Natural, durable y de aspecto premium.', pct: 90, label: 'Calidad: Premium' },
+  { color: '#b71c1c', title: 'Pintura Epoxi', desc: 'Tratamiento anticorrosivo de doble capa. Resistente a humedad, ralladuras y UV.', pct: 88, label: 'Durabilidad: Alta' },
+  { color: '#aaa', title: 'Cromado Industrial', desc: 'Acabado espejado de nivel industrial. Resistente a la corrosión, fácil de limpiar.', pct: 85, label: 'Acabado: Brillante' },
+];
+
 function ProductCard({ p, onOpen }) {
   const { addToCart } = useCart();
   return (
@@ -53,9 +68,11 @@ function ProductCard({ p, onOpen }) {
 }
 
 export default function Catalogo() {
+  const { addToCart } = useCart();
   const [products, setProducts] = useState(FALLBACK_PRODUCTS);
   const [filter, setFilter] = useState('all');
   const [modalProduct, setModalProduct] = useState(null);
+  const [modalColor, setModalColor] = useState('Negro Mate');
 
   useEffect(() => {
     let cancelled = false;
@@ -67,43 +84,105 @@ export default function Catalogo() {
     return () => { cancelled = true; };
   }, []);
 
+  const openModal = (p) => {
+    setModalColor('Negro Mate');
+    setModalProduct(p);
+    document.body.style.overflow = 'hidden';
+  };
+  const closeModal = () => {
+    setModalProduct(null);
+    document.body.style.overflow = '';
+  };
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') closeModal(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   const filtered = filter === 'all' ? products : products.filter((p) => p.category === filter);
+  const FILTERS = [
+    { key: 'all', label: 'Todos', icon: 'fa-border-all' },
+    { key: 'asientos', label: 'Asientos', icon: 'fa-chair' },
+    { key: 'mesas', label: 'Mesas', icon: 'fa-table' },
+  ];
 
   return (
-    <section className="section-padding" style={{ paddingTop: 40 }}>
+    <>
       <Seo
         title="Catálogo de Sillas de Hierro y Cuero | Taller Kappa Buenos Aires"
         description="Catálogo de sillones BKF, bancos y bases de mesa de hierro macizo y cuero vacuno. Fabricación propia en San Martín, Buenos Aires."
         path="/catalogo"
         jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }])}
       />
-      <h1 className="section-title">Sillas de Hierro y Cuero — Buenos Aires</h1>
+      <main id="catalogo" className="section-padding">
+        <h1 className="section-title">Sillas de Hierro y Cuero — Buenos Aires</h1>
 
-      <div className="filter-bar">
-        {['all', 'asientos', 'mesas'].map((cat) => (
-          <button key={cat} className={`filter-btn ${filter === cat ? 'active' : ''}`} onClick={() => setFilter(cat)}>
-            {cat === 'all' ? 'Todos' : cat === 'asientos' ? 'Asientos' : 'Mesas'}
-          </button>
-        ))}
-      </div>
-
-      <div className="products-grid">
-        {filtered.map((p) => <ProductCard key={p.id} p={p} onOpen={setModalProduct} />)}
-      </div>
-
-      {modalProduct && (
-        <div className="product-modal active" onClick={(e) => e.target === e.currentTarget && setModalProduct(null)}>
-          <div className="modal-content">
-            <button className="close-modal" onClick={() => setModalProduct(null)}>×</button>
-            <img src={modalProduct.image} alt={modalProduct.name} />
-            <h2>{modalProduct.name}</h2>
-            <p>{modalProduct.desc}</p>
-            <ul className="modal-specs">
-              {modalProduct.specs?.map((s) => <li key={s}><i className="fas fa-check" /> {s}</li>)}
-            </ul>
-          </div>
+        <div className="filters" role="group" aria-label="Filtrar productos">
+          {FILTERS.map((f) => (
+            <button key={f.key} className={`filter-btn ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
+              <i className={`fas ${f.icon}`} /> {f.label}
+            </button>
+          ))}
         </div>
-      )}
-    </section>
+
+        <div className="products-grid" aria-live="polite">
+          {filtered.map((p) => <ProductCard key={p.id} p={p} onOpen={openModal} />)}
+        </div>
+      </main>
+
+      <section className="materials-section section-fade" aria-label="Nuestros materiales">
+        <h2 className="section-title">Calidad que se ve y se toca</h2>
+        <p className="section-subtitle">Cada pieza fabricada con los mejores materiales del mercado.</p>
+        <div className="materials-grid">
+          {MATERIALS.map((m) => (
+            <div className="material-card" key={m.title}>
+              <div className="material-icon"><i className="fas fa-circle" style={{ color: m.color }} /></div>
+              <h3>{m.title}</h3>
+              <p>{m.desc}</p>
+              <div className="material-bar"><div className="material-fill" style={{ width: `${m.pct}%` }} /></div>
+              <span className="material-label">{m.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className={`modal ${modalProduct ? 'active' : ''}`} role="dialog" aria-modal="true"
+        onClick={(e) => e.target === e.currentTarget && closeModal()}>
+        {modalProduct && (
+          <div className="modal-content">
+            <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
+            <div className="modal-img">
+              <img src={modalProduct.image} alt={modalProduct.name} loading="lazy" />
+            </div>
+            <div className="modal-info">
+              <div className="modal-badge-row">
+                {modalProduct.badge && <span className="modal-badge">{modalProduct.badge}</span>}
+              </div>
+              <h2>{modalProduct.name}</h2>
+              <div className="modal-stock"><span className="stock-dot" /> En stock — Entrega coordinada</div>
+              <p>{modalProduct.desc}</p>
+              <ul className="modal-specs">
+                {modalProduct.specs?.map((s) => <li key={s}><i className="fas fa-check" /> {s}</li>)}
+              </ul>
+              <div className="color-selector">
+                <p className="color-label">Acabado: <strong>{modalColor}</strong></p>
+                <div className="color-options">
+                  {COLORS.map((c) => (
+                    <button key={c.name} className={`color-swatch ${modalColor === c.name ? 'active' : ''}`}
+                      style={{ background: c.swatch }} aria-label={c.name} title={c.name}
+                      onClick={() => setModalColor(c.name)} />
+                  ))}
+                </div>
+              </div>
+              <button className="btn-main" onClick={() => { addToCart(modalProduct, modalColor); closeModal(); }}>
+                <i className="fas fa-plus" style={{ marginRight: 8 }} /> Agregar al Presupuesto
+              </button>
+              <p className="modal-hint"><i className="fab fa-whatsapp" /> Recibís el precio en minutos por WhatsApp</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
