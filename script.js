@@ -692,6 +692,7 @@ function openLightbox(idx) {
     const lb  = document.getElementById('lightbox');
     const img = document.getElementById('lightbox-img');
     const cap = document.getElementById('lightbox-caption');
+    if (!lb || !img || !cap) return;
     img.src        = galleryImages[idx].src;
     img.alt        = galleryImages[idx].caption;
     cap.textContent = galleryImages[idx].caption;
@@ -700,7 +701,9 @@ function openLightbox(idx) {
 }
 
 function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
+    const lb = document.getElementById('lightbox');
+    if (!lb) return;
+    lb.classList.remove('active');
     document.body.style.overflow = '';
 }
 
@@ -712,7 +715,7 @@ function shiftLightbox(dir) {
 // Teclado para el lightbox
 document.addEventListener('keydown', (e) => {
     const lb = document.getElementById('lightbox');
-    if (!lb.classList.contains('active')) return;
+    if (!lb || !lb.classList.contains('active')) return;
     if (e.key === 'ArrowRight') shiftLightbox(1);
     if (e.key === 'ArrowLeft')  shiftLightbox(-1);
     if (e.key === 'Escape')     closeLightbox();
