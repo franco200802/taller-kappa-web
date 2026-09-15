@@ -12,7 +12,7 @@ const WHY = [
 
 const NUMBERS = [
   { target: 15, suffix: '+', label: 'Años de experiencia' },
-  { target: 500, suffix: '+', label: 'Proyectos entregados' },
+  { target: 100, suffix: '%', label: 'Fabricación nacional' },
   { target: 12, suffix: '', label: 'mm de hierro macizo' },
   { target: 5, suffix: '', label: 'Grandes marcas equipadas' },
 ];
@@ -100,7 +100,7 @@ export default function Nosotros() {
       />
       <div className="page-hero">
         <div className="page-hero-content">
-          <h1><i className="fas fa-users" /> Nosotros</h1>
+          <h1><i className="fas fa-users" /> Nosotros — Fábrica de Muebles de Hierro en San Martín</h1>
           <p>Más de 15 años fabricando con precisión, calidad y pasión.</p>
           <nav className="breadcrumb" aria-label="Ruta de navegación">
             <Link to="/">Inicio</Link>
@@ -116,7 +116,7 @@ export default function Nosotros() {
             <h2 className="section-title">Nuestra Historia</h2>
             <p>Taller Kappa nació hace más de <strong>15 años</strong> en San Martín, Buenos Aires, con una sola misión: fabricar mobiliario de hierro y cuero de calidad industrial, accesible a locales, empresas y particulares.</p>
             <p>Desde el primer día trabajamos con hierro macizo de 12mm, cuero vacuno de primera selección y pintura epoxi de doble capa. Sin atajos, sin materiales baratos.</p>
-            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios.</p>
+            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf">Sillón BKF</Link> o mirá el <Link to="/catalogo">catálogo completo</Link>.</p>
             <Link to="/contacto" className="btn-main" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: '1.5rem' }}>
               <i className="fas fa-envelope" /> Contactarnos
             </Link>

@@ -7,7 +7,7 @@ const PROJECTS = [
     logo: '/images/logoypf.png', alt: 'Equipamiento YPF Full - muebles de hierro',
     title: 'YPF Full — Estaciones de Servicio', tag: 'Múltiples sucursales, Buenos Aires',
     desc: 'Fabricamos y entregamos bases de mesa Flat y bancos de hierro para las tiendas YPF Full. Diseño resistente al uso intensivo 24/7 con acabado en pintura epoxi negra.',
-    specs: ['+50 bases de mesa entregadas', 'Acabado epoxi negro mate', 'Garantía de resistencia industrial'],
+    specs: ['Bases de mesa entregadas', 'Acabado epoxi negro mate', 'Fabricación resistente a uso intensivo'],
   },
   {
     logo: '/images/mcdonaldslogo.png', alt: "Equipamiento McDonald's - mesas de hierro",
@@ -48,8 +48,8 @@ export default function Proyectos() {
       />
       <div className="page-hero">
         <div className="page-hero-content">
-          <h1><i className="fas fa-briefcase" /> Proyectos</h1>
-          <p>Clientes que confiaron en nuestra calidad para equipar sus espacios.</p>
+          <h1><i className="fas fa-briefcase" /> Proyectos de Mobiliario de Hierro para Empresas</h1>
+          <p>Equipamiento comercial y gastronómico fabricado a medida para locales y franquicias.</p>
           <nav className="breadcrumb" aria-label="Ruta de navegación">
             <Link to="/">Inicio</Link>
             <i className="fas fa-chevron-right" />
@@ -61,6 +61,10 @@ export default function Proyectos() {
       <section className="projects-section section-padding section-fade">
         <h2 className="section-title">Nuestros Clientes</h2>
         <p className="section-subtitle">Grandes marcas eligen Taller Kappa para su equipamiento comercial.</p>
+        <p style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 30px' }}>
+          Fabricamos mobiliario de hierro y cuero a medida para locales gastronómicos, estaciones de servicio
+          y comercios. Si tenés un proyecto para tu empresa, <Link to="/contacto">contactanos</Link> y te asesoramos.
+        </p>
 
         <div className="projects-grid" ref={gridRef}>
           {PROJECTS.map((p) => (

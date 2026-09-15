@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
+import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 
 const FALLBACK_PRODUCTS = [
   {
     id: '1', category: 'asientos', name: 'Sillón BKF Premium', image: '/images/bkf1.jpg',
-    badge: 'Más vendido', stock: true,
+    badge: 'Diseño icónico', stock: true,
     desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
     specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm'],
   },
@@ -139,6 +140,10 @@ export default function Catalogo() {
       />
       <main id="catalogo" className="section-padding">
         <h1 className="section-title">Sillas de Hierro y Cuero — Buenos Aires</h1>
+        <p style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 20px' }}>
+          Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
+          Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf">Sillón BKF</Link>.
+        </p>
 
         <div className="filters" role="group" aria-label="Filtrar productos">
           {FILTERS.map((f) => (
@@ -155,7 +160,7 @@ export default function Catalogo() {
 
       <section className="materials-section section-fade" aria-label="Nuestros materiales">
         <h2 className="section-title">Calidad que se ve y se toca</h2>
-        <p className="section-subtitle">Cada pieza fabricada con los mejores materiales del mercado.</p>
+        <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
         <div className="materials-grid">
           {MATERIALS.map((m) => (
             <div className="material-card" key={m.title}>
@@ -167,6 +172,10 @@ export default function Catalogo() {
             </div>
           ))}
         </div>
+        <p style={{ textAlign: 'center', marginTop: 20 }}>
+          ¿Tenés dudas sobre precios o medidas? <Link to="/contacto">Contactanos</Link> o mirá las{' '}
+          <Link to="/faq">preguntas frecuentes</Link>.
+        </p>
       </section>
 
       <div className={`modal ${modalProduct ? 'active' : ''}`} role="dialog" aria-modal="true"

@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Sillón BKF Buenos Aires | Sillas de Hierro y Cuero | Taller Kappa"
-        description="Fabricamos sillones BKF, bancos y bases de mesa de hierro y cuero en San Martín, Buenos Aires. Directo de fábrica."
+        title="Taller Kappa | Sillones BKF y Muebles de Hierro en Buenos Aires"
+        description="Fábrica de sillones BKF, bancos y bases de mesa de hierro y cuero en San Martín, Buenos Aires. Fabricación a medida, envíos y atención a empresas."
         path="/"
       />
       <section className="hero">
@@ -64,6 +64,16 @@ export default function Home() {
         <p style={{ textAlign: 'center', marginBottom: 30 }}>
           Mobiliario industrial fabricado a mano en San Martín, Buenos Aires.{' '}
           <Link to="/sillon-bkf">Ver todo sobre el Sillón BKF →</Link>
+        </p>
+        <p style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 20px' }}>
+          Además de sillones, equipamos locales gastronómicos y comercios con bases de mesa de hierro.
+          Conocé nuestros <Link to="/proyectos">proyectos realizados</Link> para marcas como YPF, McDonald's
+          y Burger King, o descubrí la <Link to="/nosotros">historia de Taller Kappa</Link>.
+        </p>
+        <p style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto' }}>
+          Antes de comprar, revisá nuestras <Link to="/envios">zonas y tiempos de envío</Link> y las{' '}
+          <Link to="/garantia">condiciones de garantía</Link>. Si tenés dudas, visitá las{' '}
+          <Link to="/faq">preguntas frecuentes</Link> o <Link to="/contacto">contactanos</Link> directamente.
         </p>
         {/* El grid de productos vive en /catalogo — acá solo el teaser + CTA */}
       </section>

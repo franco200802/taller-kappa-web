@@ -30,8 +30,8 @@ export default function Envios() {
       />
       <div className="page-hero">
         <div className="page-hero-content">
-          <h1><i className="fas fa-truck" /> Envíos</h1>
-          <p>Llegamos a todo el país con embalaje profesional y envío bonificado.</p>
+          <h1><i className="fas fa-truck" /> Envíos de Muebles de Hierro en Buenos Aires</h1>
+          <p>Llegamos a Capital Federal, GBA y al interior del país con embalaje profesional.</p>
           <nav className="breadcrumb" aria-label="Ruta de navegación">
             <Link to="/">Inicio</Link>
             <i className="fas fa-chevron-right" />
@@ -82,6 +82,10 @@ export default function Envios() {
               <i className="fas fa-th-large" /> Ver Catálogo
             </Link>
           </div>
+          <p style={{ marginTop: 16 }}>
+            Conocé también nuestras <Link to="/garantia">condiciones de garantía</Link> o
+            todo sobre el <Link to="/sillon-bkf">Sillón BKF</Link>.
+          </p>
         </div>
       </section>
     </>

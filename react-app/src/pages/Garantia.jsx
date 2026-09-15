@@ -29,7 +29,7 @@ export default function Garantia() {
       />
       <div className="page-hero">
         <div className="page-hero-content">
-          <h1><i className="fas fa-shield-alt" /> Garantía y Cuidados</h1>
+          <h1><i className="fas fa-shield-alt" /> Garantía y Cuidados de Muebles de Hierro y Cuero</h1>
           <p>Respaldamos cada pieza que fabricamos con garantía de calidad.</p>
           <nav className="breadcrumb" aria-label="Ruta de navegación">
             <Link to="/">Inicio</Link>
@@ -85,6 +85,10 @@ export default function Garantia() {
               <i className="fas fa-question-circle" /> Preguntas Frecuentes
             </Link>
           </div>
+          <p style={{ marginTop: 16 }}>
+            Ver el <Link to="/catalogo">catálogo completo</Link> o{' '}
+            <Link to="/contacto">contactanos</Link> por cualquier consulta.
+          </p>
         </div>
       </section>
     </>

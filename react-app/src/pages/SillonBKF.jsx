@@ -45,10 +45,10 @@ const FAQ_SCHEMA = {
   '@type': 'FAQPage',
   mainEntity: [
     { '@type': 'Question', name: '¿Cuánto cuesta el sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega. Consultá por WhatsApp al 11 6124-2498 para recibir presupuesto actualizado.' } },
-    { '@type': 'Question', name: '¿El sillón BKF es original o copia?', acceptedAnswer: { '@type': 'Answer', text: 'El sillón BKF de Taller Kappa es fabricado artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño original de Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy de 1938. Es producción nacional de alta calidad.' } },
+    { '@type': 'Question', name: '¿El sillón BKF de Taller Kappa sigue el diseño original?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' } },
     { '@type': 'Question', name: '¿Cuánto tarda en fabricarse un sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'El tiempo de fabricación depende del stock disponible. Si hay unidades en stock, la entrega puede ser en 24-48 horas en GBA. Para pedidos a medida, el plazo es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' } },
     { '@type': 'Question', name: '¿El sillón BKF tiene garantía?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' } },
-    { '@type': 'Question', name: '¿Puedo elegir el color del sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. Ofrecemos el sillón BKF en negro mate (el más vendido), blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' } },
+    { '@type': 'Question', name: '¿Puedo elegir el color del sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' } },
   ],
 };
 
@@ -79,8 +79,8 @@ export default function SillonBKF() {
   return (
     <>
       <Seo
-        title="Sillón BKF — Original de Hierro y Cuero | Taller Kappa Buenos Aires"
-        description="Sillón BKF original fabricado en hierro macizo 12mm y cuero vacuno. Directo de fábrica en San Martín, Buenos Aires. El BKF más resistente del mercado. Enviamos a todo el país."
+        title="Sillón BKF de Hierro y Cuero | Taller Kappa Buenos Aires"
+        description="Sillón BKF fabricado en hierro macizo 12mm y cuero vacuno. Directo de fábrica en San Martín, Buenos Aires. Fabricación a medida y envíos."
         path="/sillon-bkf"
         image="https://tallerkappa.com.ar/images/bkf1.jpg"
         type="product"
@@ -113,7 +113,7 @@ export default function SillonBKF() {
           <div className="bkf-img-col">
             <img src="/images/bkf1.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" loading="eager" />
             <div className="bkf-badges">
-              <span className="bkf-badge"><i className="fas fa-star" /> Más vendido</span>
+              <span className="bkf-badge"><i className="fas fa-star" /> Diseño icónico</span>
               <span className="bkf-badge"><i className="fas fa-industry" /> Fábrica propia</span>
               <span className="bkf-badge"><i className="fas fa-truck" /> Envío a todo el país</span>
             </div>
@@ -164,7 +164,7 @@ export default function SillonBKF() {
           <h2>¿Qué es el Sillón BKF?</h2>
           <p>El <strong>sillón BKF</strong> (también conocido como <em>silla paleta</em> o <em>butterfly chair</em>) es uno de los diseños de mobiliario más reconocidos de Argentina y del mundo. Fue creado en 1938 por los arquitectos argentinos <strong>Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy</strong> en Buenos Aires, de ahí las iniciales BKF.</p>
           <p>Su estructura de <strong>hierro forjado</strong> en forma de mariposa sostiene una funda de cuero tensada, generando una silueta inconfundible. Es elegido tanto para interiores modernos y minimalistas como para locales gastronómicos, bares y restaurantes por su <strong>resistencia excepcional</strong> y su diseño atemporal.</p>
-          <p>En Taller Kappa fabricamos el sillón BKF con <strong>hierro macizo redondo de 12mm</strong> (sin tubos, sin rellenos) y <strong>cuero vacuno de primera selección</strong>, lo que lo convierte en el BKF más resistente del mercado. Nuestros sillones equipan locales de <strong>YPF, McDonald's, Burger King y Shell</strong> — un respaldo de calidad que no necesita palabras.</p>
+          <p>En Taller Kappa fabricamos el sillón BKF con <strong>hierro macizo redondo de 12mm</strong> (sin tubos, sin rellenos) y <strong>cuero vacuno de primera selección</strong>, pensado para uso residencial e intensivo. Nuestros sillones equipan locales de <strong>YPF, McDonald's, Burger King y Shell</strong>.</p>
 
           <div className="bkf-history-grid" ref={historyRef}>
             <div className="bkf-history-card">
@@ -185,7 +185,7 @@ export default function SillonBKF() {
             <div className="bkf-history-card">
               <i className="fas fa-shield-alt" />
               <h3>Garantía</h3>
-              <p>Estructura con garantía de por vida. El BKF más duradero del mercado</p>
+              <p>Estructura con garantía de por vida contra deformaciones</p>
             </div>
           </div>
         </div>
@@ -193,36 +193,51 @@ export default function SillonBKF() {
 
       <section className="bkf-comparison section-fade">
         <div className="bkf-about-inner">
-          <h2>¿Por qué el BKF de Taller Kappa?</h2>
-          <p className="section-subtitle">No todos los BKF son iguales. Así se compara el nuestro:</p>
+          <h2>Especificaciones del Sillón BKF Taller Kappa</h2>
+          <p className="section-subtitle">Estos son los materiales y estándares con los que fabricamos cada unidad:</p>
           <div className="comparison-table-wrapper">
             <table className="comparison-table">
               <thead>
                 <tr>
                   <th>Característica</th>
                   <th className="our-col"><i className="fas fa-star" /> Taller Kappa</th>
-                  <th>Otros fabricantes</th>
                 </tr>
               </thead>
               <tbody>
                 {[
-                  ['Hierro', 'Macizo 12mm', 'Tubular o 8mm'],
-                  ['Cuero', 'Vacuno 1ra selección', 'Ecológico o PU'],
-                  ['Pintura', 'Epoxi doble capa', 'Pintura simple'],
-                  ['Garantía estructura', 'De por vida', 'Sin garantía'],
-                  ['Fabricante', 'Directo de fábrica AR', 'Importado o revendedor'],
-                  ['Uso gastronómico', 'Certificado', 'Solo residencial'],
-                  ['Medidas a pedido', 'Sin costo adicional', 'Con recargo'],
-                ].map(([label, ours, other]) => (
+                  ['Hierro', 'Macizo redondo 12mm'],
+                  ['Cuero', 'Vacuno de primera selección'],
+                  ['Pintura', 'Epoxi anticorrosiva doble capa'],
+                  ['Garantía estructura', 'De por vida'],
+                  ['Fabricante', 'Directo de fábrica en San Martín, Buenos Aires'],
+                  ['Uso', 'Residencial e intensivo gastronómico'],
+                  ['Medidas a pedido', 'Sin costo adicional'],
+                ].map(([label, ours]) => (
                   <tr key={label}>
                     <td>{label}</td>
                     <td className="our-col"><strong>{ours}</strong></td>
-                    <td>{other}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+        </div>
+      </section>
+
+      <section className="section-padding section-fade">
+        <div className="bkf-about-inner">
+          <h2>Preguntas Frecuentes sobre el Sillón BKF</h2>
+          {FAQ_SCHEMA.mainEntity.map((q) => (
+            <div key={q.name} style={{ marginBottom: 20 }}>
+              <h3 style={{ marginBottom: 6 }}>{q.name}</h3>
+              <p>{q.acceptedAnswer.text}</p>
+            </div>
+          ))}
+          <p>
+            Ver todas las <Link to="/faq">preguntas frecuentes</Link>, conocé nuestras{' '}
+            <Link to="/garantia">condiciones de garantía</Link> o las{' '}
+            <Link to="/envios">zonas y tiempos de envío</Link>.
+          </p>
         </div>
       </section>
 

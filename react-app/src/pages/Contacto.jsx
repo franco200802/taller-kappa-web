@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
 
@@ -27,12 +28,21 @@ export default function Contacto() {
   return (
     <section className="section-padding" style={{ paddingTop: 60 }}>
       <Seo
-        title="Contacto | Taller Kappa Buenos Aires"
-        description="Contactanos por WhatsApp para cotizar sillones BKF, bancos y bases de mesa de hierro y cuero. Fábrica en San Martín, Buenos Aires."
+        title="Contacto — Taller Kappa | Muebles de Hierro y Sillones BKF"
+        description="Contactanos por WhatsApp, email o formulario para cotizar sillones BKF, bancos y bases de mesa de hierro y cuero. Fábrica en San Martín, Buenos Aires."
         path="/contacto"
         jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Contacto', path: '/contacto' }])}
       />
-      <h1>Contactanos</h1>
+      <h1>Contacto — Taller Kappa, Fábrica de Sillones BKF en Buenos Aires</h1>
+      <div className="contact-info" style={{ maxWidth: 600, margin: '0 auto 30px' }}>
+        <p><i className="fas fa-map-marker-alt" /> Calle 28 Nº 3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
+        <p><i className="fab fa-whatsapp" /> <a href="https://wa.me/541161242498" target="_blank" rel="noopener noreferrer">11 6124-2498</a></p>
+        <p><i className="far fa-envelope" /> <a href="mailto:ing.franciscomarotta@gmail.com">ing.franciscomarotta@gmail.com</a></p>
+        <p>
+          ¿Buscás un producto en particular? Mirá el <Link to="/catalogo">catálogo completo</Link> o
+          todo sobre nuestro <Link to="/sillon-bkf">Sillón BKF</Link>.
+        </p>
+      </div>
       <form onSubmit={handleSubmit} className="contact-form" id="contact-form">
         <label>
           Tu nombre
