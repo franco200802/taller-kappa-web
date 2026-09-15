@@ -24,6 +24,11 @@ const MATERIALS = [
 
 function ProductCard({ p, onOpen }) {
   const { addToCart } = useCart();
+  // Los productos de Firebase (cargados vía FireDB.getProducts en el admin)
+  // no tienen garantizado un `slug` propio como los de data/products.js.
+  // Sin esta guarda, un producto sin slug generaría un link roto real
+  // a /catalogo/undefined en vez de simplemente no enlazar a un detalle.
+  const detailHref = p.slug ? `/catalogo/${p.slug}` : null;
   return (
     <article className="product-card" data-category={p.category}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
@@ -36,14 +41,14 @@ function ProductCard({ p, onOpen }) {
         <div className="card-overlay"><i className="fas fa-search-plus" /> Ver detalle</div>
       </div>
       <div className="card-info">
-        <h3><Link to={`/catalogo/${p.slug}`}>{p.name}</Link></h3>
+        <h3>{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h3>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
           href={`https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}`}>
           <i className="fab fa-whatsapp" /> Consultar precio
         </a>
         <div className="card-actions">
-          <Link to={`/catalogo/${p.slug}`} className="btn-detail"><i className="fas fa-info-circle" /> Ver {p.name}</Link>
+          {detailHref && <Link to={detailHref} className="btn-detail"><i className="fas fa-info-circle" /> Ver {p.name}</Link>}
           <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><i className="fas fa-plus" /> Presupuestar</button>
         </div>
       </div>
@@ -105,6 +110,9 @@ export default function Catalogo() {
         name: p.name,
         description: p.desc,
         image: `https://tallerkappa.com.ar${p.image}`,
+        // Los productos sin slug (ej. cargados desde Firebase por el admin,
+        // que no garantiza ese campo) no deben emitir una url inventada.
+        ...(p.slug ? { url: `https://tallerkappa.com.ar/catalogo/${p.slug}` } : {}),
         category: p.category,
         brand: { '@type': 'Brand', name: 'Taller Kappa' },
         offers: {
