@@ -14,7 +14,7 @@
     </url>
     <url>
         <loc>https://tallerkappa.com.ar/catalogo</loc>
-        <lastmod>2026-09-14</lastmod>
+        <lastmod>2026-09-15</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.95</priority>
         <image:image>
@@ -29,14 +29,47 @@
         </image:image>
     </url>
     <url>
+        <loc>https://tallerkappa.com.ar/catalogo/sillon-bkf-premium</loc>
+        <lastmod>2026-09-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+        <image:image>
+            <image:loc>https://tallerkappa.com.ar/images/bkf1.jpg</image:loc>
+            <image:title>Sillón BKF Premium — Taller Kappa</image:title>
+            <image:caption>Sillón BKF Premium de hierro macizo y cuero vacuno, fabricado en San Martín, Buenos Aires.</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://tallerkappa.com.ar/catalogo/banco-bkf</loc>
+        <lastmod>2026-09-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://tallerkappa.com.ar/images/bkfapoyapies.jpg</image:loc>
+            <image:title>Banco BKF — Taller Kappa</image:title>
+            <image:caption>Banco BKF de hierro macizo, complemento de la línea BKF.</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://tallerkappa.com.ar/catalogo/base-de-mesa-flat</loc>
+        <lastmod>2026-09-15</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://tallerkappa.com.ar/images/mesa.jpeg</image:loc>
+            <image:title>Base de Mesa Flat — Taller Kappa</image:title>
+            <image:caption>Base de mesa de hierro para uso gastronómico, fabricada en San Martín, Buenos Aires.</image:caption>
+        </image:image>
+    </url>
+    <url>
         <loc>https://tallerkappa.com.ar/sillon-bkf</loc>
-        <lastmod>2026-09-14</lastmod>
+        <lastmod>2026-09-15</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
         <image:image>
             <image:loc>https://tallerkappa.com.ar/images/bkf1.jpg</image:loc>
-            <image:title>Sillón BKF Original de Hierro y Cuero — Taller Kappa</image:title>
-            <image:caption>El sillón BKF más resistente del mercado. Hierro macizo 12mm y cuero vacuno.</image:caption>
+            <image:title>Sillón BKF de Hierro y Cuero — Taller Kappa</image:title>
+            <image:caption>Sillón BKF fabricado en hierro macizo 12mm y cuero vacuno, directo de fábrica.</image:caption>
         </image:image>
     </url>
     <url>

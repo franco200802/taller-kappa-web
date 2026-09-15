@@ -8,13 +8,18 @@ import { PAGE_LOADERS, ROUTES } from './routes';
 /**
  * Entry de prerenderizado (SSG en build time — no hay servidor en runtime).
  *
- * Resuelve de forma EAGER solo las páginas marcadas con `prerender: true`.
+ * Resuelve de forma EAGER las páginas marcadas con `prerender: true`, más
+ * `Producto`: su entrada en ROUTES lleva `prerender: false` porque
+ * '/catalogo/:slug' es un patrón, no una URL real, pero sí necesitamos el
+ * componente cargado para poder prerenderizar cada URL concreta de
+ * producto (ver PRODUCT_PATHS en routes.js).
+ *
  * Admin queda fuera a propósito: importa Firebase de forma estática y no
  * queremos que initializeApp() se ejecute durante el build.
  */
 async function loadComponents() {
   const entries = await Promise.all(
-    ROUTES.filter((r) => r.prerender).map(async ({ page }) => {
+    ROUTES.filter((r) => r.prerender || r.page === 'Producto').map(async ({ page }) => {
       const mod = await PAGE_LOADERS[page]();
       return [page, mod.default];
     })

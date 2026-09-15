@@ -12,9 +12,12 @@
  * sincronizados automáticamente.
  */
 
+import { PRODUCTS } from './data/products.js';
+
 export const PAGE_LOADERS = {
   Home: () => import('./pages/Home'),
   Catalogo: () => import('./pages/Catalogo'),
+  Producto: () => import('./pages/Producto'),
   SillonBKF: () => import('./pages/SillonBKF'),
   Proyectos: () => import('./pages/Proyectos'),
   Nosotros: () => import('./pages/Nosotros'),
@@ -32,10 +35,16 @@ export const PAGE_LOADERS = {
  *
  * Admin además importa Firebase de forma estática, así que nunca debe
  * resolverse durante el build de SSR.
+ *
+ * `/catalogo/:slug` tampoco lleva `prerender: true` acá: es un patrón,
+ * no una URL real. Las URLs concretas de cada producto (una por slug)
+ * se agregan más abajo a partir de `PRODUCTS`, que es la misma fuente
+ * de datos que usa Catalogo.jsx y Producto.jsx.
  */
 export const ROUTES = [
   { path: '/', page: 'Home', prerender: true },
   { path: '/catalogo', page: 'Catalogo', prerender: true },
+  { path: '/catalogo/:slug', page: 'Producto', prerender: false },
   { path: '/sillon-bkf', page: 'SillonBKF', prerender: true },
   { path: '/proyectos', page: 'Proyectos', prerender: true },
   { path: '/nosotros', page: 'Nosotros', prerender: true },
@@ -46,5 +55,15 @@ export const ROUTES = [
   { path: '/admin', page: 'Admin', prerender: false },
 ];
 
+/**
+ * URLs concretas de producto (una por cada slug real en PRODUCTS).
+ * Se generan desde la misma fuente de datos para no duplicar la lista
+ * de productos en ningún otro lado.
+ */
+const PRODUCT_PATHS = PRODUCTS.map((p) => `/catalogo/${p.slug}`);
+
 /** Rutas que sí se escriben como HTML estático en dist/. */
-export const PRERENDER_PATHS = ROUTES.filter((r) => r.prerender).map((r) => r.path);
+export const PRERENDER_PATHS = [
+  ...ROUTES.filter((r) => r.prerender).map((r) => r.path),
+  ...PRODUCT_PATHS,
+];

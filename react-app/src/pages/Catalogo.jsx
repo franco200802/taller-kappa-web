@@ -2,27 +2,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
+import { PRODUCTS } from '../data/products';
 
-const FALLBACK_PRODUCTS = [
-  {
-    id: '1', category: 'asientos', name: 'Sillón BKF Premium', image: '/images/bkf1.jpg',
-    badge: 'Diseño icónico', stock: true,
-    desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
-    specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm'],
-  },
-  {
-    id: '2', category: 'asientos', name: 'Banco BKF', image: '/images/bkfapoyapies.jpg',
-    badge: 'Ideal para regalo', stock: true,
-    desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
-    specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm'],
-  },
-  {
-    id: '3', category: 'mesas', name: 'Base de Mesa Flat', image: '/images/mesa.jpeg',
-    badge: 'Uso gastronómico', stock: true,
-    desc: 'Estabilidad garantizada para uso gastronómico intenso. Base de chapa torneada pesada que evita el balanceo.',
-    specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes'],
-  },
-];
+const FALLBACK_PRODUCTS = PRODUCTS;
 
 const COLORS = [
   { name: 'Negro Mate', swatch: '#1a1a1a' },
@@ -49,18 +31,18 @@ function ProductCard({ p, onOpen }) {
       </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} onClick={() => onOpen(p)}
         onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen(p)}>
-        <img src={p.image} alt={p.name} loading="lazy" />
+        <img src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} />
         <div className="card-overlay"><i className="fas fa-search-plus" /> Ver detalle</div>
       </div>
       <div className="card-info">
-        <h3>{p.name}</h3>
+        <h3><Link to={`/catalogo/${p.slug}`}>{p.name}</Link></h3>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
           href={`https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}`}>
           <i className="fab fa-whatsapp" /> Consultar precio
         </a>
         <div className="card-actions">
-          <button className="btn-detail" onClick={() => onOpen(p)}><i className="fas fa-info-circle" /> Ver detalles</button>
+          <Link to={`/catalogo/${p.slug}`} className="btn-detail"><i className="fas fa-info-circle" /> Ver {p.name}</Link>
           <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><i className="fas fa-plus" /> Presupuestar</button>
         </div>
       </div>
@@ -184,7 +166,7 @@ export default function Catalogo() {
           <div className="modal-content">
             <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
             <div className="modal-img">
-              <img src={modalProduct.image} alt={modalProduct.name} loading="lazy" />
+              <img src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} />
             </div>
             <div className="modal-info">
               <div className="modal-badge-row">
