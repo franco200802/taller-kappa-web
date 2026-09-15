@@ -38,21 +38,6 @@ const PRODUCT_SCHEMA = {
     itemCondition: 'https://schema.org/NewCondition',
     seller: { '@type': 'Organization', name: 'Taller Kappa S.R.L.', url: 'https://tallerkappa.com.ar' },
   },
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: '5', bestRating: '5', worstRating: '1', reviewCount: '22' },
-  review: [
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
-      author: { '@type': 'Person', name: 'Ricardo L.' },
-      reviewBody: 'Excelente calidad. El hierro es macizo de verdad, muy diferente a lo que se vende en otros lados. Llegó en perfectas condiciones y el cuero es espectacular.',
-    },
-    {
-      '@type': 'Review',
-      reviewRating: { '@type': 'Rating', ratingValue: '5' },
-      author: { '@type': 'Person', name: 'Franquicia YPF Full' },
-      reviewBody: 'Equipamos nuestro local con los BKF de Taller Kappa. Soportan el alto tránsito sin ningún problema. Muy buena respuesta del taller.',
-    },
-  ],
 };
 
 const FAQ_SCHEMA = {
@@ -136,11 +121,6 @@ export default function SillonBKF() {
           <div className="bkf-info-col">
             <h2>Sillón BKF Premium</h2>
             <p className="bkf-tagline">El diseño argentino más icónico, fabricado con los mejores materiales.</p>
-            <div className="bkf-rating">
-              <i className="fas fa-star" /><i className="fas fa-star" /><i className="fas fa-star" />
-              <i className="fas fa-star" /><i className="fas fa-star" />
-              <span>(22 opiniones)</span>
-            </div>
             <div className="bkf-price-box">
               <span className="bkf-price">Cotización personalizada</span>
               <span className="bkf-price-note">Consultanos por WhatsApp para recibir tu presupuesto</span>

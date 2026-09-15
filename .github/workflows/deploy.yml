@@ -33,23 +33,20 @@ jobs:
         working-directory: react-app
         run: npm ci
 
-      - name: Build
+      - name: Build (client + SSR + prerender)
         working-directory: react-app
+        # npm run build ahora encadena 3 pasos (ver package.json):
+        #   1. vite build            → bundle del navegador en dist/
+        #   2. vite build --ssr      → entry-server para Node en .ssr-build/
+        #   3. node scripts/prerender.js → renderiza cada ruta a HTML real
+        #      con su propio title/description/canonical/JSON-LD y escribe
+        #      dist/<ruta>/index.html + dist/404.html
         run: npm run build
 
-      - name: Copy custom domain + SPA fallback files
+      - name: Copy custom domain + Jekyll bypass
         run: |
           cp CNAME react-app/dist/CNAME
           touch react-app/dist/.nojekyll
-          cp react-app/dist/index.html react-app/dist/404.html
-
-      - name: Pre-render static routes (para que Google reciba 200 en vez de 404)
-        working-directory: react-app/dist
-        run: |
-          for route in catalogo sillon-bkf proyectos nosotros faq contacto envios garantia; do
-            mkdir -p "$route"
-            cp index.html "$route/index.html"
-          done
 
       - uses: actions/upload-pages-artifact@v3
         with:

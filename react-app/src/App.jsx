@@ -1,42 +1,25 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useMemo } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
-import Layout from './components/Layout';
+import AppRoutes from './AppRoutes';
+import { PAGE_LOADERS } from './routes';
 
-const Home = lazy(() => import('./pages/Home'));
-const Catalogo = lazy(() => import('./pages/Catalogo'));
-const SillonBKF = lazy(() => import('./pages/SillonBKF'));
-const Proyectos = lazy(() => import('./pages/Proyectos'));
-const Nosotros = lazy(() => import('./pages/Nosotros'));
-const FAQ = lazy(() => import('./pages/FAQ'));
-const Contacto = lazy(() => import('./pages/Contacto'));
-const Envios = lazy(() => import('./pages/Envios'));
-const Garantia = lazy(() => import('./pages/Garantia'));
-const Admin = lazy(() => import('./pages/Admin'));
-const NotFound = lazy(() => import('./pages/NotFound'));
+// Code-splitting: cada página sigue siendo un chunk aparte en el cliente.
+// Los loaders vienen de routes.js para no duplicar la lista de páginas.
+const lazyComponents = Object.fromEntries(
+  Object.entries(PAGE_LOADERS).map(([name, loader]) => [name, lazy(loader)])
+);
 
 export default function App() {
+  const components = useMemo(() => lazyComponents, []);
+
   return (
     <HelmetProvider>
       <CartProvider>
         <BrowserRouter>
           <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="catalogo" element={<Catalogo />} />
-                <Route path="sillon-bkf" element={<SillonBKF />} />
-                <Route path="proyectos" element={<Proyectos />} />
-                <Route path="nosotros" element={<Nosotros />} />
-                <Route path="faq" element={<FAQ />} />
-                <Route path="contacto" element={<Contacto />} />
-                <Route path="envios" element={<Envios />} />
-                <Route path="garantia" element={<Garantia />} />
-                <Route path="admin" element={<Admin />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
+            <AppRoutes components={components} />
           </Suspense>
         </BrowserRouter>
       </CartProvider>

@@ -3,6 +3,7 @@ node_modules/
 
 # Build de Vite
 react-app/dist/
+react-app/.ssr-build/
 
 # Logs
 npm-debug.log*
