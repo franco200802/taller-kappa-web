@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 import { PRODUCTS } from '../data/products';
+import { useScrollMove } from '../lib/useReveal';
 
 const FALLBACK_PRODUCTS = PRODUCTS;
 
@@ -56,6 +57,9 @@ export default function Catalogo() {
   const [filter, setFilter] = useState('all');
   const [modalProduct, setModalProduct] = useState(null);
   const [modalColor, setModalColor] = useState('Negro Mate');
+  // La mesa se desliza horizontalmente en sincro con el scroll mientras
+  // cruza el viewport (ScrollObserver de anime v4, no un reveal de una vez).
+  const mesaRef = useScrollMove({ translateX: [-70, 70], rotate: [-3, 3] });
 
   useEffect(() => {
     let cancelled = false;
@@ -143,6 +147,17 @@ export default function Catalogo() {
       <section className="materials-section section-fade" aria-label="Nuestros materiales">
         <h2 className="section-title">Calidad que se ve y se toca</h2>
         <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
+        <div className="materials-scroll-visual">
+          <img
+            ref={mesaRef}
+            src="/images/mesa.jpeg"
+            alt="Base de Mesa Flat de Taller Kappa"
+            loading="lazy"
+            width={1024}
+            height={1536}
+            className="materials-scroll-img"
+          />
+        </div>
         <div className="materials-grid">
           {MATERIALS.map((m) => (
             <div className="material-card" key={m.title}>

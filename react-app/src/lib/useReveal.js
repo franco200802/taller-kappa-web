@@ -93,9 +93,20 @@ export function useStaggerReveal(childSelector, { staggerMs = 80 } = {}) {
   return ref;
 }
 
-/** Animación de entrada del hero — texto letra por letra (splitText de anime v4) */
+/**
+ * Animación de entrada del hero — texto letra por letra (splitText de anime v4).
+ *
+ * splitText muta el DOM envolviendo cada carácter en un <span>. En desarrollo,
+ * <StrictMode> invoca los efectos dos veces a propósito, así que sin esta
+ * guarda el título terminaba duplicado/cuadruplicado visualmente (splitText
+ * se ejecutaba sobre un texto que ya había sido dividido en la llamada previa).
+ */
 export async function animateHeroTitle(selector) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+  if (!el || el.dataset.splitDone === 'true') return;
+  el.dataset.splitDone = 'true';
+
   const { animate, stagger, splitText } = await loadAnime();
   const { chars } = splitText(selector, { words: false, chars: true });
   animate(chars, {
@@ -104,4 +115,62 @@ export async function animateHeroTitle(selector) {
     delay: stagger(18),
     ease: 'outQuart',
   });
+}
+
+/**
+ * useScrollMove — mueve/rota/escala un elemento en sincro con el scroll,
+ * usando el ScrollObserver nativo de anime v4 (onScroll), no un
+ * IntersectionObserver + animación fija como los otros hooks de este archivo.
+ *
+ * A diferencia de useReveal (que dispara una animación UNA vez al entrar en
+ * viewport), acá el progreso de scroll se mapea 1:1 al valor de la propiedad
+ * mientras el elemento cruza el viewport — por eso sirve para efectos tipo
+ * "esta mesa se desliza hacia la derecha a medida que bajás".
+ *
+ * Uso:
+ *   const ref = useScrollMove({ translateX: [-60, 60], rotate: [-4, 4] });
+ *   <img ref={ref} src="/images/mesa.jpeg" />
+ *
+ * Ver: https://animejs.com/documentation/events/onscroll
+ */
+export function useScrollMove(props, { axis = 'y', enter = 'bottom top', leave = 'top bottom' } = {}) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let animation;
+    let observer;
+    let cancelled = false;
+
+    (async () => {
+      const { animate, onScroll } = await loadAnime();
+      if (cancelled) return;
+
+      animation = animate(el, {
+        ...props,
+        ease: 'linear',
+        autoplay: onScroll({
+          target: el,
+          axis,
+          enter,
+          leave,
+          sync: true,
+        }),
+      });
+      observer = animation.autoplay;
+    })();
+
+    return () => {
+      cancelled = true;
+      observer?.revert?.();
+      animation?.revert?.();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return ref;
 }
