@@ -37,7 +37,7 @@ function reveal(selector, className, { threshold = 0.1, stagger = 0 } = {}) {
 
 function run() {
   reveal('.section-fade', 'visible', { threshold: 0.08 });
-  reveal('.testimonial-card, .material-card', 'fade-in', { threshold: 0.12, stagger: 90 });
+  reveal('.testimonial-card, .material-card, .number-item', 'fade-in', { threshold: 0.12, stagger: 90 });
   reveal('.product-card', 'visible', { threshold: 0.1, stagger: 80 });
 }
 
