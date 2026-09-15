@@ -47,11 +47,19 @@ export default function Layout() {
   // Scroll al top en cada cambio de ruta (SPA no lo hace solo)
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
 
+  // El CSS heredado del sitio viejo define `body.inner-page { padding-top: ... }`
+  // para separar el título de las páginas internas del navbar fijo. Como en
+  // React el layout es un <div> anidado (no <body>), ese selector nunca se
+  // disparaba y los títulos quedaban pegados al header. Se sincroniza acá.
+  useEffect(() => {
+    document.body.classList.toggle('inner-page', !isHome);
+  }, [isHome]);
+
   // Revela secciones/cards con opacity:0 por defecto (heredado del CSS viejo)
   useAutoReveal();
 
   return (
-    <div className={isHome ? '' : 'inner-page'}>
+    <div>
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(LOCAL_BUSINESS_SCHEMA)}</script>
         <script type="application/ld+json">{JSON.stringify(WEBSITE_SCHEMA)}</script>

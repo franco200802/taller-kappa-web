@@ -44,25 +44,27 @@ export default function Contacto() {
         </p>
       </div>
       <form onSubmit={handleSubmit} className="contact-form" id="contact-form">
-        <label>
-          Tu nombre
-          <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ej: Juan García" />
-        </label>
-        <label>
-          ¿Qué te interesa?
-          <select value={form.interest} onChange={(e) => setForm({ ...form, interest: e.target.value })}>
+        <div className="form-group">
+          <label htmlFor="contact-name">Tu nombre</label>
+          <input id="contact-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ej: Juan García" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="contact-interest">¿Qué te interesa?</label>
+          <select id="contact-interest" value={form.interest} onChange={(e) => setForm({ ...form, interest: e.target.value })}>
             <option value="">Seleccioná una opción...</option>
             <option value="Sillón BKF">Sillón BKF</option>
             <option value="Banco BKF">Banco BKF</option>
             <option value="Base de Mesa">Base de Mesa</option>
             <option value="Pedido mayorista">Pedido mayorista</option>
           </select>
-        </label>
-        <label>
-          Tu mensaje
-          <textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos tu consulta o lo que necesitás..." />
-        </label>
-        <button type="submit" className="btn-main"><i className="fab fa-whatsapp" /> Enviar por WhatsApp</button>
+        </div>
+        <div className="form-group">
+          <label htmlFor="contact-message">Tu mensaje</label>
+          <textarea id="contact-message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos tu consulta o lo que necesitás..." />
+        </div>
+        <div className="form-submit">
+          <button type="submit" className="btn-main"><i className="fab fa-whatsapp" /> Enviar por WhatsApp</button>
+        </div>
       </form>
     </section>
   );
