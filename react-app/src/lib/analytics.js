@@ -1,14 +1,11 @@
 /**
  * analytics.js — Google Analytics 4 (gtag.js), cargado solo en el navegador.
  *
- * IMPORTANTE — antes de que esto haga algo:
- *   1. Crear una propiedad GA4 en https://analytics.google.com
- *   2. Copiar el "Measurement ID" (formato G-XXXXXXXXXX)
- *   3. Reemplazar el valor de GA_MEASUREMENT_ID de abajo por ese ID real.
- *
- * Sin un ID real (o con el placeholder actual), initGA() no hace nada:
- * no se envía ningún dato falso ni se rompe el build. Esto es intencional,
- * no un "TODO" a medias — no se puede inventar un Measurement ID.
+ * GA_MEASUREMENT_ID es el ID real de la propiedad GA4 ya existente de
+ * Taller Kappa (confirmado por el dueño del proyecto: la propiedad ya
+ * tenía datos históricos de una integración previa fuera de este repo,
+ * probablemente del sitio estático viejo). Este módulo es lo que conecta
+ * el sitio React actual a esa misma propiedad, para no perder el historial.
  *
  * Por qué un módulo aparte en vez de <script> fijo en index.html:
  *   - El sitio es una SPA con react-router: gtag.js por sí solo NO detecta
@@ -21,14 +18,14 @@
  *     scripts/prerender.js, que renderiza con react-dom/server en Node
  *     (donde no existe `window`/`document`).
  */
-export const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // <- reemplazar por el ID real de GA4
+export const GA_MEASUREMENT_ID = 'G-2FDMN51XDY'; // Measurement ID real de la propiedad GA4 de Taller Kappa
 
 let gaLoaded = false;
 
 export function initGA() {
   if (typeof window === 'undefined') return; // SSR/prerender: no-op
   if (!import.meta.env.PROD) return; // no trackear en desarrollo
-  if (GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') return; // placeholder sin configurar
+  if (GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') return; // placeholder sin configurar (ya no aplica, queda como guard defensivo)
   if (gaLoaded) return;
   gaLoaded = true;
 
