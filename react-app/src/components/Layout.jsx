@@ -24,6 +24,13 @@ const LOCAL_BUSINESS_SCHEMA = {
     addressCountry: 'AR',
   },
   areaServed: { '@type': 'Country', name: 'Argentina' },
+  // Mismas coordenadas reales del iframe de Google Maps en Footer.jsx
+  // (Calle 28 Nº 3779, Villa Chacabuco, San Martín) — no son un valor inventado.
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -34.5851938,
+    longitude: -58.5281526,
+  },
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
