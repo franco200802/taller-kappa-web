@@ -48,7 +48,7 @@ export default function CartDrawer() {
           ) : cart.map(({ key, product, color, qty }) => (
             <div className="cart-item" key={key}>
               <div className="cart-item-info">
-                <img src={product.image} alt={product.name} loading="lazy" />
+                <img src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight} loading="lazy" />
                 <div>
                   <b>{product.name}</b>
                   <small className="cart-item-color"><i className="fas fa-palette" /> {color}</small>

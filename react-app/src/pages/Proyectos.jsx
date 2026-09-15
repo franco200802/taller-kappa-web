@@ -4,31 +4,31 @@ import Seo, { breadcrumbList } from '../components/Seo';
 
 const PROJECTS = [
   {
-    logo: '/images/logoypf.png', alt: 'Equipamiento YPF Full - muebles de hierro',
+    logo: '/images/logoypf.png', alt: 'Equipamiento YPF Full - muebles de hierro', w: 225, h: 225,
     title: 'YPF Full — Estaciones de Servicio', tag: 'Múltiples sucursales, Buenos Aires',
     desc: 'Fabricamos y entregamos bases de mesa Flat y bancos de hierro para las tiendas YPF Full. Diseño resistente al uso intensivo 24/7 con acabado en pintura epoxi negra.',
     specs: ['Bases de mesa entregadas', 'Acabado epoxi negro mate', 'Fabricación resistente a uso intensivo'],
   },
   {
-    logo: '/images/mcdonaldslogo.png', alt: "Equipamiento McDonald's - mesas de hierro",
+    logo: '/images/mcdonaldslogo.png', alt: "Equipamiento McDonald's - mesas de hierro", w: 246, h: 205,
     title: "McDonald's — Locales Gastronómicos", tag: 'Capital Federal y GBA',
     desc: 'Proveemos estructuras metálicas para mobiliario de salón. Sillas y mesas que soportan el alto tránsito diario de la cadena más grande del mundo.',
     specs: ['Hierro macizo 12mm', 'Entrega en plazos ajustados', 'Factura A'],
   },
   {
-    logo: '/images/burguerlogo.png', alt: 'Equipamiento Burger King - sillas de hierro',
+    logo: '/images/burguerlogo.png', alt: 'Equipamiento Burger King - sillas de hierro', w: 215, h: 234,
     title: 'Burger King — Franquicias', tag: 'Buenos Aires',
     desc: 'Fabricamos sillas y bancos de hierro para locales Burger King. Diseño moderno, resistente y fácil de mantener para uso gastronómico diario.',
     specs: ['Diseño a medida del local', 'Pintura epoxi anticorrosiva', 'Reposición rápida'],
   },
   {
-    logo: '/images/sandrologo.png', alt: 'Equipamiento Sandro Paris - mobiliario comercial',
+    logo: '/images/sandrologo.png', alt: 'Equipamiento Sandro Paris - mobiliario comercial', w: 225, h: 225,
     title: 'Sandro Paris — Locales de Indumentaria', tag: 'Palermo, Buenos Aires',
     desc: 'Desarrollamos mobiliario exhibidor en hierro para los locales Sandro. Percheros, mesas de exhibición y estructuras decorativas con acabado cromado.',
     specs: ['Acabado cromado premium', 'Diseño exclusivo', 'Medidas personalizadas'],
   },
   {
-    logo: '/images/shelllogo.png', alt: 'Equipamiento Shell Select - muebles gastronómicos',
+    logo: '/images/shelllogo.png', alt: 'Equipamiento Shell Select - muebles gastronómicos', w: 245, h: 206,
     title: 'Shell Select — Tiendas de Conveniencia', tag: 'Zona Norte, Buenos Aires',
     desc: 'Equipamos el sector gastronómico de Shell Select con bases de mesa y sillas de hierro. Producto resistente a uso intensivo con estética industrial moderna.',
     specs: ['Estética industrial', 'Resistente a intemperie', 'Entrega coordinada'],
@@ -70,7 +70,7 @@ export default function Proyectos() {
           {PROJECTS.map((p) => (
             <article className="project-card" key={p.title}>
               <div className="project-card-img">
-                <img src={p.logo} alt={p.alt} loading="lazy" />
+                <img src={p.logo} alt={p.alt} width={p.w} height={p.h} loading="lazy" />
               </div>
               <div className="project-card-body">
                 <h3>{p.title}</h3>

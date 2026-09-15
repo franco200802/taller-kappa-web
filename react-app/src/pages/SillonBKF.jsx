@@ -111,7 +111,7 @@ export default function SillonBKF() {
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <img src="/images/bkf1.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" loading="eager" />
+            <img src="/images/bkf1.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" width={1600} height={1600} loading="eager" />
             <div className="bkf-badges">
               <span className="bkf-badge"><i className="fas fa-star" /> Diseño icónico</span>
               <span className="bkf-badge"><i className="fas fa-industry" /> Fábrica propia</span>

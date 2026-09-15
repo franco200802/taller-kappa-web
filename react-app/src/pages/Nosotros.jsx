@@ -24,10 +24,10 @@ const FALLBACK_TESTIMONIOS = [
 ];
 
 const GALLERY = [
-  { src: '/images/bkf1.jpg', alt: 'Sillón BKF', label: 'Sillón BKF Premium', tall: true },
-  { src: '/images/bkfapoyapies.jpg', alt: 'Banco BKF', label: 'Banco BKF' },
-  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat', label: 'Base de Mesa Flat' },
-  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true },
+  { src: '/images/bkf1.jpg', alt: 'Sillón BKF', label: 'Sillón BKF Premium', tall: true, w: 1600, h: 1600 },
+  { src: '/images/bkfapoyapies.jpg', alt: 'Banco BKF', label: 'Banco BKF', w: 1024, h: 1024 },
+  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat', label: 'Base de Mesa Flat', w: 1024, h: 1536 },
+  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true, w: 1024, h: 1536 },
 ];
 
 function AnimatedNumber({ target, suffix, label }) {
@@ -122,7 +122,7 @@ export default function Nosotros() {
             </Link>
           </div>
           <div className="about-img-wrap">
-            <img src="/images/bkf1.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" loading="lazy" />
+            <img src="/images/bkf1.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" />
           </div>
         </div>
       </section>
@@ -152,11 +152,11 @@ export default function Nosotros() {
       <section className="clients-section section-fade" aria-label="Empresas que confían en nosotros">
         <p className="clients-label">Confían en nuestra calidad:</p>
         <div className="clients-logos">
-          <img src="/images/sandrologo.png" alt="Sandro Paris" loading="lazy" />
-          <img src="/images/logoypf.png" alt="YPF Full" loading="lazy" />
-          <img src="/images/mcdonaldslogo.png" alt="McDonald's" loading="lazy" />
-          <img src="/images/burguerlogo.png" alt="Burger King" loading="lazy" />
-          <img src="/images/shelllogo.png" alt="Shell" loading="lazy" />
+          <img src="/images/sandrologo.png" alt="Sandro Paris" width={225} height={225} loading="lazy" />
+          <img src="/images/logoypf.png" alt="YPF Full" width={225} height={225} loading="lazy" />
+          <img src="/images/mcdonaldslogo.png" alt="McDonald's" width={246} height={205} loading="lazy" />
+          <img src="/images/burguerlogo.png" alt="Burger King" width={215} height={234} loading="lazy" />
+          <img src="/images/shelllogo.png" alt="Shell" width={245} height={206} loading="lazy" />
         </div>
       </section>
 
@@ -183,7 +183,7 @@ export default function Nosotros() {
           {GALLERY.map((g, i) => (
             <div className={`gallery-item ${g.tall ? 'gallery-tall' : ''} ${g.wide ? 'gallery-wide' : ''}`}
               key={i} onClick={() => setLightbox(i)}>
-              <img src={g.src} alt={g.alt} loading="lazy" />
+              <img src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
               <div className="gallery-overlay"><i className="fas fa-search-plus" /><span>{g.label}</span></div>
             </div>
           ))}

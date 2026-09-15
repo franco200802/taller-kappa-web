@@ -24,7 +24,7 @@ export default function Envios() {
     <>
       <Seo
         title="Envíos — Zonas y Tiempos de Entrega | Taller Kappa"
-        description="Información de envíos de Taller Kappa. Entregamos muebles de hierro y cuero a todo el país: Capital Federal, GBA, Zona Norte, Zona Sur y envíos al interior por expreso."
+        description="Entregamos muebles de hierro y cuero en Capital Federal, GBA, Zona Norte, Zona Sur y al interior del país por expreso. Conocé zonas y tiempos."
         path="/envios"
         jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Envíos', path: '/envios' }])}
       />
