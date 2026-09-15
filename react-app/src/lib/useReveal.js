@@ -118,6 +118,33 @@ export async function animateHeroTitle(selector) {
 }
 
 /**
+ * Animación de entrada de un párrafo — palabra por palabra, deslizando hacia
+ * arriba desde un recorte (wrap:'clip'), a diferencia de animateHeroTitle que
+ * divide por caracteres. Pensada para el copy debajo del H1 del hero.
+ *
+ * Misma guarda de idempotencia que animateHeroTitle: sin ella, StrictMode
+ * duplica las palabras en desarrollo al invocar el efecto dos veces.
+ *
+ * Ver: https://animejs.com/documentation/text/splittext/textsplitter-settings/words
+ */
+export async function animateHeroParagraph(selector) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+  if (!el || el.dataset.splitDone === 'true') return;
+  el.dataset.splitDone = 'true';
+
+  const { animate, stagger, splitText } = await loadAnime();
+  const { words } = splitText(selector, { words: { wrap: 'clip' }, chars: false });
+  animate(words, {
+    y: ['100%', '0%'],
+    opacity: [0, 1],
+    duration: 600,
+    ease: 'outExpo',
+    delay: stagger(40, { start: 300 }),
+  });
+}
+
+/**
  * useScrollMove — mueve/rota/escala un elemento en sincro con el scroll,
  * usando el ScrollObserver nativo de anime v4 (onScroll), no un
  * IntersectionObserver + animación fija como los otros hooks de este archivo.

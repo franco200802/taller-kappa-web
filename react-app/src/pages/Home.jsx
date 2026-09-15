@@ -1,16 +1,19 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { animateHeroTitle, useReveal, useStaggerReveal } from '../lib/useReveal';
+import { animateHeroTitle, animateHeroParagraph, useReveal, useStaggerReveal } from '../lib/useReveal';
 import Seo from '../components/Seo';
 
 export default function Home() {
   const titleRef = useRef(null);
+  const introRef = useRef(null);
   const whyRef = useStaggerReveal('.why-card');
   const collectionRef = useReveal({ delay: 100 });
 
   useEffect(() => {
     // Anima el H1 letra por letra al montar (patrón splitText de anime.js v4)
     if (titleRef.current) animateHeroTitle('#hero-title');
+    // Anima el copy debajo del H1 palabra por palabra (splitText words + clip)
+    if (introRef.current) animateHeroParagraph('#hero-intro');
   }, []);
 
   return (
@@ -25,7 +28,7 @@ export default function Home() {
           <h1 id="hero-title" ref={titleRef} data-split>
             Sillones BKF y Sillas de Hierro en <span className="hero-highlight">Buenos Aires</span>
           </h1>
-          <p>Fabricamos sillones BKF, sillas y mesas de hierro y cuero directo de fábrica. Calidad elegida por YPF, McDonald's y Burger King.</p>
+          <p id="hero-intro" ref={introRef}>Fabricamos sillones BKF, sillas y mesas de hierro y cuero directo de fábrica. Calidad elegida por YPF, McDonald's y Burger King.</p>
           <p className="hero-seo-tag">Sillón BKF · Sillas de Hierro Buenos Aires · Cuero Vacuno · San Martín, GBA</p>
           <div className="hero-buttons">
             <Link to="/catalogo" className="btn-main">
