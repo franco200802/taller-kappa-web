@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAutoReveal } from '../lib/useAutoReveal';
+import { initGA, trackPageview } from '../lib/analytics';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -53,6 +54,13 @@ export default function Layout() {
 
   // Scroll al top en cada cambio de ruta (SPA no lo hace solo)
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+
+  // GA4: se inicializa una sola vez (no-op si no hay Measurement ID real
+  // configurado en lib/analytics.js, o en desarrollo/SSR). El pageview se
+  // envía a mano en cada cambio de ruta porque gtag.js no detecta navegación
+  // de una SPA por sí solo (no hay recarga de documento).
+  useEffect(() => { initGA(); }, []);
+  useEffect(() => { trackPageview(pathname); }, [pathname]);
 
   // El CSS heredado del sitio viejo define `body.inner-page { padding-top: ... }`
   // para separar el título de las páginas internas del navbar fijo. Como en

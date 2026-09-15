@@ -1,5 +1,6 @@
 import { useCart } from '../context/CartContext';
 import Picture from './Picture';
+import { trackEvent } from '../lib/analytics';
 
 export default function CartDrawer() {
   const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast } = useCart();
@@ -77,6 +78,7 @@ export default function CartDrawer() {
             className="btn-whatsapp-checkout"
             target="_blank" rel="noopener noreferrer"
             style={cart.length === 0 ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
+            onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
           >
             <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
           </a>
