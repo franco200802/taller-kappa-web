@@ -17,7 +17,12 @@ export default function Contacto() {
     try {
       const { FireDB } = await import('../lib/firedb');
       await FireDB.createContacto(form);
-    } catch { /* igual abrimos WhatsApp */ }
+    } catch {
+      // Igual abrimos WhatsApp, pero registramos el fallo para saber
+      // cuántos leads no se están guardando en Firestore (ej. mientras
+      // las credenciales de Firebase sean placeholders).
+      trackEvent('contacto_save_failed', { location: 'contacto_form' });
+    }
 
     trackEvent('whatsapp_click', { location: 'contacto_form', interest: form.interest || '(sin especificar)' });
     const interestLine = form.interest ? `\nProducto de interés: ${form.interest}` : '';
