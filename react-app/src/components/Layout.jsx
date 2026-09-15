@@ -50,7 +50,7 @@ export default function Layout() {
       </Helmet>
       <Navbar />
       <Outlet />
-      {!isHome && <Footer />}
+      <Footer />
       <CartDrawer />
       <Toast />
       <a href="https://wa.me/541161242498" className="float-wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">

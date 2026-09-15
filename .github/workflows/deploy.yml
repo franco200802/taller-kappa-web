@@ -43,6 +43,14 @@ jobs:
           touch react-app/dist/.nojekyll
           cp react-app/dist/index.html react-app/dist/404.html
 
+      - name: Pre-render static routes (para que Google reciba 200 en vez de 404)
+        working-directory: react-app/dist
+        run: |
+          for route in catalogo sillon-bkf proyectos nosotros faq contacto envios garantia; do
+            mkdir -p "$route"
+            cp index.html "$route/index.html"
+          done
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: react-app/dist

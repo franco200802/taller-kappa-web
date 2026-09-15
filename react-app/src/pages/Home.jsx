@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { animateHeroTitle, useReveal, useStaggerReveal } from '../lib/useReveal';
 import Seo from '../components/Seo';
 
@@ -27,9 +28,9 @@ export default function Home() {
           <p>Fabricamos sillones BKF, sillas y mesas de hierro y cuero directo de fábrica. Calidad elegida por YPF, McDonald's y Burger King.</p>
           <p className="hero-seo-tag">Sillón BKF · Sillas de Hierro Buenos Aires · Cuero Vacuno · San Martín, GBA</p>
           <div className="hero-buttons">
-            <a href="/catalogo" className="btn-main">
+            <Link to="/catalogo" className="btn-main">
               <i className="fas fa-th-large" style={{ marginRight: 8 }} /> Ver Catálogo
-            </a>
+            </Link>
             <a
               href="https://wa.me/541161242498?text=Hola%2C+soy+una+empresa+y+necesito+cotizaci%C3%B3n+mayorista."
               target="_blank" rel="noopener noreferrer" className="btn-outline"
@@ -62,7 +63,7 @@ export default function Home() {
         <h2 className="section-title">Sillones BKF y Muebles de Hierro — Buenos Aires</h2>
         <p style={{ textAlign: 'center', marginBottom: 30 }}>
           Mobiliario industrial fabricado a mano en San Martín, Buenos Aires.{' '}
-          <a href="/sillon-bkf">Ver todo sobre el Sillón BKF →</a>
+          <Link to="/sillon-bkf">Ver todo sobre el Sillón BKF →</Link>
         </p>
         {/* El grid de productos vive en /catalogo — acá solo el teaser + CTA */}
       </section>
