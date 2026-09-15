@@ -4,6 +4,7 @@ import { animateHeroTitle, useStaggerReveal } from '../lib/useReveal';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
 import Picture from '../components/Picture';
+import { trackEvent } from '../lib/analytics';
 
 const PRODUCT_SCHEMA = {
   '@context': 'https://schema.org',
@@ -75,6 +76,7 @@ export default function SillonBKF() {
       image: '/images/bkf1.jpg',
       specs: ['Hierro macizo 12mm', 'Cuero vacuno de 1ra'],
     }, color);
+    trackEvent('add_to_cart', { item: 'Sillón BKF Premium', color, location: 'sillon-bkf' });
   };
 
   return (
@@ -141,7 +143,8 @@ export default function SillonBKF() {
                 <i className="fas fa-plus" /> Agregar al presupuesto
               </button>
               <a href="https://wa.me/541161242498?text=Hola%2C+quiero+cotizar+el+Sillón+BKF+Premium."
-                target="_blank" rel="noopener noreferrer" className="btn-outline">
+                target="_blank" rel="noopener noreferrer" className="btn-outline"
+                onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_actions' })}>
                 <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
               </a>
             </div>
@@ -248,7 +251,8 @@ export default function SillonBKF() {
           <p>Escribinos hoy y te respondemos en minutos. Precios de fábrica, entrega en todo el país.</p>
           <div className="cta-btns">
             <a href="https://wa.me/541161242498?text=Hola%2C+quiero+cotizar+el+Sillón+BKF."
-              target="_blank" rel="noopener noreferrer" className="btn-main">
+              target="_blank" rel="noopener noreferrer" className="btn-main"
+              onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
               <i className="fab fa-whatsapp" /> Pedir cotización ahora
             </a>
             <Link to="/catalogo" className="btn-outline">

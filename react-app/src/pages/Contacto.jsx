@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
+import { trackEvent } from '../lib/analytics';
 
 export default function Contacto() {
   const { showToast } = useCart();
@@ -18,6 +19,7 @@ export default function Contacto() {
       await FireDB.createContacto(form);
     } catch { /* igual abrimos WhatsApp */ }
 
+    trackEvent('whatsapp_click', { location: 'contacto_form', interest: form.interest || '(sin especificar)' });
     const interestLine = form.interest ? `\nProducto de interés: ${form.interest}` : '';
     const text = encodeURIComponent(`Hola, soy ${form.name}.${interestLine}\n\n${form.message}`);
     window.open(`https://wa.me/541161242498?text=${text}`, '_blank');

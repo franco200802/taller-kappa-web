@@ -84,7 +84,8 @@ export default function Layout() {
       <Footer />
       <CartDrawer />
       <Toast />
-      <a href="https://wa.me/541161242498" className="float-wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+      <a href="https://wa.me/541161242498" className="float-wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
+        onClick={() => trackEvent('whatsapp_click', { location: 'float_button', page: pathname })}>
         <i className="fab fa-whatsapp" />
       </a>
     </div>
