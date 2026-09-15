@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
+import Picture from '../components/Picture';
 import { PRODUCTS } from '../data/products';
 import { useScrollMove } from '../lib/useReveal';
 
@@ -37,7 +38,7 @@ function ProductCard({ p, onOpen }) {
       </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} onClick={() => onOpen(p)}
         onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen(p)}>
-        <img src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} />
+        <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} />
         <div className="card-overlay"><i className="fas fa-search-plus" /> Ver detalle</div>
       </div>
       <div className="card-info">
@@ -156,7 +157,7 @@ export default function Catalogo() {
         <h2 className="section-title">Calidad que se ve y se toca</h2>
         <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
         <div className="materials-scroll-visual">
-          <img
+          <Picture
             ref={mesaRef}
             src="/images/mesa.jpeg"
             alt="Base de Mesa Flat de Taller Kappa"
@@ -189,7 +190,7 @@ export default function Catalogo() {
           <div className="modal-content">
             <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
             <div className="modal-img">
-              <img src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} />
+              <Picture src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} />
             </div>
             <div className="modal-info">
               <div className="modal-badge-row">

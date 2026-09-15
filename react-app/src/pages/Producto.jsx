@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
+import Picture from '../components/Picture';
 import { getProductBySlug } from '../data/products';
 
 /**
@@ -82,13 +83,13 @@ export default function Producto() {
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <img
+            <Picture
               src={product.image}
               alt={`${product.name} de Taller Kappa`}
               width={product.imageWidth}
               height={product.imageHeight}
               loading="eager"
-              fetchpriority="high"
+              fetchPriority="high"
             />
             {product.badge && (
               <div className="bkf-badges">

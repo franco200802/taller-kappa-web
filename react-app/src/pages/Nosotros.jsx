@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useStaggerReveal } from '../lib/useReveal';
 import Seo, { breadcrumbList } from '../components/Seo';
+import Picture from '../components/Picture';
 
 const WHY = [
   { icon: 'fa-industry', title: 'Directo de Fábrica', desc: 'Sin intermediarios. Comprás al productor y ahorrás entre un 30% y 50% respecto al precio de retail.' },
@@ -122,7 +123,7 @@ export default function Nosotros() {
             </Link>
           </div>
           <div className="about-img-wrap">
-            <img src="/images/bkf1.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" />
+            <Picture src="/images/bkf1.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" />
           </div>
         </div>
       </section>
@@ -155,7 +156,7 @@ export default function Nosotros() {
           <img src="/images/sandrologo.png" alt="Sandro Paris" width={225} height={225} loading="lazy" />
           <img src="/images/logoypf.png" alt="YPF Full" width={225} height={225} loading="lazy" />
           <img src="/images/mcdonaldslogo.png" alt="McDonald's" width={246} height={205} loading="lazy" />
-          <img src="/images/burguerlogo.png" alt="Burger King" width={215} height={234} loading="lazy" />
+          <Picture src="/images/burguerlogo.png" alt="Burger King" width={215} height={234} loading="lazy" />
           <img src="/images/shelllogo.png" alt="Shell" width={245} height={206} loading="lazy" />
         </div>
       </section>
@@ -183,7 +184,7 @@ export default function Nosotros() {
           {GALLERY.map((g, i) => (
             <div className={`gallery-item ${g.tall ? 'gallery-tall' : ''} ${g.wide ? 'gallery-wide' : ''}`}
               key={i} onClick={() => setLightbox(i)}>
-              <img src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
+              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
               <div className="gallery-overlay"><i className="fas fa-search-plus" /><span>{g.label}</span></div>
             </div>
           ))}

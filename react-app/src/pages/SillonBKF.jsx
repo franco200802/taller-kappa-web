@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { animateHeroTitle, useStaggerReveal } from '../lib/useReveal';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
+import Picture from '../components/Picture';
 
 const PRODUCT_SCHEMA = {
   '@context': 'https://schema.org',
@@ -111,7 +112,7 @@ export default function SillonBKF() {
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <img src="/images/bkf1.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" width={1600} height={1600} loading="eager" fetchpriority="high" />
+            <Picture src="/images/bkf1.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" width={1600} height={1600} loading="eager" fetchPriority="high" />
             <div className="bkf-badges">
               <span className="bkf-badge"><i className="fas fa-star" /> Diseño icónico</span>
               <span className="bkf-badge"><i className="fas fa-industry" /> Fábrica propia</span>

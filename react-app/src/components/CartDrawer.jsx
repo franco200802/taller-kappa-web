@@ -1,4 +1,5 @@
 import { useCart } from '../context/CartContext';
+import Picture from './Picture';
 
 export default function CartDrawer() {
   const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast } = useCart();
@@ -48,7 +49,7 @@ export default function CartDrawer() {
           ) : cart.map(({ key, product, color, qty }) => (
             <div className="cart-item" key={key}>
               <div className="cart-item-info">
-                <img src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight} loading="lazy" />
+                <Picture src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight} loading="lazy" />
                 <div>
                   <b>{product.name}</b>
                   <small className="cart-item-color"><i className="fas fa-palette" /> {color}</small>
