@@ -10,7 +10,7 @@ const DEFAULT_IMAGE = `${SITE}/images/bkf1.jpg`;
  * `jsonLd` acepta un objeto o array de objetos Schema.org (Product, FAQPage,
  * BreadcrumbList, etc.) y los inyecta como <script type="application/ld+json">.
  */
-export default function Seo({ title, description, path = '/', image = DEFAULT_IMAGE, type = 'website', jsonLd }) {
+export default function Seo({ title, description, path = '/', image = DEFAULT_IMAGE, type = 'website', jsonLd, noindex = false }) {
   const url = `${SITE}${path}`;
   const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   return (
@@ -18,6 +18,7 @@ export default function Seo({ title, description, path = '/', image = DEFAULT_IM
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
       <meta property="og:title" content={title} />

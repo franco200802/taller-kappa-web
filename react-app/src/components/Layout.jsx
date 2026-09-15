@@ -24,13 +24,20 @@ const LOCAL_BUSINESS_SCHEMA = {
     addressCountry: 'AR',
   },
   areaServed: { '@type': 'Country', name: 'Argentina' },
-  sameAs: [],
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     opens: '09:00',
     closes: '18:00',
   },
+};
+
+const WEBSITE_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Taller Kappa',
+  url: 'https://tallerkappa.com.ar',
+  inLanguage: 'es-AR',
 };
 
 export default function Layout() {
@@ -47,6 +54,7 @@ export default function Layout() {
     <div className={isHome ? '' : 'inner-page'}>
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(LOCAL_BUSINESS_SCHEMA)}</script>
+        <script type="application/ld+json">{JSON.stringify(WEBSITE_SCHEMA)}</script>
       </Helmet>
       <Navbar />
       <Outlet />

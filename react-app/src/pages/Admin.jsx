@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { FireDB } from '../lib/firedb';
+import Seo from '../components/Seo';
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -26,6 +27,7 @@ export default function Admin() {
   if (!user) {
     return (
       <section className="section-padding" style={{ paddingTop: 60, maxWidth: 400, margin: '0 auto' }}>
+        <Seo title="Admin | Taller Kappa" description="Panel de administración interno." path="/admin" noindex />
         <h1>Panel de Administración</h1>
         <form onSubmit={handleLogin}>
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -39,6 +41,7 @@ export default function Admin() {
 
   return (
     <section className="section-padding" style={{ paddingTop: 60 }}>
+      <Seo title="Admin | Taller Kappa" description="Panel de administración interno." path="/admin" noindex />
       <h1>Panel de Administración</h1>
       <button onClick={() => signOut(auth)}>Cerrar sesión</button>
       <h2>Pedidos ({orders.length})</h2>

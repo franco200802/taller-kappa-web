@@ -1,0 +1,17 @@
+{
+  "name": "Taller Kappa — Sillones BKF y Muebles de Hierro",
+  "short_name": "Taller Kappa",
+  "description": "Fabricamos sillones BKF, bancos y bases de mesa de hierro y cuero en San Martín, Buenos Aires.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#b71c1c",
+  "lang": "es-AR",
+  "icons": [
+    { "src": "/images/favicon-16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "/images/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/images/favicon-64.png", "sizes": "64x64", "type": "image/png" },
+    { "src": "/images/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

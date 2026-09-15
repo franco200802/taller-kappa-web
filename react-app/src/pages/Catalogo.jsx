@@ -107,13 +107,35 @@ export default function Catalogo() {
     { key: 'mesas', label: 'Mesas', icon: 'fa-table' },
   ];
 
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: products.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: p.name,
+        description: p.desc,
+        image: `https://tallerkappa.com.ar${p.image}`,
+        category: p.category,
+        brand: { '@type': 'Brand', name: 'Taller Kappa' },
+        offers: {
+          '@type': 'Offer',
+          availability: p.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+          seller: { '@type': 'Organization', name: 'Taller Kappa S.R.L.' },
+        },
+      },
+    })),
+  };
+
   return (
     <>
       <Seo
         title="Catálogo de Sillas de Hierro y Cuero | Taller Kappa Buenos Aires"
         description="Catálogo de sillones BKF, bancos y bases de mesa de hierro macizo y cuero vacuno. Fabricación propia en San Martín, Buenos Aires."
         path="/catalogo"
-        jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }])}
+        jsonLd={[itemListSchema, breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }])]}
       />
       <main id="catalogo" className="section-padding">
         <h1 className="section-title">Sillas de Hierro y Cuero — Buenos Aires</h1>
