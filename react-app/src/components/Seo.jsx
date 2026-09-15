@@ -2,6 +2,9 @@ import { Helmet } from 'react-helmet-async';
 
 const SITE = 'https://tallerkappa.com.ar';
 const DEFAULT_IMAGE = `${SITE}/images/bkf1.jpg`;
+// bkf1.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
+const DEFAULT_IMAGE_W = 1600;
+const DEFAULT_IMAGE_H = 1600;
 
 /**
  * Seo — helper para meta tags por ruta (título, descripción, canonical, Open Graph).
@@ -9,8 +12,13 @@ const DEFAULT_IMAGE = `${SITE}/images/bkf1.jpg`;
  *
  * `jsonLd` acepta un objeto o array de objetos Schema.org (Product, FAQPage,
  * BreadcrumbList, etc.) y los inyecta como <script type="application/ld+json">.
+ *
+ * `imageWidth`/`imageHeight` son opcionales: si se pasa una `image` distinta
+ * a la de default (ej. la foto real de un producto), conviene pasar también
+ * sus dimensiones reales para que Facebook/WhatsApp/Twitter puedan renderizar
+ * la preview sin tener que descargar la imagen primero para medirla.
  */
-export default function Seo({ title, description, path = '/', image = DEFAULT_IMAGE, type = 'website', jsonLd, noindex = false }) {
+export default function Seo({ title, description, path = '/', image = DEFAULT_IMAGE, imageWidth = DEFAULT_IMAGE_W, imageHeight = DEFAULT_IMAGE_H, type = 'website', jsonLd, noindex = false }) {
   const url = `${SITE}${path}`;
   const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   return (
@@ -24,6 +32,8 @@ export default function Seo({ title, description, path = '/', image = DEFAULT_IM
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
+      {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+      {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
       <meta property="og:locale" content="es_AR" />
       <meta property="og:site_name" content="Taller Kappa" />
       <meta name="twitter:card" content="summary_large_image" />

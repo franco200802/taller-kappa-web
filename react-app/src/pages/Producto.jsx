@@ -53,6 +53,8 @@ export default function Producto() {
         description={`${product.desc} Fabricado en hierro y cuero, directo de fábrica en San Martín, Buenos Aires.`}
         path={`/catalogo/${product.slug}`}
         image={`https://tallerkappa.com.ar${product.image}`}
+        imageWidth={product.imageWidth}
+        imageHeight={product.imageHeight}
         type="product"
         jsonLd={[
           productSchema,
