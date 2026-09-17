@@ -1588,7 +1588,10 @@ footer { background: var(--dark); color: #888; padding: 70px 5% 40px; }
 @media (max-width: 768px) {
     .materials-grid { grid-template-columns: 1fr; }
     .social-proof-popup { max-width: 210px; font-size: 0.74rem; left: 10px; bottom: 18px; }
-    .color-swatch { width: 28px; height: 28px; }
+    /* No achicar el swatch de color por debajo del tamaño de escritorio:
+       es un control táctil, no solo decorativo (mismo criterio que los
+       swatches de la landing de BKF). */
+    .color-swatch { width: 38px; height: 38px; }
     .wave-divider svg { height: 35px; }
 }
 
@@ -2391,10 +2394,18 @@ footer {
     .cart-header h3 { font-size: 1.1rem; }
     .cart-item-info { font-size: 0.82rem; }
     .cart-item-info img { width: 38px; height: 38px; }
+    /* Botones +/- del carrito: 26px era chico para tocar con el pulgar
+       en el sidebar angosto de mobile; se agranda a 34px (tap-target
+       real más cercano a los 44px recomendados sumado al gap). */
+    .qty-btn { width: 34px; height: 34px; font-size: 1.1rem; }
+    .remove-item { padding: 10px; }
+    /* Items de carrito con nombres largos de producto: permitir que la
+       fila crezca en vertical en vez de apretar todo en una sola línea. */
+    .cart-item { flex-wrap: wrap; gap: 10px; }
 
     .modal-info { padding: 20px 15px; }
     .modal-info h2 { font-size: 1.3rem; }
-    .color-swatch { width: 28px; height: 28px; }
+    .color-swatch { width: 38px; height: 38px; }
 
     .urgency-banner { font-size: 0.72rem; padding: 10px 35px 10px 10px; gap: 6px; }
     .countdown { font-size: 0.85rem; padding: 3px 8px; }
