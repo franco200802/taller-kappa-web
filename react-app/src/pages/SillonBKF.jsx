@@ -152,10 +152,10 @@ export default function SillonBKF() {
               <p style={{ fontSize: '.85rem', color: '#999', marginBottom: 8 }}>
                 Acabado: <strong>Negro Mate</strong>
               </p>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <div className="bkf-color-swatches">
                 {COLORS.map((c) => (
-                  <button key={c.name} title={c.name} onClick={() => handleAdd(c.name)}
-                    style={{ width: 32, height: 32, borderRadius: '50%', background: c.swatch, border: '3px solid transparent', cursor: 'pointer' }} />
+                  <button key={c.name} title={c.name} aria-label={`Color ${c.name}`} onClick={() => handleAdd(c.name)}
+                    className="bkf-color-swatch" style={{ background: c.swatch }} />
                 ))}
               </div>
             </div>

@@ -2755,6 +2755,8 @@ body.inner-page { padding-top: var(--nav-height); }
     .page-hero { padding: 4rem 5% 3rem; }
 
     .cta-btns { flex-direction: column; align-items: center; }
+    .cta-btns .btn-main,
+    .cta-btns .btn-outline { width: 100%; max-width: 320px; }
 
     .contact-map { margin-top: 2rem; }
 }
@@ -3027,6 +3029,19 @@ body.inner-page { padding-top: var(--nav-height); }
 .bkf-actions .btn-main,
 .bkf-actions .btn-outline { text-align: center; }
 
+.bkf-color-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.bkf-color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.bkf-color-swatch:hover,
+.bkf-color-swatch:focus-visible { border-color: var(--c-accent); transform: scale(1.1); }
+.bkf-color-swatch:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 2px; }
+
 .bkf-about { padding: 2rem 5% 3rem; background: var(--c-surface); }
 .bkf-about-inner { max-width: 960px; margin: 0 auto; }
 .bkf-about h2 { font-size: 1.8rem; margin-bottom: 1rem; }
@@ -3081,10 +3096,35 @@ body.inner-page { padding-top: var(--nav-height); }
 .comparison-table tbody tr:hover td { background: rgba(255,255,255,0.03); }
 
 @media (max-width: 768px) {
+    .bkf-product-section { padding: 2rem 5% 3rem; }
     .bkf-product-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     .bkf-info-col h2 { font-size: 1.5rem; }
+    .bkf-badges { gap: 0.4rem; }
+    .bkf-badge { font-size: 0.7rem; padding: 0.28rem 0.65rem; }
+    .bkf-price-box { padding: 0.8rem 1.1rem; }
+    .bkf-price { font-size: 1.6rem; }
+    .bkf-specs li { font-size: 0.88rem; }
+    /* Botones a ancho completo: mejor tap-target y más fácil de tocar con el pulgar */
+    .bkf-actions .btn-main,
+    .bkf-actions .btn-outline { width: 100%; }
+    /* Selectores de color: tap-target de 44px (mínimo recomendado para touch) */
+    .bkf-color-swatch { width: 44px; height: 44px; }
+    .bkf-history-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .bkf-history-card { padding: 1.1rem 0.8rem; }
     .bkf-comparison { padding: 2rem 4%; }
     .comparison-table { font-size: 0.82rem; }
     .comparison-table th,
     .comparison-table td { padding: 0.6rem 0.6rem; }
+}
+
+@media (max-width: 480px) {
+    .bkf-info-col h2 { font-size: 1.3rem; }
+    .bkf-tagline { font-size: 0.9rem; }
+    .bkf-price { font-size: 1.4rem; }
+    .bkf-history-grid { grid-template-columns: 1fr 1fr; }
+    .bkf-history-card h3 { font-size: 1.05rem; }
+    .bkf-history-card p { font-size: 0.78rem; }
+    /* Tabla comparativa: permitir scroll horizontal suave con feedback visual */
+    .comparison-table-wrapper { -webkit-overflow-scrolling: touch; }
+    .comparison-table { font-size: 0.78rem; }
 }
