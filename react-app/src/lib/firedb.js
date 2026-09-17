@@ -3,7 +3,7 @@
  * pero usando el SDK modular: import solo de las funciones que usás)
  */
 import {
-  collection, getDocs, getDoc, doc, addDoc, updateDoc, deleteDoc,
+  collection, getDocs, getDoc, doc, addDoc, updateDoc,
   query, where, orderBy, serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
