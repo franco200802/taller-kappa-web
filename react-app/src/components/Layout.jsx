@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAutoReveal } from '../lib/useAutoReveal';
-import { initGA, trackPageview } from '../lib/analytics';
+import { initGA, trackPageview, trackEvent } from '../lib/analytics';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
