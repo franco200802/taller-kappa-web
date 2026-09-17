@@ -217,7 +217,9 @@ nav.scrolled {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
+    /* Padding agranda el área táctil real a ~48x42px sin cambiar el
+       tamaño visual de las 3 líneas (que siguen midiendo 26x20px). */
+    padding: 11px 9px;
     z-index: 1100;
 }
 .hamburger span {
@@ -692,7 +694,15 @@ nav.scrolled {
     padding: 0 0 0 32px;
     font-size: 0.95rem;
 }
-.faq-item.open .faq-answer { max-height: 200px; padding: 0 0 20px 32px; }
+.faq-item.open .faq-answer {
+    /* 200px era insuficiente: en mobile el texto envuelve en más líneas
+       (columna angosta) y las respuestas más largas quedaban cortadas.
+       600px es holgado de sobra para cualquier respuesta actual y sigue
+       animando bien porque max-height solo transiciona hasta la altura
+       real del contenido. */
+    max-height: 600px;
+    padding: 0 0 20px 32px;
+}
 
 /* ============================================
    10. FORMULARIO DE CONTACTO
