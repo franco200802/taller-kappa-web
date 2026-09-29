@@ -97,7 +97,7 @@ export default function SillonBKF() {
       <PageHero
         title="Sillón BKF"
         lead="El icono del diseño argentino. Hierro macizo y cuero vacuno. Directo de fábrica."
-        current="Sillón BKF" trail={[{ to: '/catalogo', label: 'Catálogo' }]}
+        current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }]}
       />
 
       <section className="bkf-product-section section-padding section-fade">
@@ -225,9 +225,9 @@ export default function SillonBKF() {
             </div>
           ))}
           <p>
-            Ver todas las <Link to="/faq">preguntas frecuentes</Link>, conocé nuestras{' '}
-            <Link to="/garantia">condiciones de garantía</Link> o las{' '}
-            <Link to="/envios">zonas y tiempos de envío</Link>.
+            Ver todas las <Link to="/faq/">preguntas frecuentes</Link>, conocé nuestras{' '}
+            <Link to="/garantia/">condiciones de garantía</Link> o las{' '}
+            <Link to="/envios/">zonas y tiempos de envío</Link>.
           </p>
         </div>
       </section>
@@ -242,7 +242,7 @@ export default function SillonBKF() {
               onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
               <i className="fab fa-whatsapp" /> Pedir cotización ahora
             </a>
-            <Link to="/catalogo" className="btn-outline">
+            <Link to="/catalogo/" className="btn-outline">
               <i className="fas fa-th-large" /> Ver todos los productos
             </Link>
           </div>

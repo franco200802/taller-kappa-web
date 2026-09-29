@@ -83,8 +83,8 @@ export default function Contacto() {
             <p><i className="far fa-envelope" aria-hidden="true" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
           </div>
           <p>
-            ¿Buscás un producto en particular? Mirá el <Link to="/catalogo">catálogo completo</Link> o
-            todo sobre nuestro <Link to="/sillon-bkf">Sillón BKF</Link>.
+            ¿Buscás un producto en particular? Mirá el <Link to="/catalogo/">catálogo completo</Link> o
+            todo sobre nuestro <Link to="/sillon-bkf/">Sillón BKF</Link>.
           </p>
         </aside>
       </section>

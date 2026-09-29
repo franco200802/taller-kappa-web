@@ -74,8 +74,8 @@ export default function Nosotros() {
             <h2 className="section-title">Nuestra historia</h2>
             <p>Taller Kappa nació hace más de <strong>15 años</strong> en San Martín, Buenos Aires, con una sola misión: fabricar mobiliario de hierro y cuero de calidad industrial, accesible a locales, empresas y particulares.</p>
             <p>Desde el primer día trabajamos con hierro macizo de 12mm, cuero vacuno de primera selección y pintura epoxi de doble capa. Sin atajos, sin materiales baratos.</p>
-            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf">Sillón BKF</Link> o mirá el <Link to="/catalogo">catálogo completo</Link>.</p>
-            <Link to="/contacto" className="btn-main" style={{ marginTop: 8 }}>
+            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf/">Sillón BKF</Link> o mirá el <Link to="/catalogo/">catálogo completo</Link>.</p>
+            <Link to="/contacto/" className="btn-main" style={{ marginTop: 8 }}>
               Contactarnos
             </Link>
           </div>

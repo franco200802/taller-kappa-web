@@ -7,6 +7,7 @@ import Modal from '../components/Modal';
 import { PRODUCTS } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
+import { absoluteUrl } from '../lib/site';
 
 const FALLBACK_PRODUCTS = PRODUCTS;
 
@@ -31,7 +32,7 @@ function ProductCard({ p, onOpen }) {
   // no tienen garantizado un `slug` propio como los de data/products.js.
   // Sin esta guarda, un producto sin slug generaría un link roto real
   // a /catalogo/undefined en vez de simplemente no enlazar a un detalle.
-  const detailHref = p.slug ? `/catalogo/${p.slug}` : null;
+  const detailHref = p.slug ? `/catalogo/${p.slug}/` : null;
   return (
     <article className="product-card" data-category={p.category}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
@@ -107,7 +108,7 @@ export default function Catalogo() {
         image: `https://tallerkappa.com.ar${p.image}`,
         // Los productos sin slug (ej. cargados desde Firebase por el admin,
         // que no garantiza ese campo) no deben emitir una url inventada.
-        ...(p.slug ? { url: `https://tallerkappa.com.ar/catalogo/${p.slug}` } : {}),
+        ...(p.slug ? { url: absoluteUrl(`/catalogo/${p.slug}`) } : {}),
         category: p.category,
         brand: { '@type': 'Brand', name: 'Taller Kappa' },
         offers: {
@@ -131,7 +132,7 @@ export default function Catalogo() {
         <h1 className="section-title">Sillas de hierro y cuero en Buenos Aires</h1>
         <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
-          Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf">Sillón BKF</Link>.
+          Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf/">Sillón BKF</Link>.
         </p>
 
         <div className="filters" role="group" aria-label="Filtrar productos">
@@ -169,8 +170,8 @@ export default function Catalogo() {
           </div>
         </div>
         <p style={{ marginTop: 32 }}>
-          ¿Tenés dudas sobre precios o medidas? <Link to="/contacto">Contactanos</Link> o mirá las{' '}
-          <Link to="/faq">preguntas frecuentes</Link>.
+          ¿Tenés dudas sobre precios o medidas? <Link to="/contacto/">Contactanos</Link> o mirá las{' '}
+          <Link to="/faq/">preguntas frecuentes</Link>.
         </p>
       </section>
 

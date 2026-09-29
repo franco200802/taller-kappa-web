@@ -3,13 +3,13 @@ import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Inicio' },
-  { to: '/catalogo', label: 'Catálogo' },
-  { to: '/proyectos', label: 'Proyectos' },
-  { to: '/envios', label: 'Envíos' },
-  { to: '/garantia', label: 'Garantía' },
-  { to: '/nosotros', label: 'Nosotros' },
-  { to: '/faq', label: 'Preguntas frecuentes' },
-  { to: '/contacto', label: 'Contacto' },
+  { to: '/catalogo/', label: 'Catálogo' },
+  { to: '/proyectos/', label: 'Proyectos' },
+  { to: '/envios/', label: 'Envíos' },
+  { to: '/garantia/', label: 'Garantía' },
+  { to: '/nosotros/', label: 'Nosotros' },
+  { to: '/faq/', label: 'Preguntas frecuentes' },
+  { to: '/contacto/', label: 'Contacto' },
 ];
 
 export default function Footer() {

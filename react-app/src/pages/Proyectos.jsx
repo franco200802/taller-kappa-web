@@ -56,7 +56,7 @@ export default function Proyectos() {
         <p className="section-subtitle">Grandes marcas eligen Taller Kappa para su equipamiento comercial.</p>
         <p style={{ marginBottom: 32 }}>
           Fabricamos mobiliario de hierro y cuero a medida para locales gastronómicos, estaciones de servicio
-          y comercios. Si tenés un proyecto para tu empresa, <Link to="/contacto">contactanos</Link> y te asesoramos.
+          y comercios. Si tenés un proyecto para tu empresa, <Link to="/contacto/">contactanos</Link> y te asesoramos.
         </p>
 
         <div className="projects-grid">
@@ -89,7 +89,7 @@ export default function Proyectos() {
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
             </a>
-            <Link to="/catalogo" className="btn-outline">
+            <Link to="/catalogo/" className="btn-outline">
               <i className="fas fa-th-large" /> Ver catálogo
             </Link>
           </div>
