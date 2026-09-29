@@ -22,6 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Historial completo: el prerender calcula el <lastmod> del
+          # sitemap con la fecha del último commit de cada página. Con el
+          # clone superficial por defecto todas saldrían con la misma fecha.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:

@@ -36,7 +36,7 @@ export default function Home() {
             San Martín. Cotizamos por WhatsApp en el día.
           </p>
           <div className="home-hero-actions">
-            <Link to="/catalogo" className="btn-main">Ver catálogo</Link>
+            <Link to="/catalogo/" className="btn-main">Ver catálogo</Link>
             <a
               href={whatsappUrl('Hola, soy una empresa y necesito cotización mayorista.')}
               target="_blank" rel="noopener noreferrer" className="btn-outline"
@@ -47,12 +47,13 @@ export default function Home() {
         </div>
         <div className="home-hero-media">
           <Picture
-            src="/images/bkf1.jpg"
+            src="/images/sillon-bkf-hierro-cuero.jpg"
             alt="Sillón BKF de hierro negro y cuero suela, fabricado por Taller Kappa"
             width={1600}
             height={1600}
             loading="eager"
             fetchPriority="high"
+            sizes="(max-width: 860px) 100vw, 52vw"
           />
           <span className="home-hero-caption">Sillón BKF Premium, cuero suela</span>
         </div>
@@ -72,14 +73,14 @@ export default function Home() {
       <section className="section-padding">
         <div className="section-head">
           <h2 className="section-title">Lo que fabricamos</h2>
-          <Link to="/catalogo" className="btn-outline">Ver catálogo completo</Link>
+          <Link to="/catalogo/" className="btn-outline">Ver catálogo completo</Link>
         </div>
         <ul className="home-products">
           {PRODUCTS.map((p) => (
             <li className="home-product" key={p.slug}>
-              <Link to={`/catalogo/${p.slug}`}>
+              <Link to={`/catalogo/${p.slug}/`}>
                 <div className="home-product-img">
-                  <Picture src={p.image} alt={p.name} width={p.imageWidth} height={p.imageHeight} loading="lazy" />
+                  <Picture src={p.image} alt={p.name} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
                 </div>
                 <h3>{p.name}</h3>
                 <p>{p.specs[0]}</p>
@@ -105,13 +106,13 @@ export default function Home() {
         <div>
           <h2 className="section-title">Antes de pedir</h2>
           <p>
-            Conocé la historia y las medidas del <Link to="/sillon-bkf">Sillón BKF</Link>, o mirá los{' '}
-            <Link to="/proyectos">proyectos que hicimos</Link> para YPF, McDonald&apos;s y Burger King.
+            Conocé la historia y las medidas del <Link to="/sillon-bkf/">Sillón BKF</Link>, o mirá los{' '}
+            <Link to="/proyectos/">proyectos que hicimos</Link> para YPF, McDonald&apos;s y Burger King.
           </p>
           <p>
-            Revisá las <Link to="/envios">zonas y tiempos de envío</Link> y las{' '}
-            <Link to="/garantia">condiciones de garantía</Link>. Si te queda alguna duda, están las{' '}
-            <Link to="/faq">preguntas frecuentes</Link> o nos podés <Link to="/contacto">escribir directamente</Link>.
+            Revisá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
+            <Link to="/garantia/">condiciones de garantía</Link>. Si te queda alguna duda, están las{' '}
+            <Link to="/faq/">preguntas frecuentes</Link> o nos podés <Link to="/contacto/">escribir directamente</Link>.
           </p>
         </div>
       </section>

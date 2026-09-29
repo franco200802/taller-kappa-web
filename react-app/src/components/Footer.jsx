@@ -3,13 +3,13 @@ import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Inicio' },
-  { to: '/catalogo', label: 'Catálogo' },
-  { to: '/proyectos', label: 'Proyectos' },
-  { to: '/envios', label: 'Envíos' },
-  { to: '/garantia', label: 'Garantía' },
-  { to: '/nosotros', label: 'Nosotros' },
-  { to: '/faq', label: 'Preguntas frecuentes' },
-  { to: '/contacto', label: 'Contacto' },
+  { to: '/catalogo/', label: 'Catálogo' },
+  { to: '/proyectos/', label: 'Proyectos' },
+  { to: '/envios/', label: 'Envíos' },
+  { to: '/garantia/', label: 'Garantía' },
+  { to: '/nosotros/', label: 'Nosotros' },
+  { to: '/faq/', label: 'Preguntas frecuentes' },
+  { to: '/contacto/', label: 'Contacto' },
 ];
 
 export default function Footer() {
@@ -20,7 +20,7 @@ export default function Footer() {
           <span className="footer-logo">Taller Kappa</span>
           <div className="footer-info">
             <p><strong>Fábrica &amp; Showroom</strong></p>
-            <p><i className="fas fa-map-marker-alt" /> Calle 28 Nº 3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
+            <p><i className="fas fa-map-marker-alt" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
             <p><i className="fab fa-whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><i className="far fa-envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
           </div>
@@ -30,6 +30,9 @@ export default function Footer() {
         </div>
         <div className="footer-col">
           <div className="footer-map">
+            <a className="footer-map-link" href="https://maps.google.com/?q=-34.5851938,-58.5281526" target="_blank" rel="noopener noreferrer">
+              <span>Abrir en Google Maps</span>
+            </a>
             <iframe
               src="https://maps.google.com/maps?q=-34.5851938,-58.5281526&t=&z=16&ie=UTF8&iwloc=&output=embed"
               title="Ubicación Taller Kappa en Google Maps"
@@ -40,7 +43,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="footer-copy">© {new Date().getFullYear()} Taller Kappa S.R.L. — Todos los derechos reservados.</p>
+      <p className="footer-copy">© {__BUILD_YEAR__} Taller Kappa S.R.L. Todos los derechos reservados.</p>
     </footer>
   );
 }

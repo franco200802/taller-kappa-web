@@ -60,10 +60,16 @@ export const ROUTES = [
  * Se generan desde la misma fuente de datos para no duplicar la lista
  * de productos en ningún otro lado.
  */
-const PRODUCT_PATHS = PRODUCTS.map((p) => `/catalogo/${p.slug}`);
+const PRODUCT_PAGES = PRODUCTS.map((p) => ({ path: `/catalogo/${p.slug}`, page: 'Producto' }));
 
-/** Rutas que sí se escriben como HTML estático en dist/. */
-export const PRERENDER_PATHS = [
-  ...ROUTES.filter((r) => r.prerender).map((r) => r.path),
-  ...PRODUCT_PATHS,
+/**
+ * Páginas que sí se escriben como HTML estático en dist/, con el
+ * componente que las genera (el prerender lo usa para calcular el
+ * <lastmod> del sitemap a partir del historial de git de ese archivo).
+ */
+export const PRERENDER_PAGES = [
+  ...ROUTES.filter((r) => r.prerender).map(({ path, page }) => ({ path, page })),
+  ...PRODUCT_PAGES,
 ];
+
+export const PRERENDER_PATHS = PRERENDER_PAGES.map((r) => r.path);

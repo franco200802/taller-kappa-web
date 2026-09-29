@@ -1,16 +1,11 @@
+# Taller Kappa — tallerkappa.com.ar
+# Todo el sitio público es rastreable (páginas, CSS, JS e imágenes).
+# /admin es el panel interno: no tiene contenido público.
+#
+# Ojo: un bot que tiene su propio grupo (User-agent: Googlebot) ignora el
+# grupo "*". Por eso no hay grupos por bot: con uno para Googlebot, el
+# Disallow de /admin dejaba de aplicarse a Google.
 User-agent: *
-Allow: /
 Disallow: /admin
-
-# Crawl-delay sugerido para bots no prioritarios
-User-agent: AhrefsBot
-Crawl-delay: 10
-
-User-agent: SemrushBot
-Crawl-delay: 10
-
-# Googlebot — sin restricciones de crawl-delay
-User-agent: Googlebot
-Allow: /
 
 Sitemap: https://tallerkappa.com.ar/sitemap.xml

@@ -76,6 +76,7 @@ taller-kappa-web/                  (raíz del repo)
 │   │   │   ├── Layout.jsx         (shell: Navbar + <main> con el <Suspense> de las páginas + Footer + CartDrawer + WA flotante)
 │   │   │   ├── Navbar.jsx, Footer.jsx, CartDrawer.jsx, Toast.jsx
 │   │   │   ├── PageHero.jsx       (breadcrumb + h1 + bajada de las páginas internas)
+│   │   │   ├── Modal.jsx          (<dialog> nativo con showModal(): carrito, detalle de producto, lightbox)
 │   │   │   ├── Picture.jsx        (<picture> con .webp SOLO para los archivos listados en WEBP_AVAILABLE)
 │   │   │   └── Seo.jsx            (meta tags + JSON-LD por página)
 │   │   ├── context/
@@ -203,17 +204,17 @@ Gemini en la esquina inferior derecha. Conviene reemplazarlas por fotos
 reales de los productos del taller (mismo nombre de archivo, y regenerar
 el `.webp` de cada una).
 
-### 🟡 Pendiente — Modales con `<dialog>` nativo
-`react-doctor` sugiere migrar el carrito (`CartDrawer`), el detalle de
-producto (`Catalogo`) y el lightbox (`Nosotros`) a `<dialog>`: daría gratis
-el foco atrapado dentro del modal y el fondo inerte. Hoy tienen `role="dialog"`,
-cierran con Escape y no son alcanzables con Tab cuando están cerrados.
-
 ### 🟡 Pendiente — Search Console / Google Business Profile
 No están configurados todavía (requiere acceso del dueño del sitio a esas
 cuentas de Google, no es algo que se resuelva solo con código).
 
 ### 🟢 Ya resuelto recientemente (por si aparece en el historial de git)
+- Modales migrados a `<dialog>` nativo (`components/Modal.jsx`): carrito,
+  detalle de producto y lightbox. Foco atrapado, fondo inerte, el foco
+  vuelve al botón que abrió el modal, y el scroll de la página se bloquea
+  en CSS (`html:has(dialog[open])`). El `display` de cada modal va en
+  `[open]`, nunca en la clase base (ver sección 9 de `global.css`). El
+  toast es un `popover` para quedar encima de los modales (top layer).
 - Rediseño completo (sept. 2026): paleta clara basada en las fotos,
   tipografía Archivo, `global.css` reescrito, sin animaciones de scroll.
 - La hidratación fallaba en TODAS las páginas (errores React #418/#423):

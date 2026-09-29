@@ -24,7 +24,7 @@ export default function AppRoutes({ components }) {
           if (!Page) return null;
           return path === '/'
             ? <Route index key={path} element={<Page />} />
-            : <Route key={path} path={path.slice(1)} element={<Page />} />;
+            : <Route key={path} path={path.slice(1)} caseSensitive element={<Page />} />;
         })}
         {NotFound && <Route path="*" element={<NotFound />} />}
       </Route>

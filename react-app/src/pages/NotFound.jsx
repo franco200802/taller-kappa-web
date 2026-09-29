@@ -16,15 +16,14 @@ export default function NotFound() {
       <Seo
         title="Página no encontrada | Taller Kappa"
         description="La página que buscás no existe o fue movida."
-        path="/404"
         noindex
       />
       <h1>Esta página no existe</h1>
       <p className="section-subtitle">Puede que el enlace esté roto o que la página se haya movido.</p>
       <div className="cta-btns" style={{ marginTop: 24 }}>
         <Link to="/" className="btn-main">Ir al Inicio</Link>
-        <Link to="/catalogo" className="btn-outline">Ver catálogo</Link>
-        <Link to="/contacto" className="btn-outline">Contactanos</Link>
+        <Link to="/catalogo/" className="btn-outline">Ver catálogo</Link>
+        <Link to="/contacto/" className="btn-outline">Contactanos</Link>
       </div>
     </section>
   );

@@ -13,8 +13,8 @@ const PRODUCT_SCHEMA = {
   alternateName: ['Sillón BKF', 'BKF', 'Silla Paleta', 'Silla BKF'],
   description: 'Sillón BKF fabricado en hierro macizo redondo de 12mm, cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva. El icono del diseño argentino con resistencia industrial.',
   image: [
-    'https://tallerkappa.com.ar/images/bkf1.jpg',
-    'https://tallerkappa.com.ar/images/bkfapoyapies.jpg',
+    'https://tallerkappa.com.ar/images/sillon-bkf-hierro-cuero.jpg',
+    'https://tallerkappa.com.ar/images/banco-bkf-hierro-cuero.jpg',
   ],
   brand: { '@type': 'Brand', name: 'Taller Kappa' },
   manufacturer: {
@@ -70,7 +70,7 @@ export default function SillonBKF() {
       _id: 'bkf-landing',
       id: 'bkf-landing',
       name: 'Sillón BKF Premium',
-      image: '/images/bkf1.jpg',
+      image: '/images/sillon-bkf-hierro-cuero.jpg',
       specs: ['Hierro macizo 12mm', 'Cuero vacuno de 1ra'],
     }, color);
     trackEvent('add_to_cart', { item: 'Sillón BKF Premium', color, location: 'sillon-bkf' });
@@ -82,7 +82,7 @@ export default function SillonBKF() {
         title="Sillón BKF de Hierro y Cuero | Taller Kappa Buenos Aires"
         description="Sillón BKF fabricado en hierro macizo 12mm y cuero vacuno. Directo de fábrica en San Martín, Buenos Aires. Fabricación a medida y envíos."
         path="/sillon-bkf"
-        image="https://tallerkappa.com.ar/images/bkf1.jpg"
+        image="https://tallerkappa.com.ar/images/sillon-bkf-hierro-cuero.jpg"
         type="product"
         jsonLd={[
           PRODUCT_SCHEMA,
@@ -97,13 +97,13 @@ export default function SillonBKF() {
       <PageHero
         title="Sillón BKF"
         lead="El icono del diseño argentino. Hierro macizo y cuero vacuno. Directo de fábrica."
-        current="Sillón BKF" trail={[{ to: '/catalogo', label: 'Catálogo' }]}
+        current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }]}
       />
 
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <Picture src="/images/bkf1.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" width={1600} height={1600} loading="eager" fetchPriority="high" />
+            <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" width={1600} height={1600} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
             <div className="bkf-badges">
               <span className="bkf-badge"><i className="fas fa-star" /> Diseño icónico</span>
               <span className="bkf-badge"><i className="fas fa-industry" /> Fábrica propia</span>
@@ -225,9 +225,9 @@ export default function SillonBKF() {
             </div>
           ))}
           <p>
-            Ver todas las <Link to="/faq">preguntas frecuentes</Link>, conocé nuestras{' '}
-            <Link to="/garantia">condiciones de garantía</Link> o las{' '}
-            <Link to="/envios">zonas y tiempos de envío</Link>.
+            Ver todas las <Link to="/faq/">preguntas frecuentes</Link>, conocé nuestras{' '}
+            <Link to="/garantia/">condiciones de garantía</Link> o las{' '}
+            <Link to="/envios/">zonas y tiempos de envío</Link>.
           </p>
         </div>
       </section>
@@ -242,7 +242,7 @@ export default function SillonBKF() {
               onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
               <i className="fab fa-whatsapp" /> Pedir cotización ahora
             </a>
-            <Link to="/catalogo" className="btn-outline">
+            <Link to="/catalogo/" className="btn-outline">
               <i className="fas fa-th-large" /> Ver todos los productos
             </Link>
           </div>

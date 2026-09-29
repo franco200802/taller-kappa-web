@@ -5,6 +5,7 @@ import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { getProductBySlug } from '../data/products';
 import { whatsappUrl } from '../data/contact';
+import { absoluteUrl } from '../lib/site';
 
 /**
  * Página individual de producto — URL propia, indexable y prerenderizada
@@ -27,7 +28,7 @@ export default function Producto() {
         />
         <h1>Producto no encontrado</h1>
         <p>El producto que buscás no existe o ya no está disponible.</p>
-        <p><Link to="/catalogo">Ver catálogo completo</Link></p>
+        <p><Link to="/catalogo/">Ver catálogo completo</Link></p>
       </section>
     );
   }
@@ -41,7 +42,7 @@ export default function Producto() {
     category: product.category,
     brand: { '@type': 'Brand', name: 'Taller Kappa' },
     manufacturer: { '@type': 'Organization', name: 'Taller Kappa S.R.L.', url: 'https://tallerkappa.com.ar' },
-    url: `https://tallerkappa.com.ar/catalogo/${product.slug}`,
+    url: absoluteUrl(`/catalogo/${product.slug}`),
     offers: {
       '@type': 'Offer',
       availability: product.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
@@ -71,7 +72,7 @@ export default function Producto() {
       <PageHero
         title={product.name}
         lead={product.desc}
-        current={product.name} trail={[{ to: '/catalogo', label: 'Catálogo' }]}
+        current={product.name} trail={[{ to: '/catalogo/', label: 'Catálogo' }]}
       />
 
       <section className="bkf-product-section section-padding section-fade">
@@ -84,6 +85,7 @@ export default function Producto() {
               height={product.imageHeight}
               loading="eager"
               fetchPriority="high"
+              sizes="(max-width: 860px) calc(100vw - 32px), 640px"
             />
             {product.badge && (
               <div className="bkf-badges">
@@ -125,10 +127,10 @@ export default function Producto() {
           <h2>¿Querés más opciones?</h2>
           <p>Mirá el resto de nuestro catálogo o conocé en detalle el Sillón BKF.</p>
           <div className="cta-btns">
-            <Link to="/catalogo" className="btn-main">
+            <Link to="/catalogo/" className="btn-main">
               <i className="fas fa-th-large" /> Ver todo el catálogo
             </Link>
-            <Link to="/sillon-bkf" className="btn-outline">
+            <Link to="/sillon-bkf/" className="btn-outline">
               <i className="fas fa-chair" /> Sobre el Sillón BKF
             </Link>
           </div>

@@ -70,13 +70,13 @@ export default function Envios() {
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <i className="fab fa-whatsapp" /> Consultar envío
             </a>
-            <Link to="/catalogo" className="btn-outline">
+            <Link to="/catalogo/" className="btn-outline">
               <i className="fas fa-th-large" /> Ver catálogo
             </Link>
           </div>
-          <p style={{ marginTop: 16 }}>
-            Conocé también nuestras <Link to="/garantia">condiciones de garantía</Link> o
-            todo sobre el <Link to="/sillon-bkf">Sillón BKF</Link>.
+          <p className="cta-links">
+            Conocé también nuestras <Link to="/garantia/">condiciones de garantía</Link> o
+            todo sobre el <Link to="/sillon-bkf/">Sillón BKF</Link>.
           </p>
         </div>
       </section>

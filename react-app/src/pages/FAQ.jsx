@@ -68,8 +68,8 @@ export default function FAQ() {
           {faqs.map((f) => <FaqItem key={f.id} f={f} />)}
         </div>
         <p style={{ marginTop: 24 }}>
-          ¿No encontraste lo que buscabas? <Link to="/contacto">Contactanos</Link> o mirá nuestro{' '}
-          <Link to="/catalogo">catálogo completo</Link>.
+          ¿No encontraste lo que buscabas? <Link to="/contacto/">Contactanos</Link> o mirá nuestro{' '}
+          <Link to="/catalogo/">catálogo completo</Link>.
         </p>
       </section>
     </>

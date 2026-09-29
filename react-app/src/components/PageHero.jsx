@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 /**
  * Encabezado de las páginas internas: breadcrumb + h1 + bajada.
  * `trail` son los pasos intermedios entre Inicio y la página actual
- * (ej. [{ to: '/catalogo', label: 'Catálogo' }]).
+ * (ej. [{ to: '/catalogo/', label: 'Catálogo' }]).
  */
 export default function PageHero({ title, lead, current, trail = [] }) {
   return (

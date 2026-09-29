@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
+import { absoluteUrl, assetUrl } from '../lib/site';
 
-const SITE = 'https://tallerkappa.com.ar';
-const DEFAULT_IMAGE = `${SITE}/images/bkf1.jpg`;
-// bkf1.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
+const DEFAULT_IMAGE = assetUrl('/images/sillon-bkf-hierro-cuero.jpg');
+// sillon-bkf-hierro-cuero.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
 const DEFAULT_IMAGE_W = 1600;
 const DEFAULT_IMAGE_H = 1600;
 
@@ -19,16 +19,18 @@ const DEFAULT_IMAGE_H = 1600;
  * la preview sin tener que descargar la imagen primero para medirla.
  */
 export default function Seo({ title, description, path = '/', image = DEFAULT_IMAGE, imageWidth = DEFAULT_IMAGE_W, imageHeight = DEFAULT_IMAGE_H, type = 'website', jsonLd, noindex = false }) {
-  const url = `${SITE}${path}`;
+  // Canonical y og:url siempre con barra final (ver lib/site.js). Una página
+  // noindex no declara canonical: serían dos señales contradictorias.
+  const url = absoluteUrl(path);
   const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   return (
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={url} />
-      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+      {!noindex && <link rel="canonical" href={url} />}
+      <meta name="robots" content={noindex ? 'noindex' : 'index, follow'} />
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={url} />
+      {!noindex && <meta property="og:url" content={url} />}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
@@ -58,7 +60,7 @@ export function breadcrumbList(items) {
       '@type': 'ListItem',
       position: i + 1,
       name: item.name,
-      item: `${SITE}${item.path}`,
+      item: absoluteUrl(item.path),
     })),
   };
 }

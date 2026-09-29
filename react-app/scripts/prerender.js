@@ -11,11 +11,17 @@
  *   - los inyecta en el index.html que generó Vite (que ya tiene los <script>
  *     y <link> con hash correctos)
  *   - escribe dist/<ruta>/index.html
+ *   - genera dist/sitemap.xml con las URLs canónicas indexables (se
+ *     actualiza solo: agregar un producto en data/products.js alcanza)
+ *   - corta el build si una página rompe una regla básica de SEO
+ *     (canonical distinto de su URL, sin h1 o con más de uno, title o
+ *     description duplicados)
  *
  * Esto reemplaza el `cp index.html` anterior, que producía 9 páginas con
  * el mismo title y un canonical apuntando todas al home.
  */
 import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -26,9 +32,10 @@ const ssrDir = resolve(root, '.ssr-build');
 
 const template = readFileSync(resolve(distDir, 'index.html'), 'utf-8');
 const { render } = await import(pathToFileURL(resolve(ssrDir, 'entry-server.js')).href);
-// PRERENDER_PATHS se lee del source: son constantes planas y así no
+// PRERENDER_PAGES se lee del source: son constantes planas y así no
 // dependemos de cómo Vite haya agrupado los chunks del bundle de SSR.
-const { PRERENDER_PATHS } = await import(pathToFileURL(resolve(root, 'src/routes.js')).href);
+const { PRERENDER_PAGES } = await import(pathToFileURL(resolve(root, 'src/routes.js')).href);
+const { absoluteUrl, withSlash, assetUrl } = await import(pathToFileURL(resolve(root, 'src/lib/site.js')).href);
 
 /**
  * El template de Vite trae meta tags por defecto (los del Home) que deben
@@ -48,10 +55,35 @@ function stripDefaultHead(html) {
   return remove.reduce((acc, re) => acc.replace(re, ''), html);
 }
 
-const results = [];
+/**
+ * Fecha del último commit que tocó los archivos de los que sale el
+ * contenido de una página (su componente y, si corresponde, los datos de
+ * productos). Es el <lastmod> del sitemap: Google solo lo tiene en cuenta
+ * si es verificablemente preciso, así que no se usa la fecha del build.
+ * Sin git (o sin historial) devuelve null y el <lastmod> se omite.
+ */
+const PAGES_WITH_PRODUCT_DATA = new Set(['Home', 'Catalogo', 'Producto']);
+function lastModified(page) {
+  const files = [`src/pages/${page}.jsx`];
+  if (PAGES_WITH_PRODUCT_DATA.has(page)) files.push('src/data/products.js');
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', ...files], { cwd: root, encoding: 'utf-8' }).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : null;
+  } catch {
+    return null;
+  }
+}
 
-for (const path of PRERENDER_PATHS) {
-  const { html, helmet } = await render(path);
+const decode = (s) => s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+const xmlEscape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const results = [];
+const problems = [];
+
+for (const { path, page: pageName } of PRERENDER_PAGES) {
+  // Se renderiza con la barra final, que es la URL real que sirve GitHub
+  // Pages (y la que ve el router del cliente al hidratar).
+  const { html, helmet } = await render(withSlash(path));
 
   const head = [
     helmet?.title?.toString(),
@@ -71,10 +103,56 @@ for (const path of PRERENDER_PATHS) {
   mkdirSync(outDir, { recursive: true });
   writeFileSync(resolve(outDir, 'index.html'), page, 'utf-8');
 
-  const canonical = page.match(/rel="canonical" href="([^"]+)"/)?.[1] ?? '(sin canonical)';
-  const title = page.match(/<title[^>]*>([^<]+)<\/title>/)?.[1] ?? '(sin title)';
-  results.push({ path, canonical, title, bytes: Buffer.byteLength(page) });
+  const canonical = page.match(/rel="canonical" href="([^"]+)"/)?.[1] ?? null;
+  const title = decode(page.match(/<title[^>]*>([^<]+)<\/title>/)?.[1] ?? '');
+  const description = decode(page.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"/)?.[1] ?? '');
+  const noindex = /<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(page);
+  const h1Count = (html.match(/<h1[\s>]/g) || []).length;
+  // Fotos de la página (jpg/jpeg: los logos de clientes son png y no se
+  // listan) para la extensión de imágenes del sitemap.
+  const images = [...new Set([...html.matchAll(/<img[^>]*\ssrc="(\/images\/[^"]+\.jpe?g)"/g)].map((m) => m[1]))];
+
+  if (!noindex && canonical !== absoluteUrl(path)) problems.push(`${path}: canonical ${canonical} ≠ ${absoluteUrl(path)}`);
+  // Todo link interno debe llevar la barra final (o sería un 301 en GitHub Pages).
+  const sinBarra = [...new Set([...html.matchAll(/href="(\/[^"#?]*)"/g)].map((m) => m[1]))]
+    .filter((h) => !h.endsWith('/') && !/\.[a-z0-9]+$/i.test(h));
+  if (sinBarra.length) problems.push(`${path}: links internos sin barra final → ${sinBarra.join(', ')}`);
+  if (h1Count !== 1) problems.push(`${path}: tiene ${h1Count} <h1> (debe tener exactamente 1)`);
+  if (!title) problems.push(`${path}: sin <title>`);
+  if (!description) problems.push(`${path}: sin meta description`);
+
+  results.push({ path, pageName, canonical, title, description, noindex, images, bytes: Buffer.byteLength(page) });
 }
+
+for (const key of ['title', 'description']) {
+  const seen = new Map();
+  for (const r of results) {
+    if (seen.has(r[key])) problems.push(`${key} duplicado en ${seen.get(r[key])} y ${r.path}: "${r[key]}"`);
+    else seen.set(r[key], r.path);
+  }
+}
+
+if (problems.length) {
+  console.error('\n  El prerender encontró problemas de SEO:\n');
+  for (const p of problems) console.error(`  ✗ ${p}`);
+  process.exit(1);
+}
+
+/**
+ * sitemap.xml — solo URLs canónicas e indexables (las noindex, /admin y
+ * el 404 quedan afuera). Sin <changefreq> ni <priority>: Google los ignora.
+ */
+const urls = results.filter((r) => !r.noindex).map((r) => {
+  const lastmod = lastModified(r.pageName);
+  const imgs = r.images.map((src) => `\n    <image:image><image:loc>${xmlEscape(assetUrl(src))}</image:loc></image:image>`).join('');
+  return `  <url>\n    <loc>${xmlEscape(r.canonical)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}${imgs}\n  </url>`;
+});
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${urls.join('\n')}
+</urlset>
+`;
+writeFileSync(resolve(distDir, 'sitemap.xml'), sitemap, 'utf-8');
 
 /**
  * 404.html — fallback de GitHub Pages para rutas no prerenderizadas.
@@ -87,10 +165,44 @@ const notFound = stripDefaultHead(template).replace(
 );
 writeFileSync(resolve(distDir, '404.html'), notFound, 'utf-8');
 
+/**
+ * URLs del sitio estático anterior (antes de la migración a React, 14/09/2026).
+ * Estaban en su sitemap como /catalogo.html, /nosotros.html, etc. y hoy dan
+ * 404. GitHub Pages no permite 301 del lado del servidor: lo más fuerte que
+ * se puede publicar es una página con canonical a la URL nueva y un meta
+ * refresh inmediato, que Google trata como redirección permanente. No llevan
+ * noindex (contradiría la redirección) ni van al sitemap.
+ */
+const LEGACY_HTML = {
+  'catalogo.html': '/catalogo/',
+  'sillon-bkf.html': '/sillon-bkf/',
+  'nosotros.html': '/nosotros/',
+  'faq.html': '/faq/',
+  'contacto.html': '/contacto/',
+  'proyectos.html': '/proyectos/',
+  'envios.html': '/envios/',
+  'garantia.html': '/garantia/',
+};
+for (const [file, to] of Object.entries(LEGACY_HTML)) {
+  const target = absoluteUrl(to);
+  writeFileSync(resolve(distDir, file), `<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<title>Taller Kappa</title>
+<link rel="canonical" href="${target}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace(${JSON.stringify(to)} + location.search + location.hash)</script>
+</head>
+<body><p>Esta página se mudó a <a href="${target}">${target}</a>.</p></body>
+</html>
+`, 'utf-8');
+}
+
 rmSync(ssrDir, { recursive: true, force: true });
 
 console.log('\n  Prerender completado:\n');
 for (const r of results) {
   console.log(`  ${r.path.padEnd(14)} ${String(r.bytes).padStart(7)} B  canonical: ${r.canonical}`);
 }
-console.log(`\n  ${results.length} rutas + 404.html\n`);
+console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · ${Object.keys(LEGACY_HTML).length} redirecciones de URLs .html heredadas\n`);

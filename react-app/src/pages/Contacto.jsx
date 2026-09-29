@@ -61,7 +61,7 @@ export default function Contacto() {
           <div className="form-group">
             <label htmlFor="contact-interest">¿Qué te interesa?</label>
             <select id="contact-interest" value={form.interest} onChange={(e) => setForm({ ...form, interest: e.target.value })}>
-              <option value="">Seleccioná una opción...</option>
+              <option value="">Seleccioná una opción…</option>
               <option value="Sillón BKF">Sillón BKF</option>
               <option value="Banco BKF">Banco BKF</option>
               <option value="Base de Mesa">Base de Mesa</option>
@@ -70,7 +70,7 @@ export default function Contacto() {
           </div>
           <div className="form-group">
             <label htmlFor="contact-message">Tu mensaje</label>
-            <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos tu consulta o lo que necesitás..." />
+            <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos tu consulta o lo que necesitás…" />
           </div>
           <div className="form-submit">
             <button type="submit" className="btn-main"><i className="fab fa-whatsapp" /> Enviar por WhatsApp</button>
@@ -78,13 +78,13 @@ export default function Contacto() {
         </form>
         <aside className="contact-aside" aria-label="Datos de contacto">
           <div className="contact-info">
-            <p><i className="fas fa-map-marker-alt" aria-hidden="true" /> Calle 28 Nº 3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
+            <p><i className="fas fa-map-marker-alt" aria-hidden="true" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
             <p><i className="fab fa-whatsapp" aria-hidden="true" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><i className="far fa-envelope" aria-hidden="true" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
           </div>
           <p>
-            ¿Buscás un producto en particular? Mirá el <Link to="/catalogo">catálogo completo</Link> o
-            todo sobre nuestro <Link to="/sillon-bkf">Sillón BKF</Link>.
+            ¿Buscás un producto en particular? Mirá el <Link to="/catalogo/">catálogo completo</Link> o
+            todo sobre nuestro <Link to="/sillon-bkf/">Sillón BKF</Link>.
           </p>
         </aside>
       </section>

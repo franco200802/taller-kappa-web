@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
+import Modal from '../components/Modal';
 import { loadFireDB } from '../lib/firebaseConfig';
 
 const WHY = [
@@ -26,10 +27,10 @@ const FALLBACK_TESTIMONIOS = [
 ];
 
 const GALLERY = [
-  { src: '/images/bkf1.jpg', alt: 'Sillón BKF', label: 'Sillón BKF Premium', tall: true, w: 1600, h: 1600 },
-  { src: '/images/bkfapoyapies.jpg', alt: 'Banco BKF', label: 'Banco BKF', w: 1024, h: 1024 },
-  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat', label: 'Base de Mesa Flat', w: 1024, h: 1536 },
-  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true, w: 1024, h: 1536 },
+  { src: '/images/sillon-bkf-hierro-cuero.jpg', alt: 'Sillón BKF', label: 'Sillón BKF Premium', tall: true, w: 1600, h: 1600 },
+  { src: '/images/banco-bkf-hierro-cuero.jpg', alt: 'Banco BKF', label: 'Banco BKF', w: 1024, h: 1024 },
+  { src: '/images/base-mesa-flat-hierro.jpg', alt: 'Base de Mesa Flat', label: 'Base de Mesa Flat', w: 1024, h: 1536 },
+  { src: '/images/base-mesa-flat-hierro.jpg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true, w: 1024, h: 1536 },
 ];
 
 export default function Nosotros() {
@@ -47,16 +48,11 @@ export default function Nosotros() {
     setLightbox((i) => (i === null ? i : (i + dir + GALLERY.length) % GALLERY.length));
   };
 
-  useEffect(() => {
-    if (lightbox === null) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') setLightbox(null);
-      if (e.key === 'ArrowLeft') shiftLightbox(-1);
-      if (e.key === 'ArrowRight') shiftLightbox(1);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [lightbox]);
+  // Escape ya lo maneja el <dialog>; acá solo las flechas.
+  const onLightboxKey = (e) => {
+    if (e.key === 'ArrowLeft') shiftLightbox(-1);
+    if (e.key === 'ArrowRight') shiftLightbox(1);
+  };
 
   return (
     <>
@@ -78,13 +74,13 @@ export default function Nosotros() {
             <h2 className="section-title">Nuestra historia</h2>
             <p>Taller Kappa nació hace más de <strong>15 años</strong> en San Martín, Buenos Aires, con una sola misión: fabricar mobiliario de hierro y cuero de calidad industrial, accesible a locales, empresas y particulares.</p>
             <p>Desde el primer día trabajamos con hierro macizo de 12mm, cuero vacuno de primera selección y pintura epoxi de doble capa. Sin atajos, sin materiales baratos.</p>
-            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf">Sillón BKF</Link> o mirá el <Link to="/catalogo">catálogo completo</Link>.</p>
-            <Link to="/contacto" className="btn-main" style={{ marginTop: 8 }}>
+            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf/">Sillón BKF</Link> o mirá el <Link to="/catalogo/">catálogo completo</Link>.</p>
+            <Link to="/contacto/" className="btn-main" style={{ marginTop: 8 }}>
               Contactarnos
             </Link>
           </div>
           <div className="about-img-wrap">
-            <Picture src="/images/bkf1.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" />
+            <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" sizes="(max-width: 860px) calc(100vw - 32px), 50vw" />
           </div>
         </div>
       </section>
@@ -149,22 +145,25 @@ export default function Nosotros() {
               key={g.alt} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
               onClick={() => setLightbox(i)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightbox(i); } }}>
-              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
+              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" sizes="(max-width: 760px) 50vw, 400px" />
               <div className="gallery-overlay">{g.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {lightbox !== null && (
-        <div className="lightbox" style={{ display: 'flex' }} role="dialog" aria-modal="true" aria-label="Galería de trabajos" onClick={() => setLightbox(null)}>
-          <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Cerrar">×</button>
-          <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); shiftLightbox(-1); }} aria-label="Anterior"><i className="fas fa-chevron-left" /></button>
-          <img className="lightbox-img" src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt} onClick={(e) => e.stopPropagation()} />
-          <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); shiftLightbox(1); }} aria-label="Siguiente"><i className="fas fa-chevron-right" /></button>
-          <p className="lightbox-caption">{GALLERY[lightbox].label}</p>
-        </div>
-      )}
+      <Modal className="lightbox" label="Galería de trabajos" open={lightbox !== null}
+        onClose={() => setLightbox(null)} onKeyDown={onLightboxKey}>
+        {lightbox !== null && (
+          <>
+            <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Cerrar">×</button>
+            <button className="lightbox-prev" onClick={() => shiftLightbox(-1)} aria-label="Anterior"><i className="fas fa-chevron-left" /></button>
+            <img className="lightbox-img" src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt} />
+            <button className="lightbox-next" onClick={() => shiftLightbox(1)} aria-label="Siguiente"><i className="fas fa-chevron-right" /></button>
+            <p className="lightbox-caption">{GALLERY[lightbox].label}</p>
+          </>
+        )}
+      </Modal>
     </>
   );
 }

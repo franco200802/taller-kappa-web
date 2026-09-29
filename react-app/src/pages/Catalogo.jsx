@@ -1,11 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 import Picture from '../components/Picture';
+import Modal from '../components/Modal';
 import { PRODUCTS } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
+import { absoluteUrl } from '../lib/site';
 
 const FALLBACK_PRODUCTS = PRODUCTS;
 
@@ -30,7 +32,7 @@ function ProductCard({ p, onOpen }) {
   // no tienen garantizado un `slug` propio como los de data/products.js.
   // Sin esta guarda, un producto sin slug generaría un link roto real
   // a /catalogo/undefined en vez de simplemente no enlazar a un detalle.
-  const detailHref = p.slug ? `/catalogo/${p.slug}` : null;
+  const detailHref = p.slug ? `/catalogo/${p.slug}/` : null;
   return (
     <article className="product-card" data-category={p.category}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
@@ -40,7 +42,7 @@ function ProductCard({ p, onOpen }) {
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Ver detalle de ${p.name}`}
         onClick={() => onOpen(p)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
-        <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} />
+        <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
         <div className="card-overlay" aria-hidden="true">Vista rápida</div>
       </div>
       <div className="card-info">
@@ -63,7 +65,10 @@ export default function Catalogo() {
   const { addToCart } = useCart();
   const [products, setProducts] = useState(FALLBACK_PRODUCTS);
   const [filter, setFilter] = useState('all');
+  // El producto queda cargado al cerrar el modal: así el contenido no
+  // desaparece mientras corre la animación de salida.
   const [modalProduct, setModalProduct] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [modalColor, setModalColor] = useState('Negro Mate');
 
   useEffect(() => {
@@ -79,22 +84,9 @@ export default function Catalogo() {
   const openModal = (p) => {
     setModalColor('Negro Mate');
     setModalProduct(p);
-    document.body.style.overflow = 'hidden';
+    setModalOpen(true);
   };
-  const closeModal = () => {
-    setModalProduct(null);
-    document.body.style.overflow = '';
-  };
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') closeModal(); };
-    window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      // Si se navega con el modal abierto, no dejar la página sin scroll.
-      document.body.style.overflow = '';
-    };
-  }, []);
+  const closeModal = () => setModalOpen(false);
 
   const filtered = filter === 'all' ? products : products.filter((p) => p.category === filter);
   const FILTERS = [
@@ -116,7 +108,7 @@ export default function Catalogo() {
         image: `https://tallerkappa.com.ar${p.image}`,
         // Los productos sin slug (ej. cargados desde Firebase por el admin,
         // que no garantiza ese campo) no deben emitir una url inventada.
-        ...(p.slug ? { url: `https://tallerkappa.com.ar/catalogo/${p.slug}` } : {}),
+        ...(p.slug ? { url: absoluteUrl(`/catalogo/${p.slug}`) } : {}),
         category: p.category,
         brand: { '@type': 'Brand', name: 'Taller Kappa' },
         offers: {
@@ -140,7 +132,7 @@ export default function Catalogo() {
         <h1 className="section-title">Sillas de hierro y cuero en Buenos Aires</h1>
         <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
-          Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf">Sillón BKF</Link>.
+          Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf/">Sillón BKF</Link>.
         </p>
 
         <div className="filters" role="group" aria-label="Filtrar productos">
@@ -161,12 +153,13 @@ export default function Catalogo() {
         <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
         <div className="materials-layout">
           <Picture
-            src="/images/mesa.jpeg"
+            src="/images/base-mesa-flat-hierro.jpg"
             alt="Base de Mesa Flat de Taller Kappa"
             loading="lazy"
             width={1024}
             height={1536}
             className="materials-scroll-img"
+            sizes="(max-width: 860px) calc(100vw - 32px), 45vw"
           />
           <div className="materials-grid">
             {MATERIALS.map((m) => (
@@ -178,18 +171,17 @@ export default function Catalogo() {
           </div>
         </div>
         <p style={{ marginTop: 32 }}>
-          ¿Tenés dudas sobre precios o medidas? <Link to="/contacto">Contactanos</Link> o mirá las{' '}
-          <Link to="/faq">preguntas frecuentes</Link>.
+          ¿Tenés dudas sobre precios o medidas? <Link to="/contacto/">Contactanos</Link> o mirá las{' '}
+          <Link to="/faq/">preguntas frecuentes</Link>.
         </p>
       </section>
 
-      <div className={`modal ${modalProduct ? 'active' : ''}`} role="dialog" aria-modal="true" aria-label={modalProduct ? modalProduct.name : 'Detalle del producto'} aria-hidden={!modalProduct}
-        onClick={(e) => e.target === e.currentTarget && closeModal()}>
+      <Modal className="modal" label={modalProduct ? modalProduct.name : 'Detalle del producto'} open={modalOpen} onClose={closeModal}>
         {modalProduct && (
           <div className="modal-content">
             <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
             <div className="modal-img">
-              <Picture src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} />
+              <Picture src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
             </div>
             <div className="modal-info">
               <div className="modal-badge-row">
@@ -218,7 +210,7 @@ export default function Catalogo() {
             </div>
           </div>
         )}
-      </div>
+      </Modal>
     </>
   );
 }

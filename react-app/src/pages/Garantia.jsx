@@ -72,13 +72,13 @@ export default function Garantia() {
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <i className="fab fa-whatsapp" /> Contactar soporte
             </a>
-            <Link to="/faq" className="btn-outline">
+            <Link to="/faq/" className="btn-outline">
               <i className="fas fa-question-circle" /> Preguntas frecuentes
             </Link>
           </div>
-          <p style={{ marginTop: 16 }}>
-            Ver el <Link to="/catalogo">catálogo completo</Link> o{' '}
-            <Link to="/contacto">contactanos</Link> por cualquier consulta.
+          <p className="cta-links">
+            Ver el <Link to="/catalogo/">catálogo completo</Link> o{' '}
+            <Link to="/contacto/">contactanos</Link> por cualquier consulta.
           </p>
         </div>
       </section>
