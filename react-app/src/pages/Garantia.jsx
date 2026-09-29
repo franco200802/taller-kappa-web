@@ -76,7 +76,7 @@ export default function Garantia() {
               <i className="fas fa-question-circle" /> Preguntas frecuentes
             </Link>
           </div>
-          <p style={{ marginTop: 16 }}>
+          <p className="cta-links">
             Ver el <Link to="/catalogo/">catálogo completo</Link> o{' '}
             <Link to="/contacto/">contactanos</Link> por cualquier consulta.
           </p>

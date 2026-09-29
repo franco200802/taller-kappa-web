@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { WHATSAPP_DISPLAY } from '../data/contact';
 import Picture from './Picture';
@@ -42,14 +43,13 @@ export default function CartDrawer() {
     <Modal className="cart-overlay" label="Presupuesto" open={isOpen} onClose={() => setIsOpen(false)}>
       <div className="cart-sidebar">
         <div className="cart-header">
-          <h3><i className="fas fa-shopping-bag" style={{ marginRight: 8, color: 'var(--primary)' }} /> Tu presupuesto</h3>
+          <h2>Tu presupuesto</h2>
           <button className="cart-close" aria-label="Cerrar presupuesto" onClick={() => setIsOpen(false)}>×</button>
         </div>
 
         <div className="cart-items">
           {cart.length === 0 ? (
             <p className="cart-empty">
-              <i className="fas fa-box-open" style={{ fontSize: '2.5rem', color: '#ddd', display: 'block', marginBottom: 15 }} />
               Tu lista está vacía.<br /><small>Explorá el catálogo y agregá productos.</small>
             </p>
           ) : cart.map(({ key, product, color, qty }) => (
@@ -78,18 +78,25 @@ export default function CartDrawer() {
               <span>{cart.reduce((s, i) => s + i.qty, 0)}</span>
             </div>
           )}
-          <a
-            href={whatsappLink}
-            className="btn-whatsapp-checkout"
-            target="_blank" rel="noopener noreferrer"
-            style={cart.length === 0 ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
-            onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
-          >
-            <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
-          </a>
-          <button className="btn-print-budget" onClick={printBudget}>
-            <i className="fas fa-file-pdf" /> Descargar presupuesto
-          </button>
+          {cart.length === 0 ? (
+            // Con el presupuesto vacío no hay nada que cotizar: en lugar de un
+            // botón apagado (que igual se podía enfocar), una salida real.
+            <Link to="/catalogo/" className="btn-main" onClick={() => setIsOpen(false)}>Ver catálogo</Link>
+          ) : (
+            <>
+              <a
+                href={whatsappLink}
+                className="btn-whatsapp-checkout"
+                target="_blank" rel="noopener noreferrer"
+                onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
+              >
+                <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+              </a>
+              <button className="btn-print-budget" onClick={printBudget}>
+                <i className="fas fa-file-pdf" /> Descargar presupuesto
+              </button>
+            </>
+          )}
           <p className="cart-hint">Consultá por WhatsApp para coordinar tu pedido.</p>
         </div>
       </div>
