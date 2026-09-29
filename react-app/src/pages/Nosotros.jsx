@@ -27,10 +27,10 @@ const FALLBACK_TESTIMONIOS = [
 ];
 
 const GALLERY = [
-  { src: '/images/bkf1.jpg', alt: 'Sillón BKF', label: 'Sillón BKF Premium', tall: true, w: 1600, h: 1600 },
-  { src: '/images/bkfapoyapies.jpg', alt: 'Banco BKF', label: 'Banco BKF', w: 1024, h: 1024 },
-  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat', label: 'Base de Mesa Flat', w: 1024, h: 1536 },
-  { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true, w: 1024, h: 1536 },
+  { src: '/images/sillon-bkf-hierro-cuero.jpg', alt: 'Sillón BKF', label: 'Sillón BKF Premium', tall: true, w: 1600, h: 1600 },
+  { src: '/images/banco-bkf-hierro-cuero.jpg', alt: 'Banco BKF', label: 'Banco BKF', w: 1024, h: 1024 },
+  { src: '/images/base-mesa-flat-hierro.jpg', alt: 'Base de Mesa Flat', label: 'Base de Mesa Flat', w: 1024, h: 1536 },
+  { src: '/images/base-mesa-flat-hierro.jpg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true, w: 1024, h: 1536 },
 ];
 
 export default function Nosotros() {
@@ -80,7 +80,7 @@ export default function Nosotros() {
             </Link>
           </div>
           <div className="about-img-wrap">
-            <Picture src="/images/bkf1.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" />
+            <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt="Sillón BKF — fabricación propia Taller Kappa" width={1600} height={1600} loading="lazy" sizes="(max-width: 860px) calc(100vw - 32px), 50vw" />
           </div>
         </div>
       </section>
@@ -145,7 +145,7 @@ export default function Nosotros() {
               key={g.alt} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
               onClick={() => setLightbox(i)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightbox(i); } }}>
-              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
+              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" sizes="(max-width: 760px) 50vw, 400px" />
               <div className="gallery-overlay">{g.label}</div>
             </div>
           ))}

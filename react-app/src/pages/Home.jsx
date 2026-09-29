@@ -47,12 +47,13 @@ export default function Home() {
         </div>
         <div className="home-hero-media">
           <Picture
-            src="/images/bkf1.jpg"
+            src="/images/sillon-bkf-hierro-cuero.jpg"
             alt="Sillón BKF de hierro negro y cuero suela, fabricado por Taller Kappa"
             width={1600}
             height={1600}
             loading="eager"
             fetchPriority="high"
+            sizes="(max-width: 860px) 100vw, 52vw"
           />
           <span className="home-hero-caption">Sillón BKF Premium, cuero suela</span>
         </div>
@@ -79,7 +80,7 @@ export default function Home() {
             <li className="home-product" key={p.slug}>
               <Link to={`/catalogo/${p.slug}/`}>
                 <div className="home-product-img">
-                  <Picture src={p.image} alt={p.name} width={p.imageWidth} height={p.imageHeight} loading="lazy" />
+                  <Picture src={p.image} alt={p.name} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
                 </div>
                 <h3>{p.name}</h3>
                 <p>{p.specs[0]}</p>

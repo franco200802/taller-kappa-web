@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { absoluteUrl, assetUrl } from '../lib/site';
 
-const DEFAULT_IMAGE = assetUrl('/images/bkf1.jpg');
-// bkf1.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
+const DEFAULT_IMAGE = assetUrl('/images/sillon-bkf-hierro-cuero.jpg');
+// sillon-bkf-hierro-cuero.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
 const DEFAULT_IMAGE_W = 1600;
 const DEFAULT_IMAGE_H = 1600;
 

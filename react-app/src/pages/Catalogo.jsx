@@ -42,7 +42,7 @@ function ProductCard({ p, onOpen }) {
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Ver detalle de ${p.name}`}
         onClick={() => onOpen(p)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
-        <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} />
+        <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
         <div className="card-overlay" aria-hidden="true">Vista rápida</div>
       </div>
       <div className="card-info">
@@ -153,12 +153,13 @@ export default function Catalogo() {
         <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
         <div className="materials-layout">
           <Picture
-            src="/images/mesa.jpeg"
+            src="/images/base-mesa-flat-hierro.jpg"
             alt="Base de Mesa Flat de Taller Kappa"
             loading="lazy"
             width={1024}
             height={1536}
             className="materials-scroll-img"
+            sizes="(max-width: 860px) calc(100vw - 32px), 45vw"
           />
           <div className="materials-grid">
             {MATERIALS.map((m) => (
@@ -180,7 +181,7 @@ export default function Catalogo() {
           <div className="modal-content">
             <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
             <div className="modal-img">
-              <Picture src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} />
+              <Picture src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
             </div>
             <div className="modal-info">
               <div className="modal-badge-row">

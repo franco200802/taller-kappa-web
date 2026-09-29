@@ -85,6 +85,7 @@ export default function Producto() {
               height={product.imageHeight}
               loading="eager"
               fetchPriority="high"
+              sizes="(max-width: 860px) calc(100vw - 32px), 640px"
             />
             {product.badge && (
               <div className="bkf-badges">

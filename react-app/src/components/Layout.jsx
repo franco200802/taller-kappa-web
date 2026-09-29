@@ -13,7 +13,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   '@type': 'LocalBusiness',
   '@id': 'https://tallerkappa.com.ar/#organization',
   name: 'Taller Kappa',
-  image: 'https://tallerkappa.com.ar/images/bkf1.jpg',
+  image: 'https://tallerkappa.com.ar/images/sillon-bkf-hierro-cuero.jpg',
   url: 'https://tallerkappa.com.ar',
   telephone: '+541161242498',
   priceRange: '$$',
