@@ -28,9 +28,9 @@ export default function Seo({ title, description, path = '/', image = DEFAULT_IM
       <title>{title}</title>
       <meta name="description" content={description} />
       {!noindex && <link rel="canonical" href={url} />}
-      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+      <meta name="robots" content={noindex ? 'noindex' : 'index, follow'} />
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={url} />
+      {!noindex && <meta property="og:url" content={url} />}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />

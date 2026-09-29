@@ -11,6 +11,10 @@ import react from '@vitejs/plugin-react';
 // manualChunks no aplica (Rollup lo rechaza junto a inlineDynamicImports).
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [react()],
+  // El año del footer se fija al compilar: con new Date() en runtime, entre
+  // el 1° de enero y el próximo deploy el HTML prerenderizado y el cliente
+  // no coinciden y React descarta el HTML de toda la página al hidratar.
+  define: { __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()) },
   base: '/', // GitHub Pages con dominio custom (CNAME) usa raíz
   build: {
     target: 'es2018',

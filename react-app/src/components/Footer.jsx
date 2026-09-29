@@ -43,7 +43,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="footer-copy">© {new Date().getFullYear()} Taller Kappa S.R.L. — Todos los derechos reservados.</p>
+      <p className="footer-copy">© {__BUILD_YEAR__} Taller Kappa S.R.L. Todos los derechos reservados.</p>
     </footer>
   );
 }

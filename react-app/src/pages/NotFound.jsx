@@ -16,7 +16,6 @@ export default function NotFound() {
       <Seo
         title="Página no encontrada | Taller Kappa"
         description="La página que buscás no existe o fue movida."
-        path="/404"
         noindex
       />
       <h1>Esta página no existe</h1>

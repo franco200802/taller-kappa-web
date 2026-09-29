@@ -113,6 +113,10 @@ for (const { path, page: pageName } of PRERENDER_PAGES) {
   const images = [...new Set([...html.matchAll(/<img[^>]*\ssrc="(\/images\/[^"]+\.jpe?g)"/g)].map((m) => m[1]))];
 
   if (!noindex && canonical !== absoluteUrl(path)) problems.push(`${path}: canonical ${canonical} ≠ ${absoluteUrl(path)}`);
+  // Todo link interno debe llevar la barra final (o sería un 301 en GitHub Pages).
+  const sinBarra = [...new Set([...html.matchAll(/href="(\/[^"#?]*)"/g)].map((m) => m[1]))]
+    .filter((h) => !h.endsWith('/') && !/\.[a-z0-9]+$/i.test(h));
+  if (sinBarra.length) problems.push(`${path}: links internos sin barra final → ${sinBarra.join(', ')}`);
   if (h1Count !== 1) problems.push(`${path}: tiene ${h1Count} <h1> (debe tener exactamente 1)`);
   if (!title) problems.push(`${path}: sin <title>`);
   if (!description) problems.push(`${path}: sin meta description`);
@@ -161,10 +165,44 @@ const notFound = stripDefaultHead(template).replace(
 );
 writeFileSync(resolve(distDir, '404.html'), notFound, 'utf-8');
 
+/**
+ * URLs del sitio estático anterior (antes de la migración a React, 14/09/2026).
+ * Estaban en su sitemap como /catalogo.html, /nosotros.html, etc. y hoy dan
+ * 404. GitHub Pages no permite 301 del lado del servidor: lo más fuerte que
+ * se puede publicar es una página con canonical a la URL nueva y un meta
+ * refresh inmediato, que Google trata como redirección permanente. No llevan
+ * noindex (contradiría la redirección) ni van al sitemap.
+ */
+const LEGACY_HTML = {
+  'catalogo.html': '/catalogo/',
+  'sillon-bkf.html': '/sillon-bkf/',
+  'nosotros.html': '/nosotros/',
+  'faq.html': '/faq/',
+  'contacto.html': '/contacto/',
+  'proyectos.html': '/proyectos/',
+  'envios.html': '/envios/',
+  'garantia.html': '/garantia/',
+};
+for (const [file, to] of Object.entries(LEGACY_HTML)) {
+  const target = absoluteUrl(to);
+  writeFileSync(resolve(distDir, file), `<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<title>Taller Kappa</title>
+<link rel="canonical" href="${target}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace(${JSON.stringify(to)} + location.search + location.hash)</script>
+</head>
+<body><p>Esta página se mudó a <a href="${target}">${target}</a>.</p></body>
+</html>
+`, 'utf-8');
+}
+
 rmSync(ssrDir, { recursive: true, force: true });
 
 console.log('\n  Prerender completado:\n');
 for (const r of results) {
   console.log(`  ${r.path.padEnd(14)} ${String(r.bytes).padStart(7)} B  canonical: ${r.canonical}`);
 }
-console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs\n`);
+console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · ${Object.keys(LEGACY_HTML).length} redirecciones de URLs .html heredadas\n`);
