@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
+import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { getProductBySlug } from '../data/products';
 import { whatsappUrl } from '../data/contact';
@@ -17,7 +18,7 @@ export default function Producto() {
 
   if (!product) {
     return (
-      <section className="section-padding" style={{ paddingTop: 60, textAlign: 'center' }}>
+      <section className="section-padding" style={{ minHeight: '60vh' }}>
         <Seo
           title="Producto no encontrado | Taller Kappa"
           description="El producto que buscás no existe o ya no está disponible."
@@ -67,19 +68,11 @@ export default function Producto() {
           ]),
         ]}
       />
-      <div className="page-hero">
-        <div className="page-hero-content">
-          <h1>{product.name}</h1>
-          <p>{product.desc}</p>
-          <nav className="breadcrumb" aria-label="Ruta de navegación">
-            <Link to="/">Inicio</Link>
-            <i className="fas fa-chevron-right" />
-            <Link to="/catalogo">Catálogo</Link>
-            <i className="fas fa-chevron-right" />
-            <span>{product.name}</span>
-          </nav>
-        </div>
-      </div>
+      <PageHero
+        title={product.name}
+        lead={product.desc}
+        current={product.name} trail={[{ to: '/catalogo', label: 'Catálogo' }]}
+      />
 
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">

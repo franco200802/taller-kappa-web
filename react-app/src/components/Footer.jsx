@@ -8,7 +8,7 @@ const FOOTER_LINKS = [
   { to: '/envios', label: 'Envíos' },
   { to: '/garantia', label: 'Garantía' },
   { to: '/nosotros', label: 'Nosotros' },
-  { to: '/faq', label: 'Preguntas Frecuentes' },
+  { to: '/faq', label: 'Preguntas frecuentes' },
   { to: '/contacto', label: 'Contacto' },
 ];
 

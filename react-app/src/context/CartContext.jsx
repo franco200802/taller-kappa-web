@@ -5,18 +5,30 @@ const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]'); }
-    catch { return []; }
-  });
+  // El carrito guardado se lee DESPUÉS de montar, no en el estado inicial:
+  // el HTML prerenderizado siempre sale con el carrito vacío, y si el
+  // primer render del cliente ya mostrara "2" en el badge, la hidratación
+  // no coincidiría y React descartaría el HTML de la página.
+  const [cart, setCart] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
+      if (Array.isArray(saved) && saved.length) setCart(saved);
+    } catch { /* storage bloqueado o JSON inválido: se arranca vacío */ }
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    // No persistir hasta haber leído lo guardado, o se pisaría con [].
     // sessionStorage puede lanzar (modo privado, cuota llena): el carrito
     // sigue funcionando en memoria aunque no se pueda persistir.
+    if (!loaded) return;
     try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch { /* noop */ }
-  }, [cart]);
+  }, [cart, loaded]);
 
   // Un solo timer: si se muestran dos toasts seguidos, el primero no debe
   // cerrar prematuramente al segundo.

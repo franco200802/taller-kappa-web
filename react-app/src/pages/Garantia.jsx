@@ -1,25 +1,22 @@
 import { Link } from 'react-router-dom';
-import { useStaggerReveal } from '../lib/useReveal';
 import Seo, { breadcrumbList } from '../components/Seo';
+import PageHero from '../components/PageHero';
 import { whatsappUrl } from '../data/contact';
 
 const WARRANTY = [
-  { icon: 'fa-certificate', title: 'Garantía de Estructura', desc: 'Todas nuestras piezas de hierro tienen garantía de por vida en la estructura. Si se deforma o presenta defectos de soldadura, lo reparamos o reponemos sin cargo.' },
-  { icon: 'fa-paint-roller', title: 'Garantía de Pintura', desc: 'La pintura epoxi tiene garantía de 2 años contra descascaramiento o pérdida de adherencia en condiciones normales de uso interior.' },
-  { icon: 'fa-couch', title: 'Garantía del Cuero', desc: 'El cuero vacuno tiene garantía de 1 año contra defectos de fabricación (costuras, cortes). El desgaste natural del cuero no está cubierto.' },
-  { icon: 'fa-undo', title: 'Cambios y Devoluciones', desc: 'Si recibís un producto con algún defecto, contactanos dentro de las 72 hs de recibido y lo resolvemos sin costo de envío.' },
+  { icon: 'fa-certificate', title: 'Garantía de la estructura', desc: 'Todas nuestras piezas de hierro tienen garantía de por vida en la estructura. Si se deforma o presenta defectos de soldadura, lo reparamos o reponemos sin cargo.' },
+  { icon: 'fa-paint-roller', title: 'Garantía de la pintura', desc: 'La pintura epoxi tiene garantía de 2 años contra descascaramiento o pérdida de adherencia en condiciones normales de uso interior.' },
+  { icon: 'fa-couch', title: 'Garantía del cuero', desc: 'El cuero vacuno tiene garantía de 1 año contra defectos de fabricación (costuras, cortes). El desgaste natural del cuero no está cubierto.' },
+  { icon: 'fa-undo', title: 'Cambios y devoluciones', desc: 'Si recibís un producto con algún defecto, contactanos dentro de las 72 hs de recibido y lo resolvemos sin costo de envío.' },
 ];
 
 const CARE = [
-  { n: 1, title: 'Hierro Pintado (Epoxi)', ok: ['Limpiar con paño húmedo y detergente neutro', 'Secar bien después de limpiar'], no: ['No usar productos abrasivos ni virulana', 'Evitar exposición prolongada a lluvia directa'] },
-  { n: 2, title: 'Hierro Cromado', ok: ['Limpiar con paño suave y limpiametales', 'Pulir cada 3-6 meses para mantener el brillo'], no: ['No usar productos ácidos', 'No dejar en exteriores húmedos'] },
-  { n: 3, title: 'Cuero Vacuno', ok: ['Limpiar con paño seco o ligeramente húmedo', 'Aplicar crema hidratante para cuero cada 6 meses', 'El cuero se oscurece naturalmente con el uso — eso es normal'], no: ['No exponer al sol directo por períodos prolongados', 'No usar alcohol ni solventes'] },
+  { n: 1, title: 'Hierro pintado (epoxi)', ok: ['Limpiar con paño húmedo y detergente neutro', 'Secar bien después de limpiar'], no: ['No usar productos abrasivos ni virulana', 'Evitar exposición prolongada a lluvia directa'] },
+  { n: 2, title: 'Hierro cromado', ok: ['Limpiar con paño suave y limpiametales', 'Pulir cada 3-6 meses para mantener el brillo'], no: ['No usar productos ácidos', 'No dejar en exteriores húmedos'] },
+  { n: 3, title: 'Cuero vacuno', ok: ['Limpiar con paño seco o ligeramente húmedo', 'Aplicar crema hidratante para cuero cada 6 meses', 'El cuero se oscurece naturalmente con el uso — eso es normal'], no: ['No exponer al sol directo por períodos prolongados', 'No usar alcohol ni solventes'] },
 ];
 
 export default function Garantia() {
-  const wRef = useStaggerReveal('.warranty-card');
-  const cRef = useStaggerReveal('.care-card');
-
   return (
     <>
       <Seo
@@ -28,26 +25,19 @@ export default function Garantia() {
         path="/garantia"
         jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Garantía', path: '/garantia' }])}
       />
-      <div className="page-hero">
-        <div className="page-hero-content">
-          <h1><i className="fas fa-shield-alt" /> Garantía y Cuidados de Muebles de Hierro y Cuero</h1>
-          <p>Respaldamos cada pieza que fabricamos con garantía de calidad.</p>
-          <nav className="breadcrumb" aria-label="Ruta de navegación">
-            <Link to="/">Inicio</Link>
-            <i className="fas fa-chevron-right" />
-            <span>Garantía</span>
-          </nav>
-        </div>
-      </div>
+      <PageHero
+        title="Garantía y cuidados de muebles de hierro y cuero"
+        lead="Respaldamos cada pieza que fabricamos con garantía de calidad."
+        current="Garantía"
+      />
 
       <section className="warranty-section section-padding section-fade">
-        <h2 className="section-title">Nuestra Garantía</h2>
+        <h2 className="section-title">Nuestra garantía</h2>
         <p className="section-subtitle">Confiamos en lo que hacemos. Por eso garantizamos cada producto.</p>
 
-        <div className="warranty-grid" ref={wRef}>
+        <div className="warranty-grid">
           {WARRANTY.map((w) => (
             <div className="warranty-card" key={w.title}>
-              <div className="warranty-icon"><i className={`fas ${w.icon}`} /></div>
               <h3>{w.title}</h3>
               <p>{w.desc}</p>
             </div>
@@ -56,10 +46,10 @@ export default function Garantia() {
       </section>
 
       <section className="care-section section-fade">
-        <h2 className="section-title">Cuidados del Producto</h2>
+        <h2 className="section-title">Cuidados del producto</h2>
         <p className="section-subtitle">Seguí estos consejos para mantener tus muebles como nuevos por años.</p>
 
-        <div className="care-grid" ref={cRef}>
+        <div className="care-grid">
           {CARE.map((c) => (
             <div className="care-card" key={c.title}>
               <div className="care-number">{c.n}</div>
@@ -83,7 +73,7 @@ export default function Garantia() {
               <i className="fab fa-whatsapp" /> Contactar soporte
             </a>
             <Link to="/faq" className="btn-outline">
-              <i className="fas fa-question-circle" /> Preguntas Frecuentes
+              <i className="fas fa-question-circle" /> Preguntas frecuentes
             </Link>
           </div>
           <p style={{ marginTop: 16 }}>

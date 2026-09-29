@@ -33,9 +33,15 @@ termina en un link de WhatsApp con el detalle del pedido.
   FAQs, y guardar leads del formulario de contacto.
   - ⚠️ **Estado actual: NO configurado con credenciales reales** (ver
     sección "Problemas conocidos" más abajo). El sitio funciona igual
-    gracias a datos de fallback hardcodeados en el código.
-- **anime.js v4** para animaciones de scroll-reveal (import dinámico, no
-  bloquea el render inicial).
+    gracias a datos de fallback hardcodeados en el código, y mientras las
+    credenciales sean placeholders el SDK ni siquiera se descarga (ver
+    `loadFireDB()` en `lib/firebaseConfig.js`).
+- **Sin librería de animación**: anime.js se quitó en el rediseño de
+  sept. 2026. El único movimiento no pedido del sitio es la entrada de la
+  foto del hero de la home, en CSS puro (`@keyframes hero-reveal`).
+- **Tipografía**: Archivo (Omnibus-Type, Buenos Aires) desde Google Fonts,
+  una sola familia variable (ejes de ancho y peso). Íconos: Font Awesome 6
+  por CDN.
 - **Google Analytics 4** — integración custom hecha a mano en
   `src/lib/analytics.js` (no es el snippet de gtag.js pegado directo, ni
   Google Tag Manager). Measurement ID real: `G-2FDMN51XDY`.
@@ -67,23 +73,24 @@ taller-kappa-web/                  (raíz del repo)
 │   │   ├── routes.js              (FUENTE ÚNICA de rutas — ver sección 4)
 │   │   ├── entry-server.jsx       (renderToString para el prerender)
 │   │   ├── components/
-│   │   │   ├── Layout.jsx         (shell: Navbar+Outlet+Footer+CartDrawer+WA flotante)
+│   │   │   ├── Layout.jsx         (shell: Navbar + <main> con el <Suspense> de las páginas + Footer + CartDrawer + WA flotante)
 │   │   │   ├── Navbar.jsx, Footer.jsx, CartDrawer.jsx, Toast.jsx
-│   │   │   ├── Picture.jsx        (<picture> con fallback a .webp)
+│   │   │   ├── PageHero.jsx       (breadcrumb + h1 + bajada de las páginas internas)
+│   │   │   ├── Picture.jsx        (<picture> con .webp SOLO para los archivos listados en WEBP_AVAILABLE)
 │   │   │   └── Seo.jsx            (meta tags + JSON-LD por página)
 │   │   ├── context/
 │   │   │   └── CartContext.jsx    (carrito/presupuesto, persiste en sessionStorage)
 │   │   ├── pages/                 (una página por ruta, ver routes.js)
 │   │   ├── data/
-│   │   │   └── products.js        (fuente única de verdad de productos)
+│   │   │   ├── products.js        (fuente única de verdad de productos)
+│   │   │   └── contact.js         (número de WhatsApp, email y whatsappUrl() — fuente única)
 │   │   ├── lib/
 │   │   │   ├── analytics.js       (GA4 custom, SSR-safe)
-│   │   │   ├── firebase.js        (init de Firebase — credenciales placeholder!)
-│   │   │   ├── firedb.js          (capa de acceso a Firestore)
-│   │   │   ├── useReveal.js       (scroll-reveal con anime.js)
-│   │   │   └── useAutoReveal.js   (reveal automático de secciones heredadas del CSS viejo)
+│   │   │   ├── firebaseConfig.js  (credenciales — placeholder! — + isFirebaseConfigured + loadFireDB())
+│   │   │   ├── firebase.js        (init del SDK; solo lo carga firedb.js o Admin)
+│   │   │   └── firedb.js          (capa de acceso a Firestore)
 │   │   └── styles/
-│   │       └── global.css         (TODO el CSS del sitio vive en este único archivo, ~3100 líneas)
+│   │       └── global.css         (TODO el CSS del sitio, ~730 líneas, secciones numeradas)
 │   └── scripts/
 │       └── prerender.js           (genera el HTML estático, ver sección 2)
 ```
@@ -111,18 +118,26 @@ falta tocar `routes.js` para agregar un producto nuevo, solo `products.js`.
 
 ## 5. Convenciones y patrones establecidos
 
-- **Todo el CSS vive en un solo archivo**: `src/styles/global.css`. Está
-  organizado en secciones numeradas con comentarios tipo
-  `/* == 15. CARRITO LATERAL == */`. Antes de crear un componente con estilos
-  nuevos, buscá si ya existe una sección relacionada.
-- **Mobile-first no, pero sí con múltiples breakpoints**: hay reglas
-  repetidas en distintos `@media` (`max-width: 480px`, `481-768px`,
-  `max-width: 768px`, `769-1024px`, etc.) que a veces se pisan entre sí por
-  orden de cascada. **Cuidado**: ya encontramos casos donde una regla en un
-  breakpoint posterior sobreescribía sin querer una corrección hecha en un
-  breakpoint anterior (ej. `.color-swatch` se achicaba más en mobile que en
-  desktop). Si tocás algo responsive, buscá TODAS las apariciones de esa
-  clase con grep antes de asumir que solo hay una definición.
+- **Todo el CSS vive en un solo archivo**: `src/styles/global.css`
+  (reescrito desde cero en el rediseño de sept. 2026). Está organizado en
+  secciones numeradas (`/* ---------- 10. Carrito / presupuesto ---------- */`).
+  Antes de crear estilos nuevos, buscá si ya existe una sección relacionada.
+- **Tokens de diseño** en `:root` (sección 1): colores `--cal` (fondo),
+  `--blanco`, `--hierro` (texto y botón principal), `--grafito`, `--linea`,
+  `--kappa` (rojo de marca: logo, estado activo, foco) y `--wa` (verde
+  WhatsApp oscurecido para contraste AA). Escala tipográfica `--t-*`.
+  Usá los tokens; no agregues hex sueltos.
+- **Alineación a la columna**: toda sección de ancho completo usa
+  `padding-inline: var(--pad-x)`, que alinea su contenido a la columna de
+  `--max` (1200px). **No** uses `max-width + margin: auto` en los hijos de
+  una sección: eso hacía que los `<p>` perdieran su límite de 68ch y que
+  formularios con `margin-left: 0` quedaran pegados al borde.
+- **Breakpoints**: pocos y por componente, todos `max-width` (960 nav,
+  860 grillas de 2 columnas, 760/640/560 ajustes finos). Cada regla
+  responsive vive junto al componente que ajusta, no en un bloque aparte.
+- **Estilo de textos**: títulos en mayúscula inicial (castellano, no
+  "Title Case"), sin mayúsculas forzadas ni el patrón "Palabra — fragmento".
+  Botones con verbos que dicen qué pasa ("Agregar al presupuesto").
 - **Analytics (GA4) manual en cada CTA**: cada botón/link de WhatsApp o
   acción de conversión importante llama a `trackEvent(nombre, params)` de
   `lib/analytics.js`. Si agregás un CTA nuevo, seguí el mismo patrón
@@ -130,49 +145,90 @@ falta tocar `routes.js` para agregar un producto nuevo, solo `products.js`.
   los params.
 - **Fallback-first para datos de Firestore**: páginas como `Catalogo.jsx`,
   `Nosotros.jsx` (testimonios) y `FAQ.jsx` arrancan con un array
-  `FALLBACK_*` hardcodeado y hacen un `import()` dinámico de `lib/firedb.js`
-  que, si trae datos, los reemplaza. Si Firestore falla o no está
-  configurado, el fallback queda y el sitio sigue andando. **No asumas que
-  el catch silencioso es un bug** — es intencional en varios lugares (pero
-  ver el punto de Contacto.jsx en "Problemas conocidos").
+  `FALLBACK_*` hardcodeado y llaman a `loadFireDB()` (de
+  `lib/firebaseConfig.js`), que descarga `lib/firedb.js` solo si hay
+  credenciales reales. Si Firestore falla o no está configurado, el
+  fallback queda y el sitio sigue andando. **No asumas que el catch
+  silencioso es un bug** — es intencional. No hagas `import('../lib/firedb')`
+  directo: saltearías la guarda.
 - **`Picture` component para imágenes**: envuelve `<img>` en `<picture>`
-  con un `<source>` `.webp` si existe. Se usa en vez de `<img>` directo en
-  toda página de catálogo/producto. No usar para imágenes de meta tags
-  (`og:image`) — esas necesitan ser una URL directa fetcheable por
-  crawlers.
+  con un `<source>` `.webp` **solo** si el archivo está en
+  `WEBP_AVAILABLE` (Picture.jsx). Si agregás un .webp nuevo a
+  `public/images`, sumalo a esa lista. Ojo: si el navegador elige un
+  `<source>` que da 404, NO vuelve al `<img>` — muestra la imagen rota.
+  No usar para imágenes de meta tags (`og:image`).
+- **Hidratación (importante)**: el HTML prerenderizado y el primer render
+  del cliente tienen que ser idénticos, o React descarta el HTML y
+  re-renderiza todo. Reglas: (1) el `<Suspense>` de las páginas lazy vive
+  en `Layout.jsx` porque Layout se renderiza igual en ambos lados — no lo
+  muevas a `App.jsx`; (2) nada de leer `sessionStorage`/`window` en el
+  estado inicial (ver cómo `CartContext` carga el carrito en un effect);
+  (3) nada que dependa de JS para el layout inicial (el espacio bajo el
+  navbar fijo es CSS: `#contenido { padding-top }`). Para verificar:
+  `vite preview` y abrir las rutas **con barra final** (`/contacto/`):
+  sin barra, el preview de Vite sirve el HTML de la home y aparecen
+  errores #418 falsos.
 - **Validación de cada cambio**: el flujo de trabajo establecido en este
   proyecto es siempre: editar → `get_errors` en los archivos tocados →
   `npm run build` completo (esperar "12 rutas + 404.html" sin warnings) →
-  commit descriptivo (explicando el *por qué*, no solo el *qué*) → push.
+  `npx react-doctor@latest --verbose --scope changed` (el puntaje no debe
+  bajar) → commit descriptivo (explicando el *por qué*, no solo el *qué*) → push.
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
-`src/lib/firebase.js` todavía tiene valores tipo
+`src/lib/firebaseConfig.js` todavía tiene valores tipo
 `'REEMPLAZAR_CON_TU_API_KEY'` en vez de credenciales reales de un proyecto
 Firebase. Esto significa:
 - El login del panel `/admin` **no funciona** (Firebase Auth falla contra
   un proyecto inexistente).
-- El formulario de contacto (`Contacto.jsx`) intenta guardar el lead en
-  Firestore antes de abrir WhatsApp, pero como Firebase no está
-  configurado, ese guardado **siempre falla silenciosamente**. Ya se
-  agregó un `trackEvent('contacto_save_failed', ...)` para poder ver en
-  GA4 cuántos leads no se están persistiendo mientras esto no se arregle.
+- El formulario de contacto (`Contacto.jsx`) abre WhatsApp y después
+  intenta guardar el lead en Firestore en segundo plano; mientras Firebase
+  no esté configurado **no se guarda**. Cada lead no guardado se registra
+  en GA4 como `contacto_save_failed` con `reason: 'firebase_sin_configurar'`.
 - **Para arreglarlo**: hay que crear un proyecto real en
   https://console.firebase.google.com, habilitar Authentication (email/
-  password) y Firestore, y reemplazar los valores en `firebase.js` por los
-  reales del proyecto (`apiKey`, `authDomain`, `projectId`, etc.).
+  password) y Firestore, reemplazar los valores en `firebaseConfig.js` por
+  los reales del proyecto (`apiKey`, `authDomain`, `projectId`, etc.) y
+  **publicar `firestore.rules`** (el deploy de GitHub Pages no las sube).
 
 ### 🟡 Pendiente — Admin panel incompleto
 `src/pages/Admin.jsx` tiene un TODO explícito: faltan migrar las tabs
 Pedidos/Clientes/Stats del `admin.html` viejo. Hoy solo muestra el login y
 un conteo básico de pedidos.
 
+### 🟡 Pendiente — Fotos de producto generadas con IA
+`bkf1.jpg`, `bkfapoyapies.jpg` y `mesa.jpeg` muestran la marca de agua ✦ de
+Gemini en la esquina inferior derecha. Conviene reemplazarlas por fotos
+reales de los productos del taller (mismo nombre de archivo, y regenerar
+el `.webp` de cada una).
+
+### 🟡 Pendiente — Modales con `<dialog>` nativo
+`react-doctor` sugiere migrar el carrito (`CartDrawer`), el detalle de
+producto (`Catalogo`) y el lightbox (`Nosotros`) a `<dialog>`: daría gratis
+el foco atrapado dentro del modal y el fondo inerte. Hoy tienen `role="dialog"`,
+cierran con Escape y no son alcanzables con Tab cuando están cerrados.
+
 ### 🟡 Pendiente — Search Console / Google Business Profile
 No están configurados todavía (requiere acceso del dueño del sitio a esas
 cuentas de Google, no es algo que se resuelva solo con código).
 
 ### 🟢 Ya resuelto recientemente (por si aparece en el historial de git)
+- Rediseño completo (sept. 2026): paleta clara basada en las fotos,
+  tipografía Archivo, `global.css` reescrito, sin animaciones de scroll.
+- La hidratación fallaba en TODAS las páginas (errores React #418/#423):
+  el `<Suspense>` estaba solo en el cliente, así que React descartaba el
+  HTML prerenderizado y re-renderizaba todo. Movido a `Layout.jsx`.
+- El contenido de las páginas internas saltaba 68px al cargar JS (CLS):
+  el espacio bajo el navbar dependía de una clase en `<body>` puesta por JS.
+- Nosotros mostraba "0+ años" en el HTML prerenderizado (contador animado
+  que arrancaba en 0): ahora los números son fijos.
+- Catálogo, FAQ, Nosotros y Contacto descargaban el SDK de Firebase
+  (~105 kB gzip) en cada visita para pedidos que fallaban siempre.
+- Contacto abría WhatsApp después de un `await` a Firestore (Safari/iOS
+  bloqueaba la ventana y con Firestore colgado el botón no hacía nada).
+- `firestore.rules`: `/contactos` aceptaba cualquier documento; ahora valida
+  campos y largo.
 - Bug real: `Layout.jsx` llamaba a `trackEvent(...)` en el botón flotante
   de WhatsApp sin importarlo → `ReferenceError` en cada click. Arreglado.
 - Acordeón de FAQ se cortaba en mobile (`max-height: 200px` insuficiente

@@ -12,16 +12,16 @@ export default function NotFound() {
   }, []);
 
   return (
-    <section className="section-padding" style={{ paddingTop: 100, textAlign: 'center' }}>
+    <section className="section-padding" style={{ minHeight: '60vh' }}>
       <Seo
         title="Página no encontrada | Taller Kappa"
         description="La página que buscás no existe o fue movida."
         path="/404"
         noindex
       />
-      <h1>404 — Página no encontrada</h1>
-      <p>La página que buscás no existe o fue movida.</p>
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 24 }}>
+      <h1>Esta página no existe</h1>
+      <p className="section-subtitle">Puede que el enlace esté roto o que la página se haya movido.</p>
+      <div className="cta-btns" style={{ marginTop: 24 }}>
         <Link to="/" className="btn-main">Ir al Inicio</Link>
         <Link to="/catalogo" className="btn-outline">Ver catálogo</Link>
         <Link to="/contacto" className="btn-outline">Contactanos</Link>

@@ -1,12 +1,12 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useAutoReveal } from '../lib/useAutoReveal';
 import { initGA, trackPageview, trackEvent } from '../lib/analytics';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 import Toast from './Toast';
+import { whatsappUrl } from '../data/contact';
 
 const LOCAL_BUSINESS_SCHEMA = {
   '@context': 'https://schema.org',
@@ -50,7 +50,6 @@ const WEBSITE_SCHEMA = {
 
 export default function Layout() {
   const { pathname } = useLocation();
-  const isHome = pathname === '/';
 
   // Scroll al top en cada cambio de ruta (SPA no lo hace solo)
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
@@ -62,29 +61,28 @@ export default function Layout() {
   useEffect(() => { initGA(); }, []);
   useEffect(() => { trackPageview(pathname); }, [pathname]);
 
-  // El CSS heredado del sitio viejo define `body.inner-page { padding-top: ... }`
-  // para separar el título de las páginas internas del navbar fijo. Como en
-  // React el layout es un <div> anidado (no <body>), ese selector nunca se
-  // disparaba y los títulos quedaban pegados al header. Se sincroniza acá.
-  useEffect(() => {
-    document.body.classList.toggle('inner-page', !isHome);
-  }, [isHome]);
-
-  // Revela secciones/cards con opacity:0 por defecto (heredado del CSS viejo)
-  useAutoReveal();
-
   return (
     <div>
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(LOCAL_BUSINESS_SCHEMA)}</script>
         <script type="application/ld+json">{JSON.stringify(WEBSITE_SCHEMA)}</script>
       </Helmet>
+      <a href="#contenido" className="skip-link">Saltar al contenido</a>
       <Navbar />
-      <Outlet />
+      <main id="contenido" tabIndex={-1}>
+        {/* El Suspense de las páginas lazy vive acá y no en App.jsx: Layout
+            se renderiza igual en el prerender y en el cliente, así los
+            marcadores <!--$--> del HTML estático coinciden al hidratar.
+            Con el boundary solo en el cliente, React descartaba todo el
+            HTML prerenderizado (errores #418/#423) en cada página. */}
+        <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
+          <Outlet />
+        </Suspense>
+      </main>
       <Footer />
       <CartDrawer />
       <Toast />
-      <a href="https://wa.me/541161242498" className="float-wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
+      <a href={whatsappUrl()} className="float-wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
         onClick={() => trackEvent('whatsapp_click', { location: 'float_button', page: pathname })}>
         <i className="fab fa-whatsapp" />
       </a>

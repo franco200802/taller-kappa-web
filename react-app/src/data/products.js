@@ -23,7 +23,7 @@ export const PRODUCTS = [
     badge: 'Diseño icónico',
     stock: true,
     desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
-    specs: ['Hierro redondo macizo 12mm', 'Cuero Vacuno de 1ra', 'Pintura Epoxi o Cromado', 'Medidas: 78x70x90 cm'],
+    specs: ['Hierro redondo macizo 12mm', 'Cuero vacuno de 1ra', 'Pintura epoxi o cromado', 'Medidas: 78x70x90 cm'],
   },
   {
     id: '2',

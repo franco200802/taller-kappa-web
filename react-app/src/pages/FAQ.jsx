@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Seo, { breadcrumbList } from '../components/Seo';
-import { useStaggerReveal } from '../lib/useReveal';
+import PageHero from '../components/PageHero';
+import { loadFireDB } from '../lib/firebaseConfig';
 
 const FALLBACK_FAQS = [
   { id: '1', question: '¿Qué es un sillón BKF?', answer: 'El sillón BKF (también conocido como silla paleta o butterfly chair) es un diseño de 1938 creado por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy. En Taller Kappa lo fabricamos artesanalmente con estructura de hierro y funda de cuero.' },
@@ -19,27 +20,22 @@ function FaqItem({ f }) {
   const [open, setOpen] = useState(false);
   return (
     <div className={`faq-item ${open ? 'open' : ''}`}>
-      <div className="faq-question" role="button" tabIndex={0} aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setOpen((o) => !o)}>
+      <button type="button" className="faq-question" aria-expanded={open} aria-controls={`faq-answer-${f.id}`}
+        onClick={() => setOpen((o) => !o)}>
         <span>{f.question}</span>
         <i className="fas fa-chevron-down faq-icon-right" />
-      </div>
-      <div className="faq-answer">{f.answer}</div>
+      </button>
+      <div className="faq-answer" id={`faq-answer-${f.id}`}><p>{f.answer}</p></div>
     </div>
   );
 }
 
 export default function FAQ() {
   const [faqs, setFaqs] = useState(FALLBACK_FAQS);
-  // useStaggerReveal anima vía estilos inline (anime.js), por eso es inmune
-  // a que React reescriba el className de cada .faq-item al abrir/cerrar
-  // el acordeón (a diferencia del sistema global de reveal por classList).
-  const listRef = useStaggerReveal('.faq-item', { staggerMs: 60 });
 
   useEffect(() => {
-    import('../lib/firedb')
-      .then(({ FireDB }) => FireDB.getFAQs())
+    loadFireDB()
+      .then((db) => db.getFAQs())
       .then((data) => { if (data.length) setFaqs(data); })
       .catch(() => {});
   }, []);
@@ -55,21 +51,27 @@ export default function FAQ() {
   };
 
   return (
-    <section className="section-padding" style={{ paddingTop: 60 }}>
+    <>
       <Seo
         title="Preguntas Frecuentes | Taller Kappa"
         description="Respuestas sobre precios, envíos, garantía y materiales de los sillones BKF y muebles de hierro de Taller Kappa."
         path="/faq"
         jsonLd={[faqSchema, breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Preguntas Frecuentes', path: '/faq' }])]}
       />
-      <h1>Preguntas Frecuentes sobre Sillones BKF y Envíos en Buenos Aires</h1>
-      <div id="faq" ref={listRef}>
-        {faqs.map((f) => <FaqItem key={f.id} f={f} />)}
-      </div>
-      <p style={{ marginTop: 24 }}>
-        ¿No encontraste lo que buscabas? <Link to="/contacto">Contactanos</Link> o mirá nuestro{' '}
-        <Link to="/catalogo">catálogo completo</Link>.
-      </p>
-    </section>
+      <PageHero
+        title="Preguntas frecuentes sobre sillones BKF y envíos en Buenos Aires"
+        lead="Precios, materiales, envíos y garantía."
+        current="Preguntas frecuentes"
+      />
+      <section className="section-padding">
+        <div id="faq">
+          {faqs.map((f) => <FaqItem key={f.id} f={f} />)}
+        </div>
+        <p style={{ marginTop: 24 }}>
+          ¿No encontraste lo que buscabas? <Link to="/contacto">Contactanos</Link> o mirá nuestro{' '}
+          <Link to="/catalogo">catálogo completo</Link>.
+        </p>
+      </section>
+    </>
   );
 }

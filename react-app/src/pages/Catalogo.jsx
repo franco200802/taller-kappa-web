@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 import Picture from '../components/Picture';
 import { PRODUCTS } from '../data/products';
-import { useScrollMove } from '../lib/useReveal';
+import { whatsappUrl } from '../data/contact';
+import { loadFireDB } from '../lib/firebaseConfig';
 
 const FALLBACK_PRODUCTS = PRODUCTS;
 
@@ -17,10 +18,10 @@ const COLORS = [
 ];
 
 const MATERIALS = [
-  { color: '#555', title: 'Hierro Macizo', desc: 'Varilla redonda de 12mm, sin costuras ni rellenos. Indeformable ante el uso intensivo.', pct: 95, label: 'Resistencia: 95%' },
-  { color: '#8B4513', title: 'Cuero Vacuno', desc: 'Cuero de primera selección, curtido al vegetal. Natural, durable y de aspecto premium.', pct: 90, label: 'Calidad: Premium' },
-  { color: '#b71c1c', title: 'Pintura Epoxi', desc: 'Tratamiento anticorrosivo de doble capa. Resistente a humedad, ralladuras y UV.', pct: 88, label: 'Durabilidad: Alta' },
-  { color: '#aaa', title: 'Cromado Industrial', desc: 'Acabado espejado de nivel industrial. Resistente a la corrosión, fácil de limpiar.', pct: 85, label: 'Acabado: Brillante' },
+  { color: '#1a1a1a', title: 'Hierro macizo', desc: 'Varilla redonda de 12 mm, sin costuras ni rellenos. Indeformable ante el uso intensivo.' },
+  { color: '#9a5a2c', title: 'Cuero vacuno', desc: 'Cuero de primera selección, curtido al vegetal. Toma color con el uso.' },
+  { color: '#b71c1c', title: 'Pintura epoxi', desc: 'Tratamiento anticorrosivo de doble capa. Resiste humedad, rayones y rayos UV.' },
+  { color: 'linear-gradient(135deg,#ccc,#fff,#aaa)', title: 'Cromado', desc: 'Acabado espejado de nivel industrial. Resistente a la corrosión y fácil de limpiar.' },
 ];
 
 function ProductCard({ p, onOpen }) {
@@ -36,21 +37,22 @@ function ProductCard({ p, onOpen }) {
       <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
         <span className="stock-dot-small" /> {p.stock ? 'En stock' : 'Consultar'}
       </div>
-      <div className="card-img-wrapper" role="button" tabIndex={0} onClick={() => onOpen(p)}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen(p)}>
+      <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Ver detalle de ${p.name}`}
+        onClick={() => onOpen(p)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
         <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} />
-        <div className="card-overlay"><i className="fas fa-search-plus" /> Ver detalle</div>
+        <div className="card-overlay" aria-hidden="true">Vista rápida</div>
       </div>
       <div className="card-info">
         <h3>{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h3>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
-          href={`https://wa.me/541161242498?text=${encodeURIComponent('Hola! Quisiera consultar el precio de: ' + p.name)}`}>
+          href={whatsappUrl('Hola! Quisiera consultar el precio de: ' + p.name)}>
           <i className="fab fa-whatsapp" /> Consultar precio
         </a>
         <div className="card-actions">
-          {detailHref && <Link to={detailHref} className="btn-detail"><i className="fas fa-info-circle" /> Ver {p.name}</Link>}
-          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><i className="fas fa-plus" /> Presupuestar</button>
+          {detailHref && <Link to={detailHref} className="btn-detail" aria-label={`Ver ficha de ${p.name}`}>Ver ficha</Link>}
+          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><i className="fas fa-plus" /> Agregar al presupuesto</button>
         </div>
       </div>
     </article>
@@ -63,15 +65,12 @@ export default function Catalogo() {
   const [filter, setFilter] = useState('all');
   const [modalProduct, setModalProduct] = useState(null);
   const [modalColor, setModalColor] = useState('Negro Mate');
-  // La mesa se desliza horizontalmente en sincro con el scroll mientras
-  // cruza el viewport (ScrollObserver de anime v4, no un reveal de una vez).
-  const mesaRef = useScrollMove({ translateX: [-70, 70], rotate: [-3, 3] });
 
   useEffect(() => {
     let cancelled = false;
-    // Import dinámico: el chunk de Firebase (~105kB gzip) solo se descarga
-    // cuando esta página realmente lo necesita, no bloquea el render inicial.
-    import('../lib/firedb').then(({ FireDB }) => FireDB.getProducts())
+    // loadFireDB solo descarga el chunk de Firebase (~105kB gzip) si hay
+    // credenciales reales; si no, se queda con los productos locales.
+    loadFireDB().then((db) => db.getProducts())
       .then((data) => { if (!cancelled && data.length) setProducts(data); })
       .catch(() => { /* se queda con el fallback */ });
     return () => { cancelled = true; };
@@ -90,7 +89,11 @@ export default function Catalogo() {
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') closeModal(); };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      // Si se navega con el modal abierto, no dejar la página sin scroll.
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const filtered = filter === 'all' ? products : products.filter((p) => p.category === filter);
@@ -133,9 +136,9 @@ export default function Catalogo() {
         path="/catalogo"
         jsonLd={[itemListSchema, breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }])]}
       />
-      <main id="catalogo" className="section-padding">
-        <h1 className="section-title">Sillas de Hierro y Cuero — Buenos Aires</h1>
-        <p style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 20px' }}>
+      <section id="catalogo" className="section-padding">
+        <h1 className="section-title">Sillas de hierro y cuero en Buenos Aires</h1>
+        <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
           Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf">Sillón BKF</Link>.
         </p>
@@ -151,14 +154,13 @@ export default function Catalogo() {
         <div className="products-grid" aria-live="polite">
           {filtered.map((p) => <ProductCard key={p.id} p={p} onOpen={openModal} />)}
         </div>
-      </main>
+      </section>
 
       <section className="materials-section section-fade" aria-label="Nuestros materiales">
         <h2 className="section-title">Calidad que se ve y se toca</h2>
         <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
-        <div className="materials-scroll-visual">
+        <div className="materials-layout">
           <Picture
-            ref={mesaRef}
             src="/images/mesa.jpeg"
             alt="Base de Mesa Flat de Taller Kappa"
             loading="lazy"
@@ -166,25 +168,22 @@ export default function Catalogo() {
             height={1536}
             className="materials-scroll-img"
           />
+          <div className="materials-grid">
+            {MATERIALS.map((m) => (
+              <div className="material-card" key={m.title}>
+                <h3><span className="material-swatch" style={{ background: m.color }} aria-hidden="true" />{m.title}</h3>
+                <p>{m.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="materials-grid">
-          {MATERIALS.map((m) => (
-            <div className="material-card" key={m.title}>
-              <div className="material-icon"><i className="fas fa-circle" style={{ color: m.color }} /></div>
-              <h3>{m.title}</h3>
-              <p>{m.desc}</p>
-              <div className="material-bar"><div className="material-fill" style={{ width: `${m.pct}%` }} /></div>
-              <span className="material-label">{m.label}</span>
-            </div>
-          ))}
-        </div>
-        <p style={{ textAlign: 'center', marginTop: 20 }}>
+        <p style={{ marginTop: 32 }}>
           ¿Tenés dudas sobre precios o medidas? <Link to="/contacto">Contactanos</Link> o mirá las{' '}
           <Link to="/faq">preguntas frecuentes</Link>.
         </p>
       </section>
 
-      <div className={`modal ${modalProduct ? 'active' : ''}`} role="dialog" aria-modal="true"
+      <div className={`modal ${modalProduct ? 'active' : ''}`} role="dialog" aria-modal="true" aria-label={modalProduct ? modalProduct.name : 'Detalle del producto'} aria-hidden={!modalProduct}
         onClick={(e) => e.target === e.currentTarget && closeModal()}>
         {modalProduct && (
           <div className="modal-content">
@@ -197,7 +196,7 @@ export default function Catalogo() {
                 {modalProduct.badge && <span className="modal-badge">{modalProduct.badge}</span>}
               </div>
               <h2>{modalProduct.name}</h2>
-              <div className="modal-stock"><span className="stock-dot" /> En stock — Entrega coordinada</div>
+              <div className="modal-stock"><span className="stock-dot" /> {modalProduct.stock ? 'En stock, entrega coordinada' : 'Consultar disponibilidad'}</div>
               <p>{modalProduct.desc}</p>
               <ul className="modal-specs">
                 {modalProduct.specs?.map((s) => <li key={s}><i className="fas fa-check" /> {s}</li>)}
@@ -207,15 +206,15 @@ export default function Catalogo() {
                 <div className="color-options">
                   {COLORS.map((c) => (
                     <button key={c.name} className={`color-swatch ${modalColor === c.name ? 'active' : ''}`}
-                      style={{ background: c.swatch }} aria-label={c.name} title={c.name}
+                      style={{ background: c.swatch }} aria-label={c.name} aria-pressed={modalColor === c.name} title={c.name}
                       onClick={() => setModalColor(c.name)} />
                   ))}
                 </div>
               </div>
               <button className="btn-main" onClick={() => { addToCart(modalProduct, modalColor); closeModal(); }}>
-                <i className="fas fa-plus" style={{ marginRight: 8 }} /> Agregar al Presupuesto
+                <i className="fas fa-plus" /> Agregar al presupuesto
               </button>
-              <p className="modal-hint"><i className="fab fa-whatsapp" /> Recibís el precio en minutos por WhatsApp</p>
+              <p className="modal-hint"><i className="fab fa-whatsapp" /> Te pasamos el precio por WhatsApp</p>
             </div>
           </div>
         )}

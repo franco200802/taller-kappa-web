@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useStaggerReveal } from '../lib/useReveal';
 import Seo, { breadcrumbList } from '../components/Seo';
+import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
+import { loadFireDB } from '../lib/firebaseConfig';
 
 const WHY = [
-  { icon: 'fa-industry', title: 'Directo de Fábrica', desc: 'Sin intermediarios. Comprás al productor y ahorrás entre un 30% y 50% respecto al precio de retail.' },
-  { icon: 'fa-shield-alt', title: 'Garantía de Resistencia', desc: 'Hierro macizo de primera calidad. Nuestras piezas soportan el uso gastronómico intensivo sin deformarse.' },
-  { icon: 'fa-pencil-ruler', title: 'Fabricación a Medida', desc: 'Adaptamos cada pieza a tus necesidades. Medidas, colores y acabados personalizados sin costo adicional.' },
-  { icon: 'fa-file-invoice', title: 'Factura A y B', desc: 'Somos contribuyentes responsables. Emitimos cualquier tipo de comprobante para personas y empresas.' },
+  { title: 'Directo de fábrica', desc: 'Sin intermediarios. Comprás al productor y ahorrás entre un 30% y 50% respecto al precio de retail.' },
+  { title: 'Garantía de resistencia', desc: 'Hierro macizo de primera calidad. Nuestras piezas soportan el uso gastronómico intensivo sin deformarse.' },
+  { title: 'Fabricación a medida', desc: 'Adaptamos cada pieza a tus necesidades. Medidas, colores y acabados personalizados sin costo adicional.' },
+  { title: 'Factura A y B', desc: 'Somos contribuyentes responsables. Emitimos cualquier tipo de comprobante para personas y empresas.' },
 ];
 
 const NUMBERS = [
@@ -31,47 +32,13 @@ const GALLERY = [
   { src: '/images/mesa.jpeg', alt: 'Base de Mesa Flat detalle', label: 'Base de Mesa Flat', wide: true, w: 1024, h: 1536 },
 ];
 
-function AnimatedNumber({ target, suffix, label }) {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    let frame;
-    let started = false;
-    const el = document.getElementById(`num-${target}-${label}`);
-    if (!el) return;
-    const io = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !started) {
-        started = true;
-        const duration = 1200;
-        const start = performance.now();
-        const step = (now) => {
-          const progress = Math.min((now - start) / duration, 1);
-          setValue(Math.floor(progress * target));
-          if (progress < 1) frame = requestAnimationFrame(step);
-        };
-        frame = requestAnimationFrame(step);
-        io.disconnect();
-      }
-    }, { threshold: 0.3 });
-    io.observe(el);
-    return () => { io.disconnect(); cancelAnimationFrame(frame); };
-  }, [target, label]);
-
-  return (
-    <div className="number-item" id={`num-${target}-${label}`}>
-      <span className="number-value">{value}</span><span className="number-suffix">{suffix}</span>
-      <p className="number-label">{label}</p>
-    </div>
-  );
-}
-
 export default function Nosotros() {
-  const whyRef = useStaggerReveal('.why-card');
   const [testimonios, setTestimonios] = useState(FALLBACK_TESTIMONIOS);
   const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
-    import('../lib/firedb')
-      .then(({ FireDB }) => FireDB.getTestimonios())
+    loadFireDB()
+      .then((db) => db.getTestimonios())
       .then((data) => { if (data.length) setTestimonios(data); })
       .catch(() => {});
   }, []);
@@ -99,27 +66,21 @@ export default function Nosotros() {
         path="/nosotros"
         jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Nosotros', path: '/nosotros' }])}
       />
-      <div className="page-hero">
-        <div className="page-hero-content">
-          <h1><i className="fas fa-users" /> Nosotros — Fábrica de Muebles de Hierro en San Martín</h1>
-          <p>Más de 15 años fabricando con precisión, calidad y pasión.</p>
-          <nav className="breadcrumb" aria-label="Ruta de navegación">
-            <Link to="/">Inicio</Link>
-            <i className="fas fa-chevron-right" />
-            <span>Nosotros</span>
-          </nav>
-        </div>
-      </div>
+      <PageHero
+        title="Una fábrica de muebles de hierro en San Martín"
+        lead="Más de 15 años fabricando con precisión, calidad y pasión."
+        current="Nosotros"
+      />
 
       <section className="about-section section-padding section-fade">
         <div className="about-grid">
           <div className="about-text">
-            <h2 className="section-title">Nuestra Historia</h2>
+            <h2 className="section-title">Nuestra historia</h2>
             <p>Taller Kappa nació hace más de <strong>15 años</strong> en San Martín, Buenos Aires, con una sola misión: fabricar mobiliario de hierro y cuero de calidad industrial, accesible a locales, empresas y particulares.</p>
             <p>Desde el primer día trabajamos con hierro macizo de 12mm, cuero vacuno de primera selección y pintura epoxi de doble capa. Sin atajos, sin materiales baratos.</p>
             <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf">Sillón BKF</Link> o mirá el <Link to="/catalogo">catálogo completo</Link>.</p>
-            <Link to="/contacto" className="btn-main" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: '1.5rem' }}>
-              <i className="fas fa-envelope" /> Contactarnos
+            <Link to="/contacto" className="btn-main" style={{ marginTop: 8 }}>
+              Contactarnos
             </Link>
           </div>
           <div className="about-img-wrap">
@@ -131,11 +92,10 @@ export default function Nosotros() {
       <section className="why-section section-fade" aria-label="Por qué elegirnos">
         <h2 className="section-title">¿Por qué elegirnos?</h2>
         <p className="section-subtitle">Más de 15 años fabricando para los más exigentes del mercado.</p>
-        <div className="why-grid" ref={whyRef}>
+        <div className="why-grid">
           {WHY.map((w) => (
             <div className="why-card" key={w.title}>
-              <div className="why-icon"><i className={`fas ${w.icon}`} /></div>
-              <h3>{w.title}</h3>
+                            <h3>{w.title}</h3>
               <p>{w.desc}</p>
             </div>
           ))}
@@ -145,16 +105,19 @@ export default function Nosotros() {
       <section className="numbers-section section-fade" aria-label="Números de Taller Kappa">
         <div className="numbers-grid">
           {NUMBERS.map((n) => (
-            <AnimatedNumber key={n.label} target={n.target} suffix={n.suffix} label={n.label} />
+            <div className="number-item" key={n.label}>
+              <span className="number-value">{n.target}</span><span className="number-suffix">{n.suffix}</span>
+              <p className="number-label">{n.label}</p>
+            </div>
           ))}
         </div>
       </section>
 
       <section className="clients-section section-fade" aria-label="Empresas que confían en nosotros">
-        <p className="clients-label">Confían en nuestra calidad:</p>
+        <p className="clients-label">Equipamos locales de estas marcas</p>
         <div className="clients-logos">
-          <img src="/images/sandrologo.png" alt="Sandro Paris" width={225} height={225} loading="lazy" />
-          <img src="/images/logoypf.png" alt="YPF Full" width={225} height={225} loading="lazy" />
+          <img src="/images/sandrologo.png" alt="Sandro Paris" width={211} height={63} loading="lazy" className="logo-wide" />
+          <img src="/images/logoypf.png" alt="YPF Full" width={213} height={60} loading="lazy" className="logo-wide" />
           <img src="/images/mcdonaldslogo.png" alt="McDonald's" width={246} height={205} loading="lazy" />
           <Picture src="/images/burguerlogo.png" alt="Burger King" width={215} height={234} loading="lazy" />
           <img src="/images/shelllogo.png" alt="Shell" width={245} height={206} loading="lazy" />
@@ -183,11 +146,11 @@ export default function Nosotros() {
         <div className="gallery-grid">
           {GALLERY.map((g, i) => (
             <div className={`gallery-item ${g.tall ? 'gallery-tall' : ''} ${g.wide ? 'gallery-wide' : ''}`}
-              key={g.src} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
+              key={g.alt} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
               onClick={() => setLightbox(i)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightbox(i); } }}>
               <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
-              <div className="gallery-overlay"><i className="fas fa-search-plus" /><span>{g.label}</span></div>
+              <div className="gallery-overlay">{g.label}</div>
             </div>
           ))}
         </div>

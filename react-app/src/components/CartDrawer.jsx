@@ -51,7 +51,7 @@ export default function CartDrawer() {
       onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}>
       <div className="cart-sidebar">
         <div className="cart-header">
-          <h3><i className="fas fa-shopping-bag" style={{ marginRight: 8, color: 'var(--primary)' }} /> Tu Presupuesto</h3>
+          <h3><i className="fas fa-shopping-bag" style={{ marginRight: 8, color: 'var(--primary)' }} /> Tu presupuesto</h3>
           <button className="cart-close" aria-label="Cerrar presupuesto" onClick={() => setIsOpen(false)}>×</button>
         </div>
 

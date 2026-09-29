@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { animateHeroTitle, useStaggerReveal } from '../lib/useReveal';
 import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
+import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrl } from '../data/contact';
@@ -65,9 +64,6 @@ const COLORS = [
 
 export default function SillonBKF() {
   const { addToCart } = useCart();
-  const historyRef = useStaggerReveal('.bkf-history-card');
-
-  useEffect(() => { animateHeroTitle('.bkf-hero-h1'); }, []);
 
   const handleAdd = (color) => {
     addToCart({
@@ -98,19 +94,11 @@ export default function SillonBKF() {
           ]),
         ]}
       />
-      <div className="page-hero">
-        <div className="page-hero-content">
-          <h1 className="bkf-hero-h1" data-split><i className="fas fa-chair" /> Sillón BKF</h1>
-          <p>El icono del diseño argentino. Hierro macizo y cuero vacuno. Directo de fábrica.</p>
-          <nav className="breadcrumb" aria-label="Ruta de navegación">
-            <Link to="/">Inicio</Link>
-            <i className="fas fa-chevron-right" />
-            <Link to="/catalogo">Catálogo</Link>
-            <i className="fas fa-chevron-right" />
-            <span>Sillón BKF</span>
-          </nav>
-        </div>
-      </div>
+      <PageHero
+        title="Sillón BKF"
+        lead="El icono del diseño argentino. Hierro macizo y cuero vacuno. Directo de fábrica."
+        current="Sillón BKF" trail={[{ to: '/catalogo', label: 'Catálogo' }]}
+      />
 
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
@@ -149,13 +137,11 @@ export default function SillonBKF() {
                 <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
               </a>
             </div>
-            <div style={{ marginTop: 16 }}>
-              <p style={{ fontSize: '.85rem', color: '#999', marginBottom: 8 }}>
-                Acabado: <strong>Negro Mate</strong>
-              </p>
+            <div>
+              <p className="color-label">Agregar en otro acabado:</p>
               <div className="bkf-color-swatches">
                 {COLORS.map((c) => (
-                  <button key={c.name} title={c.name} aria-label={`Color ${c.name}`} onClick={() => handleAdd(c.name)}
+                  <button key={c.name} title={c.name} aria-label={`Agregar en ${c.name}`} onClick={() => handleAdd(c.name)}
                     className="bkf-color-swatch" style={{ background: c.swatch }} />
                 ))}
               </div>
@@ -171,7 +157,7 @@ export default function SillonBKF() {
           <p>Su estructura de <strong>hierro forjado</strong> en forma de mariposa sostiene una funda de cuero tensada, generando una silueta inconfundible. Es elegido tanto para interiores modernos y minimalistas como para locales gastronómicos, bares y restaurantes por su <strong>resistencia excepcional</strong> y su diseño atemporal.</p>
           <p>En Taller Kappa fabricamos el sillón BKF con <strong>hierro macizo redondo de 12mm</strong> (sin tubos, sin rellenos) y <strong>cuero vacuno de primera selección</strong>, pensado para uso residencial e intensivo. Nuestros sillones equipan locales de <strong>YPF, McDonald's, Burger King y Shell</strong>.</p>
 
-          <div className="bkf-history-grid" ref={historyRef}>
+          <div className="bkf-history-grid">
             <div className="bkf-history-card">
               <i className="fas fa-calendar-alt" />
               <h3>1938</h3>
@@ -198,7 +184,7 @@ export default function SillonBKF() {
 
       <section className="bkf-comparison section-fade">
         <div className="bkf-about-inner">
-          <h2>Especificaciones del Sillón BKF Taller Kappa</h2>
+          <h2>Especificaciones del Sillón BKF de Taller Kappa</h2>
           <p className="section-subtitle">Estos son los materiales y estándares con los que fabricamos cada unidad:</p>
           <div className="comparison-table-wrapper">
             <table className="comparison-table">
@@ -231,10 +217,10 @@ export default function SillonBKF() {
 
       <section className="section-padding section-fade">
         <div className="bkf-about-inner">
-          <h2>Preguntas Frecuentes sobre el Sillón BKF</h2>
+          <h2>Preguntas frecuentes sobre el Sillón BKF</h2>
           {FAQ_SCHEMA.mainEntity.map((q) => (
-            <div key={q.name} style={{ marginBottom: 20 }}>
-              <h3 style={{ marginBottom: 6 }}>{q.name}</h3>
+            <div key={q.name} className="bkf-faq-item">
+              <h3>{q.name}</h3>
               <p>{q.acceptedAnswer.text}</p>
             </div>
           ))}

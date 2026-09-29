@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 // Config pensada para que el bundle final sea lo más liviano posible:
 // - code-splitting automático por ruta (React.lazy en App.jsx)
-// - manualChunks separa vendor pesado (firebase, animejs) del código propio
+// - manualChunks separa vendor pesado (firebase) del código propio
 //   así el navegador cachea esas libs aunque tu código cambie seguido
 //
 // `isSsrBuild` distingue el build del navegador del build de prerender:
@@ -22,7 +22,6 @@ export default defineConfig(({ isSsrBuild }) => ({
           output: {
             manualChunks: {
               firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth'],
-              animejs: ['animejs'],
             },
           },
         },
