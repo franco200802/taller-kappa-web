@@ -20,9 +20,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // CONTACTOS — cualquiera crea, solo admin lee
+    // CONTACTOS — cualquiera crea (con forma y tamaño validados), solo admin lee.
+    // Sin esta validación cualquiera podía escribir documentos arbitrarios
+    // (o gigantes) en la colección desde la consola del navegador.
     match /contactos/{docId} {
-      allow create: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'interest', 'message', 'leido', 'createdAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 2000
+        && request.resource.data.interest is string && request.resource.data.interest.size() <= 100
+        && request.resource.data.leido == false
+        && request.resource.data.createdAt == request.time;
       allow read, update, delete: if isAdmin();
     }
 

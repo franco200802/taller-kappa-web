@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useStaggerReveal } from '../lib/useReveal';
 import Seo, { breadcrumbList } from '../components/Seo';
+import { whatsappUrl } from '../data/contact';
 
 const WARRANTY = [
   { icon: 'fa-certificate', title: 'Garantía de Estructura', desc: 'Todas nuestras piezas de hierro tienen garantía de por vida en la estructura. Si se deforma o presenta defectos de soldadura, lo reparamos o reponemos sin cargo.' },
@@ -77,7 +78,7 @@ export default function Garantia() {
           <h2>¿Tenés un problema con tu producto?</h2>
           <p>Escribinos y lo resolvemos. Tu satisfacción es nuestra prioridad.</p>
           <div className="cta-btns">
-            <a href="https://wa.me/541161242498?text=Hola%2C+necesito+hacer+un+reclamo+de+garantía."
+            <a href={whatsappUrl('Hola, necesito hacer un reclamo de garantía.')}
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <i className="fab fa-whatsapp" /> Contactar soporte
             </a>

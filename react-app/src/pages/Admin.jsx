@@ -30,8 +30,8 @@ export default function Admin() {
         <Seo title="Admin | Taller Kappa" description="Panel de administración interno." path="/admin" noindex />
         <h1>Panel de Administración</h1>
         <form onSubmit={handleLogin}>
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input type="email" placeholder="Email" aria-label="Email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Contraseña" aria-label="Contraseña" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit" className="btn-main">Ingresar</button>
           {error && <p style={{ color: '#e74c3c' }}>{error}</p>}
         </form>

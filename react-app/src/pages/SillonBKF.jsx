@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
 import Picture from '../components/Picture';
 import { trackEvent } from '../lib/analytics';
+import { whatsappUrl } from '../data/contact';
 
 const PRODUCT_SCHEMA = {
   '@context': 'https://schema.org',
@@ -142,7 +143,7 @@ export default function SillonBKF() {
               <button className="btn-main" onClick={() => handleAdd('Negro Mate')}>
                 <i className="fas fa-plus" /> Agregar al presupuesto
               </button>
-              <a href="https://wa.me/541161242498?text=Hola%2C+quiero+cotizar+el+Sillón+BKF+Premium."
+              <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF Premium.')}
                 target="_blank" rel="noopener noreferrer" className="btn-outline"
                 onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_actions' })}>
                 <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
@@ -250,7 +251,7 @@ export default function SillonBKF() {
           <h2>¿Querés tu Sillón BKF?</h2>
           <p>Escribinos hoy y te respondemos en minutos. Precios de fábrica, entrega en todo el país.</p>
           <div className="cta-btns">
-            <a href="https://wa.me/541161242498?text=Hola%2C+quiero+cotizar+el+Sillón+BKF."
+            <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF.')}
               target="_blank" rel="noopener noreferrer" className="btn-main"
               onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
               <i className="fab fa-whatsapp" /> Pedir cotización ahora

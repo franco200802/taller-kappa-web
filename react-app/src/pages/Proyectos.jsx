@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useStaggerReveal } from '../lib/useReveal';
 import Seo, { breadcrumbList } from '../components/Seo';
+import { whatsappUrl } from '../data/contact';
 
 const PROJECTS = [
   {
@@ -92,7 +93,7 @@ export default function Proyectos() {
           <h2>¿Querés equipar tu local o empresa?</h2>
           <p>Trabajamos con franquicias, restaurantes, bares, hoteles y oficinas. Pedí tu cotización sin compromiso.</p>
           <div className="cta-btns">
-            <a href="https://wa.me/541161242498?text=Hola%2C+soy+de+una+empresa+y+necesito+cotización+para+equipamiento."
+            <a href={whatsappUrl('Hola, soy de una empresa y necesito cotización para equipamiento.')}
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
             </a>

@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { whatsappUrl } from '../data/contact';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
@@ -12,12 +13,19 @@ export function CartProvider({ children }) {
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    // sessionStorage puede lanzar (modo privado, cuota llena): el carrito
+    // sigue funcionando en memoria aunque no se pueda persistir.
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch { /* noop */ }
   }, [cart]);
 
+  // Un solo timer: si se muestran dos toasts seguidos, el primero no debe
+  // cerrar prematuramente al segundo.
+  const toastTimer = useRef(null);
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
   const showToast = useCallback((msg) => {
+    clearTimeout(toastTimer.current);
     setToast(msg);
-    setTimeout(() => setToast(null), 3000);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
   }, []);
 
   const addToCart = useCallback((product, color = 'Negro Mate') => {
@@ -49,15 +57,14 @@ export function CartProvider({ children }) {
     if (cart.length === 0) return '#';
     const lines = cart.map(({ product, color, qty }) =>
       `- ${product.name} x${qty} (Acabado: ${color})`).join('\n');
-    const msg = encodeURIComponent(
+    return whatsappUrl(
       `Hola Taller Kappa! Quisiera cotizar:\n${lines}\n\nPor favor indicarme precio final y tiempo de entrega.`);
-    return `https://wa.me/541161242498?text=${msg}`;
   }, [cart]);
 
-  const value = {
+  const value = useMemo(() => ({
     cart, totalItems, isOpen, toast,
     setIsOpen, addToCart, changeQty, removeItem, showToast, whatsappLink,
-  };
+  }), [cart, totalItems, isOpen, toast, addToCart, changeQty, removeItem, showToast, whatsappLink]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

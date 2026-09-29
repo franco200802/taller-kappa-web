@@ -183,7 +183,9 @@ export default function Nosotros() {
         <div className="gallery-grid">
           {GALLERY.map((g, i) => (
             <div className={`gallery-item ${g.tall ? 'gallery-tall' : ''} ${g.wide ? 'gallery-wide' : ''}`}
-              key={i} onClick={() => setLightbox(i)}>
+              key={g.src} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
+              onClick={() => setLightbox(i)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightbox(i); } }}>
               <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" />
               <div className="gallery-overlay"><i className="fas fa-search-plus" /><span>{g.label}</span></div>
             </div>
@@ -192,7 +194,7 @@ export default function Nosotros() {
       </section>
 
       {lightbox !== null && (
-        <div className="lightbox" style={{ display: 'flex' }} onClick={() => setLightbox(null)}>
+        <div className="lightbox" style={{ display: 'flex' }} role="dialog" aria-modal="true" aria-label="Galería de trabajos" onClick={() => setLightbox(null)}>
           <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Cerrar">×</button>
           <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); shiftLightbox(-1); }} aria-label="Anterior"><i className="fas fa-chevron-left" /></button>
           <img className="lightbox-img" src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt} onClick={(e) => e.stopPropagation()} />

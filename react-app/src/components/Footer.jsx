@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Inicio' },
@@ -20,8 +21,8 @@ export default function Footer() {
           <div className="footer-info">
             <p><strong>Fábrica &amp; Showroom</strong></p>
             <p><i className="fas fa-map-marker-alt" /> Calle 28 Nº 3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
-            <p><i className="fab fa-whatsapp" /> <a href="https://wa.me/541161242498" target="_blank" rel="noopener noreferrer">11 6124-2498</a></p>
-            <p><i className="far fa-envelope" /> <a href="mailto:ing.franciscomarotta@gmail.com">ing.franciscomarotta@gmail.com</a></p>
+            <p><i className="fab fa-whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
+            <p><i className="far fa-envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
           </div>
           <div className="footer-nav">
             {FOOTER_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
@@ -33,6 +34,7 @@ export default function Footer() {
               src="https://maps.google.com/maps?q=-34.5851938,-58.5281526&t=&z=16&ie=UTF8&iwloc=&output=embed"
               title="Ubicación Taller Kappa en Google Maps"
               loading="lazy"
+              sandbox="allow-scripts allow-same-origin allow-popups"
               referrerPolicy="no-referrer-when-downgrade"
             />
           </div>

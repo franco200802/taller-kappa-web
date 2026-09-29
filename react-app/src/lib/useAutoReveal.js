@@ -14,7 +14,11 @@ import { useLocation } from 'react-router-dom';
 
 function reveal(selector, className, { threshold = 0.1, stagger = 0 } = {}) {
   const nodes = document.querySelectorAll(selector);
-  const pending = Array.from(nodes).filter((el) => !el.dataset.kappaRevealed);
+  // kappaObserving evita observar dos veces el mismo elemento: el
+  // MutationObserver de abajo llama a run() en cada mutación del DOM y, sin
+  // esta marca, cada llamada creaba otro IntersectionObserver sobre
+  // elementos que todavía esperaban entrar en viewport.
+  const pending = Array.from(nodes).filter((el) => !el.dataset.kappaRevealed && !el.dataset.kappaObserving);
   if (!pending.length) return;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -32,7 +36,7 @@ function reveal(selector, className, { threshold = 0.1, stagger = 0 } = {}) {
     });
   }, { threshold });
 
-  pending.forEach((el) => io.observe(el));
+  pending.forEach((el) => { el.dataset.kappaObserving = '1'; io.observe(el); });
 }
 
 function run() {

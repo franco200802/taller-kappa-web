@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useStaggerReveal } from '../lib/useReveal';
 import Seo, { breadcrumbList } from '../components/Seo';
+import { whatsappUrl } from '../data/contact';
 
 const ZONES = [
   { icon: 'fa-motorcycle', title: 'San Martín y alrededores', time: '24-48 hs', desc: 'Entrega directa en Villa Chacabuco, San Martín, Tres de Febrero, Caseros, Santos Lugares, Hurlingham y Ciudadela.', badge: 'Envío bonificado', free: true },
@@ -74,7 +75,7 @@ export default function Envios() {
           <h2>¿Querés saber el costo de envío a tu zona?</h2>
           <p>Escribinos por WhatsApp con tu dirección y te cotizamos en el momento.</p>
           <div className="cta-btns">
-            <a href="https://wa.me/541161242498?text=Hola%2C+quiero+saber+el+costo+de+envío+a+mi+zona."
+            <a href={whatsappUrl('Hola, quiero saber el costo de envío a mi zona.')}
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <i className="fab fa-whatsapp" /> Consultar envío
             </a>

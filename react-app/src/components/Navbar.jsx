@@ -38,17 +38,15 @@ export default function Navbar() {
       </ul>
 
       <div className="nav-actions">
-        <div
+        <button
+          type="button"
           className="cart-icon-container"
-          role="button"
-          tabIndex={0}
           aria-label="Abrir presupuesto"
           onClick={() => setIsOpen(true)}
-          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setIsOpen(true)}
         >
           <i className="fas fa-shopping-bag" style={{ fontSize: '1.2rem' }} />
           <span className="cart-badge" style={{ opacity: totalItems > 0 ? 1 : 0 }}>{totalItems}</span>
-        </div>
+        </button>
         <button
           className="hamburger"
           aria-label="Abrir menú"

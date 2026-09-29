@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import Seo, { breadcrumbList } from '../components/Seo';
 import Picture from '../components/Picture';
 import { getProductBySlug } from '../data/products';
+import { whatsappUrl } from '../data/contact';
 
 /**
  * Página individual de producto — URL propia, indexable y prerenderizada
@@ -116,7 +117,7 @@ export default function Producto() {
                 <i className="fas fa-plus" /> Agregar al presupuesto
               </button>
               <a
-                href={`https://wa.me/541161242498?text=${encodeURIComponent('Hola, quiero cotizar: ' + product.name)}`}
+                href={whatsappUrl('Hola, quiero cotizar: ' + product.name)}
                 target="_blank" rel="noopener noreferrer" className="btn-outline"
               >
                 <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
