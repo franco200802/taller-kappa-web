@@ -355,21 +355,46 @@ p a:hover, li a:hover { color: var(--kappa); }
     .materials-scroll-img { aspect-ratio: 4 / 3; }
 }
 
-/* ---------- 9. Modal de producto ---------- */
-.modal {
-    position: fixed; inset: 0; z-index: 2000;
-    display: flex; align-items: center; justify-content: center; padding: 16px;
-    background: rgba(27, 28, 30, 0.55);
-    opacity: 0; visibility: hidden; transition: opacity .25s, visibility 0s linear .25s;
+/* ---------- 9. Modales (<dialog>) y modal de producto ---------- */
+/* Los tres modales (producto, carrito, lightbox) son <dialog> nativos
+   (components/Modal.jsx) a pantalla completa: el propio <dialog> es el fondo
+   oscuro, así un click cuyo target es el <dialog> es un click afuera.
+   Ojo: el `display` va siempre en [open]; un display en la clase base le
+   ganaría al display:none del navegador y el modal cerrado se vería. */
+.modal, .cart-overlay, .lightbox {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; border: 0; padding: 0;
+    color: inherit; overscroll-behavior: contain;
 }
-.modal.active { opacity: 1; visibility: visible; transition-delay: 0s; }
+.modal::backdrop, .cart-overlay::backdrop, .lightbox::backdrop { background: transparent; }
+/* showModal() no bloquea el scroll de la página: se hace en CSS. El gutter
+   estable evita que el contenido salte al desaparecer la barra de scroll. */
+html { scrollbar-gutter: stable; }
+html:has(dialog[open]) { overflow: hidden; }
+
+/* Entrada con @starting-style y salida con allow-discrete (el <dialog>
+   sigue visible hasta que termina la transición). La primera declaración
+   es el respaldo para navegadores que no conocen allow-discrete: abren y
+   cierran sin animar, pero funcionan. */
+.modal, .cart-overlay {
+    opacity: 0;
+    transition: opacity .25s;
+    transition: opacity .25s, display .3s allow-discrete, overlay .3s allow-discrete;
+}
+.modal[open], .cart-overlay[open] { opacity: 1; }
+@starting-style { .modal[open], .cart-overlay[open] { opacity: 0; } }
+
+.modal[open] { display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal { background: rgba(27, 28, 30, 0.55); }
 .modal-content {
     position: relative; width: min(960px, 100%); max-height: calc(100svh - 32px); overflow: auto;
     display: grid; grid-template-columns: 1fr 1fr;
     background: var(--blanco); border-radius: 10px;
     transform: translateY(12px); transition: transform .3s var(--ease);
 }
-.modal.active .modal-content { transform: none; }
+.modal[open] .modal-content { transform: none; }
+@starting-style { .modal[open] .modal-content { transform: translateY(12px); } }
 .modal-img img { width: 100%; height: 100%; object-fit: cover; }
 .modal-info { padding: 32px; display: flex; flex-direction: column; gap: 14px; }
 .modal-info h2 { font-size: var(--t-xl); }
@@ -400,31 +425,24 @@ p a:hover, li a:hover { color: var(--kappa); }
     box-shadow: 0 1px 4px rgba(0,0,0,.15);
 }
 @media (max-width: 760px) {
-    .modal { align-items: flex-end; padding: 0; }
+    .modal[open] { align-items: flex-end; padding: 0; }
     .modal-content { grid-template-columns: 1fr; border-radius: 12px 12px 0 0; max-height: 92svh; }
     .modal-img { aspect-ratio: 4 / 3; overflow: hidden; }
     .modal-info { padding: 24px 20px 32px; }
 }
 
 /* ---------- 10. Carrito / presupuesto ---------- */
-.cart-overlay {
-    position: fixed; inset: 0; z-index: 2000;
-    display: flex; justify-content: flex-end;
-    background: rgba(27, 28, 30, 0.45);
-    opacity: 0; pointer-events: none;
-    /* visibility:hidden saca del orden de tabulación los botones del panel
-       cerrado; se demora para no cortar la animación de cierre. */
-    visibility: hidden;
-    transition: opacity .3s ease, visibility 0s linear .3s;
-}
-.cart-overlay.open { opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s; }
+/* Base y animación de apertura/cierre del <dialog>: sección 9. */
+.cart-overlay { background: rgba(27, 28, 30, 0.45); }
+.cart-overlay[open] { display: flex; justify-content: flex-end; }
 .cart-sidebar {
     width: min(420px, 100%); height: 100%;
     display: flex; flex-direction: column;
     background: var(--blanco);
-    transform: translateX(100%); transition: transform .35s var(--ease);
+    transform: translateX(100%); transition: transform .3s var(--ease);
 }
-.cart-overlay.open .cart-sidebar { transform: none; }
+.cart-overlay[open] .cart-sidebar { transform: none; }
+@starting-style { .cart-overlay[open] .cart-sidebar { transform: translateX(100%); } }
 .cart-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--linea); }
 .cart-header h3 { font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; }
 .cart-header h3 i { display: none; }
@@ -461,9 +479,11 @@ p a:hover, li a:hover { color: var(--kappa); }
 .cart-hint { font-size: var(--t-sm); color: var(--grafito); text-align: center; margin: 0 auto; }
 
 /* ---------- 11. Toast y WhatsApp flotante ---------- */
+/* El toast es un popover (Toast.jsx) para mostrarse encima de los modales:
+   se anulan los estilos del navegador (centrado, borde, overflow). */
 #toast {
-    position: fixed; left: 50%; bottom: 24px; z-index: 2500;
-    max-width: calc(100vw - 32px);
+    position: fixed; inset: auto auto 24px 50%; margin: 0; border: 0; overflow: visible; z-index: 2500;
+    width: max-content; max-width: calc(100vw - 32px);
     background: var(--hierro); color: var(--blanco);
     padding: 12px 20px; border-radius: var(--r); font-weight: 500;
     transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
@@ -593,10 +613,11 @@ footer a:hover { color: #fff; }
     .gallery-item.gallery-wide { grid-column: span 2; }
 }
 
-.lightbox {
-    position: fixed; inset: 0; z-index: 2500;
+/* Base del <dialog>: sección 9. */
+.lightbox { background: rgba(27, 28, 30, 0.94); }
+.lightbox[open] {
     display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px;
-    background: rgba(27, 28, 30, 0.94); padding: 64px 16px 24px;
+    padding: 64px 16px 24px;
 }
 .lightbox-img { max-width: min(1000px, 100%); max-height: 78svh; object-fit: contain; border-radius: var(--r); }
 .lightbox-caption { color: #fff; }

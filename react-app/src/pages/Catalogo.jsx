@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 import Picture from '../components/Picture';
+import Modal from '../components/Modal';
 import { PRODUCTS } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
@@ -63,7 +64,10 @@ export default function Catalogo() {
   const { addToCart } = useCart();
   const [products, setProducts] = useState(FALLBACK_PRODUCTS);
   const [filter, setFilter] = useState('all');
+  // El producto queda cargado al cerrar el modal: así el contenido no
+  // desaparece mientras corre la animación de salida.
   const [modalProduct, setModalProduct] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [modalColor, setModalColor] = useState('Negro Mate');
 
   useEffect(() => {
@@ -79,22 +83,9 @@ export default function Catalogo() {
   const openModal = (p) => {
     setModalColor('Negro Mate');
     setModalProduct(p);
-    document.body.style.overflow = 'hidden';
+    setModalOpen(true);
   };
-  const closeModal = () => {
-    setModalProduct(null);
-    document.body.style.overflow = '';
-  };
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') closeModal(); };
-    window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      // Si se navega con el modal abierto, no dejar la página sin scroll.
-      document.body.style.overflow = '';
-    };
-  }, []);
+  const closeModal = () => setModalOpen(false);
 
   const filtered = filter === 'all' ? products : products.filter((p) => p.category === filter);
   const FILTERS = [
@@ -183,8 +174,7 @@ export default function Catalogo() {
         </p>
       </section>
 
-      <div className={`modal ${modalProduct ? 'active' : ''}`} role="dialog" aria-modal="true" aria-label={modalProduct ? modalProduct.name : 'Detalle del producto'} aria-hidden={!modalProduct}
-        onClick={(e) => e.target === e.currentTarget && closeModal()}>
+      <Modal className="modal" label={modalProduct ? modalProduct.name : 'Detalle del producto'} open={modalOpen} onClose={closeModal}>
         {modalProduct && (
           <div className="modal-content">
             <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
@@ -218,7 +208,7 @@ export default function Catalogo() {
             </div>
           </div>
         )}
-      </div>
+      </Modal>
     </>
   );
 }

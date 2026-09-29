@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { WHATSAPP_DISPLAY } from '../data/contact';
 import Picture from './Picture';
+import Modal from './Modal';
 import { trackEvent } from '../lib/analytics';
 
 // Los nombres pueden venir de Firestore: se escapan antes de interpolarlos
@@ -10,14 +10,6 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 
 export default function CartDrawer() {
   const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast } = useCart();
-
-  // Escape cierra el panel (patrón esperado en un diálogo modal).
-  useEffect(() => {
-    if (!isOpen) return undefined;
-    const onKey = (e) => { if (e.key === 'Escape') setIsOpen(false); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [isOpen, setIsOpen]);
 
   const printBudget = () => {
     if (cart.length === 0) { showToast('Tu presupuesto está vacío.'); return; }
@@ -47,8 +39,7 @@ export default function CartDrawer() {
   };
 
   return (
-    <div className={`cart-overlay ${isOpen ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Presupuesto" aria-hidden={!isOpen}
-      onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}>
+    <Modal className="cart-overlay" label="Presupuesto" open={isOpen} onClose={() => setIsOpen(false)}>
       <div className="cart-sidebar">
         <div className="cart-header">
           <h3><i className="fas fa-shopping-bag" style={{ marginRight: 8, color: 'var(--primary)' }} /> Tu presupuesto</h3>
@@ -102,6 +93,6 @@ export default function CartDrawer() {
           <p className="cart-hint">Consultá por WhatsApp para coordinar tu pedido.</p>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Seo, { breadcrumbList } from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
+import Modal from '../components/Modal';
 import { loadFireDB } from '../lib/firebaseConfig';
 
 const WHY = [
@@ -47,16 +48,11 @@ export default function Nosotros() {
     setLightbox((i) => (i === null ? i : (i + dir + GALLERY.length) % GALLERY.length));
   };
 
-  useEffect(() => {
-    if (lightbox === null) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') setLightbox(null);
-      if (e.key === 'ArrowLeft') shiftLightbox(-1);
-      if (e.key === 'ArrowRight') shiftLightbox(1);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [lightbox]);
+  // Escape ya lo maneja el <dialog>; acá solo las flechas.
+  const onLightboxKey = (e) => {
+    if (e.key === 'ArrowLeft') shiftLightbox(-1);
+    if (e.key === 'ArrowRight') shiftLightbox(1);
+  };
 
   return (
     <>
@@ -156,15 +152,18 @@ export default function Nosotros() {
         </div>
       </section>
 
-      {lightbox !== null && (
-        <div className="lightbox" style={{ display: 'flex' }} role="dialog" aria-modal="true" aria-label="Galería de trabajos" onClick={() => setLightbox(null)}>
-          <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Cerrar">×</button>
-          <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); shiftLightbox(-1); }} aria-label="Anterior"><i className="fas fa-chevron-left" /></button>
-          <img className="lightbox-img" src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt} onClick={(e) => e.stopPropagation()} />
-          <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); shiftLightbox(1); }} aria-label="Siguiente"><i className="fas fa-chevron-right" /></button>
-          <p className="lightbox-caption">{GALLERY[lightbox].label}</p>
-        </div>
-      )}
+      <Modal className="lightbox" label="Galería de trabajos" open={lightbox !== null}
+        onClose={() => setLightbox(null)} onKeyDown={onLightboxKey}>
+        {lightbox !== null && (
+          <>
+            <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Cerrar">×</button>
+            <button className="lightbox-prev" onClick={() => shiftLightbox(-1)} aria-label="Anterior"><i className="fas fa-chevron-left" /></button>
+            <img className="lightbox-img" src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt} />
+            <button className="lightbox-next" onClick={() => shiftLightbox(1)} aria-label="Siguiente"><i className="fas fa-chevron-right" /></button>
+            <p className="lightbox-caption">{GALLERY[lightbox].label}</p>
+          </>
+        )}
+      </Modal>
     </>
   );
 }
