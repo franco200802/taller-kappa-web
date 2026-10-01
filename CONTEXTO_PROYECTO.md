@@ -244,18 +244,19 @@ Gemini en la esquina inferior derecha. Conviene reemplazarlas por fotos
 reales de los productos del taller (mismo nombre de archivo, y regenerar
 el `.webp` de cada una).
 
-### 🟡 Pendiente — Afirmaciones que el dueño debe confirmar (GEO)
-El sitio publica estas afirmaciones y no hay forma de verificarlas desde el
-código; la IA las cita tal cual, así que conviene confirmarlas o quitarlas:
-- Testimonios de `Nosotros.jsx` (hoy `FALLBACK_TESTIMONIOS`): ¿son reales y
-  autorizados? No se marcan como `Review` en el schema.
-- Clientes y detalle de `Proyectos.jsx` (YPF, McDonald's, Burger King, Shell
-  Select, Sandro Paris): qué se entregó a cada uno y si se pueden nombrar.
-- "Más de 15 años", "1938/MoMA", plazos de fabricación (5 a 10 días hábiles).
-- Que el Banco BKF lleva asiento de cuero, y si se venden tapas de mesa (hoy el
-  catálogo solo tiene la base).
-- Redes sociales, CUIT y año de fundación: no están en el sitio, por eso no
-  figuran en el schema (`sameAs`, `taxID`, `foundingDate`).
+### 🟢 Confirmado por el dueño (1/10/2026) — afirmaciones del sitio
+El dueño confirmó que son ciertas las afirmaciones que el sitio publica y que
+la IA cita tal cual: los testimonios de `Nosotros.jsx` (no se marcan como
+`Review` en el schema), los clientes y el detalle de `Proyectos.jsx` (YPF,
+McDonald's, Burger King, Shell Select, Sandro Paris), "más de 15 años",
+"1938/MoMA", los plazos de fabricación (5 a 10 días hábiles) y que el Banco BKF
+lleva asiento de cuero. Si alguna deja de ser cierta, hay que corregirla en
+todas las páginas que la repiten.
+
+Sigue abierto: si se venden tapas de mesa (hoy el catálogo solo tiene la base y
+`CATEGORIES.mesas.difference` lo dice así) y los datos que el sitio no publica
+(redes sociales, CUIT, año de fundación), por eso no figuran en el schema
+(`sameAs`, `taxID`, `foundingDate`).
 
 ### 🟡 Pendiente — Search Console / Google Business Profile
 No están configurados todavía (requiere acceso del dueño del sitio a esas
