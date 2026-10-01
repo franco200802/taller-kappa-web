@@ -42,7 +42,7 @@ export const CATEGORIES = [
     slug: 'asientos',
     name: 'Asientos',
     heading: 'Sillones y bancos BKF de hierro y cuero',
-    seoTitle: 'Sillones y Bancos BKF de Hierro y Cuero | Taller Kappa',
+    seoTitle: 'Sillones y Bancos BKF en Buenos Aires | Hierro y Cuero | Taller Kappa',
     seoDescription: 'Sillón BKF Premium y Banco BKF de Taller Kappa: hierro macizo de 12 mm y cuero. Medidas, materiales y cotización. Fábrica en San Martín, Buenos Aires.',
     definition: 'Los asientos de Taller Kappa son el sillón BKF y el banco BKF: piezas de estructura de hierro macizo de 12 mm y asiento de cuero, fabricadas en San Martín, Buenos Aires.',
     faq: [
@@ -56,7 +56,7 @@ export const CATEGORIES = [
     slug: 'mesas',
     name: 'Mesas',
     heading: 'Bases de mesa de hierro para mesas y barras',
-    seoTitle: 'Bases de Mesa de Hierro para Bares y Restaurantes | Taller Kappa',
+    seoTitle: 'Bases de Mesa de Hierro en Buenos Aires | Taller Kappa',
     seoDescription: 'Base de Mesa Flat de Taller Kappa: chapa torneada de 10 mm, en altura de mesa (73 cm) y de barra (105 cm). Uso gastronómico. San Martín, Buenos Aires.',
     definition: 'En mesas, Taller Kappa fabrica la Base de Mesa Flat: una base de chapa torneada de 10 mm con columna central, en altura de mesa (73 cm) y de barra (105 cm), pensada para uso gastronómico intenso, como en bares y restaurantes.',
     faq: [
@@ -71,6 +71,10 @@ export const PRODUCTS = [
   {
     id: '1',
     slug: 'sillon-bkf-premium',
+    // URL canónica propia: el Sillón BKF vive en la landing comercial y NO tiene ficha aparte, para que
+    // una sola página compita por "sillón BKF" (antes había dos con casi el mismo contenido).
+    // /catalogo/sillon-bkf-premium/ queda como redirección (ver LEGACY_PAGES en scripts/prerender.js).
+    path: '/sillon-bkf',
     category: 'asientos',
     name: 'Sillón BKF Premium',
     alternateName: ['Sillón BKF', 'Silla BKF', 'Silla paleta', 'Butterfly chair'],
@@ -108,7 +112,7 @@ export const PRODUCTS = [
     category: 'asientos',
     name: 'Banco BKF',
     alternateName: ['Banco BKF de hierro y cuero', 'Banqueta BKF'],
-    seoTitle: 'Banco BKF de Hierro y Cuero | Taller Kappa',
+    seoTitle: 'Banco BKF de Hierro y Cuero en Buenos Aires | Taller Kappa',
     seoDescription: 'Banco BKF de hierro macizo de 12 mm, 38 x 38 x 45 cm: pie de cama o asiento auxiliar en la línea del sillón BKF. Fabricado por Taller Kappa en San Martín.',
     image: '/images/banco-bkf-hierro-cuero.jpg',
     imageWidth: 1024,
@@ -139,7 +143,7 @@ export const PRODUCTS = [
     category: 'mesas',
     name: 'Base de Mesa Flat',
     alternateName: ['Base de mesa de hierro', 'Base Flat'],
-    seoTitle: 'Base de Mesa Flat para Mesas y Barras | Taller Kappa',
+    seoTitle: 'Base de Mesa Flat de Hierro en Buenos Aires | Taller Kappa',
     seoDescription: 'Base de Mesa Flat: chapa de 10 mm, columna de 77/101 mm, altura de mesa (73 cm) o de barra (105 cm). Para uso gastronómico. Taller Kappa, San Martín.',
     image: '/images/base-mesa-flat-hierro.jpg',
     imageWidth: 1024,
@@ -185,6 +189,11 @@ export function formatPrice(product) {
   if (!price?.amount) return null;
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: price.currency ?? 'ARS', maximumFractionDigits: 0 }).format(price.amount);
 }
+
+/** Ruta canónica de un producto: la propia (`path`) o /catalogo/<slug>. */
+export const productPath = (p) => p.path ?? `/catalogo/${p.slug}`;
+/** Igual, con barra final: es la forma de los enlaces internos y de la URL canónica. */
+export const productHref = (p) => `${productPath(p)}/`;
 
 export function getProductBySlug(slug) {
   return PRODUCTS.find((p) => p.slug === slug) ?? null;

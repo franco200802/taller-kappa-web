@@ -97,7 +97,7 @@ export default function Contacto() {
           </p>
           <p>
             ¿Buscás un producto en particular? Mirá el <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link> o
-            todo sobre el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link>. Si es para un negocio, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
+            todo sobre el <Link to="/sillon-bkf/">sillón BKF</Link>. Si es para un negocio, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
           </p>
         </aside>
       </section>

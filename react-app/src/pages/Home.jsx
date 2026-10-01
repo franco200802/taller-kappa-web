@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import Picture from '../components/Picture';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, productHref } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { BUSINESS, addressLine } from '../data/business';
 import { ORG_ID } from '../lib/schema';
@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Taller Kappa | Sillones BKF y Muebles de Hierro en Buenos Aires"
+        title="Fábrica de Sillón BKF y Muebles de Hierro | Taller Kappa, Buenos Aires"
         description="Fábrica de sillones BKF, bancos y bases de mesa de hierro y cuero en San Martín, Buenos Aires. Fabricación a medida, envíos y atención a empresas."
         path="/"
         about={[ORG_ID]}
@@ -40,7 +40,7 @@ export default function Home() {
             San Martín. Cotizamos por WhatsApp en el día.
           </p>
           <div className="home-hero-actions">
-            <Link to="/catalogo/" className="btn-main">Ver catálogo</Link>
+            <Link to="/sillon-bkf/" className="btn-main">Ver el sillón BKF</Link>
             <a
               href={whatsappUrl('Hola, soy una empresa y necesito cotización mayorista.')}
               target="_blank" rel="noopener noreferrer" className="btn-outline"
@@ -90,7 +90,7 @@ export default function Home() {
             <dt>Qué fabrica</dt>
             <dd>
               {PRODUCTS.map((p, i) => (
-                <span key={p.slug}>{i > 0 && ', '}<Link to={`/catalogo/${p.slug}/`}>{p.name}</Link></span>
+                <span key={p.slug}>{i > 0 && ', '}<Link to={productHref(p)}>{p.name}</Link></span>
               ))}
             </dd>
           </div>
@@ -98,6 +98,30 @@ export default function Home() {
           <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
           <div><dt>Cómo consultar</dt><dd><Link to="/contacto/">WhatsApp {BUSINESS.phoneDisplay} o formulario de contacto</Link></dd></div>
         </dl>
+      </section>
+
+      <section className="section-padding about-facts section-fade" aria-labelledby="como-comprar-home">
+        <div>
+          <h2 className="section-title" id="como-comprar-home">Comprar en Taller Kappa: cómo funciona</h2>
+          <p>
+            Comprás directo a la fábrica, sin pagar nada en el sitio. Elegís lo que necesitás, pedís el presupuesto y el pedido se acuerda con el taller.
+          </p>
+          <ol className="buy-steps">
+            <li><strong>Elegí en el catálogo</strong> y agregá los productos al presupuesto.</li>
+            <li><strong>Enviá el presupuesto por WhatsApp</strong> y te respondemos con el precio final y el plazo.</li>
+            <li><strong>Fabricamos a medida</strong> y coordinamos el envío o el retiro en el taller de San Martín.</li>
+          </ol>
+        </div>
+        <div>
+          <p>
+            Entregamos en San Martín y alrededores, en CABA, en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
+            <Link to="/envios/">zonas y tiempos de envío</Link>.
+          </p>
+          <p>
+            ¿Querés comprar un sillón BKF? Conocé el <Link to="/sillon-bkf/">Sillón BKF Premium</Link>, con medidas, colores, garantía y envíos.
+            Para locales y empresas, el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
+          </p>
+        </div>
       </section>
 
       <section className="section-padding">
@@ -108,7 +132,7 @@ export default function Home() {
         <ul className="home-products">
           {PRODUCTS.map((p) => (
             <li className="home-product" key={p.slug}>
-              <Link to={`/catalogo/${p.slug}/`}>
+              <Link to={productHref(p)}>
                 <div className="home-product-img">
                   <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
                 </div>
@@ -136,7 +160,7 @@ export default function Home() {
         <div>
           <h2 className="section-title">Para elegir y pedir</h2>
           <p>
-            <strong>Sillón BKF:</strong> conocé el <Link to="/sillon-bkf/">sillón BKF fabricado en Argentina</Link>, leé{' '}
+            <strong>Sillón BKF:</strong> conocé el <Link to="/sillon-bkf/">sillón BKF de hierro y cuero fabricado en Buenos Aires</Link>, leé{' '}
             <Link to="/bkf/">qué es el sillón BKF, su historia y cómo elegir uno</Link> o mirá los{' '}
             <Link to="/catalogo/asientos/">sillones y bancos BKF</Link> del catálogo.
           </p>

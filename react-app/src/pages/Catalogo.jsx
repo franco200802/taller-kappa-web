@@ -6,7 +6,7 @@ import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
-import { PRODUCTS, CATEGORIES } from '../data/products';
+import { CATEGORIES, PRODUCTS, productHref } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
 import { itemListNode } from '../lib/schema';
@@ -34,7 +34,7 @@ function ProductCard({ p, onOpen }) {
   // no tienen garantizado un `slug` propio como los de data/products.js.
   // Sin esta guarda, un producto sin slug generaría un link roto real
   // a /catalogo/undefined en vez de simplemente no enlazar a un detalle.
-  const detailHref = p.slug ? `/catalogo/${p.slug}/` : null;
+  const detailHref = p.slug ? productHref(p) : null;
   return (
     <article className="product-card" data-category={p.category}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
@@ -102,8 +102,8 @@ export default function Catalogo() {
   return (
     <>
       <Seo
-        title="Muebles de Hierro y Cuero: Sillones BKF, Bancos y Bases | Taller Kappa"
-        description="Catálogo de sillones BKF, bancos y bases de mesa de hierro macizo y cuero vacuno. Fabricación propia en San Martín, Buenos Aires."
+        title="Muebles de Hierro y Cuero en Buenos Aires | Catálogo | Taller Kappa"
+        description="Catálogo de muebles de hierro y cuero hechos en San Martín, Buenos Aires: sillón BKF, banco BKF y bases de mesa. Directo de fábrica, con presupuesto por WhatsApp."
         path="/catalogo"
         pageType="CollectionPage"
         mainEntity={itemList['@id']}
@@ -111,7 +111,7 @@ export default function Catalogo() {
         jsonLd={itemList}
       />
       <section id="catalogo" className="section-padding">
-        <h1 className="section-title">Muebles de hierro y cuero: sillones, bancos y bases de mesa</h1>
+        <h1 className="section-title">Muebles de hierro y cuero en Buenos Aires: sillones, bancos y bases de mesa</h1>
         <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
           Conocé en detalle nuestro producto insignia, el <Link to="/sillon-bkf/">sillón BKF</Link>, o leé <Link to="/bkf/">qué es el sillón BKF</Link>.

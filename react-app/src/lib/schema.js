@@ -18,14 +18,17 @@
  * único `@graph` con un solo contexto.
  */
 import { BUSINESS } from '../data/business';
-import { CATEGORIES, PRODUCTS, getCategory, productImages, productsInCategory, relatedProducts, socialImage } from '../data/products';
+import { CATEGORIES, PRODUCTS, getCategory, productImages, productPath, productsInCategory, relatedProducts, socialImage } from '../data/products';
 import { SITE, absoluteUrl, assetUrl, breadcrumbId, breadcrumbList, pageId } from './site';
 
 export const ORG_ID = `${SITE}/#organization`;
 export const BRAND_ID = `${SITE}/#brand`;
 export const WEBSITE_ID = `${SITE}/#website`;
 export const articleId = (path) => `${absoluteUrl(path)}#articulo`;
-export const productId = (slug) => `${absoluteUrl(`/catalogo/${slug}`)}#producto`;
+export const productId = (slug) => {
+  const p = PRODUCTS.find((x) => x.slug === slug);
+  return `${absoluteUrl(p ? productPath(p) : `/catalogo/${slug}`)}#producto`;
+};
 
 const ref = (id) => ({ '@id': id });
 
@@ -45,7 +48,7 @@ export function productStub(p) {
     '@type': 'Product',
     '@id': productId(p.slug),
     name: p.name,
-    url: absoluteUrl(`/catalogo/${p.slug}`),
+    url: absoluteUrl(productPath(p)),
   };
 }
 
@@ -98,6 +101,9 @@ export function organizationNode() {
     areaServed: [
       { '@type': 'AdministrativeArea', name: 'Ciudad Autónoma de Buenos Aires' },
       { '@type': 'AdministrativeArea', name: 'Gran Buenos Aires' },
+      { '@type': 'AdministrativeArea', name: 'Zona Norte del Gran Buenos Aires' },
+      { '@type': 'AdministrativeArea', name: 'Zona Oeste del Gran Buenos Aires' },
+      { '@type': 'AdministrativeArea', name: 'Zona Sur del Gran Buenos Aires' },
       COUNTRY,
     ],
     openingHoursSpecification: {
@@ -164,7 +170,7 @@ export function productNode(p, extra = {}) {
   return {
     '@type': 'Product',
     '@id': productId(p.slug),
-    url: absoluteUrl(`/catalogo/${p.slug}`),
+    url: absoluteUrl(productPath(p)),
     name: p.name,
     alternateName: p.alternateName,
     description: p.definition,
@@ -194,7 +200,7 @@ export function offerNode(p) {
   const price = p.price;
   return {
     '@type': 'Offer',
-    url: absoluteUrl(`/catalogo/${p.slug}`),
+    url: absoluteUrl(productPath(p)),
     availability: p.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
     itemCondition: 'https://schema.org/NewCondition',
     seller: ref(ORG_ID),

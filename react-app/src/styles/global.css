@@ -918,3 +918,8 @@ address { font-style: normal; }
     #main-nav, .float-wa, footer, .cart-overlay { display: none !important; }
     body { background: #fff; }
 }
+
+/* Pasos para pedir el presupuesto (landing del Sillón BKF y Home). */
+.buy-steps { list-style: none; counter-reset: paso; display: grid; gap: 10px; margin: 8px 0 16px; padding: 0; }
+.buy-steps li { counter-increment: paso; position: relative; padding-left: 40px; color: var(--hierro); }
+.buy-steps li::before { content: counter(paso); position: absolute; left: 0; top: 0; width: 28px; height: 28px; display: grid; place-items: center; border: 1.5px solid var(--hierro); border-radius: 50%; font-weight: 700; font-size: var(--t-sm); }

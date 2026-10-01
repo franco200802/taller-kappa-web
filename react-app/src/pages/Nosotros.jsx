@@ -6,7 +6,7 @@ import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import { loadFireDB } from '../lib/firebaseConfig';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, productHref } from '../data/products';
 import { BUSINESS, addressLine } from '../data/business';
 import { CONTACT_EMAIL, whatsappUrl } from '../data/contact';
 import { ORG_ID } from '../lib/schema';
@@ -64,7 +64,7 @@ export default function Nosotros() {
   return (
     <>
       <Seo
-        title="Nosotros: quiénes somos | Taller Kappa"
+        title="Fábrica de Muebles de Hierro, San Martín, Buenos Aires | Taller Kappa"
         description="Taller Kappa S.R.L. es una fábrica de muebles de hierro y cuero en Villa Chacabuco, San Martín, Buenos Aires. Qué fabrica, para quién y cómo contactarla."
         path="/nosotros"
         pageType="AboutPage"
@@ -111,7 +111,7 @@ export default function Nosotros() {
             <dt>Productos</dt>
             <dd>
               {PRODUCTS.map((p, i) => (
-                <span key={p.slug}>{i > 0 && ', '}<Link to={`/catalogo/${p.slug}/`}>{p.name}</Link></span>
+                <span key={p.slug}>{i > 0 && ', '}<Link to={productHref(p)}>{p.name}</Link></span>
               ))}
             </dd>
           </div>

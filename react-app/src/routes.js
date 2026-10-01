@@ -69,7 +69,7 @@ export const ROUTES = [
  * Se generan desde la misma fuente de datos para no duplicar la lista
  * de productos en ningún otro lado.
  */
-const PRODUCT_PAGES = PRODUCTS.map((p) => ({ path: `/catalogo/${p.slug}`, page: 'Producto' }));
+const PRODUCT_PAGES = PRODUCTS.filter((p) => !p.path).map((p) => ({ path: `/catalogo/${p.slug}`, page: 'Producto' }));
 
 /**
  * Páginas que sí se escriben como HTML estático en dist/, con el

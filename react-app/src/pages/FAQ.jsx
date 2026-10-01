@@ -75,7 +75,7 @@ export default function FAQ() {
         <p style={{ marginTop: 24 }}>
           ¿No encontraste lo que buscabas? <Link to="/contacto/">Contactanos</Link> o mirá nuestro{' '}
           <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link>. Más información: <Link to="/bkf/">qué es el sillón BKF</Link>,
-          el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link> y el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
+          el <Link to="/sillon-bkf/">cómo comprar el sillón BKF</Link> y el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
         </p>
       </section>
     </>

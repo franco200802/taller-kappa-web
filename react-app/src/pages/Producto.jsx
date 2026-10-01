@@ -1,10 +1,10 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, getCategory, relatedProducts, socialImage } from '../data/products';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, productHref, relatedProducts, socialImage } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { assetUrl } from '../lib/site';
 import { faqNode, productId, productNode } from '../lib/schema';
@@ -18,6 +18,9 @@ export default function Producto() {
   const { slug } = useParams();
   const { addToCart } = useCart();
   const product = getProductBySlug(slug);
+
+  // Un producto con URL propia (el Sillón BKF vive en su landing) no tiene ficha acá.
+  if (product?.path) return <Navigate to={productHref(product)} replace />;
 
   if (!product) {
     return (
@@ -148,7 +151,7 @@ export default function Producto() {
             ))}
             <p>
               Más preguntas en las <Link to="/faq/">preguntas frecuentes de Taller Kappa</Link>
-              {product.category === 'asientos' && <>, el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link> o la guía <Link to="/bkf/">qué es el sillón BKF: historia y cómo elegir uno</Link></>}.
+              {product.category === 'asientos' && <>, el <Link to="/sillon-bkf/">Sillón BKF Premium</Link> o la guía <Link to="/bkf/">qué es el sillón BKF: historia y cómo elegir uno</Link></>}.
             </p>
           </div>
         </section>
@@ -161,7 +164,7 @@ export default function Producto() {
           <ul className="related-list">
             {related.map((r) => (
               <li key={r.slug}>
-                <Link to={`/catalogo/${r.slug}/`}>{r.name}</Link>
+                <Link to={productHref(r)}>{r.name}</Link>
                 <span>{r.desc}</span>
               </li>
             ))}
