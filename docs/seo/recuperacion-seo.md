@@ -133,6 +133,8 @@ categoría para comparar y la otra el producto).
 
 ## 8. Acciones externas (Cloudflare)
 
+> Paso a paso con las expresiones listas para pegar y las pruebas de verificación: `cloudflare-paso-a-paso.md`.
+
 1. **Always Use HTTPS** (hoy `http://` responde 200).
 2. **Redirecciones 301 reales** (Reglas → Redirect Rules), una por URL antigua:
 
