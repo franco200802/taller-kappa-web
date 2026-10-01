@@ -314,9 +314,14 @@ que respetar si se usan en otro lado:
   `--hierro` (activo) y `--grafito` (atenuado, 7:1). No usar opacidades que bajen del contraste.
 - `ScrollText` usa el scroll de la página (el original usa un contenedor de 300 px con scroll
   propio, que atrapa el scroll).
-- Usos hoy: la home (typewriter en el hero con las frases de `HERO_PHRASES`, destello en
-  "Cotizamos por WhatsApp en el día.", y `ScrollText` en "Por qué pedirle el presupuesto a la
-  fábrica"). El H1 sigue siendo estático.
+- Usos hoy:
+  - **Home:** typewriter en el hero (frases de `HERO_PHRASES`), destello en "Cotizamos por WhatsApp en
+    el día." y `ScrollText` en "Por qué pedirle el presupuesto a la fábrica".
+  - **`/sillon-bkf/`:** destello en "Pedís el presupuesto por WhatsApp" (el `lead` de `PageHero` acepta
+    un nodo), typewriter con los acabados junto a las muestras de color (`FINISHES`) y `ScrollText` en
+    "De qué está hecho el sillón BKF" (`MADE_OF`, los mismos datos de la ficha técnica y la garantía).
+  - Los H1 siguen siendo estáticos. El typewriter se pausa fuera de pantalla: si queda debajo de la
+    primera pantalla (como en la landing) no anima hasta que se hace scroll hasta él; es lo esperado.
 - Si se prueba con un iframe, ojo: dentro de un iframe el `IntersectionObserver` mide contra la
   ventana superior y el resaltado de `ScrollText` parece no funcionar; probar a nivel superior.
 
