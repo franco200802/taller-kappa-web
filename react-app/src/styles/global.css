@@ -539,6 +539,10 @@ html:has(dialog[open]) { overflow: hidden; }
 .btn-print-budget { background: none; border: 1.5px solid var(--linea); }
 .btn-print-budget:hover { border-color: var(--hierro); }
 .cart-hint { font-size: var(--t-sm); color: var(--grafito); text-align: center; margin: 0 auto; }
+.cart-contact { display: grid; gap: 4px; }
+.cart-contact label { font-size: var(--t-sm); font-weight: 600; margin-top: 6px; }
+.cart-contact input { min-height: 44px; padding: 0 12px; border: 1.5px solid var(--linea); border-radius: var(--r); background: var(--blanco); }
+.cart-contact input:focus-visible { outline: 2px solid var(--kappa); outline-offset: 2px; border-color: var(--hierro); }
 
 /* ---------- 11. Toast y WhatsApp flotante ---------- */
 /* El toast es un popover (Toast.jsx) para mostrarse encima de los modales:
@@ -849,6 +853,7 @@ address { font-style: normal; }
 @media (max-width: 860px) { .about-facts { grid-template-columns: 1fr; } }
 @media (max-width: 480px) { .facts > div { grid-template-columns: 1fr; gap: 2px; } }
 
+.quote-note { margin: -16px 0 16px; padding-left: 12px; border-left: 3px solid var(--wa); color: var(--hierro); }
 .catalog-categories { margin: -16px 0 24px; color: var(--grafito); }
 .related-list { list-style: none; display: grid; gap: 0; margin: 20px 0 24px; border-top: 2px solid var(--hierro); }
 .related-list li { display: grid; grid-template-columns: minmax(140px, 0.3fr) 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--linea); }

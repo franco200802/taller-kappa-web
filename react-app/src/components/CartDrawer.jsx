@@ -11,7 +11,7 @@ import { trackEvent } from '../lib/analytics';
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 export default function CartDrawer() {
-  const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast } = useCart();
+  const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast, quote, setQuote } = useCart();
 
   const printBudget = () => {
     if (cart.length === 0) { showToast('Tu presupuesto está vacío.'); return; }
@@ -35,7 +35,7 @@ export default function CartDrawer() {
       <table><thead><tr><th>Producto</th><th>Acabado</th><th>Cant.</th><th>Precio</th></tr></thead>
       <tbody>${lines}</tbody></table>
       <div class="footer"><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}<br>
-      Confirmá el pedido por WhatsApp al <strong>${WHATSAPP_DISPLAY}</strong></div>
+      Para el presupuesto final escribinos por WhatsApp al <strong>${WHATSAPP_DISPLAY}</strong></div>
       <script>window.onload=()=>{window.print();}<\/script></body></html>`);
     win.document.close();
   };
@@ -85,20 +85,26 @@ export default function CartDrawer() {
             <Link to="/catalogo/" className="btn-main" onClick={() => setIsOpen(false)}>Ver catálogo</Link>
           ) : (
             <>
+              <div className="cart-contact">
+                <label htmlFor="quote-name">Tu nombre (opcional)</label>
+                <input id="quote-name" autoComplete="name" maxLength={80} value={quote.name} onChange={(e) => setQuote({ ...quote, name: e.target.value })} />
+                <label htmlFor="quote-zone">Zona de entrega (opcional)</label>
+                <input id="quote-zone" autoComplete="address-level2" maxLength={80} placeholder="Barrio o localidad" value={quote.zone} onChange={(e) => setQuote({ ...quote, zone: e.target.value })} />
+              </div>
               <a
                 href={whatsappLink}
                 className="btn-whatsapp-checkout"
                 target="_blank" rel="noopener noreferrer"
                 onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
               >
-                <Icon name="whatsapp" /> Cotizar por WhatsApp
+                <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
               </a>
               <button className="btn-print-budget" onClick={printBudget}>
                 <Icon name="file-pdf" /> Descargar presupuesto
               </button>
             </>
           )}
-          <p className="cart-hint">Consultá por WhatsApp para coordinar tu pedido.</p>
+          <p className="cart-hint">En el sitio no se paga nada: te respondemos con el presupuesto por WhatsApp.</p>
         </div>
       </div>
     </Modal>

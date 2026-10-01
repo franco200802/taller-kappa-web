@@ -59,7 +59,7 @@ const COUNTRY = { '@type': 'Country', name: BUSINESS.address.country };
 export function organizationNode() {
   const a = BUSINESS.address;
   return {
-    // LocalBusiness + el subtipo más específico: fábrica con showroom donde se retira y se compra directo.
+    // LocalBusiness + el subtipo más específico: fábrica con showroom donde se retira lo pedido y se cotiza directo.
     '@type': ['LocalBusiness', 'FurnitureStore'],
     '@id': ORG_ID,
     name: BUSINESS.name,

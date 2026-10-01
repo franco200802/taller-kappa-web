@@ -121,7 +121,7 @@ export default function Home() {
       </section>
 
       <section className="why-section">
-        <h2 className="section-title">Por qué comprarle a la fábrica</h2>
+        <h2 className="section-title">Por qué pedirle el presupuesto a la fábrica</h2>
         <div className="why-grid">
           {REASONS.map((r) => (
             <div className="why-card" key={r.title}>
@@ -146,7 +146,7 @@ export default function Home() {
             McDonald&apos;s y Burger King.
           </p>
           <p>
-            <strong>Antes de comprar:</strong> revisá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
+            <strong>Antes de pedir tu presupuesto:</strong> revisá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
             <Link to="/garantia/">condiciones de garantía</Link>. Si te queda alguna duda, están las{' '}
             <Link to="/faq/">preguntas frecuentes</Link> o podés <Link to="/contacto/">escribirnos directamente</Link>.
           </p>

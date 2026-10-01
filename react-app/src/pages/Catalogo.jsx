@@ -116,6 +116,9 @@ export default function Catalogo() {
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
           Conocé en detalle nuestro producto insignia, el <Link to="/sillon-bkf/">sillón BKF</Link>, o leé <Link to="/bkf/">qué es el sillón BKF</Link>.
         </p>
+        <p className="quote-note">
+          En Taller Kappa no se compra online: agregá los productos al presupuesto y te lo respondemos por WhatsApp, con precio y plazo de entrega.
+        </p>
         <p className="catalog-categories">
           Categorías:{' '}
           {CATEGORIES.map((c, i) => (

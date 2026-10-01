@@ -3,6 +3,7 @@ import { whatsappUrl } from '../data/contact';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
+const QUOTE_KEY = 'kappa-quote-contact';
 
 export function CartProvider({ children }) {
   // El carrito guardado se lee DESPUÉS de montar, no en el estado inicial:
@@ -13,11 +14,15 @@ export function CartProvider({ children }) {
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState(null);
+  // Datos opcionales que el taller necesita para cotizar (el destino cambia el costo de envío).
+  const [quote, setQuote] = useState({ name: '', zone: '' });
 
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
       if (Array.isArray(saved) && saved.length) setCart(saved);
+      const savedQuote = JSON.parse(sessionStorage.getItem(QUOTE_KEY) || 'null');
+      if (savedQuote && typeof savedQuote === 'object') setQuote({ name: String(savedQuote.name ?? ''), zone: String(savedQuote.zone ?? '') });
     } catch { /* storage bloqueado o JSON inválido: se arranca vacío */ }
     setLoaded(true);
   }, []);
@@ -27,8 +32,11 @@ export function CartProvider({ children }) {
     // sessionStorage puede lanzar (modo privado, cuota llena): el carrito
     // sigue funcionando en memoria aunque no se pueda persistir.
     if (!loaded) return;
-    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch { /* noop */ }
-  }, [cart, loaded]);
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+      sessionStorage.setItem(QUOTE_KEY, JSON.stringify(quote));
+    } catch { /* noop */ }
+  }, [cart, quote, loaded]);
 
   // Un solo timer: si se muestran dos toasts seguidos, el primero no debe
   // cerrar prematuramente al segundo.
@@ -67,16 +75,22 @@ export function CartProvider({ children }) {
 
   const whatsappLink = useMemo(() => {
     if (cart.length === 0) return '#';
-    const lines = cart.map(({ product, color, qty }) =>
-      `- ${product.name} x${qty} (Acabado: ${color})`).join('\n');
+    // Pedido de presupuesto, no de compra: no se cobra nada en el sitio. El texto va
+    // ordenado para que el taller pueda responder con precio y plazo sin repreguntar.
+    const lines = cart.map(({ product, color, qty }, i) =>
+      `${i + 1}. ${product.name} - ${qty} ${qty === 1 ? 'unidad' : 'unidades'} - Acabado: ${color}`).join('\n');
+    const name = quote.name.trim();
+    const zone = quote.zone.trim();
+    const details = [name && `Nombre: ${name}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
     return whatsappUrl(
-      `Hola Taller Kappa! Quisiera cotizar:\n${lines}\n\nPor favor indicarme precio final y tiempo de entrega.`);
-  }, [cart]);
+      `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${lines}\n\nTotal: ${totalItems} ${totalItems === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`);
+  }, [cart, quote, totalItems]);
 
   const value = useMemo(() => ({
     cart, totalItems, isOpen, toast,
+    quote, setQuote,
     setIsOpen, addToCart, changeQty, removeItem, showToast, whatsappLink,
-  }), [cart, totalItems, isOpen, toast, addToCart, changeQty, removeItem, showToast, whatsappLink]);
+  }), [cart, totalItems, isOpen, toast, quote, addToCart, changeQty, removeItem, showToast, whatsappLink]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
