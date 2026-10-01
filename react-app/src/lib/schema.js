@@ -18,7 +18,7 @@
  * único `@graph` con un solo contexto.
  */
 import { BUSINESS } from '../data/business';
-import { CATEGORIES, getCategory, productsInCategory, relatedProducts } from '../data/products';
+import { CATEGORIES, PRODUCTS, getCategory, productImages, productsInCategory, relatedProducts, socialImage } from '../data/products';
 import { SITE, absoluteUrl, assetUrl, breadcrumbId, breadcrumbList, pageId } from './site';
 
 export const ORG_ID = `${SITE}/#organization`;
@@ -28,6 +28,16 @@ export const articleId = (path) => `${absoluteUrl(path)}#articulo`;
 export const productId = (slug) => `${absoluteUrl(`/catalogo/${slug}`)}#producto`;
 
 const ref = (id) => ({ '@id': id });
+
+/** ImageObject con URL, dimensiones reales y descripción (el mismo texto del alt de la foto). */
+export const imageNode = ({ path, width, height }, caption) => ({
+  '@type': 'ImageObject',
+  url: assetUrl(path),
+  contentUrl: assetUrl(path),
+  width,
+  height,
+  caption,
+});
 
 /** Nodo mínimo de un producto (enlace con nombre y URL), para listas y relaciones. */
 export function productStub(p) {
@@ -49,7 +59,8 @@ const COUNTRY = { '@type': 'Country', name: BUSINESS.address.country };
 export function organizationNode() {
   const a = BUSINESS.address;
   return {
-    '@type': 'LocalBusiness',
+    // LocalBusiness + el subtipo más específico: fábrica con showroom donde se retira y se compra directo.
+    '@type': ['LocalBusiness', 'FurnitureStore'],
     '@id': ORG_ID,
     name: BUSINESS.name,
     legalName: BUSINESS.legalName,
@@ -57,7 +68,7 @@ export function organizationNode() {
     description: BUSINESS.summary,
     url: `${SITE}/`,
     logo: { '@type': 'ImageObject', url: assetUrl(BUSINESS.logo.path), width: BUSINESS.logo.width, height: BUSINESS.logo.height },
-    image: assetUrl(BUSINESS.logo.path),
+    image: [assetUrl(BUSINESS.logo.path), assetUrl(socialImage(PRODUCTS[0]))],
     brand: ref(BRAND_ID),
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
@@ -133,6 +144,8 @@ export function websiteNode() {
     '@id': WEBSITE_ID,
     url: `${SITE}/`,
     name: BUSINESS.name,
+    // Nombres alternativos del sitio (Google los usa para el nombre del sitio en los resultados).
+    alternateName: [BUSINESS.legalName, ...BUSINESS.alternateName],
     description: BUSINESS.summary,
     inLanguage: 'es-AR',
     publisher: ref(ORG_ID),
@@ -155,7 +168,7 @@ export function productNode(p, extra = {}) {
     name: p.name,
     alternateName: p.alternateName,
     description: p.definition,
-    image: [assetUrl(p.image)],
+    image: productImages(p).map((img) => imageNode(img, p.alt)),
     category: category ? `Muebles > ${category.name}` : p.category,
     material: p.material,
     brand: ref(BRAND_ID),

@@ -3,7 +3,7 @@ import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import ProductTable from '../components/ProductTable';
-import { productsInCategory, getProductBySlug } from '../data/products';
+import { SOCIAL_IMAGE_SIZE, productsInCategory, getProductBySlug, socialImage } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import { articleId, articleNode, faqNode } from '../lib/schema';
@@ -31,6 +31,9 @@ const FAQ = [
   { q: '¿Quién creó el sillón BKF y cuándo?', a: 'Lo crearon a fines de 1938, en Buenos Aires, los arquitectos Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
   { q: '¿El sillón BKF es lo mismo que la silla mariposa o la butterfly chair?', a: 'Sí, son nombres del mismo diseño. En inglés se lo conoce como butterfly chair ("silla mariposa") y también se lo llamó "silla Hardoy".' },
   { q: '¿De qué materiales está hecho un sillón BKF?', a: 'El diseño clásico combina una estructura de hierro macizo redondo con un asiento de cuero suspendido; algunas versiones usan lona o textil. El Sillón BKF Premium de Taller Kappa tiene estructura de hierro macizo de 12 mm y cuero vacuno curtido al vegetal.' },
+  { q: '¿Qué medidas tiene un sillón BKF?', a: 'Las medidas cambian según el fabricante. El Sillón BKF Premium de Taller Kappa mide 78 x 70 x 90 cm en su versión estándar y también se fabrica a medida, sin costo adicional.' },
+  { q: '¿Cuál es el sillón BKF original?', a: 'El diseño original es el de 1938 de Bonet, Kurchan y Ferrari Hardoy. Como no pudieron patentarlo, desde los años 40 circulan versiones oficiales y no oficiales, y hoy lo fabrican muchos talleres. Al comparar conviene preguntar por la estructura, el cuero y la terminación. Taller Kappa fabrica su propia versión de ese diseño.' },
+  { q: '¿Cómo se cuida un sillón BKF de cuero?', a: 'Limpiá el cuero con un paño seco o apenas húmedo, aplicá crema hidratante para cuero cada 6 meses y evitá el sol directo prolongado, el alcohol y los solventes. El cuero se oscurece naturalmente con el uso. La estructura pintada se limpia con un paño húmedo y detergente neutro.' },
   { q: '¿Dónde comprar un sillón BKF en Argentina?', a: 'Taller Kappa fabrica el Sillón BKF Premium en su taller de Villa Chacabuco, San Martín (Buenos Aires) y lo envía a todo el país. Se cotiza por WhatsApp.' },
 ];
 
@@ -54,9 +57,9 @@ export default function GuiaBKF() {
         title="Qué es el sillón BKF: historia y características | Taller Kappa"
         description={description}
         path={PATH}
-        image={assetUrl(sillon.image)}
-        imageWidth={sillon.imageWidth}
-        imageHeight={sillon.imageHeight}
+        image={assetUrl(socialImage(sillon))}
+        imageWidth={SOCIAL_IMAGE_SIZE.width}
+        imageHeight={SOCIAL_IMAGE_SIZE.height}
         imageAlt={sillon.alt}
         mainEntity={articleId(PATH)}
         breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Qué es el sillón BKF', path: PATH }]}
@@ -65,7 +68,7 @@ export default function GuiaBKF() {
             path: PATH,
             headline: 'Sillón BKF: qué es, historia y características',
             description,
-            image: sillon.image,
+            image: socialImage(sillon),
             datePublished: '2026-10-01',
             // El diseño BKF como entidad, enlazada a una referencia pública; el producto de Taller Kappa va aparte.
             about: [{ '@type': 'Thing', name: 'Silla BKF', alternateName: ['Sillón BKF', 'Butterfly chair', 'Silla Hardoy'], sameAs: ['https://es.wikipedia.org/wiki/BKF'] }],
@@ -177,6 +180,8 @@ export default function GuiaBKF() {
                 <p>{a}</p>
               </div>
             ))}
+
+            <p>Los cuidados de cada material y las condiciones están en <Link to="/garantia/">garantía y cuidados de los muebles de hierro y cuero</Link>.</p>
 
             <h2>Fuentes</h2>
             <p>Los datos históricos de esta guía se tomaron de:</p>

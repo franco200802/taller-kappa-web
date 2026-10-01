@@ -6,7 +6,7 @@ import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrl } from '../data/contact';
-import { formatPrice, getProductBySlug, relatedProducts } from '../data/products';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, relatedProducts, socialImage } from '../data/products';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
 
@@ -50,7 +50,9 @@ export default function SillonBKF() {
         title="Sillón BKF en Argentina: hierro y cuero | Taller Kappa"
         description="Sillón BKF fabricado en Argentina: hierro macizo de 12 mm y cuero vacuno curtido al vegetal. Medidas, garantía y envíos a todo el país. Cotizá por WhatsApp."
         path="/sillon-bkf"
-        image={assetUrl(PRODUCT.image)}
+        image={assetUrl(socialImage(PRODUCT))}
+        imageWidth={SOCIAL_IMAGE_SIZE.width}
+        imageHeight={SOCIAL_IMAGE_SIZE.height}
         imageAlt={PRODUCT.alt}
         type="product"
         about={[productId(PRODUCT.slug)]}
@@ -63,7 +65,6 @@ export default function SillonBKF() {
         jsonLd={[
           // Mismo @id que la ficha /catalogo/sillon-bkf-premium/: es UNA entidad.
           productNode(PRODUCT, {
-            image: [assetUrl(PRODUCT.image), assetUrl('/images/banco-bkf-hierro-cuero.jpg')],
             color: 'Negro mate',
             mainEntityOfPage: { '@id': pageId('/sillon-bkf') },
           }),
@@ -98,7 +99,7 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Tapizado:</strong> Cuero vacuno de primera selección curtido al vegetal</li>
               <li><Icon name="check" /> <strong>Pintura:</strong> Epoxi anticorrosiva doble capa</li>
               <li><Icon name="check" /> <strong>Colores:</strong> Negro mate, blanco, colores a pedido, cromado</li>
-              <li><Icon name="check" /> <strong>Medidas:</strong> Standard o a medida sin cargo adicional</li>
+              <li><Icon name="check" /> <strong>Medidas:</strong> 78 x 70 x 90 cm (estándar) o a medida sin cargo adicional</li>
               <li><Icon name="check" /> <strong>Uso:</strong> Residencial e intensivo gastronómico</li>
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
               <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
@@ -189,7 +190,7 @@ export default function SillonBKF() {
                   ['Garantía estructura', 'De por vida'],
                   ['Fabricante', 'Directo de fábrica en San Martín, Buenos Aires'],
                   ['Uso', 'Residencial e intensivo gastronómico'],
-                  ['Medidas a pedido', 'Sin costo adicional'],
+                  ['Medidas', '78 x 70 x 90 cm estándar; a medida sin costo adicional'],
                 ].map(([label, ours]) => (
                   <tr key={label}>
                     <td>{label}</td>

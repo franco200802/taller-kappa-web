@@ -89,6 +89,7 @@ export default function Contacto() {
             <p><Icon name="whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
             <p><Icon name="clock" /> Retiro en el taller: {BUSINESS.hours.label}.</p>
+            <p><Icon name="map-marker-alt" /> <a href={BUSINESS.directionsUrl} target="_blank" rel="noopener noreferrer">Cómo llegar en Google Maps</a></p>
           </address>
           <p>
             Taller Kappa vende por cotización: indicá el producto, la cantidad, el color y la zona de entrega. Antes de escribir,

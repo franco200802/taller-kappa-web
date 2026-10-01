@@ -50,7 +50,7 @@ export default function MobiliarioComercial() {
   return (
     <>
       <Seo
-        title="Mobiliario Comercial de Hierro a Medida | Taller Kappa"
+        title="Mobiliario Comercial de Hierro a Medida en Argentina | Taller Kappa"
         description={description}
         path={PATH}
         about={[ORG_ID]}

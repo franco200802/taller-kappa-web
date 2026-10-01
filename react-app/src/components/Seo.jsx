@@ -3,10 +3,11 @@ import { BUSINESS } from '../data/business';
 import { absoluteUrl, assetUrl } from '../lib/site';
 import { pageGraph } from '../lib/schema';
 
-const DEFAULT_IMAGE = assetUrl('/images/sillon-bkf-hierro-cuero.jpg');
-// sillon-bkf-hierro-cuero.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
-const DEFAULT_IMAGE_W = 1600;
-const DEFAULT_IMAGE_H = 1600;
+// og:image 16:9 (1200x675, generada por scripts/build-social-images.sh): el cuadrado de 1600x1600 se
+// recortaba en las previews de WhatsApp y redes. Mide exactamente 1200x675 (verificado con identify).
+const DEFAULT_IMAGE = assetUrl('/images/sillon-bkf-hierro-cuero-16x9.jpg');
+const DEFAULT_IMAGE_W = 1200;
+const DEFAULT_IMAGE_H = 675;
 const DEFAULT_IMAGE_ALT = 'Sillón BKF de hierro negro y cuero suela, fabricado por Taller Kappa';
 
 /**
@@ -41,7 +42,8 @@ export default function Seo({
       <title>{title}</title>
       <meta name="description" content={description} />
       {!noindex && <link rel="canonical" href={url} />}
-      <meta name="robots" content={noindex ? 'noindex' : 'index, follow'} />
+      {/* max-image-preview:large habilita las previews grandes de imagen en Search, Imágenes y Discover; max-snippet:-1 no limita el largo del extracto. */}
+      <meta name="robots" content={noindex ? 'noindex' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
       <meta property="og:type" content={type} />
       {!noindex && <meta property="og:url" content={url} />}
       <meta property="og:title" content={title} />

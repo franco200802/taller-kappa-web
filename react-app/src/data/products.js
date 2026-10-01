@@ -45,6 +45,10 @@ export const CATEGORIES = [
     seoTitle: 'Sillones y Bancos BKF de Hierro y Cuero | Taller Kappa',
     seoDescription: 'Sillón BKF Premium y Banco BKF de Taller Kappa: hierro macizo de 12 mm y cuero. Medidas, materiales y cotización. Fábrica en San Martín, Buenos Aires.',
     definition: 'Los asientos de Taller Kappa son el sillón BKF y el banco BKF: piezas de estructura de hierro macizo de 12 mm y asiento de cuero, fabricadas en San Martín, Buenos Aires.',
+    faq: [
+      { q: '¿Para qué espacios sirven los sillones y bancos BKF de Taller Kappa?', a: 'Para interiores residenciales y para locales gastronómicos con uso intensivo. El banco BKF, además, se usa como pie de cama o asiento auxiliar.' },
+      { q: '¿Los sillones y bancos BKF se pueden pedir en otros colores o medidas?', a: 'Sí. Se fabrican con colores y medidas a pedido, sin costo adicional. Los acabados habituales de la estructura son negro mate, blanco y cromado.' },
+    ],
     difference: 'Comparten diseño y materiales y se diferencian por tamaño y uso: el Sillón BKF Premium mide 78 x 70 x 90 cm y el Banco BKF, 38 x 38 x 45 cm, y se usa como pie de cama o asiento auxiliar.',
   },
   {
@@ -55,6 +59,10 @@ export const CATEGORIES = [
     seoTitle: 'Bases de Mesa de Hierro para Bares y Restaurantes | Taller Kappa',
     seoDescription: 'Base de Mesa Flat de Taller Kappa: chapa torneada de 10 mm, en altura de mesa (73 cm) y de barra (105 cm). Uso gastronómico. San Martín, Buenos Aires.',
     definition: 'En mesas, Taller Kappa fabrica la Base de Mesa Flat: una base de chapa torneada de 10 mm con columna central, en altura de mesa (73 cm) y de barra (105 cm), pensada para uso gastronómico intenso, como en bares y restaurantes.',
+    faq: [
+      { q: '¿Existe una mesa BKF?', a: 'BKF es el nombre de un diseño de sillón, formado por las iniciales de Bonet, Kurchan y Ferrari Hardoy. Taller Kappa no vende una "mesa BKF": en mesas fabrica la Base de Mesa Flat, y del diseño BKF fabrica el sillón y el banco.' },
+      { q: '¿La Base de Mesa Flat incluye la tapa de la mesa?', a: 'El catálogo del sitio ofrece la base, que admite tapas grandes. Para consultar por tapas u otras medidas de mesa, escribinos por WhatsApp.' },
+    ],
     difference: 'El catálogo incluye la base de mesa; el sitio no publica tapas. Para otros modelos o medidas de mesa, la consulta se hace por WhatsApp.',
   },
 ];
@@ -156,6 +164,19 @@ export const PRODUCTS = [
       { q: '¿La Base de Mesa Flat sirve para uso gastronómico?', a: 'Sí, está pensada para eso: es una base de chapa torneada pesada de 10 mm que evita el balanceo y admite tapas grandes.' },
     ],
   },
+];
+
+/**
+ * Variantes de la foto principal que genera scripts/build-social-images.sh:
+ * 16:9 (1200x675, og:image y twitter:image) y 4:3 (1200x900). Junto con la
+ * original (1:1), son las tres proporciones que Google pide para un Product.
+ */
+export const socialImage = (p) => p.image.replace(/\.jpg$/, '-16x9.jpg');
+export const SOCIAL_IMAGE_SIZE = { width: 1200, height: 675 };
+export const productImages = (p) => [
+  { path: p.image, width: p.imageWidth, height: p.imageHeight },
+  { path: p.image.replace(/\.jpg$/, '-4x3.jpg'), width: 1200, height: 900 },
+  { path: socialImage(p), ...SOCIAL_IMAGE_SIZE },
 ];
 
 /** "$ 123.456" a partir de `product.price`, o null si el producto no publica precio. */
