@@ -1,10 +1,16 @@
 # Taller Kappa — tallerkappa.com.ar
-# Todo el sitio público es rastreable (páginas, CSS, JS e imágenes).
-# /admin es el panel interno: no tiene contenido público.
+# Todo el sitio público es rastreable (páginas, CSS, JS e imágenes), también
+# para los rastreadores de buscadores con IA y asistentes: no hay reglas por
+# agente, así que ninguno queda bloqueado. /admin es el panel interno: no
+# tiene contenido público.
 #
 # Ojo: un bot que tiene su propio grupo (User-agent: Googlebot) ignora el
 # grupo "*". Por eso no hay grupos por bot: con uno para Googlebot, el
-# Disallow de /admin dejaba de aplicarse a Google.
+# Disallow de /admin dejaba de aplicarse a Google. Si algún día se quiere
+# tratar distinto a un agente concreto, hay que repetir ahí el Disallow.
+#
+# /llms.txt (generado en cada build) resume la empresa y enlaza las páginas
+# principales; es una ayuda opcional, no una directiva de rastreo.
 User-agent: *
 Disallow: /admin
 

@@ -3,9 +3,10 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { getProductBySlug } from '../data/products';
+import { getProductBySlug, getCategory, relatedProducts } from '../data/products';
 import { whatsappUrl } from '../data/contact';
-import { absoluteUrl, breadcrumbList } from '../lib/site';
+import { assetUrl } from '../lib/site';
+import { faqNode, productId, productNode } from '../lib/schema';
 
 /**
  * Página individual de producto — URL propia, indexable y prerenderizada
@@ -33,54 +34,46 @@ export default function Producto() {
     );
   }
 
-  const productSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.desc,
-    image: `https://tallerkappa.com.ar${product.image}`,
-    category: product.category,
-    brand: { '@type': 'Brand', name: 'Taller Kappa' },
-    manufacturer: { '@type': 'Organization', name: 'Taller Kappa S.R.L.', url: 'https://tallerkappa.com.ar' },
-    url: absoluteUrl(`/catalogo/${product.slug}`),
-    offers: {
-      '@type': 'Offer',
-      availability: product.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
-      seller: { '@type': 'Organization', name: 'Taller Kappa S.R.L.' },
-    },
-  };
+  const category = getCategory(product.category);
+  const path = `/catalogo/${product.slug}`;
+  const related = relatedProducts(product);
+  const faq = faqNode(product.faq ?? [], path);
 
   return (
     <>
       <Seo
-        title={`${product.name} | Taller Kappa`}
-        description={`${product.desc} Fabricado en hierro y cuero, directo de fábrica en San Martín, Buenos Aires.`}
-        path={`/catalogo/${product.slug}`}
-        image={`https://tallerkappa.com.ar${product.image}`}
+        title={product.seoTitle}
+        description={product.seoDescription}
+        path={path}
+        image={assetUrl(product.image)}
         imageWidth={product.imageWidth}
         imageHeight={product.imageHeight}
+        imageAlt={product.alt}
         type="product"
-        jsonLd={[
-          productSchema,
-          breadcrumbList([
-            { name: 'Inicio', path: '/' },
-            { name: 'Catálogo', path: '/catalogo' },
-            { name: product.name, path: `/catalogo/${product.slug}` },
-          ]),
+        mainEntity={productId(product.slug)}
+        about={[productId(product.slug)]}
+        breadcrumb={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Catálogo', path: '/catalogo' },
+          { name: category.name, path: `/catalogo/${category.slug}` },
+          { name: product.name, path },
         ]}
+        jsonLd={[productNode(product), ...(product.faq?.length ? [faq] : [])]}
       />
       <PageHero
         title={product.name}
-        lead={product.desc}
-        current={product.name} trail={[{ to: '/catalogo/', label: 'Catálogo' }]}
+        lead={product.definition}
+        current={product.name}
+        trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: `/catalogo/${category.slug}/`, label: category.name }]}
       />
 
+      <article aria-label={`Ficha de ${product.name}`}>
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
             <Picture
               src={product.image}
-              alt={`${product.name} de Taller Kappa`}
+              alt={product.alt}
               width={product.imageWidth}
               height={product.imageHeight}
               loading="eager"
@@ -122,16 +115,76 @@ export default function Producto() {
         </div>
       </section>
 
+      <section className="bkf-comparison section-fade">
+        <div className="bkf-about-inner">
+          <h2>Ficha técnica del {product.name}</h2>
+          <p className="section-subtitle">Datos del producto tal como los fabrica Taller Kappa en San Martín, Buenos Aires.</p>
+          <div className="comparison-table-wrapper">
+            <table className="comparison-table">
+              <caption className="visually-hidden">Ficha técnica del {product.name}</caption>
+              <tbody>
+                {product.facts.map(([label, value]) => (
+                  <tr key={label}>
+                    <th scope="row">{label}</th>
+                    <td className="our-col"><strong>{value}</strong></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {product.faq?.length > 0 && (
+        <section className="section-padding section-fade">
+          <div className="bkf-about-inner">
+            <h2>Preguntas sobre el {product.name}</h2>
+            {product.faq.map(({ q, a }) => (
+              <div key={q} className="bkf-faq-item">
+                <h3>{q}</h3>
+                <p>{a}</p>
+              </div>
+            ))}
+            <p>
+              Más preguntas en las <Link to="/faq/">preguntas frecuentes de Taller Kappa</Link>
+              {product.category === 'asientos' && <>, o la <Link to="/sillon-bkf/">guía del Sillón BKF: historia, medidas y materiales</Link></>}.
+            </p>
+          </div>
+        </section>
+      )}
+      </article>
+
+      <aside className="section-padding section-fade" aria-label="Otros productos de Taller Kappa">
+        <div className="bkf-about-inner">
+          <h2>Otros productos de Taller Kappa</h2>
+          <ul className="related-list">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link to={`/catalogo/${r.slug}/`}>{r.name}</Link>
+                <span>{r.desc}</span>
+              </li>
+            ))}
+          </ul>
+          <p>
+            Ver todos los productos de la categoría <Link to={`/catalogo/${category.slug}/`}>{category.heading.charAt(0).toLowerCase() + category.heading.slice(1)}</Link> o
+            el <Link to="/catalogo/">catálogo completo de sillones, bancos y bases de mesa</Link>.
+          </p>
+        </div>
+      </aside>
+
       <section className="cta-section section-fade">
         <div className="cta-box">
-          <h2>¿Querés más opciones?</h2>
-          <p>Mirá el resto de nuestro catálogo o conocé en detalle el Sillón BKF.</p>
+          <h2>¿Querés cotizar el {product.name}?</h2>
+          <p>Escribinos por WhatsApp con la cantidad, el color y la zona de entrega, y te enviamos el presupuesto.</p>
           <div className="cta-btns">
-            <Link to="/catalogo/" className="btn-main">
-              <i className="fas fa-th-large" /> Ver todo el catálogo
-            </Link>
-            <Link to="/sillon-bkf/" className="btn-outline">
-              <i className="fas fa-chair" /> Sobre el Sillón BKF
+            <a
+              href={whatsappUrl('Hola, quiero cotizar: ' + product.name)}
+              target="_blank" rel="noopener noreferrer" className="btn-main"
+            >
+              <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+            </a>
+            <Link to="/envios/" className="btn-outline">
+              <i className="fas fa-truck" /> Zonas y tiempos de envío
             </Link>
           </div>
         </div>

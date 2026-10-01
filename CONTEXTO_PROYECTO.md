@@ -54,9 +54,13 @@ termina en un link de WhatsApp con el detalle del pedido.
   3. Inyecta los tags que `react-helmet-async` recolectó (title,
      description, canonical, JSON-LD) en el `index.html` que generó Vite.
   4. Escribe `dist/<ruta>/index.html` para cada URL pública real.
-  5. Genera `dist/404.html` (fallback de GitHub Pages para rutas no
-     prerenderizadas, con `noindex`).
-  - Resultado esperado de `npm run build`: **"12 rutas + 404.html"**
+  5. Genera `dist/sitemap.xml`, `dist/llms.txt` y `dist/404.html` (fallback
+     de GitHub Pages para rutas no prerenderizadas, con `noindex`).
+  6. **Valida GEO/SEO y corta el build si algo falla**: canonical, un solo
+     `<h1>`, title/description únicos, JSON-LD parseable con todos sus `@id`
+     resueltos y el nodo `WebPage` de la página, links internos rotos,
+     páginas huérfanas, `<img>` sin `alt` e imágenes que no existen.
+  - Resultado esperado de `npm run build`: **"14 rutas + 404.html"**
     sin errores ni warnings. Si ese número cambia sin que vos hayas
     agregado/quitado una página, algo se rompió.
 
@@ -76,6 +80,7 @@ taller-kappa-web/                  (raíz del repo)
 │   │   │   ├── Layout.jsx         (shell: Navbar + <main> con el <Suspense> de las páginas + Footer + CartDrawer + WA flotante)
 │   │   │   ├── Navbar.jsx, Footer.jsx, CartDrawer.jsx, Toast.jsx
 │   │   │   ├── PageHero.jsx       (breadcrumb + h1 + bajada de las páginas internas)
+│   │   │   ├── ProductTable.jsx   (tabla HTML comparativa de productos, desde `facts`)
 │   │   │   ├── Modal.jsx          (<dialog> nativo con showModal(): carrito, detalle de producto, lightbox)
 │   │   │   ├── Picture.jsx        (<picture> con .webp SOLO para los archivos listados en WEBP_AVAILABLE)
 │   │   │   └── Seo.jsx            (meta tags + JSON-LD por página)
@@ -83,10 +88,13 @@ taller-kappa-web/                  (raíz del repo)
 │   │   │   └── CartContext.jsx    (carrito/presupuesto, persiste en sessionStorage)
 │   │   ├── pages/                 (una página por ruta, ver routes.js)
 │   │   ├── data/
-│   │   │   ├── products.js        (fuente única de verdad de productos)
+│   │   │   ├── products.js        (fuente única de productos Y categorías: definición, ficha técnica, FAQ, alt)
+│   │   │   ├── business.js        (fuente única de la identidad de la empresa: razón social, dirección, horario, resumen)
 │   │   │   └── contact.js         (número de WhatsApp, email y whatsappUrl() — fuente única)
 │   │   ├── lib/
 │   │   │   ├── analytics.js       (GA4 custom, SSR-safe)
+│   │   │   ├── schema.js          (constructores de JSON-LD enlazados por @id: empresa, marca, sitio, producto, FAQ…)
+│   │   │   ├── site.js            (URLs canónicas, breadcrumbList, ids de página)
 │   │   │   ├── firebaseConfig.js  (credenciales — placeholder! — + isFirebaseConfigured + loadFireDB())
 │   │   │   ├── firebase.js        (init del SDK; solo lo carga firedb.js o Admin)
 │   │   │   └── firedb.js          (capa de acceso a Firestore)
@@ -113,9 +121,12 @@ Si necesitás agregar una página nueva:
    privada/dinámica, como `/admin` o `/catalogo/:slug`).
 4. Corré `npm run build` y verificá que aparezca en el conteo final.
 
-Los productos del catálogo tienen URL propia (`/catalogo/:slug`), generada
-automáticamente a partir de `PRODUCTS` en `data/products.js` — no hace
-falta tocar `routes.js` para agregar un producto nuevo, solo `products.js`.
+Los productos del catálogo tienen URL propia (`/catalogo/:slug`) y cada
+categoría también (`/catalogo/asientos`, `/catalogo/mesas`): ambas se generan
+a partir de `PRODUCTS` y `CATEGORIES` en `data/products.js`. Para agregar un
+producto solo se toca `products.js` (con su `definition`, `facts`, `faq`, `alt`,
+`seoTitle` y `seoDescription`); entra solo al sitemap, a `llms.txt`, a las
+tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
 
 ## 5. Convenciones y patrones establecidos
 
@@ -175,6 +186,35 @@ falta tocar `routes.js` para agregar un producto nuevo, solo `products.js`.
   `npx react-doctor@latest --verbose --scope changed` (el puntaje no debe
   bajar) → commit descriptivo (explicando el *por qué*, no solo el *qué*) → push.
 
+## 5b. GEO (optimización para buscadores con IA) — cómo está armado
+
+- **Una sola entidad, un solo grafo.** `lib/schema.js` arma el JSON-LD con
+  `@id` estables: `#organization` (LocalBusiness: Taller Kappa S.R.L.),
+  `#brand`, `#website`, y `<URL de la ficha>#producto` por producto. `Layout`
+  emite empresa + marca + sitio en todas las páginas; `Seo` emite el nodo de
+  la página (WebPage/AboutPage/ContactPage/CollectionPage), su breadcrumb y lo
+  extra (Product, FAQPage, ItemList, Service). Los productos referencian a la
+  empresa por `@id` (`manufacturer`, `brand`), no con un objeto suelto.
+- **El Sillón BKF es UNA entidad**: `/sillon-bkf/` (guía) y
+  `/catalogo/sillon-bkf-premium/` (ficha) emiten el mismo `@id` de producto.
+- **Datos reales o nada.** Sin precio, SKU, GTIN, reviews ni rating. Todo lo que
+  figura en `business.js`/`products.js` ya estaba publicado en el sitio. Si
+  un dato nuevo no se puede demostrar, no se agrega.
+- **Respuesta primero.** Cada ficha, categoría y página institucional abre con
+  una definición citable (`definition`), seguida de tabla/lista y preguntas
+  visibles. El FAQPage solo existe donde las preguntas están a la vista.
+- **Sin superlativos ni cifras sin respaldo** ("los mejores", "ahorrás 30-50%",
+  "estabilidad garantizada"): se sacaron. Si el dueño puede respaldar alguna,
+  que la agregue con la fuente.
+- **`llms.txt`** se genera en cada build desde los mismos datos. Es una ayuda
+  opcional: ningún buscador ni asistente garantiza usarlo.
+- **robots.txt**: sin reglas por agente (no se bloquea ningún rastreador de IA);
+  solo `Disallow: /admin`.
+- **Textos que deben coincidir entre sí** (cambiar uno obliga a revisar los
+  otros): plazos de entrega (`/envios/` ↔ FAQ del Sillón BKF ↔ FAQ general),
+  garantía (`/garantia/` ↔ fichas), dirección/horario (`business.js` ↔ footer ↔
+  contacto ↔ FAQ).
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
@@ -203,6 +243,19 @@ un conteo básico de pedidos.
 Gemini en la esquina inferior derecha. Conviene reemplazarlas por fotos
 reales de los productos del taller (mismo nombre de archivo, y regenerar
 el `.webp` de cada una).
+
+### 🟡 Pendiente — Afirmaciones que el dueño debe confirmar (GEO)
+El sitio publica estas afirmaciones y no hay forma de verificarlas desde el
+código; la IA las cita tal cual, así que conviene confirmarlas o quitarlas:
+- Testimonios de `Nosotros.jsx` (hoy `FALLBACK_TESTIMONIOS`): ¿son reales y
+  autorizados? No se marcan como `Review` en el schema.
+- Clientes y detalle de `Proyectos.jsx` (YPF, McDonald's, Burger King, Shell
+  Select, Sandro Paris): qué se entregó a cada uno y si se pueden nombrar.
+- "Más de 15 años", "1938/MoMA", plazos de fabricación (5 a 10 días hábiles).
+- Que el Banco BKF lleva asiento de cuero, y si se venden tapas de mesa (hoy el
+  catálogo solo tiene la base).
+- Redes sociales, CUIT y año de fundación: no están en el sitio, por eso no
+  figuran en el schema (`sameAs`, `taxID`, `foundingDate`).
 
 ### 🟡 Pendiente — Search Console / Google Business Profile
 No están configurados todavía (requiere acceso del dueño del sitio a esas
