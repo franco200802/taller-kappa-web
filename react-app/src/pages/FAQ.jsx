@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import { useEffect, useState } from 'react';
 import Seo from '../components/Seo';
 import { faqNode } from '../lib/schema';
@@ -33,7 +34,7 @@ function FaqItem({ f }) {
       <button type="button" className="faq-question" aria-expanded={open} aria-controls={`faq-answer-${f.id}`}
         onClick={() => setOpen((o) => !o)}>
         <span>{f.question}</span>
-        <i className="fas fa-chevron-down faq-icon-right" />
+        <Icon name="chevron-down" className="faq-icon-right" />
       </button>
       <div className="faq-answer" id={`faq-answer-${f.id}`}><p>{f.answer}</p></div>
     </div>

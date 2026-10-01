@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { whatsappUrl } from '../data/contact';
@@ -55,8 +56,8 @@ export default function Garantia() {
               <div className="care-number">{c.n}</div>
               <h3>{c.title}</h3>
               <ul>
-                {c.ok.map((t) => <li key={t}><i className="fas fa-check-circle" /> {t}</li>)}
-                {c.no.map((t) => <li key={t}><i className="fas fa-times-circle" /> {t}</li>)}
+                {c.ok.map((t) => <li key={t}><Icon name="check-circle" /> {t}</li>)}
+                {c.no.map((t) => <li key={t}><Icon name="times-circle" /> {t}</li>)}
               </ul>
             </div>
           ))}
@@ -70,10 +71,10 @@ export default function Garantia() {
           <div className="cta-btns">
             <a href={whatsappUrl('Hola, necesito hacer un reclamo de garantía.')}
               target="_blank" rel="noopener noreferrer" className="btn-main">
-              <i className="fab fa-whatsapp" /> Contactar soporte
+              <Icon name="whatsapp" /> Contactar soporte
             </a>
             <Link to="/faq/" className="btn-outline">
-              <i className="fas fa-question-circle" /> Preguntas frecuentes
+              <Icon name="question-circle" /> Preguntas frecuentes
             </Link>
           </div>
           <p className="cta-links">

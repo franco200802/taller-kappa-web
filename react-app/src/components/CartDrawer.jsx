@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from './Icon';
 import { useCart } from '../context/CartContext';
 import { WHATSAPP_DISPLAY } from '../data/contact';
 import Picture from './Picture';
@@ -58,14 +59,14 @@ export default function CartDrawer() {
                 <Picture src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight} loading="lazy" sizes="64px" />
                 <div>
                   <b>{product.name}</b>
-                  <small className="cart-item-color"><i className="fas fa-palette" /> {color}</small>
+                  <small className="cart-item-color"><Icon name="palette" /> {color}</small>
                 </div>
               </div>
               <div className="cart-item-qty">
                 <button className="qty-btn" aria-label={`Quitar una unidad de ${product.name}`} onClick={() => changeQty(key, -1)}>−</button>
                 <span className="qty-value">{qty}</span>
                 <button className="qty-btn" aria-label={`Agregar una unidad de ${product.name}`} onClick={() => changeQty(key, 1)}>+</button>
-                <button className="remove-item" aria-label={`Eliminar ${product.name}`} onClick={() => removeItem(key)}><i className="fas fa-trash-alt" /></button>
+                <button className="remove-item" aria-label={`Eliminar ${product.name}`} onClick={() => removeItem(key)}><Icon name="trash-alt" /></button>
               </div>
             </div>
           ))}
@@ -90,10 +91,10 @@ export default function CartDrawer() {
                 target="_blank" rel="noopener noreferrer"
                 onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
               >
-                <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+                <Icon name="whatsapp" /> Cotizar por WhatsApp
               </a>
               <button className="btn-print-budget" onClick={printBudget}>
-                <i className="fas fa-file-pdf" /> Descargar presupuesto
+                <Icon name="file-pdf" /> Descargar presupuesto
               </button>
             </>
           )}

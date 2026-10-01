@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import { PRODUCTS } from '../data/products';
@@ -44,7 +45,7 @@ export default function Home() {
               href={whatsappUrl('Hola, soy una empresa y necesito cotización mayorista.')}
               target="_blank" rel="noopener noreferrer" className="btn-outline"
             >
-              <i className="fab fa-whatsapp" /> Cotizar para empresas
+              <Icon name="whatsapp" /> Cotizar para empresas
             </a>
           </div>
         </div>

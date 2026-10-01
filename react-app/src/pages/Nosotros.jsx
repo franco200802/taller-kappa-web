@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Icon from '../components/Icon';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
@@ -168,8 +169,8 @@ export default function Nosotros() {
           {testimonios.map((t) => (
             <article className="testimonial-card" key={t.id}>
               <div className="stars" aria-label="5 estrellas">
-                <i className="fas fa-star" /><i className="fas fa-star" /><i className="fas fa-star" />
-                <i className="fas fa-star" /><i className="fas fa-star" />
+                <Icon name="star" /><Icon name="star" /><Icon name="star" />
+                <Icon name="star" /><Icon name="star" />
               </div>
               <p>{t.text}</p>
               <p className="testimonial-author">{t.author}</p>
@@ -199,9 +200,9 @@ export default function Nosotros() {
         {lightbox !== null && (
           <>
             <button className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Cerrar">×</button>
-            <button className="lightbox-prev" onClick={() => shiftLightbox(-1)} aria-label="Anterior"><i className="fas fa-chevron-left" /></button>
+            <button className="lightbox-prev" onClick={() => shiftLightbox(-1)} aria-label="Anterior"><Icon name="chevron-left" /></button>
             <img className="lightbox-img" src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt || GALLERY[lightbox].label} />
-            <button className="lightbox-next" onClick={() => shiftLightbox(1)} aria-label="Siguiente"><i className="fas fa-chevron-right" /></button>
+            <button className="lightbox-next" onClick={() => shiftLightbox(1)} aria-label="Siguiente"><Icon name="chevron-right" /></button>
             <p className="lightbox-caption">{GALLERY[lightbox].label}</p>
           </>
         )}

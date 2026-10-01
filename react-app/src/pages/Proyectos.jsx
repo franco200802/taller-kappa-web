@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { whatsappUrl } from '../data/contact';
@@ -89,11 +90,11 @@ export default function Proyectos() {
               </div>
               <div className="project-card-body">
                 <h3>{p.brand}</h3>
-                <p className="project-tag"><i className="fas fa-map-marker-alt" aria-hidden="true" /> {p.where}</p>
+                <p className="project-tag"><Icon name="map-marker-alt" /> {p.where}</p>
                 <p>{p.desc}</p>
                 <ul className="project-specs">
                   {p.specs.map((s) => (
-                    <li key={s}><i className="fas fa-check" /> {s}</li>
+                    <li key={s}><Icon name="check" /> {s}</li>
                   ))}
                 </ul>
               </div>
@@ -109,10 +110,10 @@ export default function Proyectos() {
           <div className="cta-btns">
             <a href={whatsappUrl('Hola, soy de una empresa y necesito cotización para equipamiento.')}
               target="_blank" rel="noopener noreferrer" className="btn-main">
-              <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+              <Icon name="whatsapp" /> Cotizar por WhatsApp
             </a>
             <Link to="/catalogo/" className="btn-outline">
-              <i className="fas fa-th-large" /> Ver catálogo
+              <Icon name="th-large" /> Ver catálogo
             </Link>
           </div>
         </div>

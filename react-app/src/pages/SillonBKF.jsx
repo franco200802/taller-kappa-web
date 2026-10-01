@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
@@ -80,9 +81,9 @@ export default function SillonBKF() {
           <div className="bkf-img-col">
             <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt={PRODUCT.alt} width={1600} height={1600} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
             <div className="bkf-badges">
-              <span className="bkf-badge"><i className="fas fa-star" /> Diseño icónico</span>
-              <span className="bkf-badge"><i className="fas fa-industry" /> Fábrica propia</span>
-              <span className="bkf-badge"><i className="fas fa-truck" /> Envío a todo el país</span>
+              <span className="bkf-badge"><Icon name="star" /> Diseño icónico</span>
+              <span className="bkf-badge"><Icon name="industry" /> Fábrica propia</span>
+              <span className="bkf-badge"><Icon name="truck" /> Envío a todo el país</span>
             </div>
           </div>
           <div className="bkf-info-col">
@@ -93,23 +94,23 @@ export default function SillonBKF() {
               <span className="bkf-price-note">Consultanos por WhatsApp para recibir tu presupuesto</span>
             </div>
             <ul className="bkf-specs">
-              <li><i className="fas fa-check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
-              <li><i className="fas fa-check" /> <strong>Tapizado:</strong> Cuero vacuno de primera selección curtido al vegetal</li>
-              <li><i className="fas fa-check" /> <strong>Pintura:</strong> Epoxi anticorrosiva doble capa</li>
-              <li><i className="fas fa-check" /> <strong>Colores:</strong> Negro mate, blanco, colores a pedido, cromado</li>
-              <li><i className="fas fa-check" /> <strong>Medidas:</strong> Standard o a medida sin cargo adicional</li>
-              <li><i className="fas fa-check" /> <strong>Uso:</strong> Residencial e intensivo gastronómico</li>
-              <li><i className="fas fa-check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
-              <li><i className="fas fa-check" /> <strong>Factura:</strong> A y B</li>
+              <li><Icon name="check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
+              <li><Icon name="check" /> <strong>Tapizado:</strong> Cuero vacuno de primera selección curtido al vegetal</li>
+              <li><Icon name="check" /> <strong>Pintura:</strong> Epoxi anticorrosiva doble capa</li>
+              <li><Icon name="check" /> <strong>Colores:</strong> Negro mate, blanco, colores a pedido, cromado</li>
+              <li><Icon name="check" /> <strong>Medidas:</strong> Standard o a medida sin cargo adicional</li>
+              <li><Icon name="check" /> <strong>Uso:</strong> Residencial e intensivo gastronómico</li>
+              <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
+              <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
             </ul>
             <div className="bkf-actions">
               <button className="btn-main" onClick={() => handleAdd('Negro Mate')}>
-                <i className="fas fa-plus" /> Agregar al presupuesto
+                <Icon name="plus" /> Agregar al presupuesto
               </button>
               <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF Premium.')}
                 target="_blank" rel="noopener noreferrer" className="btn-outline"
                 onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_actions' })}>
-                <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+                <Icon name="whatsapp" /> Cotizar por WhatsApp
               </a>
             </div>
             <div>
@@ -134,22 +135,22 @@ export default function SillonBKF() {
 
           <div className="bkf-history-grid">
             <div className="bkf-history-card">
-              <i className="fas fa-calendar-alt" />
+              <Icon name="calendar-alt" />
               <h3>1938</h3>
               <p>Año de creación por Bonet, Kurchan y Ferrari Hardoy en Buenos Aires</p>
             </div>
             <div className="bkf-history-card">
-              <i className="fas fa-globe-americas" />
+              <Icon name="globe-americas" />
               <h3>Mundial</h3>
               <p>Incluido en la colección permanente del MoMA de Nueva York</p>
             </div>
             <div className="bkf-history-card">
-              <i className="fas fa-industry" />
+              <Icon name="industry" />
               <h3>Fábrica AR</h3>
               <p>100% fabricado en Argentina, en nuestro taller de San Martín, Bs. As.</p>
             </div>
             <div className="bkf-history-card">
-              <i className="fas fa-shield-alt" />
+              <Icon name="shield-alt" />
               <h3>Garantía</h3>
               <p>Estructura con garantía de por vida contra deformaciones</p>
             </div>
@@ -166,7 +167,7 @@ export default function SillonBKF() {
               <thead>
                 <tr>
                   <th>Característica</th>
-                  <th className="our-col"><i className="fas fa-star" /> Taller Kappa</th>
+                  <th className="our-col"><Icon name="star" /> Taller Kappa</th>
                 </tr>
               </thead>
               <tbody>
@@ -235,10 +236,10 @@ export default function SillonBKF() {
             <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF.')}
               target="_blank" rel="noopener noreferrer" className="btn-main"
               onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
-              <i className="fab fa-whatsapp" /> Pedir cotización ahora
+              <Icon name="whatsapp" /> Pedir cotización ahora
             </a>
             <Link to="/catalogo/" className="btn-outline">
-              <i className="fas fa-th-large" /> Ver todos los productos
+              <Icon name="th-large" /> Ver todos los productos
             </Link>
           </div>
         </div>

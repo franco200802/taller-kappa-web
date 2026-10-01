@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
@@ -82,7 +83,7 @@ export default function Producto() {
             />
             {product.badge && (
               <div className="bkf-badges">
-                <span className="bkf-badge"><i className="fas fa-check" /> {product.badge}</span>
+                <span className="bkf-badge"><Icon name="check" /> {product.badge}</span>
               </div>
             )}
           </div>
@@ -96,19 +97,19 @@ export default function Producto() {
             {product.specs?.length > 0 && (
               <ul className="bkf-specs">
                 {product.specs.map((s) => (
-                  <li key={s}><i className="fas fa-check" /> {s}</li>
+                  <li key={s}><Icon name="check" /> {s}</li>
                 ))}
               </ul>
             )}
             <div className="bkf-actions">
               <button className="btn-main" onClick={() => addToCart(product, 'Negro Mate')}>
-                <i className="fas fa-plus" /> Agregar al presupuesto
+                <Icon name="plus" /> Agregar al presupuesto
               </button>
               <a
                 href={whatsappUrl('Hola, quiero cotizar: ' + product.name)}
                 target="_blank" rel="noopener noreferrer" className="btn-outline"
               >
-                <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+                <Icon name="whatsapp" /> Cotizar por WhatsApp
               </a>
             </div>
           </div>
@@ -181,10 +182,10 @@ export default function Producto() {
               href={whatsappUrl('Hola, quiero cotizar: ' + product.name)}
               target="_blank" rel="noopener noreferrer" className="btn-main"
             >
-              <i className="fab fa-whatsapp" /> Cotizar por WhatsApp
+              <Icon name="whatsapp" /> Cotizar por WhatsApp
             </a>
             <Link to="/envios/" className="btn-outline">
-              <i className="fas fa-truck" /> Zonas y tiempos de envío
+              <Icon name="truck" /> Zonas y tiempos de envío
             </Link>
           </div>
         </div>

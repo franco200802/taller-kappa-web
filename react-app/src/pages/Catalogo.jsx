@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
@@ -51,11 +52,11 @@ function ProductCard({ p, onOpen }) {
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
           href={whatsappUrl('Hola! Quisiera consultar el precio de: ' + p.name)}>
-          <i className="fab fa-whatsapp" /> Consultar precio
+          <Icon name="whatsapp" /> Consultar precio
         </a>
         <div className="card-actions">
           {detailHref && <Link to={detailHref} className="btn-detail" aria-label={`Ver ficha de ${p.name}`}>Ver ficha</Link>}
-          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><i className="fas fa-plus" /> Agregar al presupuesto</button>
+          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><Icon name="plus" /> Agregar al presupuesto</button>
         </div>
       </div>
     </article>
@@ -125,7 +126,7 @@ export default function Catalogo() {
         <div className="filters" role="group" aria-label="Filtrar productos">
           {FILTERS.map((f) => (
             <button key={f.key} className={`filter-btn ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
-              <i className={`fas ${f.icon}`} /> {f.label}
+              <Icon name={f.icon} /> {f.label}
             </button>
           ))}
         </div>
@@ -184,7 +185,7 @@ export default function Catalogo() {
               <div className="modal-stock"><span className="stock-dot" /> {modalProduct.stock ? 'En stock, entrega coordinada' : 'Consultar disponibilidad'}</div>
               <p>{modalProduct.desc}</p>
               <ul className="modal-specs">
-                {modalProduct.specs?.map((s) => <li key={s}><i className="fas fa-check" /> {s}</li>)}
+                {modalProduct.specs?.map((s) => <li key={s}><Icon name="check" /> {s}</li>)}
               </ul>
               <div className="color-selector">
                 <p className="color-label">Acabado: <strong>{modalColor}</strong></p>
@@ -197,9 +198,9 @@ export default function Catalogo() {
                 </div>
               </div>
               <button className="btn-main" onClick={() => { addToCart(modalProduct, modalColor); closeModal(); }}>
-                <i className="fas fa-plus" /> Agregar al presupuesto
+                <Icon name="plus" /> Agregar al presupuesto
               </button>
-              <p className="modal-hint"><i className="fab fa-whatsapp" /> Te pasamos el precio por WhatsApp</p>
+              <p className="modal-hint"><Icon name="whatsapp" /> Te pasamos el precio por WhatsApp</p>
             </div>
           </div>
         )}

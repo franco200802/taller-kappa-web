@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Icon from '../components/Icon';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
@@ -78,16 +79,16 @@ export default function Contacto() {
             <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos tu consulta o lo que necesitás…" />
           </div>
           <div className="form-submit">
-            <button type="submit" className="btn-main"><i className="fab fa-whatsapp" /> Enviar por WhatsApp</button>
+            <button type="submit" className="btn-main"><Icon name="whatsapp" /> Enviar por WhatsApp</button>
           </div>
         </form>
         <aside className="contact-aside" aria-label="Datos de contacto">
           <h2 className="contact-aside-title">Cómo contactar a {BUSINESS.name}</h2>
           <address className="contact-info">
-            <p><i className="fas fa-map-marker-alt" aria-hidden="true" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
-            <p><i className="fab fa-whatsapp" aria-hidden="true" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
-            <p><i className="far fa-envelope" aria-hidden="true" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-            <p><i className="far fa-clock" aria-hidden="true" /> Retiro en el taller: {BUSINESS.hours.label}.</p>
+            <p><Icon name="map-marker-alt" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
+            <p><Icon name="whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
+            <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+            <p><Icon name="clock" /> Retiro en el taller: {BUSINESS.hours.label}.</p>
           </address>
           <p>
             Taller Kappa vende por cotización: indicá el producto, la cantidad, el color y la zona de entrega. Antes de escribir,

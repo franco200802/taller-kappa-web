@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import Icon from './Icon';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
@@ -44,7 +45,7 @@ export default function Navbar() {
           aria-label="Abrir presupuesto"
           onClick={() => setIsOpen(true)}
         >
-          <i className="fas fa-shopping-bag" style={{ fontSize: '1.2rem' }} />
+          <Icon name="shopping-bag" style={{ fontSize: '1.2rem' }} />
           <span className="cart-badge" style={{ opacity: totalItems > 0 ? 1 : 0 }}>{totalItems}</span>
         </button>
         <button
