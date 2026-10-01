@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { whatsappUrl } from '../data/contact';
 
@@ -23,7 +23,7 @@ export default function Garantia() {
         title="Garantía y Cuidados — Muebles de Hierro y Cuero | Taller Kappa"
         description="Política de garantía de Taller Kappa. Todos nuestros muebles de hierro y cuero tienen garantía de fabricación. Conocé cómo cuidar tus productos."
         path="/garantia"
-        jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Garantía', path: '/garantia' }])}
+        breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Garantía', path: '/garantia' }]}
       />
       <PageHero
         title="Garantía y cuidados de muebles de hierro y cuero"

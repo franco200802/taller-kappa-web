@@ -3,9 +3,11 @@ import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import { PRODUCTS } from '../data/products';
 import { whatsappUrl } from '../data/contact';
+import { BUSINESS, addressLine } from '../data/business';
+import { ORG_ID } from '../lib/schema';
 
 const REASONS = [
-  { title: 'Directo de fábrica', text: 'Sin intermediarios. Comprás al productor y ahorrás entre un 30% y 50% respecto al precio de retail.' },
+  { title: 'Directo de fábrica', text: 'Sin intermediarios: comprás al productor, con cotización directa por WhatsApp.' },
   { title: 'Hecho para uso intensivo', text: 'Hierro macizo de 12 mm. Nuestras piezas soportan el uso gastronómico diario sin deformarse.' },
   { title: 'A medida, sin recargo', text: 'Adaptamos medidas, colores y acabados a lo que necesites, sin costo adicional.' },
   { title: 'Factura A y B', text: 'Somos responsables inscriptos. Emitimos comprobante para personas y empresas.' },
@@ -26,6 +28,7 @@ export default function Home() {
         title="Taller Kappa | Sillones BKF y Muebles de Hierro en Buenos Aires"
         description="Fábrica de sillones BKF, bancos y bases de mesa de hierro y cuero en San Martín, Buenos Aires. Fabricación a medida, envíos y atención a empresas."
         path="/"
+        about={[ORG_ID]}
       />
 
       <section className="home-hero">
@@ -48,7 +51,7 @@ export default function Home() {
         <div className="home-hero-media">
           <Picture
             src="/images/sillon-bkf-hierro-cuero.jpg"
-            alt="Sillón BKF de hierro negro y cuero suela, fabricado por Taller Kappa"
+            alt={PRODUCTS[0].alt}
             width={1600}
             height={1600}
             loading="eager"
@@ -70,6 +73,32 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section-padding about-facts" aria-labelledby="que-es-kappa">
+        <div>
+          <h2 className="section-title" id="que-es-kappa">Qué es Taller Kappa</h2>
+          <p>{BUSINESS.summary}</p>
+          <p>
+            {BUSINESS.salesModel} Las piezas se pueden fabricar a medida. Si es para un local o una empresa,
+            mirá el <Link to="/proyectos/">mobiliario comercial de hierro que fabricamos para franquicias y locales</Link>.
+          </p>
+        </div>
+        <dl className="facts">
+          <div><dt>Empresa</dt><dd>{BUSINESS.legalName}</dd></div>
+          <div><dt>Dónde está</dt><dd>{addressLine()}, Argentina</dd></div>
+          <div>
+            <dt>Qué fabrica</dt>
+            <dd>
+              {PRODUCTS.map((p, i) => (
+                <span key={p.slug}>{i > 0 && ', '}<Link to={`/catalogo/${p.slug}/`}>{p.name}</Link></span>
+              ))}
+            </dd>
+          </div>
+          <div><dt>Para quién</dt><dd>Particulares, empresas y locales gastronómicos o comerciales</dd></div>
+          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
+          <div><dt>Cómo consultar</dt><dd><Link to="/contacto/">WhatsApp {BUSINESS.phoneDisplay} o formulario de contacto</Link></dd></div>
+        </dl>
+      </section>
+
       <section className="section-padding">
         <div className="section-head">
           <h2 className="section-title">Lo que fabricamos</h2>
@@ -80,7 +109,7 @@ export default function Home() {
             <li className="home-product" key={p.slug}>
               <Link to={`/catalogo/${p.slug}/`}>
                 <div className="home-product-img">
-                  <Picture src={p.image} alt={p.name} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
+                  <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
                 </div>
                 <h3>{p.name}</h3>
                 <p>{p.specs[0]}</p>
@@ -106,7 +135,9 @@ export default function Home() {
         <div>
           <h2 className="section-title">Antes de pedir</h2>
           <p>
-            Conocé la historia y las medidas del <Link to="/sillon-bkf/">Sillón BKF</Link>, o mirá los{' '}
+            Conocé la historia y las medidas del <Link to="/sillon-bkf/">Sillón BKF</Link>, mirá las{' '}
+            <Link to="/catalogo/asientos/">categorías de sillones y bancos BKF</Link> y de{' '}
+            <Link to="/catalogo/mesas/">bases de mesa</Link>, o los{' '}
             <Link to="/proyectos/">proyectos que hicimos</Link> para YPF, McDonald&apos;s y Burger King.
           </p>
           <p>

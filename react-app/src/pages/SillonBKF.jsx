@@ -1,58 +1,22 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrl } from '../data/contact';
+import { getProductBySlug, relatedProducts } from '../data/products';
+import { faqNode, productId, productNode } from '../lib/schema';
+import { assetUrl, pageId } from '../lib/site';
 
-const PRODUCT_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: 'Sillón BKF Premium',
-  alternateName: ['Sillón BKF', 'BKF', 'Silla Paleta', 'Silla BKF'],
-  description: 'Sillón BKF fabricado en hierro macizo redondo de 12mm, cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva. El icono del diseño argentino con resistencia industrial.',
-  image: [
-    'https://tallerkappa.com.ar/images/sillon-bkf-hierro-cuero.jpg',
-    'https://tallerkappa.com.ar/images/banco-bkf-hierro-cuero.jpg',
-  ],
-  brand: { '@type': 'Brand', name: 'Taller Kappa' },
-  manufacturer: {
-    '@type': 'Organization',
-    name: 'Taller Kappa S.R.L.',
-    url: 'https://tallerkappa.com.ar',
-    telephone: '+541161242498',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Calle 28 Nº 3779',
-      addressLocality: 'San Martín',
-      addressRegion: 'Buenos Aires',
-      addressCountry: 'AR',
-    },
-  },
-  material: 'Hierro macizo 12mm, Cuero vacuno curtido al vegetal',
-  color: 'Negro Mate',
-  category: 'Muebles / Sillas / Sillones',
-  countryOfOrigin: 'AR',
-  offers: {
-    '@type': 'Offer',
-    availability: 'https://schema.org/InStock',
-    itemCondition: 'https://schema.org/NewCondition',
-    seller: { '@type': 'Organization', name: 'Taller Kappa S.R.L.', url: 'https://tallerkappa.com.ar' },
-  },
-};
-
-const FAQ_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: '¿Cuánto cuesta el sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega. Consultá por WhatsApp al 11 6124-2498 para recibir presupuesto actualizado.' } },
-    { '@type': 'Question', name: '¿El sillón BKF de Taller Kappa sigue el diseño original?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' } },
-    { '@type': 'Question', name: '¿Cuánto tarda en fabricarse un sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'El tiempo de fabricación depende del stock disponible. Si hay unidades en stock, la entrega puede ser en 24-48 horas en GBA. Para pedidos a medida, el plazo es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' } },
-    { '@type': 'Question', name: '¿El sillón BKF tiene garantía?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' } },
-    { '@type': 'Question', name: '¿Puedo elegir el color del sillón BKF?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' } },
-  ],
-};
+// Las respuestas tienen que coincidir con /envios/ y /garantia/ (misma fuente de verdad).
+const FAQ_ITEMS = [
+  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega. Consultá por WhatsApp al 11 6124-2498 para recibir presupuesto actualizado.' },
+  { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
+  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en el resto de CABA y GBA, de 2 a 5 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
+  { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
+  { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
+];
 
 const COLORS = [
   { name: 'Negro Mate', swatch: '#1a1a1a' },
@@ -62,8 +26,11 @@ const COLORS = [
   { name: 'Rojo Kappa', swatch: '#b71c1c' },
 ];
 
+const PRODUCT = getProductBySlug('sillon-bkf-premium');
+
 export default function SillonBKF() {
   const { addToCart } = useCart();
+  const related = relatedProducts(PRODUCT);
 
   const handleAdd = (color) => {
     addToCart({
@@ -80,30 +47,38 @@ export default function SillonBKF() {
     <>
       <Seo
         title="Sillón BKF de Hierro y Cuero | Taller Kappa Buenos Aires"
-        description="Sillón BKF fabricado en hierro macizo 12mm y cuero vacuno. Directo de fábrica en San Martín, Buenos Aires. Fabricación a medida y envíos."
+        description="Qué es el sillón BKF, quién lo diseñó y cómo lo fabrica Taller Kappa: hierro macizo de 12 mm y cuero vacuno, en San Martín, Buenos Aires. Medidas y garantía."
         path="/sillon-bkf"
-        image="https://tallerkappa.com.ar/images/sillon-bkf-hierro-cuero.jpg"
+        image={assetUrl(PRODUCT.image)}
+        imageAlt={PRODUCT.alt}
         type="product"
+        about={[productId(PRODUCT.slug)]}
+        mainEntity={productId(PRODUCT.slug)}
+        breadcrumb={[
+          { name: 'Inicio', path: '/' },
+          { name: 'Catálogo', path: '/catalogo' },
+          { name: 'Sillón BKF', path: '/sillon-bkf' },
+        ]}
         jsonLd={[
-          PRODUCT_SCHEMA,
-          FAQ_SCHEMA,
-          breadcrumbList([
-            { name: 'Inicio', path: '/' },
-            { name: 'Catálogo', path: '/catalogo' },
-            { name: 'Sillón BKF', path: '/sillon-bkf' },
-          ]),
+          // Mismo @id que la ficha /catalogo/sillon-bkf-premium/: es UNA entidad.
+          productNode(PRODUCT, {
+            image: [assetUrl(PRODUCT.image), assetUrl('/images/banco-bkf-hierro-cuero.jpg')],
+            color: 'Negro mate',
+            mainEntityOfPage: { '@id': pageId('/sillon-bkf') },
+          }),
+          faqNode(FAQ_ITEMS, '/sillon-bkf'),
         ]}
       />
       <PageHero
         title="Sillón BKF"
-        lead="El icono del diseño argentino. Hierro macizo y cuero vacuno. Directo de fábrica."
+        lead="El sillón BKF es un sillón de hierro y cuero diseñado en Buenos Aires en 1938. Taller Kappa lo fabrica en San Martín con hierro macizo de 12 mm y cuero vacuno, directo de fábrica."
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }]}
       />
 
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt="Sillón BKF de hierro macizo y cuero vacuno - Taller Kappa Buenos Aires" width={1600} height={1600} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
+            <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt={PRODUCT.alt} width={1600} height={1600} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
             <div className="bkf-badges">
               <span className="bkf-badge"><i className="fas fa-star" /> Diseño icónico</span>
               <span className="bkf-badge"><i className="fas fa-industry" /> Fábrica propia</span>
@@ -112,7 +87,7 @@ export default function SillonBKF() {
           </div>
           <div className="bkf-info-col">
             <h2>Sillón BKF Premium</h2>
-            <p className="bkf-tagline">El diseño argentino más icónico, fabricado con los mejores materiales.</p>
+            <p className="bkf-tagline">Diseño argentino de 1938, fabricado con hierro macizo de 12 mm y cuero vacuno curtido al vegetal.</p>
             <div className="bkf-price-box">
               <span className="bkf-price">Cotización personalizada</span>
               <span className="bkf-price-note">Consultanos por WhatsApp para recibir tu presupuesto</span>
@@ -218,24 +193,44 @@ export default function SillonBKF() {
       <section className="section-padding section-fade">
         <div className="bkf-about-inner">
           <h2>Preguntas frecuentes sobre el Sillón BKF</h2>
-          {FAQ_SCHEMA.mainEntity.map((q) => (
-            <div key={q.name} className="bkf-faq-item">
-              <h3>{q.name}</h3>
-              <p>{q.acceptedAnswer.text}</p>
+          {FAQ_ITEMS.map((f) => (
+            <div key={f.q} className="bkf-faq-item">
+              <h3>{f.q}</h3>
+              <p>{f.a}</p>
             </div>
           ))}
           <p>
-            Ver todas las <Link to="/faq/">preguntas frecuentes</Link>, conocé nuestras{' '}
+            Ver todas las <Link to="/faq/">preguntas frecuentes de Taller Kappa</Link>, conocé nuestras{' '}
             <Link to="/garantia/">condiciones de garantía</Link> o las{' '}
             <Link to="/envios/">zonas y tiempos de envío</Link>.
           </p>
         </div>
       </section>
 
+      <aside className="section-padding section-fade" aria-label="Otros productos de Taller Kappa">
+        <div className="bkf-about-inner">
+          <h2>Más productos BKF y bases de mesa</h2>
+          <p>
+            Ficha técnica completa, con medidas y garantía, del <Link to="/catalogo/sillon-bkf-premium/">Sillón BKF Premium</Link>. Del mismo diseño
+            fabricamos el <Link to="/catalogo/banco-bkf/">Banco BKF</Link> (38 x 38 x 45 cm), y para locales gastronómicos
+            la <Link to="/catalogo/base-de-mesa-flat/">Base de Mesa Flat</Link>. Todo el catálogo está en{' '}
+            <Link to="/catalogo/asientos/">sillones y bancos BKF</Link> y <Link to="/catalogo/mesas/">bases de mesa de hierro</Link>.
+          </p>
+          <ul className="related-list">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link to={`/catalogo/${r.slug}/`}>{r.name}</Link>
+                <span>{r.desc}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+
       <section className="cta-section section-fade">
         <div className="cta-box">
           <h2>¿Querés tu Sillón BKF?</h2>
-          <p>Escribinos hoy y te respondemos en minutos. Precios de fábrica, entrega en todo el país.</p>
+          <p>Escribinos por WhatsApp y te respondemos con la cotización. Precios de fábrica, envíos a todo el país.</p>
           <div className="cta-btns">
             <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF.')}
               target="_blank" rel="noopener noreferrer" className="btn-main"

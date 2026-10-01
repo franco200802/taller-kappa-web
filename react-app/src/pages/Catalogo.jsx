@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
-import { PRODUCTS } from '../data/products';
+import ProductTable from '../components/ProductTable';
+import { PRODUCTS, CATEGORIES } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
-import { absoluteUrl } from '../lib/site';
+import { itemListNode } from '../lib/schema';
 
 const FALLBACK_PRODUCTS = PRODUCTS;
 
@@ -42,7 +43,7 @@ function ProductCard({ p, onOpen }) {
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Ver detalle de ${p.name}`}
         onClick={() => onOpen(p)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
-        <Picture src={p.image} alt={p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
+        <Picture src={p.image} alt={p.alt ?? p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
         <div className="card-overlay" aria-hidden="true">Vista rápida</div>
       </div>
       <div className="card-info">
@@ -95,30 +96,7 @@ export default function Catalogo() {
     { key: 'mesas', label: 'Mesas', icon: 'fa-table' },
   ];
 
-  const itemListSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: products.map((p, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: {
-        '@type': 'Product',
-        name: p.name,
-        description: p.desc,
-        image: `https://tallerkappa.com.ar${p.image}`,
-        // Los productos sin slug (ej. cargados desde Firebase por el admin,
-        // que no garantiza ese campo) no deben emitir una url inventada.
-        ...(p.slug ? { url: absoluteUrl(`/catalogo/${p.slug}`) } : {}),
-        category: p.category,
-        brand: { '@type': 'Brand', name: 'Taller Kappa' },
-        offers: {
-          '@type': 'Offer',
-          availability: p.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
-          seller: { '@type': 'Organization', name: 'Taller Kappa S.R.L.' },
-        },
-      },
-    })),
-  };
+  const itemList = itemListNode(products, '/catalogo', 'Catálogo de Taller Kappa');
 
   return (
     <>
@@ -126,13 +104,22 @@ export default function Catalogo() {
         title="Catálogo de Sillas de Hierro y Cuero | Taller Kappa Buenos Aires"
         description="Catálogo de sillones BKF, bancos y bases de mesa de hierro macizo y cuero vacuno. Fabricación propia en San Martín, Buenos Aires."
         path="/catalogo"
-        jsonLd={[itemListSchema, breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }])]}
+        pageType="CollectionPage"
+        mainEntity={itemList['@id']}
+        breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }]}
+        jsonLd={itemList}
       />
       <section id="catalogo" className="section-padding">
         <h1 className="section-title">Sillas de hierro y cuero en Buenos Aires</h1>
         <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
           Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf/">Sillón BKF</Link>.
+        </p>
+        <p className="catalog-categories">
+          Categorías:{' '}
+          {CATEGORIES.map((c, i) => (
+            <span key={c.key}>{i > 0 && ' · '}<Link to={`/catalogo/${c.slug}/`}>{c.heading}</Link></span>
+          ))}
         </p>
 
         <div className="filters" role="group" aria-label="Filtrar productos">
@@ -148,13 +135,19 @@ export default function Catalogo() {
         </div>
       </section>
 
+      <section className="why-section section-fade" aria-label="Comparación de productos">
+        <h2 className="section-title">Comparación de productos</h2>
+        <p className="section-subtitle">Estructura, medidas y uso de cada producto del catálogo de Taller Kappa.</p>
+        <ProductTable products={PRODUCTS} />
+      </section>
+
       <section className="materials-section section-fade" aria-label="Nuestros materiales">
         <h2 className="section-title">Calidad que se ve y se toca</h2>
         <p className="section-subtitle">Cada pieza fabricada con materiales seleccionados y controles de calidad propios.</p>
         <div className="materials-layout">
           <Picture
             src="/images/base-mesa-flat-hierro.jpg"
-            alt="Base de Mesa Flat de Taller Kappa"
+            alt={PRODUCTS[2].alt}
             loading="lazy"
             width={1024}
             height={1536}
@@ -181,7 +174,7 @@ export default function Catalogo() {
           <div className="modal-content">
             <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
             <div className="modal-img">
-              <Picture src={modalProduct.image} alt={modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
+              <Picture src={modalProduct.image} alt={modalProduct.alt ?? modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
             </div>
             <div className="modal-info">
               <div className="modal-badge-row">

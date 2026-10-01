@@ -1,28 +1,41 @@
 import { Helmet } from 'react-helmet-async';
+import { BUSINESS } from '../data/business';
 import { absoluteUrl, assetUrl } from '../lib/site';
+import { pageGraph } from '../lib/schema';
 
 const DEFAULT_IMAGE = assetUrl('/images/sillon-bkf-hierro-cuero.jpg');
 // sillon-bkf-hierro-cuero.jpg mide realmente 1600x1600 (verificado con PIL, no un valor de relleno).
 const DEFAULT_IMAGE_W = 1600;
 const DEFAULT_IMAGE_H = 1600;
+const DEFAULT_IMAGE_ALT = 'Sillón BKF de hierro negro y cuero suela, fabricado por Taller Kappa';
 
 /**
- * Seo — helper para meta tags por ruta (título, descripción, canonical, Open Graph).
- * Reemplaza los <head> estáticos de cada .html del sitio viejo.
+ * Seo — meta tags y JSON-LD por ruta (título, descripción, canonical, Open
+ * Graph, Twitter).
  *
- * `jsonLd` acepta un objeto o array de objetos Schema.org (Product, FAQPage,
- * BreadcrumbList, etc.) y los inyecta como <script type="application/ld+json">.
+ * El JSON-LD sale como UN solo `@graph` (ver pageGraph en lib/schema.js):
+ * el nodo de la página (`pageType`), su BreadcrumbList (`breadcrumb`:
+ * [{ name, path }], que tiene que coincidir con el breadcrumb visible de
+ * PageHero), la entidad de la que trata (`about` / `mainEntity`, como @id)
+ * y los nodos extra de `jsonLd` (Product, FAQPage, ItemList, Service…).
+ * La empresa, la marca y el sitio los emite Layout.jsx en todas las páginas.
  *
- * `imageWidth`/`imageHeight` son opcionales: si se pasa una `image` distinta
- * a la de default (ej. la foto real de un producto), conviene pasar también
- * sus dimensiones reales para que Facebook/WhatsApp/Twitter puedan renderizar
- * la preview sin tener que descargar la imagen primero para medirla.
+ * `image*` son opcionales: si se pasa una `image` distinta a la de default
+ * conviene pasar también sus datos reales, para que la preview social no
+ * tenga que descargar la imagen para medirla.
  */
-export default function Seo({ title, description, path = '/', image = DEFAULT_IMAGE, imageWidth = DEFAULT_IMAGE_W, imageHeight = DEFAULT_IMAGE_H, type = 'website', jsonLd, noindex = false }) {
+export default function Seo({
+  title, description, path = '/', image = DEFAULT_IMAGE,
+  imageWidth = DEFAULT_IMAGE_W, imageHeight = DEFAULT_IMAGE_H, imageAlt = DEFAULT_IMAGE_ALT,
+  type = 'website', jsonLd, noindex = false,
+  pageType = 'WebPage', about, mainEntity, breadcrumb,
+}) {
   // Canonical y og:url siempre con barra final (ver lib/site.js). Una página
-  // noindex no declara canonical: serían dos señales contradictorias.
+  // noindex no declara canonical ni JSON-LD: serían señales contradictorias.
   const url = absoluteUrl(path);
-  const schemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+  const extra = jsonLd ? [].concat(jsonLd) : [];
+  const graph = noindex ? null : pageGraph({ title, description, path, pageType, about, mainEntity, breadcrumb, extra });
+
   return (
     <Helmet>
       <title>{title}</title>
@@ -34,33 +47,17 @@ export default function Seo({ title, description, path = '/', image = DEFAULT_IM
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
-      {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
-      {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
+      <meta property="og:image:width" content={String(imageWidth)} />
+      <meta property="og:image:height" content={String(imageHeight)} />
+      <meta property="og:image:alt" content={imageAlt} />
       <meta property="og:locale" content="es_AR" />
-      <meta property="og:site_name" content="Taller Kappa" />
+      <meta property="og:site_name" content={BUSINESS.name} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
-      {schemas.map((schema, i) => (
-        <script key={i} type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
-      ))}
+      <meta name="twitter:image:alt" content={imageAlt} />
+      {graph && <script type="application/ld+json">{JSON.stringify(graph)}</script>}
     </Helmet>
   );
-}
-
-/** Helper para armar un BreadcrumbList a partir de [{ name, path }]. */
-export function breadcrumbList(items) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: item.name,
-      item: absoluteUrl(item.path),
-    })),
-  };
 }

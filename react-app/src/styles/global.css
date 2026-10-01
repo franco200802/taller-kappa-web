@@ -87,11 +87,14 @@ h1, h2, h3 {
     font-weight: 800;
     line-height: 1.02;
     letter-spacing: -0.01em;
+    /* El espacio de Archivo se angosta junto con el eje de ancho: a 62-70% las
+       palabras de un título casi se pegan ("Loquefabricamos"). */
+    word-spacing: 0.1em;
     text-wrap: balance;
 }
 h1 { font-size: var(--t-xl); }
 h2 { font-size: var(--t-xl); }
-h3 { font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; }
+h3 { font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; word-spacing: 0.06em; }
 p  { max-width: 68ch; text-wrap: pretty; }
 strong { font-weight: 650; }
 
@@ -216,7 +219,7 @@ p a:hover, li a:hover { color: var(--kappa); }
     display: flex; flex-direction: column; justify-content: center; gap: 24px;
     padding: 48px var(--gutter) 64px var(--pad-x);
 }
-.home-hero h1 { font-size: var(--t-hero); font-stretch: 62%; font-weight: 850; line-height: 0.98; letter-spacing: -0.015em; }
+.home-hero h1 { font-size: var(--t-hero); font-stretch: 62%; font-weight: 850; line-height: 0.98; letter-spacing: -0.015em; word-spacing: 0.12em; }
 .home-hero-lead { font-size: var(--t-md); color: var(--grafito); max-width: 34ch; }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 @media (max-width: 560px) { .home-hero-actions > *, .bkf-actions > *, .cta-btns > * { flex: 1 1 100%; } }
@@ -609,6 +612,22 @@ footer a:hover { color: var(--blanco); }
 .bkf-history-card h3 { font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; margin-bottom: 6px; }
 .bkf-history-card p { color: var(--grafito); font-size: var(--t-sm); }
 @media (max-width: 860px) { .bkf-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Desktop: el texto de lectura (68ch) dejaba casi la mitad derecha vacía.
+   Texto a la izquierda; los datos clave (about) y la tabla (specs) a la derecha. */
+@media (min-width: 861px) {
+    .bkf-about .bkf-about-inner,
+    .bkf-comparison .bkf-about-inner {
+        display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        column-gap: clamp(40px, 6vw, 96px); align-items: start;
+    }
+    .bkf-about .bkf-about-inner > :not(.bkf-history-grid),
+    .bkf-comparison .bkf-about-inner > :not(.comparison-table-wrapper) { grid-column: 1; }
+    .bkf-about .bkf-history-grid { grid-column: 2; grid-row: 1 / span 4; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 28px; margin-top: 0; }
+    .bkf-comparison .comparison-table-wrapper { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+    .bkf-comparison .comparison-table { max-width: none; }
+    .bkf-comparison .section-subtitle { margin-bottom: 0; }
+}
 
 .comparison-table-wrapper { overflow-x: auto; margin-top: 24px; }
 .comparison-table { width: 100%; max-width: 760px; border-collapse: collapse; }
@@ -792,6 +811,45 @@ footer a:hover { color: var(--blanco); }
 .form-submit .btn-main { width: 100%; background: var(--wa); border-color: var(--wa); color: var(--blanco); }
 .form-submit .btn-main:hover { background: var(--wa-osc); border-color: var(--wa-osc); }
 .admin-form { display: grid; gap: 12px; margin-top: 20px; }
+
+/* ---------- 19b. Datos de la empresa, categorías y fichas ---------- */
+/* Bloques de respuesta directa (quién es Taller Kappa, ficha técnica): texto a
+   la izquierda y una lista de datos a la derecha, con el mismo trazo fino de
+   las demás tarjetas. */
+address { font-style: normal; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.about-facts { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px clamp(40px, 6vw, 96px); align-items: start; }
+.about-facts p { margin-bottom: 14px; color: var(--grafito); }
+.about-facts .section-title { margin-bottom: 20px; }
+.facts { border-top: 2px solid var(--hierro); }
+.facts > div { display: grid; grid-template-columns: minmax(110px, 0.34fr) 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--linea); }
+.facts dt { color: var(--grafito); font-size: var(--t-sm); font-weight: 600; padding-top: 2px; }
+.facts dd { font-weight: 500; }
+@media (max-width: 860px) { .about-facts { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .facts > div { grid-template-columns: 1fr; gap: 2px; } }
+
+.catalog-categories { margin: -16px 0 24px; color: var(--grafito); }
+.related-list { list-style: none; display: grid; gap: 0; margin: 20px 0 24px; border-top: 2px solid var(--hierro); }
+.related-list li { display: grid; grid-template-columns: minmax(140px, 0.3fr) 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--linea); }
+.related-list a { font-weight: 650; }
+.related-list span { color: var(--grafito); font-size: var(--t-sm); }
+@media (max-width: 560px) { .related-list li { grid-template-columns: 1fr; gap: 2px; } }
+.contact-aside-title { font-size: var(--t-lg); }
+.contact-aside-title + .contact-info { margin-top: -8px; }
+/* Fila de encabezado de fila (ficha técnica y tabla de productos): no usa el estilo de cabecera de columna. */
+.comparison-table tbody th { font-size: inherit; color: var(--grafito); font-weight: 400; border-bottom: 1px solid var(--linea); width: 40%; }
+.product-table tbody th { color: var(--hierro); font-weight: 650; width: auto; }
+.comparison-table.product-table { max-width: none; }
+.product-table td, .product-table th { padding-right: 20px; }
+/* Categoría con un solo producto (Mesas): foto y texto lado a lado en vez de una tarjeta suelta en una grilla de 3. */
+@media (min-width: 761px) {
+    .home-products > .home-product:only-child { grid-column: 1 / -1; }
+    .home-products > .home-product:only-child a { display: grid; grid-template-columns: minmax(0, 384px) minmax(0, 1fr); column-gap: clamp(32px, 5vw, 72px); align-content: center; }
+    .home-products > .home-product:only-child .home-product-img { grid-row: 1 / span 2; margin-bottom: 0; }
+    .home-products > .home-product:only-child h3 { align-self: end; font-size: var(--t-lg); margin-bottom: 8px; }
+    .home-products > .home-product:only-child p { align-self: start; font-size: var(--t-base); max-width: 48ch; }
+}
+.comparison-table caption { text-align: left; }
 
 /* ---------- 20. Utilidades y preferencias ---------- */
 .contact-layout { display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr); gap: 32px 64px; align-items: start; }

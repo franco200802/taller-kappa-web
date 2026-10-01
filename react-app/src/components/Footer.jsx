@@ -1,9 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
+import { BUSINESS } from '../data/business';
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Inicio' },
   { to: '/catalogo/', label: 'Catálogo' },
+  { to: '/catalogo/asientos/', label: 'Sillones y bancos BKF' },
+  { to: '/catalogo/mesas/', label: 'Bases de mesa' },
   { to: '/proyectos/', label: 'Proyectos' },
   { to: '/envios/', label: 'Envíos' },
   { to: '/garantia/', label: 'Garantía' },
@@ -18,12 +21,12 @@ export default function Footer() {
       <div className="footer-content">
         <div className="footer-col">
           <span className="footer-logo">Taller Kappa</span>
-          <div className="footer-info">
+          <address className="footer-info">
             <p><strong>Fábrica &amp; Showroom</strong></p>
-            <p><i className="fas fa-map-marker-alt" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
-            <p><i className="fab fa-whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
-            <p><i className="far fa-envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-          </div>
+            <p><i className="fas fa-map-marker-alt" aria-hidden="true" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
+            <p><i className="fab fa-whatsapp" aria-hidden="true" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
+            <p><i className="far fa-envelope" aria-hidden="true" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+          </address>
           <div className="footer-nav">
             {FOOTER_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
           </div>
@@ -43,7 +46,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="footer-copy">© {__BUILD_YEAR__} Taller Kappa S.R.L. Todos los derechos reservados.</p>
+      <p className="footer-copy">© {__BUILD_YEAR__} {BUSINESS.legalName} Todos los derechos reservados.</p>
     </footer>
   );
 }

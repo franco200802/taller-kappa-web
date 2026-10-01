@@ -13,14 +13,18 @@
  *   - escribe dist/<ruta>/index.html
  *   - genera dist/sitemap.xml con las URLs canónicas indexables (se
  *     actualiza solo: agregar un producto en data/products.js alcanza)
- *   - corta el build si una página rompe una regla básica de SEO
- *     (canonical distinto de su URL, sin h1 o con más de uno, title o
- *     description duplicados)
+ *   - genera dist/llms.txt (resumen de la empresa y enlaces a las páginas
+ *     reales; se arma desde data/business.js y data/products.js)
+ *   - corta el build si una página rompe una regla básica de SEO/GEO:
+ *     canonical distinto de su URL, sin h1 o con más de uno, title o
+ *     description duplicados, JSON-LD inválido o con @id sin resolver,
+ *     links internos rotos, páginas huérfanas, imágenes sin alt o que
+ *     no existen
  *
  * Esto reemplaza el `cp index.html` anterior, que producía 9 páginas con
  * el mismo title y un canonical apuntando todas al home.
  */
-import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -35,7 +39,9 @@ const { render } = await import(pathToFileURL(resolve(ssrDir, 'entry-server.js')
 // PRERENDER_PAGES se lee del source: son constantes planas y así no
 // dependemos de cómo Vite haya agrupado los chunks del bundle de SSR.
 const { PRERENDER_PAGES } = await import(pathToFileURL(resolve(root, 'src/routes.js')).href);
-const { absoluteUrl, withSlash, assetUrl } = await import(pathToFileURL(resolve(root, 'src/lib/site.js')).href);
+const { absoluteUrl, withSlash, assetUrl, pageId } = await import(pathToFileURL(resolve(root, 'src/lib/site.js')).href);
+const { BUSINESS, addressLine } = await import(pathToFileURL(resolve(root, 'src/data/business.js')).href);
+const { PRODUCTS, CATEGORIES, factOf } = await import(pathToFileURL(resolve(root, 'src/data/products.js')).href);
 
 /**
  * El template de Vite trae meta tags por defecto (los del Home) que deben
@@ -62,7 +68,7 @@ function stripDefaultHead(html) {
  * si es verificablemente preciso, así que no se usa la fecha del build.
  * Sin git (o sin historial) devuelve null y el <lastmod> se omite.
  */
-const PAGES_WITH_PRODUCT_DATA = new Set(['Home', 'Catalogo', 'Producto']);
+const PAGES_WITH_PRODUCT_DATA = new Set(['Home', 'Catalogo', 'Categoria', 'Producto', 'SillonBKF', 'FAQ', 'Nosotros', 'Proyectos']);
 function lastModified(page) {
   const files = [`src/pages/${page}.jsx`];
   if (PAGES_WITH_PRODUCT_DATA.has(page)) files.push('src/data/products.js');
@@ -79,6 +85,20 @@ const xmlEscape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 
 const results = [];
 const problems = [];
+
+const prerenderedPaths = new Set(PRERENDER_PAGES.map((r) => withSlash(r.path)));
+
+/** Recorre un JSON-LD y separa los @id definidos (nodo con @type) de las referencias puras ({ "@id": … }). */
+function collectIds(node, defined, refs) {
+  if (Array.isArray(node)) return node.forEach((n) => collectIds(n, defined, refs));
+  if (!node || typeof node !== 'object') return;
+  const keys = Object.keys(node);
+  if ('@id' in node) (keys.length === 1 ? refs : defined).add(node['@id']);
+  keys.forEach((k) => collectIds(node[k], defined, refs));
+}
+
+/** Archivo local al que apunta una URL de la página (/images/x.jpg), o null si es externa. */
+const localFile = (url) => (url.startsWith('/') && !url.startsWith('//') ? resolve(distDir, url.split(/[?#]/)[0].slice(1)) : null);
 
 for (const { path, page: pageName } of PRERENDER_PAGES) {
   // Se renderiza con la barra final, que es la URL real que sirve GitHub
@@ -121,7 +141,50 @@ for (const { path, page: pageName } of PRERENDER_PAGES) {
   if (!title) problems.push(`${path}: sin <title>`);
   if (!description) problems.push(`${path}: sin meta description`);
 
-  results.push({ path, pageName, canonical, title, description, noindex, images, bytes: Buffer.byteLength(page) });
+  // --- JSON-LD: parsea, resuelve @id y exige el nodo de la página (y su breadcrumb) ---
+  const blocks = [...head.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  const defined = new Set();
+  const refs = new Set();
+  const nodes = [];
+  for (const block of blocks) {
+    try {
+      const data = JSON.parse(block);
+      nodes.push(...(data['@graph'] ?? [data]));
+      collectIds(data, defined, refs);
+    } catch (e) {
+      problems.push(`${path}: JSON-LD inválido (${e.message})`);
+    }
+  }
+  const unresolved = [...refs].filter((id) => !defined.has(id));
+  if (unresolved.length) problems.push(`${path}: @id sin definir en la página → ${unresolved.join(', ')}`);
+  if (!noindex) {
+    const webpage = nodes.find((n) => n['@id'] === pageId(path));
+    if (!webpage) problems.push(`${path}: falta el nodo WebPage ${pageId(path)} en el JSON-LD`);
+    else if (path !== '/' && !webpage.breadcrumb) problems.push(`${path}: el WebPage no enlaza su BreadcrumbList`);
+    if (!nodes.some((n) => n['@type'] === 'LocalBusiness')) problems.push(`${path}: falta la entidad LocalBusiness en el JSON-LD`);
+  }
+
+  // --- enlaces e imágenes locales ---
+  const internalLinks = new Set();
+  for (const [, href] of html.matchAll(/href="(\/[^"#?]*)"/g)) {
+    if (/\.[a-z0-9]+$/i.test(href)) {
+      if (!existsSync(localFile(href))) problems.push(`${path}: enlace a archivo inexistente ${href}`);
+    } else {
+      internalLinks.add(href);
+      if (!prerenderedPaths.has(href)) problems.push(`${path}: link interno roto → ${href}`);
+    }
+  }
+  const imgUrls = new Set();
+  for (const m of html.matchAll(/<img\b[^>]*>/g)) {
+    const tag = m[0];
+    if (!/\salt="/.test(tag)) problems.push(`${path}: <img> sin alt → ${tag.slice(0, 90)}`);
+  }
+  for (const m of html.matchAll(/\s(?:src|srcset)="([^"]+)"/gi)) {
+    m[1].split(',').map((c) => c.trim().split(/\s+/)[0]).filter((u) => u.startsWith('/images/')).forEach((u) => imgUrls.add(u));
+  }
+  for (const u of imgUrls) if (!existsSync(localFile(u))) problems.push(`${path}: imagen inexistente ${u}`);
+
+  results.push({ path, pageName, canonical, title, description, noindex, images, links: internalLinks, bytes: Buffer.byteLength(page) });
 }
 
 for (const key of ['title', 'description']) {
@@ -132,8 +195,15 @@ for (const key of ['title', 'description']) {
   }
 }
 
+// Páginas huérfanas: toda página indexable tiene que recibir al menos un link de otra página.
+for (const r of results) {
+  if (r.noindex || r.path === '/') continue;
+  const target = withSlash(r.path);
+  if (!results.some((o) => o.path !== r.path && o.links.has(target))) problems.push(`${r.path}: página huérfana (ninguna otra página enlaza a ${target})`);
+}
+
 if (problems.length) {
-  console.error('\n  El prerender encontró problemas de SEO:\n');
+  console.error('\n  El prerender encontró problemas de SEO/GEO:\n');
   for (const p of problems) console.error(`  ✗ ${p}`);
   process.exit(1);
 }
@@ -153,6 +223,53 @@ ${urls.join('\n')}
 </urlset>
 `;
 writeFileSync(resolve(distDir, 'sitemap.xml'), sitemap, 'utf-8');
+
+/**
+ * llms.txt — resumen en texto plano de la empresa y mapa de las páginas reales,
+ * pensado para que un asistente de IA que lo consulte entienda qué es Taller
+ * Kappa sin recorrer todo el sitio. Se arma desde las mismas fuentes que el
+ * HTML (data/business.js y data/products.js, y el meta description de cada
+ * página), así no puede quedar desactualizado respecto del sitio.
+ *
+ * Es una convención propuesta, no un estándar que los buscadores respeten
+ * ni una garantía de indexación o citación: no reemplaza al sitemap ni al
+ * contenido de las páginas.
+ */
+const descOf = (path) => results.find((r) => r.path === path)?.description ?? '';
+const bullet = (label, path) => `- [${label}](${absoluteUrl(path)}): ${descOf(path)}`;
+const llms = [
+  `# ${BUSINESS.name}`,
+  '',
+  `> ${BUSINESS.summary} ${BUSINESS.salesModel}`,
+  '',
+  '## Datos de la empresa',
+  `- Razón social: ${BUSINESS.legalName}`,
+  `- Sitio oficial: ${BUSINESS.url}/`,
+  `- Dirección: ${addressLine()}, ${BUSINESS.address.country}`,
+  `- Retiro en el taller: ${BUSINESS.hours.label}`,
+  `- WhatsApp: ${BUSINESS.phoneDisplay}`,
+  `- Email: ${BUSINESS.email}`,
+  '',
+  '## Productos',
+  ...PRODUCTS.map((p) => `- [${p.name}](${absoluteUrl(`/catalogo/${p.slug}`)}): ${factOf(p, 'Categoría')}. ${factOf(p, 'Estructura')}. Medidas: ${factOf(p, 'Medidas')}.`),
+  '',
+  '## Categorías',
+  ...CATEGORIES.map((c) => `- [${c.heading}](${absoluteUrl(`/catalogo/${c.slug}`)}): ${c.definition}`),
+  '',
+  '## Información para clientes',
+  bullet('Catálogo', '/catalogo'),
+  bullet('Preguntas frecuentes', '/faq'),
+  bullet('Envíos', '/envios'),
+  bullet('Garantía', '/garantia'),
+  bullet('Contacto', '/contacto'),
+  '',
+  '## Sobre la empresa',
+  bullet('Nosotros', '/nosotros'),
+  bullet('Mobiliario comercial y proyectos', '/proyectos'),
+  bullet('Guía del Sillón BKF', '/sillon-bkf'),
+  '',
+].join('\n');
+writeFileSync(resolve(distDir, 'llms.txt'), llms, 'utf-8');
 
 /**
  * 404.html — fallback de GitHub Pages para rutas no prerenderizadas.
@@ -205,4 +322,4 @@ console.log('\n  Prerender completado:\n');
 for (const r of results) {
   console.log(`  ${r.path.padEnd(14)} ${String(r.bytes).padStart(7)} B  canonical: ${r.canonical}`);
 }
-console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · ${Object.keys(LEGACY_HTML).length} redirecciones de URLs .html heredadas\n`);
+console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · llms.txt · ${Object.keys(LEGACY_HTML).length} redirecciones de URLs .html heredadas\n`);

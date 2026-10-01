@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { trackEvent } from '../lib/analytics';
 import { loadFireDB } from '../lib/firebaseConfig';
 import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
+import { BUSINESS } from '../data/business';
+import { ORG_ID } from '../lib/schema';
 
 export default function Contacto() {
   const { showToast } = useCart();
@@ -42,14 +44,17 @@ export default function Contacto() {
   return (
     <>
       <Seo
-        title="Contacto — Taller Kappa | Muebles de Hierro y Sillones BKF"
-        description="Contactanos por WhatsApp, email o formulario para cotizar sillones BKF, bancos y bases de mesa de hierro y cuero. Fábrica en San Martín, Buenos Aires."
+        title="Contacto | Taller Kappa, Villa Chacabuco, San Martín"
+        description="Cómo contactar a Taller Kappa: WhatsApp 11 6124-2498, email y dirección en Villa Chacabuco, San Martín. Cotizá sillones BKF, bancos y bases de mesa."
         path="/contacto"
-        jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Contacto', path: '/contacto' }])}
+        pageType="ContactPage"
+        about={[ORG_ID]}
+        mainEntity={ORG_ID}
+        breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Contacto', path: '/contacto' }]}
       />
       <PageHero
         title="Contacto"
-        lead="Escribinos y te respondemos por WhatsApp con la cotización."
+        lead="Para cotizar o consultar por un producto, escribí a Taller Kappa por WhatsApp o con el formulario: te respondemos con el presupuesto."
         current="Contacto"
       />
       <section className="section-padding contact-layout">
@@ -77,14 +82,20 @@ export default function Contacto() {
           </div>
         </form>
         <aside className="contact-aside" aria-label="Datos de contacto">
-          <div className="contact-info">
+          <h2 className="contact-aside-title">Cómo contactar a {BUSINESS.name}</h2>
+          <address className="contact-info">
             <p><i className="fas fa-map-marker-alt" aria-hidden="true" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
             <p><i className="fab fa-whatsapp" aria-hidden="true" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><i className="far fa-envelope" aria-hidden="true" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-          </div>
+            <p><i className="far fa-clock" aria-hidden="true" /> Retiro en el taller: {BUSINESS.hours.label}.</p>
+          </address>
           <p>
-            ¿Buscás un producto en particular? Mirá el <Link to="/catalogo/">catálogo completo</Link> o
-            todo sobre nuestro <Link to="/sillon-bkf/">Sillón BKF</Link>.
+            Taller Kappa vende por cotización: indicá el producto, la cantidad, el color y la zona de entrega. Antes de escribir,
+            podés ver las <Link to="/envios/">zonas y tiempos de envío</Link> y la <Link to="/garantia/">garantía</Link>.
+          </p>
+          <p>
+            ¿Buscás un producto en particular? Mirá el <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link> o
+            todo sobre el <Link to="/sillon-bkf/">Sillón BKF</Link>.
           </p>
         </aside>
       </section>

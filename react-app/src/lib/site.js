@@ -27,3 +27,25 @@ export function absoluteUrl(path = '/') {
 export function assetUrl(src) {
   return `${SITE}${src}`;
 }
+
+/**
+ * JSON-LD BreadcrumbList a partir de [{ name, path }]. Lleva @id (la URL de la
+ * última página + #breadcrumb) para que el WebPage de esa página lo referencie.
+ * La lista tiene que coincidir con el breadcrumb visible (PageHero).
+ */
+export function breadcrumbList(items) {
+  return {
+    '@type': 'BreadcrumbList',
+    '@id': breadcrumbId(items[items.length - 1].path),
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}
+
+/** @id del WebPage y del BreadcrumbList de una ruta. */
+export const pageId = (path) => `${absoluteUrl(path)}#webpage`;
+export const breadcrumbId = (path) => `${absoluteUrl(path)}#breadcrumb`;

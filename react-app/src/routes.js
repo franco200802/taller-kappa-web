@@ -12,11 +12,12 @@
  * sincronizados automáticamente.
  */
 
-import { PRODUCTS } from './data/products.js';
+import { PRODUCTS, CATEGORIES } from './data/products.js';
 
 export const PAGE_LOADERS = {
   Home: () => import('./pages/Home'),
   Catalogo: () => import('./pages/Catalogo'),
+  Categoria: () => import('./pages/Categoria'),
   Producto: () => import('./pages/Producto'),
   SillonBKF: () => import('./pages/SillonBKF'),
   Proyectos: () => import('./pages/Proyectos'),
@@ -44,6 +45,10 @@ export const PAGE_LOADERS = {
 export const ROUTES = [
   { path: '/', page: 'Home', prerender: true },
   { path: '/catalogo', page: 'Catalogo', prerender: true },
+  // Una página por categoría de PRODUCTS (/catalogo/asientos, /catalogo/mesas).
+  // Van ANTES de '/catalogo/:slug' y son rutas estáticas, así que el router las
+  // prioriza sobre el comodín del producto.
+  ...CATEGORIES.map((c) => ({ path: `/catalogo/${c.slug}`, page: 'Categoria', prerender: true })),
   { path: '/catalogo/:slug', page: 'Producto', prerender: false },
   { path: '/sillon-bkf', page: 'SillonBKF', prerender: true },
   { path: '/proyectos', page: 'Proyectos', prerender: true },

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { whatsappUrl } from '../data/contact';
 
@@ -25,7 +25,7 @@ export default function Envios() {
         title="Envíos — Zonas y Tiempos de Entrega | Taller Kappa"
         description="Entregamos muebles de hierro y cuero en Capital Federal, GBA, Zona Norte, Zona Sur y al interior del país por expreso. Conocé zonas y tiempos."
         path="/envios"
-        jsonLd={breadcrumbList([{ name: 'Inicio', path: '/' }, { name: 'Envíos', path: '/envios' }])}
+        breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Envíos', path: '/envios' }]}
       />
       <PageHero
         title="Envíos de muebles de hierro en Buenos Aires"

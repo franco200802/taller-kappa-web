@@ -7,46 +7,11 @@ import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 import Toast from './Toast';
 import { whatsappUrl } from '../data/contact';
+import { siteNodes } from '../lib/schema';
 
-const LOCAL_BUSINESS_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': 'https://tallerkappa.com.ar/#organization',
-  name: 'Taller Kappa',
-  image: 'https://tallerkappa.com.ar/images/sillon-bkf-hierro-cuero.jpg',
-  url: 'https://tallerkappa.com.ar',
-  telephone: '+541161242498',
-  priceRange: '$$',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Calle 28 Nº 3779',
-    addressLocality: 'San Martín',
-    addressRegion: 'Buenos Aires',
-    addressCountry: 'AR',
-  },
-  areaServed: { '@type': 'Country', name: 'Argentina' },
-  // Mismas coordenadas reales del iframe de Google Maps en Footer.jsx
-  // (Calle 28 Nº 3779, Villa Chacabuco, San Martín) — no son un valor inventado.
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: -34.5851938,
-    longitude: -58.5281526,
-  },
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '09:00',
-    closes: '18:00',
-  },
-};
-
-const WEBSITE_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Taller Kappa',
-  url: 'https://tallerkappa.com.ar',
-  inLanguage: 'es-AR',
-};
+// Empresa + marca + sitio como un solo grafo enlazado por @id (ver lib/schema.js).
+// Es constante: se calcula una vez al cargar el módulo.
+const SITE_GRAPH = JSON.stringify({ '@context': 'https://schema.org', '@graph': siteNodes() });
 
 /**
  * Esconde el WhatsApp flotante mientras hay un botón de acción a la vista
@@ -89,11 +54,12 @@ export default function Layout() {
   return (
     <div>
       <Helmet>
-        <script type="application/ld+json">{JSON.stringify(LOCAL_BUSINESS_SCHEMA)}</script>
-        <script type="application/ld+json">{JSON.stringify(WEBSITE_SCHEMA)}</script>
+        <script type="application/ld+json">{SITE_GRAPH}</script>
       </Helmet>
       <a href="#contenido" className="skip-link">Saltar al contenido</a>
-      <Navbar />
+      <header>
+        <Navbar />
+      </header>
       <main id="contenido" tabIndex={-1}>
         {/* El Suspense de las páginas lazy vive acá y no en App.jsx: Layout
             se renderiza igual en el prerender y en el cliente, así los
