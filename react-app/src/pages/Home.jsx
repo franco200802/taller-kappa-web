@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import Picture from '../components/Picture';
+import ScrollText from '../components/ScrollText';
+import ShimmerText from '../components/ShimmerText';
+import TypeWriter from '../components/TypeWriter';
 import { PRODUCTS, productHref } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { BUSINESS, addressLine } from '../data/business';
@@ -13,6 +16,9 @@ const REASONS = [
   { title: 'A medida, sin recargo', text: 'Adaptamos medidas, colores y acabados a lo que necesites, sin costo adicional.' },
   { title: 'Factura A y B', text: 'Somos responsables inscriptos. Emitimos comprobante para personas y empresas.' },
 ];
+
+// Lo que se escribe en el hero (la primera frase es la que ve quien no ejecuta JavaScript).
+const HERO_PHRASES = ['sillones BKF', 'bancos BKF', 'bases de mesa de hierro', 'mobiliario comercial a medida'];
 
 const CLIENTS = [
   { src: '/images/logoypf.png', alt: 'YPF', w: 213, h: 60, wide: true },
@@ -35,9 +41,16 @@ export default function Home() {
       <section className="home-hero">
         <div className="home-hero-text">
           <h1>Sillones BKF y muebles de hierro en Buenos Aires</h1>
+          <p className="home-hero-typed">
+            Fabricamos{' '}
+            <TypeWriter
+              sequences={HERO_PHRASES}
+              srText="sillones BKF, bancos BKF, bases de mesa de hierro y mobiliario comercial a medida"
+            />
+          </p>
           <p className="home-hero-lead">
             Directo de fábrica: hierro macizo de 12 mm y cuero vacuno, hechos en nuestro taller de
-            San Martín. Cotizamos por WhatsApp en el día.
+            San Martín. <ShimmerText>Cotizamos por WhatsApp en el día.</ShimmerText>
           </p>
           <div className="home-hero-actions">
             <Link to="/sillon-bkf/" className="btn-main">Ver el sillón BKF</Link>
@@ -146,14 +159,7 @@ export default function Home() {
 
       <section className="why-section">
         <h2 className="section-title">Por qué pedirle el presupuesto a la fábrica</h2>
-        <div className="why-grid">
-          {REASONS.map((r) => (
-            <div className="why-card" key={r.title}>
-              <h3>{r.title}</h3>
-              <p>{r.text}</p>
-            </div>
-          ))}
-        </div>
+        <ScrollText items={REASONS.map((r) => ({ title: r.title, text: r.text }))} />
       </section>
 
       <section className="section-padding home-links">

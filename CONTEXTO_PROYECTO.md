@@ -297,6 +297,29 @@ evidencia, mapa query → URL y qué revisar en Search Console). Reglas que sale
 - **Fotos con los nombres viejos** (`bkf1.jpg`, `bkfapoyapies.jpg`, `mesa.jpeg`) siguen en
   `public/images/` solo para que Google Imágenes no reciba 404. No borrarlas.
 
+## 5f. Texto animado (TypeWriter, ShimmerText, ScrollText)
+
+Basados en los componentes de KokonutUI (kokonutui.com/docs/texts/…), pero **reimplementados sin
+Tailwind ni `motion`**: los originales los necesitan (más ~40 kB de JS) y el proyecto no los usa.
+Están en `src/components/` y su CSS en la sección 19d de `global.css`. Reglas que cumplen y que hay
+que respetar si se usan en otro lado:
+
+- **El contenido siempre está en el HTML**, visible y completo. `TypeWriter` arranca mostrando la
+  primera frase entera (no vacío) y lleva el texto de todas las frases en un `visually-hidden`;
+  `ScrollText` nunca empieza en `opacity: 0`. Nada que dependa de JS para existir.
+- **`prefers-reduced-motion` desactiva la animación** (el tipeo queda fijo, el destello es texto
+  normal y el resaltado cambia solo el color). El destello también se apaga con colores forzados.
+- **Sin saltos de layout**: el renglón del typewriter reserva su alto.
+- **Contraste AA**: `ShimmerText` va del color del texto al rojo de marca; `ScrollText` alterna
+  `--hierro` (activo) y `--grafito` (atenuado, 7:1). No usar opacidades que bajen del contraste.
+- `ScrollText` usa el scroll de la página (el original usa un contenedor de 300 px con scroll
+  propio, que atrapa el scroll).
+- Usos hoy: la home (typewriter en el hero con las frases de `HERO_PHRASES`, destello en
+  "Cotizamos por WhatsApp en el día.", y `ScrollText` en "Por qué pedirle el presupuesto a la
+  fábrica"). El H1 sigue siendo estático.
+- Si se prueba con un iframe, ojo: dentro de un iframe el `IntersectionObserver` mide contra la
+  ventana superior y el resaltado de `ScrollText` parece no funcionar; probar a nivel superior.
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
