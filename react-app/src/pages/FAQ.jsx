@@ -20,6 +20,7 @@ const FALLBACK_FAQS = [
   { id: '8', question: '¿Qué tipos de mesas vende Taller Kappa?', answer: 'En el catálogo figura la Base de Mesa Flat: una base de chapa torneada de 10 mm con columna central, en altura de mesa (73 cm) y de barra (105 cm), pensada para uso gastronómico. Para otros modelos o medidas, consultá por WhatsApp.' },
   { id: '9', question: '¿Taller Kappa vende mobiliario comercial?', answer: 'Sí. Fabrica mobiliario de hierro a medida para locales gastronómicos, estaciones de servicio y comercios. Entre sus clientes figuran YPF, McDonald\'s, Burger King, Shell Select y Sandro. Más información en la página de mobiliario comercial.' },
   { id: '10', question: '¿De qué materiales están fabricados los productos?', answer: 'Usamos hierro macizo redondo de 12mm (sin tubos ni rellenos), pintura epoxi y cuero vacuno. Cada pieza se fabrica en nuestro taller de San Martín, Buenos Aires.' },
+  { id: '10b', question: '¿Se puede comprar online?', answer: 'No. En el sitio no se compra ni se paga nada: elegís los productos, los agregás al presupuesto y se envía por WhatsApp. Taller Kappa responde con el precio final y el plazo de entrega, y el resto se acuerda directamente con el taller.' },
   { id: '11', question: '¿Cuánto cuesta un sillón BKF? ¿Cómo consulto precios o hago un pedido?', answer: 'Taller Kappa no publica precios de lista: se cotizan según cantidad, color y terminación. Escribinos por WhatsApp o completá el formulario de contacto con el producto, la cantidad y la zona de entrega, y te respondemos con la cotización.' },
   { id: '12', question: '¿Hacen envíos?', answer: 'Sí. Coordinamos envíos en Buenos Aires (CABA y GBA) y también al interior del país mediante empresas de transporte. Los tiempos y costos varían según la zona de entrega.' },
   { id: '13', question: '¿Los productos tienen garantía?', answer: 'Sí. La estructura de hierro tiene garantía de por vida, la pintura 2 años y el cuero 1 año. Podés ver el detalle completo en la sección de garantía.' },
@@ -74,7 +75,7 @@ export default function FAQ() {
         <p style={{ marginTop: 24 }}>
           ¿No encontraste lo que buscabas? <Link to="/contacto/">Contactanos</Link> o mirá nuestro{' '}
           <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link>. Más información: <Link to="/bkf/">qué es el sillón BKF</Link>,
-          el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link> y el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
+          el <Link to="/sillon-bkf/">cómo comprar el sillón BKF</Link> y el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
         </p>
       </section>
     </>

@@ -41,7 +41,7 @@ const { render } = await import(pathToFileURL(resolve(ssrDir, 'entry-server.js')
 const { PRERENDER_PAGES } = await import(pathToFileURL(resolve(root, 'src/routes.js')).href);
 const { absoluteUrl, withSlash, assetUrl, pageId } = await import(pathToFileURL(resolve(root, 'src/lib/site.js')).href);
 const { BUSINESS, addressLine } = await import(pathToFileURL(resolve(root, 'src/data/business.js')).href);
-const { PRODUCTS, CATEGORIES, factOf } = await import(pathToFileURL(resolve(root, 'src/data/products.js')).href);
+const { PRODUCTS, CATEGORIES, factOf, productPath } = await import(pathToFileURL(resolve(root, 'src/data/products.js')).href);
 
 /**
  * El template de Vite trae meta tags por defecto (los del Home) que deben
@@ -264,7 +264,7 @@ const llms = [
   `- Email: ${BUSINESS.email}`,
   '',
   '## Productos',
-  ...PRODUCTS.map((p) => `- [${p.name}](${absoluteUrl(`/catalogo/${p.slug}`)}): ${factOf(p, 'Categoría')}. ${factOf(p, 'Estructura')}. Medidas: ${factOf(p, 'Medidas')}.`),
+  ...PRODUCTS.map((p) => `- [${p.name}](${absoluteUrl(productPath(p))}): ${factOf(p, 'Categoría')}. ${factOf(p, 'Estructura')}. Medidas: ${factOf(p, 'Medidas')}.`),
   '',
   '## Categorías',
   ...CATEGORIES.map((c) => `- [${c.heading}](${absoluteUrl(`/catalogo/${c.slug}`)}): ${c.definition}`),
@@ -300,14 +300,19 @@ const notFound = stripDefaultHead(template).replace(
 writeFileSync(resolve(distDir, '404.html'), notFound, 'utf-8');
 
 /**
- * URLs del sitio estático anterior (antes de la migración a React, 14/09/2026).
- * Estaban en su sitemap como /catalogo.html, /nosotros.html, etc. y hoy dan
- * 404. GitHub Pages no permite 301 del lado del servidor: lo más fuerte que
- * se puede publicar es una página con canonical a la URL nueva y un meta
- * refresh inmediato, que Google trata como redirección permanente. No llevan
- * noindex (contradiría la redirección) ni van al sitemap.
+ * URLs que cambiaron de lugar y que Google puede tener indexadas:
+ *  - las del sitio estático anterior (/catalogo.html, /sillon-bkf.html…), vivas hasta
+ *    el 14/09/2026, que dieron 404 hasta que se agregaron estas páginas;
+ *  - la ficha /catalogo/sillon-bkf-premium/, que se unió a la landing /sillon-bkf/ para
+ *    que una sola página compita por "sillón BKF".
+ * GitHub Pages no permite 301 del lado del servidor: lo más fuerte que se puede publicar
+ * es una página con canonical a la URL nueva y un meta refresh inmediato, que Google
+ * trata como redirección permanente. Llevan el title y la description de la página de
+ * destino (si Google mostrara el stub, no sale un "Taller Kappa" genérico), no llevan
+ * noindex (contradiría la redirección) y no van al sitemap. Un 301 real solo se logra
+ * con una regla de Cloudflare (ver docs/seo/recuperacion-seo.md).
  */
-const LEGACY_HTML = {
+const LEGACY_PAGES = {
   'catalogo.html': '/catalogo/',
   'sillon-bkf.html': '/sillon-bkf/',
   'nosotros.html': '/nosotros/',
@@ -316,19 +321,25 @@ const LEGACY_HTML = {
   'proyectos.html': '/proyectos/',
   'envios.html': '/envios/',
   'garantia.html': '/garantia/',
+  ...Object.fromEntries(PRODUCTS.filter((p) => p.path).map((p) => [`catalogo/${p.slug}/index.html`, `${p.path}/`])),
 };
-for (const [file, to] of Object.entries(LEGACY_HTML)) {
+const attr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+for (const [file, to] of Object.entries(LEGACY_PAGES)) {
   const target = absoluteUrl(to);
+  const dest = results.find((r) => withSlash(r.path) === to);
+  if (!dest) { console.error(`  ✗ redirección ${file} → ${to}: la página de destino no existe`); process.exit(1); }
+  mkdirSync(dirname(resolve(distDir, file)), { recursive: true });
   writeFileSync(resolve(distDir, file), `<!DOCTYPE html>
 <html lang="es-AR">
 <head>
 <meta charset="UTF-8">
-<title>Taller Kappa</title>
+<title>${xmlEscape(dest.title)}</title>
+<meta name="description" content="${attr(dest.description)}">
 <link rel="canonical" href="${target}">
 <meta http-equiv="refresh" content="0; url=${to}">
 <script>location.replace(${JSON.stringify(to)} + location.search + location.hash)</script>
 </head>
-<body><p>Esta página se mudó a <a href="${target}">${target}</a>.</p></body>
+<body><p>Esta página se mudó a <a href="${target}">${xmlEscape(dest.title)}</a>.</p></body>
 </html>
 `, 'utf-8');
 }
@@ -348,4 +359,4 @@ if (warnings.length) {
   console.log('\n  Avisos (no cortan el build):');
   for (const w of warnings) console.log(`  ! ${w}`);
 }
-console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · llms.txt · ${Object.keys(LEGACY_HTML).length} redirecciones de URLs .html heredadas\n`);
+console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · llms.txt · ${Object.keys(LEGACY_PAGES).length} redirecciones de URLs que cambiaron de lugar\n`);

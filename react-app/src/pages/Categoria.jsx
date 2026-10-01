@@ -3,7 +3,7 @@ import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import ProductTable from '../components/ProductTable';
-import { CATEGORIES, SOCIAL_IMAGE_SIZE, getCategoryBySlug, productsInCategory, socialImage } from '../data/products';
+import { CATEGORIES, SOCIAL_IMAGE_SIZE, getCategoryBySlug, productHref, productsInCategory, socialImage } from '../data/products';
 import { assetUrl } from '../lib/site';
 import { whatsappUrl } from '../data/contact';
 import { faqNode, itemListNode } from '../lib/schema';
@@ -52,7 +52,7 @@ export default function Categoria() {
         <ul className="home-products">
           {products.map((p) => (
             <li className="home-product" key={p.slug}>
-              <Link to={`/catalogo/${p.slug}/`}>
+              <Link to={productHref(p)}>
                 <div className="home-product-img">
                   <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
                 </div>
@@ -95,7 +95,7 @@ export default function Categoria() {
             {others.map((c) => (
               <span key={c.key}>Ver también <Link to={`/catalogo/${c.slug}/`}>{lcFirst(c.heading)}</Link>. </span>
             ))}
-            {category.key === 'asientos' && <>Conocé el <Link to="/sillon-bkf/">sillón BKF fabricado en Argentina</Link> y leé <Link to="/bkf/">qué es el sillón BKF y cómo elegir uno</Link>. </>}
+            {category.key === 'asientos' && <>Conocé el <Link to="/sillon-bkf/">comprar un sillón BKF en Buenos Aires</Link> y leé <Link to="/bkf/">qué es el sillón BKF y cómo elegir uno</Link>. </>}
             {category.key === 'mesas' && <>Si es para un local, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida</Link>. </>}
             Consultá las <Link to="/envios/">zonas y tiempos de envío</Link> y las <Link to="/garantia/">condiciones de garantía</Link>.
           </p>

@@ -34,7 +34,7 @@ const FAQ = [
   { q: '¿Qué medidas tiene un sillón BKF?', a: 'Las medidas cambian según el fabricante. El Sillón BKF Premium de Taller Kappa mide 78 x 70 x 90 cm en su versión estándar y también se fabrica a medida, sin costo adicional.' },
   { q: '¿Cuál es el sillón BKF original?', a: 'El diseño original es el de 1938 de Bonet, Kurchan y Ferrari Hardoy. Como no pudieron patentarlo, desde los años 40 circulan versiones oficiales y no oficiales, y hoy lo fabrican muchos talleres. Al comparar conviene preguntar por la estructura, el cuero y la terminación. Taller Kappa fabrica su propia versión de ese diseño.' },
   { q: '¿Cómo se cuida un sillón BKF de cuero?', a: 'Limpiá el cuero con un paño seco o apenas húmedo, aplicá crema hidratante para cuero cada 6 meses y evitá el sol directo prolongado, el alcohol y los solventes. El cuero se oscurece naturalmente con el uso. La estructura pintada se limpia con un paño húmedo y detergente neutro.' },
-  { q: '¿Dónde comprar un sillón BKF en Argentina?', a: 'Taller Kappa fabrica el Sillón BKF Premium en su taller de Villa Chacabuco, San Martín (Buenos Aires) y lo envía a todo el país. Se cotiza por WhatsApp.' },
+  { q: '¿Dónde comprar un sillón BKF en Buenos Aires y en Argentina?', a: 'Taller Kappa fabrica el Sillón BKF Premium en su taller de Villa Chacabuco, San Martín (Buenos Aires) y lo envía a todo el país. No se compra por la web: se cotiza por WhatsApp.' },
 ];
 
 const TOC = [
@@ -43,7 +43,7 @@ const TOC = [
   ['historia', 'Historia del sillón BKF'],
   ['materiales', 'Estructura y materiales'],
   ['como-elegir', 'Cómo elegir un sillón BKF'],
-  ['donde-comprar', 'Dónde comprar un sillón BKF en Argentina'],
+  ['donde-comprar', 'Dónde comprar un sillón BKF en Buenos Aires'],
   ['preguntas', 'Preguntas frecuentes'],
 ];
 
@@ -154,12 +154,12 @@ export default function GuiaBKF() {
             <p>
               Así lo fabrica Taller Kappa: estructura de hierro redondo macizo de 12 mm, cuero vacuno de primera selección curtido al vegetal,
               pintura epoxi anticorrosiva o cromado, 78 x 70 x 90 cm en la versión estándar (o a medida, sin costo adicional) y garantía de por vida
-              en la estructura. Está todo en la <Link to="/catalogo/sillon-bkf-premium/">ficha técnica del Sillón BKF Premium</Link>.
+              en la estructura. Está todo en la <Link to="/sillon-bkf/">ficha técnica del Sillón BKF Premium</Link>.
             </p>
 
-            <h2 id="donde-comprar">Dónde comprar un sillón BKF en Argentina</h2>
+            <h2 id="donde-comprar">Dónde comprar un sillón BKF en Buenos Aires y Argentina</h2>
             <p>
-              {BUSINESS.legalName} fabrica el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link>, en su taller de Villa Chacabuco, San Martín (provincia de
+              {BUSINESS.legalName} fabrica el <Link to="/sillon-bkf/">sillón BKF de hierro y cuero</Link>, en su taller de Villa Chacabuco, San Martín (provincia de
               Buenos Aires), y lo vende directo de fábrica. Se puede retirar en el taller o recibir en todo el país: consultá las{' '}
               <Link to="/envios/">zonas y tiempos de envío</Link>. El pedido se cotiza por{' '}
               <a href={whatsappUrl('Hola, quiero cotizar un sillón BKF.')} target="_blank" rel="noopener noreferrer">WhatsApp</a>, según acabado, cantidad y destino.

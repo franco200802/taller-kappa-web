@@ -38,7 +38,7 @@ const SECTORS = [
 ];
 
 export default function MobiliarioComercial() {
-  const description = 'Taller Kappa fabrica mobiliario comercial de hierro a medida en San Martín: bases de mesa, bancos y sillones BKF para locales gastronómicos, comercios y empresas.';
+  const description = 'Taller Kappa fabrica en San Martín, Buenos Aires, mobiliario comercial de hierro a medida: bases de mesa, bancos y sillones BKF para locales y empresas de todo el país.';
   const service = serviceNode({
     path: PATH,
     name: 'Fabricación de mobiliario comercial de hierro a medida',
@@ -50,7 +50,7 @@ export default function MobiliarioComercial() {
   return (
     <>
       <Seo
-        title="Mobiliario Comercial de Hierro a Medida en Argentina | Taller Kappa"
+        title="Mobiliario Comercial de Hierro en Buenos Aires | Taller Kappa"
         description={description}
         path={PATH}
         about={[ORG_ID]}
@@ -94,7 +94,7 @@ export default function MobiliarioComercial() {
         <ProductTable products={PRODUCTS} />
         <p style={{ marginTop: 24 }}>
           Ver la <Link to="/catalogo/base-de-mesa-flat/">Base de Mesa Flat</Link> para mesas y barras, el <Link to="/catalogo/banco-bkf/">Banco BKF</Link> y el{' '}
-          <Link to="/catalogo/sillon-bkf-premium/">Sillón BKF Premium</Link>. Todo el catálogo está en{' '}
+          <Link to="/sillon-bkf/">Sillón BKF Premium</Link>. Todo el catálogo está en{' '}
           <Link to="/catalogo/asientos/">sillones y bancos BKF</Link> y <Link to="/catalogo/mesas/">bases de mesa de hierro</Link>.
         </p>
       </section>

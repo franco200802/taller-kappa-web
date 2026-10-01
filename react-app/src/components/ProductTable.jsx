@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CATEGORIES, factOf } from '../data/products';
+import { CATEGORIES, factOf, productHref } from '../data/products';
 
 /**
  * Tabla HTML real de productos comparables (no una imagen): producto,
@@ -25,7 +25,7 @@ export default function ProductTable({ products, showCategory = true, caption })
         <tbody>
           {products.map((p) => (
             <tr key={p.slug}>
-              <th scope="row"><Link to={`/catalogo/${p.slug}/`}>{p.name}</Link></th>
+              <th scope="row"><Link to={productHref(p)}>{p.name}</Link></th>
               {showCategory && <td>{categoryName(p.category)}</td>}
               <td>{factOf(p, 'Estructura')}</td>
               <td>{factOf(p, 'Medidas')}</td>
