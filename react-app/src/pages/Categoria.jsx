@@ -76,7 +76,8 @@ export default function Categoria() {
             {others.map((c) => (
               <span key={c.key}>Ver también <Link to={`/catalogo/${c.slug}/`}>{lcFirst(c.heading)}</Link>. </span>
             ))}
-            {category.key === 'asientos' && <>Conocé la historia del diseño en la guía del <Link to="/sillon-bkf/">Sillón BKF</Link>. </>}
+            {category.key === 'asientos' && <>Conocé el <Link to="/sillon-bkf/">sillón BKF fabricado en Argentina</Link> y leé <Link to="/bkf/">qué es el sillón BKF y cómo elegir uno</Link>. </>}
+            {category.key === 'mesas' && <>Si es para un local, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida</Link>. </>}
             Consultá las <Link to="/envios/">zonas y tiempos de envío</Link> y las <Link to="/garantia/">condiciones de garantía</Link>.
           </p>
         </div>

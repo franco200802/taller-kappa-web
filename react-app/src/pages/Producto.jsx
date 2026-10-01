@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { getProductBySlug, getCategory, relatedProducts } from '../data/products';
+import { formatPrice, getProductBySlug, getCategory, relatedProducts } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { assetUrl } from '../lib/site';
 import { faqNode, productId, productNode } from '../lib/schema';
@@ -91,8 +91,8 @@ export default function Producto() {
             <h2>{product.name}</h2>
             <p className="bkf-tagline">{product.desc}</p>
             <div className="bkf-price-box">
-              <span className="bkf-price">Cotización personalizada</span>
-              <span className="bkf-price-note">Consultanos por WhatsApp para recibir tu presupuesto</span>
+              <span className="bkf-price">{formatPrice(product) ?? 'Cotización personalizada'}</span>
+              <span className="bkf-price-note">{product.price?.note ?? 'Consultanos por WhatsApp para recibir tu presupuesto'}</span>
             </div>
             {product.specs?.length > 0 && (
               <ul className="bkf-specs">
@@ -127,7 +127,7 @@ export default function Producto() {
                 {product.facts.map(([label, value]) => (
                   <tr key={label}>
                     <th scope="row">{label}</th>
-                    <td className="our-col"><strong>{value}</strong></td>
+                    <td className="our-col"><strong>{label === 'Precio' ? (formatPrice(product) ?? value) : value}</strong></td>
                   </tr>
                 ))}
               </tbody>
@@ -148,7 +148,7 @@ export default function Producto() {
             ))}
             <p>
               Más preguntas en las <Link to="/faq/">preguntas frecuentes de Taller Kappa</Link>
-              {product.category === 'asientos' && <>, o la <Link to="/sillon-bkf/">guía del Sillón BKF: historia, medidas y materiales</Link></>}.
+              {product.category === 'asientos' && <>, el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link> o la guía <Link to="/bkf/">qué es el sillón BKF: historia y cómo elegir uno</Link></>}.
             </p>
           </div>
         </section>

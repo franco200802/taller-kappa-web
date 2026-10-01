@@ -6,13 +6,13 @@ import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrl } from '../data/contact';
-import { getProductBySlug, relatedProducts } from '../data/products';
+import { formatPrice, getProductBySlug, relatedProducts } from '../data/products';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
 
 // Las respuestas tienen que coincidir con /envios/ y /garantia/ (misma fuente de verdad).
 const FAQ_ITEMS = [
-  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega. Consultá por WhatsApp al 11 6124-2498 para recibir presupuesto actualizado.' },
+  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
   { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
   { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en el resto de CABA y GBA, de 2 a 5 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
   { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
@@ -47,8 +47,8 @@ export default function SillonBKF() {
   return (
     <>
       <Seo
-        title="Sillón BKF de Hierro y Cuero | Taller Kappa Buenos Aires"
-        description="Qué es el sillón BKF, quién lo diseñó y cómo lo fabrica Taller Kappa: hierro macizo de 12 mm y cuero vacuno, en San Martín, Buenos Aires. Medidas y garantía."
+        title="Sillón BKF en Argentina: hierro y cuero | Taller Kappa"
+        description="Sillón BKF fabricado en Argentina: hierro macizo de 12 mm y cuero vacuno curtido al vegetal. Medidas, garantía y envíos a todo el país. Cotizá por WhatsApp."
         path="/sillon-bkf"
         image={assetUrl(PRODUCT.image)}
         imageAlt={PRODUCT.alt}
@@ -71,8 +71,8 @@ export default function SillonBKF() {
         ]}
       />
       <PageHero
-        title="Sillón BKF"
-        lead="El sillón BKF es un sillón de hierro y cuero diseñado en Buenos Aires en 1938. Taller Kappa lo fabrica en San Martín con hierro macizo de 12 mm y cuero vacuno, directo de fábrica."
+        title="Sillón BKF fabricado en Argentina"
+        lead="El sillón BKF es un sillón de hierro y cuero diseñado en Buenos Aires en 1938. Taller Kappa lo fabrica en Argentina, en San Martín, con hierro macizo de 12 mm y cuero vacuno, directo de fábrica."
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }]}
       />
 
@@ -90,8 +90,8 @@ export default function SillonBKF() {
             <h2>Sillón BKF Premium</h2>
             <p className="bkf-tagline">Diseño argentino de 1938, fabricado con hierro macizo de 12 mm y cuero vacuno curtido al vegetal.</p>
             <div className="bkf-price-box">
-              <span className="bkf-price">Cotización personalizada</span>
-              <span className="bkf-price-note">Consultanos por WhatsApp para recibir tu presupuesto</span>
+              <span className="bkf-price">{formatPrice(PRODUCT) ?? 'Cotización personalizada'}</span>
+              <span className="bkf-price-note">{PRODUCT.price?.note ?? 'Consultanos por WhatsApp para recibir tu presupuesto'}</span>
             </div>
             <ul className="bkf-specs">
               <li><Icon name="check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
@@ -128,10 +128,21 @@ export default function SillonBKF() {
 
       <section className="bkf-about section-fade">
         <div className="bkf-about-inner">
-          <h2>¿Qué es el Sillón BKF?</h2>
-          <p>El <strong>sillón BKF</strong> (también conocido como <em>silla paleta</em> o <em>butterfly chair</em>) es uno de los diseños de mobiliario más reconocidos de Argentina y del mundo. Fue creado en 1938 por los arquitectos argentinos <strong>Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy</strong> en Buenos Aires, de ahí las iniciales BKF.</p>
-          <p>Su estructura de <strong>hierro forjado</strong> en forma de mariposa sostiene una funda de cuero tensada, generando una silueta inconfundible. Es elegido tanto para interiores modernos y minimalistas como para locales gastronómicos, bares y restaurantes por su <strong>resistencia excepcional</strong> y su diseño atemporal.</p>
-          <p>En Taller Kappa fabricamos el sillón BKF con <strong>hierro macizo redondo de 12mm</strong> (sin tubos, sin rellenos) y <strong>cuero vacuno de primera selección</strong>, pensado para uso residencial e intensivo. Nuestros sillones equipan locales de <strong>YPF, McDonald's, Burger King y Shell</strong>.</p>
+          <h2>Sillón BKF fabricado en Argentina</h2>
+          <p>
+            El <strong>sillón BKF</strong> (también llamado silla BKF, silla paleta, sillón mariposa o <em>butterfly chair</em>) es un diseño argentino de 1938:
+            una estructura de hierro y un asiento de cuero tensado. Taller Kappa lo fabrica en Argentina, en su taller de Villa Chacabuco, San Martín,
+            y lo vende directo de fábrica.
+          </p>
+          <p>
+            Sirve tanto para interiores residenciales, como un living, como para locales gastronómicos: la estructura es de <strong>hierro macizo redondo
+            de 12 mm</strong> (sin tubos ni rellenos) y el asiento, de <strong>cuero vacuno de primera selección</strong>. Nuestros sillones equipan locales de
+            YPF, McDonald&apos;s, Burger King y Shell: mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida</Link>.
+          </p>
+          <p>
+            Podés retirarlo en el taller o recibirlo en todo el país (<Link to="/envios/">zonas y tiempos de envío</Link>). Para conocer el origen del
+            diseño y cómo elegir uno, leé la guía <Link to="/bkf/">qué es el sillón BKF: historia y características</Link>.
+          </p>
 
           <div className="bkf-history-grid">
             <div className="bkf-history-card">

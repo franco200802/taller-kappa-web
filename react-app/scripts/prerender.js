@@ -68,7 +68,7 @@ function stripDefaultHead(html) {
  * si es verificablemente preciso, así que no se usa la fecha del build.
  * Sin git (o sin historial) devuelve null y el <lastmod> se omite.
  */
-const PAGES_WITH_PRODUCT_DATA = new Set(['Home', 'Catalogo', 'Categoria', 'Producto', 'SillonBKF', 'FAQ', 'Nosotros', 'Proyectos']);
+const PAGES_WITH_PRODUCT_DATA = new Set(['Home', 'Catalogo', 'Categoria', 'Producto', 'SillonBKF', 'GuiaBKF', 'MobiliarioComercial', 'FAQ', 'Nosotros', 'Proyectos']);
 function lastModified(page) {
   const files = [`src/pages/${page}.jsx`];
   if (PAGES_WITH_PRODUCT_DATA.has(page)) files.push('src/data/products.js');
@@ -128,6 +128,7 @@ for (const { path, page: pageName } of PRERENDER_PAGES) {
   const description = decode(page.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"/)?.[1] ?? '');
   const noindex = /<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(page);
   const h1Count = (html.match(/<h1[\s>]/g) || []).length;
+  const h1Text = decode((html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? '').replace(/<[^>]+>/g, '').trim());
   // Fotos de la página (jpg/jpeg: los logos de clientes son png y no se
   // listan) para la extensión de imágenes del sitemap.
   const images = [...new Set([...html.matchAll(/<img[^>]*\ssrc="(\/images\/[^"]+\.jpe?g)"/g)].map((m) => m[1]))];
@@ -174,6 +175,9 @@ for (const { path, page: pageName } of PRERENDER_PAGES) {
       if (!prerenderedPaths.has(href)) problems.push(`${path}: link interno roto → ${href}`);
     }
   }
+  // Enlaces contextuales: solo los del <main> (sin menú ni footer, que enlazan todo en cada página).
+  const mainHtml = html.match(/<main[\s\S]*?<\/main>/)?.[0] ?? '';
+  const contextualLinks = new Set([...mainHtml.matchAll(/href="(\/[^"#?]*)"/g)].map((m) => m[1]).filter((h) => !/\.[a-z0-9]+$/i.test(h)));
   const imgUrls = new Set();
   for (const m of html.matchAll(/<img\b[^>]*>/g)) {
     const tag = m[0];
@@ -184,13 +188,13 @@ for (const { path, page: pageName } of PRERENDER_PAGES) {
   }
   for (const u of imgUrls) if (!existsSync(localFile(u))) problems.push(`${path}: imagen inexistente ${u}`);
 
-  results.push({ path, pageName, canonical, title, description, noindex, images, links: internalLinks, bytes: Buffer.byteLength(page) });
+  results.push({ path, pageName, canonical, title, description, noindex, h1Text, images, links: internalLinks, contextualLinks, bytes: Buffer.byteLength(page) });
 }
 
-for (const key of ['title', 'description']) {
+for (const key of ['title', 'description', 'h1Text']) {
   const seen = new Map();
   for (const r of results) {
-    if (seen.has(r[key])) problems.push(`${key} duplicado en ${seen.get(r[key])} y ${r.path}: "${r[key]}"`);
+    if (seen.has(r[key])) problems.push(`${key === 'h1Text' ? 'h1' : key} duplicado en ${seen.get(r[key])} y ${r.path}: "${r[key]}"`);
     else seen.set(r[key], r.path);
   }
 }
@@ -200,6 +204,15 @@ for (const r of results) {
   if (r.noindex || r.path === '/') continue;
   const target = withSlash(r.path);
   if (!results.some((o) => o.path !== r.path && o.links.has(target))) problems.push(`${r.path}: página huérfana (ninguna otra página enlaza a ${target})`);
+}
+
+// Avisos que no cortan el build: longitudes que los buscadores suelen truncar o que quedan cortas.
+const warnings = [];
+for (const r of results) {
+  if (r.noindex) continue;
+  if (r.title.length > 70) warnings.push(`${r.path}: title de ${r.title.length} caracteres (se trunca pasados ~60-70)`);
+  if (r.description.length > 170) warnings.push(`${r.path}: description de ${r.description.length} caracteres (se trunca pasados ~155-165)`);
+  if (r.description.length < 70) warnings.push(`${r.path}: description de solo ${r.description.length} caracteres`);
 }
 
 if (problems.length) {
@@ -256,6 +269,11 @@ const llms = [
   '## Categorías',
   ...CATEGORIES.map((c) => `- [${c.heading}](${absoluteUrl(`/catalogo/${c.slug}`)}): ${c.definition}`),
   '',
+  '## Guías y páginas principales',
+  bullet('Sillón BKF fabricado en Argentina', '/sillon-bkf'),
+  bullet('Qué es el sillón BKF: historia y características', '/bkf'),
+  bullet('Mobiliario comercial de hierro a medida', '/mobiliario-comercial'),
+  '',
   '## Información para clientes',
   bullet('Catálogo', '/catalogo'),
   bullet('Preguntas frecuentes', '/faq'),
@@ -265,8 +283,7 @@ const llms = [
   '',
   '## Sobre la empresa',
   bullet('Nosotros', '/nosotros'),
-  bullet('Mobiliario comercial y proyectos', '/proyectos'),
-  bullet('Guía del Sillón BKF', '/sillon-bkf'),
+  bullet('Proyectos y clientes', '/proyectos'),
   '',
 ].join('\n');
 writeFileSync(resolve(distDir, 'llms.txt'), llms, 'utf-8');
@@ -321,5 +338,14 @@ rmSync(ssrDir, { recursive: true, force: true });
 console.log('\n  Prerender completado:\n');
 for (const r of results) {
   console.log(`  ${r.path.padEnd(14)} ${String(r.bytes).padStart(7)} B  canonical: ${r.canonical}`);
+}
+const inbound = (path) => results.filter((o) => o.path !== path && o.contextualLinks.has(withSlash(path))).length;
+console.log('\n  Enlaces internos contextuales entrantes (desde el contenido de otras páginas, sin menú ni footer), de menos a más:');
+for (const r of [...results].sort((a, b) => inbound(a.path) - inbound(b.path))) {
+  console.log(`  ${String(inbound(r.path)).padStart(3)}  ${r.path}`);
+}
+if (warnings.length) {
+  console.log('\n  Avisos (no cortan el build):');
+  for (const w of warnings) console.log(`  ! ${w}`);
 }
 console.log(`\n  ${results.length} rutas + 404.html · sitemap.xml con ${urls.length} URLs · llms.txt · ${Object.keys(LEGACY_HTML).length} redirecciones de URLs .html heredadas\n`);

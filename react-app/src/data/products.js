@@ -13,6 +13,11 @@
  * `width`/`height` son las dimensiones reales del archivo en
  * public/images (verificadas con `file`), no valores inventados.
  *
+ * Precio (opcional): si un producto lleva `price: { amount, currency: 'ARS',
+ * validUntil?: 'AAAA-MM-DD', note?: '…' }`, la ficha lo muestra y el JSON-LD
+ * emite price/priceCurrency (ver offerNode en lib/schema.js). Hoy ningún producto
+ * lo tiene porque el sitio cotiza por WhatsApp: no se inventa.
+ *
  * Campos de contenido:
  *  - definition: respuesta directa a "¿qué es?". Va arriba de la ficha, en el
  *    meta description del schema y es la frase citable del producto.
@@ -47,9 +52,9 @@ export const CATEGORIES = [
     slug: 'mesas',
     name: 'Mesas',
     heading: 'Bases de mesa de hierro para mesas y barras',
-    seoTitle: 'Bases de Mesa de Hierro para Mesas y Barras | Taller Kappa',
+    seoTitle: 'Bases de Mesa de Hierro para Bares y Restaurantes | Taller Kappa',
     seoDescription: 'Base de Mesa Flat de Taller Kappa: chapa torneada de 10 mm, en altura de mesa (73 cm) y de barra (105 cm). Uso gastronómico. San Martín, Buenos Aires.',
-    definition: 'En mesas, Taller Kappa fabrica la Base de Mesa Flat: una base de chapa torneada de 10 mm con columna central, en altura de mesa (73 cm) y de barra (105 cm), pensada para uso gastronómico intenso.',
+    definition: 'En mesas, Taller Kappa fabrica la Base de Mesa Flat: una base de chapa torneada de 10 mm con columna central, en altura de mesa (73 cm) y de barra (105 cm), pensada para uso gastronómico intenso, como en bares y restaurantes.',
     difference: 'El catálogo incluye la base de mesa; el sitio no publica tapas. Para otros modelos o medidas de mesa, la consulta se hace por WhatsApp.',
   },
 ];
@@ -94,7 +99,7 @@ export const PRODUCTS = [
     slug: 'banco-bkf',
     category: 'asientos',
     name: 'Banco BKF',
-    alternateName: ['Banco BKF de hierro y cuero'],
+    alternateName: ['Banco BKF de hierro y cuero', 'Banqueta BKF'],
     seoTitle: 'Banco BKF de Hierro y Cuero | Taller Kappa',
     seoDescription: 'Banco BKF de hierro macizo de 12 mm, 38 x 38 x 45 cm: pie de cama o asiento auxiliar en la línea del sillón BKF. Fabricado por Taller Kappa en San Martín.',
     image: '/images/banco-bkf-hierro-cuero.jpg',
@@ -104,7 +109,7 @@ export const PRODUCTS = [
     badge: 'Ideal para regalo',
     stock: true,
     desc: 'El complemento ideal de diseño. Versatilidad y resistencia en tamaño compacto, siguiendo la línea BKF.',
-    definition: 'El Banco BKF es un banco bajo de hierro macizo de 12 mm y asiento de cuero que sigue la línea del sillón BKF en formato compacto: 38 x 38 x 45 cm. Taller Kappa lo fabrica en San Martín, Buenos Aires, para usarlo como pie de cama o asiento auxiliar.',
+    definition: 'El Banco BKF es un banco bajo (una banqueta) de hierro macizo de 12 mm y asiento de cuero que sigue la línea del sillón BKF en formato compacto: 38 x 38 x 45 cm. Taller Kappa lo fabrica en San Martín, Buenos Aires, para usarlo como pie de cama o asiento auxiliar.',
     material: 'Hierro macizo de 12 mm y asiento de cuero',
     specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm'],
     facts: [
@@ -135,7 +140,7 @@ export const PRODUCTS = [
     badge: 'Uso gastronómico',
     stock: true,
     desc: 'Base de chapa torneada pesada que evita el balanceo, pensada para uso gastronómico intenso.',
-    definition: 'La Base de Mesa Flat es una base de mesa de chapa torneada de 10 mm con columna central de 77 o 101 mm, que Taller Kappa fabrica en San Martín, Buenos Aires, para uso gastronómico. Se ofrece en altura de mesa (73 cm) y de barra (105 cm), admite tapas grandes y su base pesada evita el balanceo.',
+    definition: 'La Base de Mesa Flat es una base de mesa de chapa torneada de 10 mm con columna central de 77 o 101 mm, que Taller Kappa fabrica en San Martín, Buenos Aires, para uso gastronómico, como mesas de bares y restaurantes. Se ofrece en altura de mesa (73 cm) y de barra (105 cm), admite tapas grandes y su base pesada evita el balanceo.',
     material: 'Chapa torneada de 10 mm con columna central de 77 o 101 mm',
     specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes'],
     facts: [
@@ -152,6 +157,13 @@ export const PRODUCTS = [
     ],
   },
 ];
+
+/** "$ 123.456" a partir de `product.price`, o null si el producto no publica precio. */
+export function formatPrice(product) {
+  const price = product.price;
+  if (!price?.amount) return null;
+  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: price.currency ?? 'ARS', maximumFractionDigits: 0 }).format(price.amount);
+}
 
 export function getProductBySlug(slug) {
   return PRODUCTS.find((p) => p.slug === slug) ?? null;

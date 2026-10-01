@@ -7,9 +7,12 @@ import { BUSINESS } from '../data/business';
 const FOOTER_LINKS = [
   { to: '/', label: 'Inicio' },
   { to: '/catalogo/', label: 'Catálogo' },
+  { to: '/sillon-bkf/', label: 'Sillón BKF' },
   { to: '/catalogo/asientos/', label: 'Sillones y bancos BKF' },
   { to: '/catalogo/mesas/', label: 'Bases de mesa' },
-  { to: '/proyectos/', label: 'Proyectos' },
+  { to: '/bkf/', label: 'Qué es el sillón BKF' },
+  { to: '/mobiliario-comercial/', label: 'Mobiliario comercial' },
+  { to: '/proyectos/', label: 'Proyectos y clientes' },
   { to: '/envios/', label: 'Envíos' },
   { to: '/garantia/', label: 'Garantía' },
   { to: '/nosotros/', label: 'Nosotros' },

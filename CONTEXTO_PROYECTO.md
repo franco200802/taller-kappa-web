@@ -60,7 +60,7 @@ termina en un link de WhatsApp con el detalle del pedido.
      `<h1>`, title/description únicos, JSON-LD parseable con todos sus `@id`
      resueltos y el nodo `WebPage` de la página, links internos rotos,
      páginas huérfanas, `<img>` sin `alt` e imágenes que no existen.
-  - Resultado esperado de `npm run build`: **"14 rutas + 404.html"**
+  - Resultado esperado de `npm run build`: **"16 rutas + 404.html"**
     sin errores ni warnings. Si ese número cambia sin que vos hayas
     agregado/quitado una página, algo se rompió.
 
@@ -80,6 +80,7 @@ taller-kappa-web/                  (raíz del repo)
 │   │   │   ├── Layout.jsx         (shell: Navbar + <main> con el <Suspense> de las páginas + Footer + CartDrawer + WA flotante)
 │   │   │   ├── Navbar.jsx, Footer.jsx, CartDrawer.jsx, Toast.jsx
 │   │   │   ├── PageHero.jsx       (breadcrumb + h1 + bajada de las páginas internas)
+│   │   │   ├── Icon.jsx           (íconos SVG en línea; reemplazan a Font Awesome por CDN)
 │   │   │   ├── ProductTable.jsx   (tabla HTML comparativa de productos, desde `facts`)
 │   │   │   ├── Modal.jsx          (<dialog> nativo con showModal(): carrito, detalle de producto, lightbox)
 │   │   │   ├── Picture.jsx        (<picture> con .webp SOLO para los archivos listados en WEBP_AVAILABLE)
@@ -214,6 +215,40 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   otros): plazos de entrega (`/envios/` ↔ FAQ del Sillón BKF ↔ FAQ general),
   garantía (`/garantia/` ↔ fichas), dirección/horario (`business.js` ↔ footer ↔
   contacto ↔ FAQ).
+
+## 5c. SEO + GEO fase 2 (1/10/2026) — qué cambió y por qué
+
+El análisis completo (SERPs, content gap, clusters, matriz, lista de indexación y
+acciones externas) está en `docs/seo/seo-geo-fase-2-competencia.md`. Lo que hay que
+saber al tocar el código:
+
+- **Páginas nuevas con intención propia (no duplicarlas):** `/bkf/` (guía
+  informativa: "qué es BKF", historia, cómo elegir) y `/mobiliario-comercial/`
+  (servicio B2B). `/sillon-bkf/` es la página *comercial* del BKF y `/proyectos/`
+  es el *portfolio*. Si se agrega contenido, ponerlo en la página cuya intención
+  corresponde.
+- **Menú:** destaca las dos páginas comerciales (`Sillón BKF` y `Mobiliario
+  comercial`). La guía y Proyectos van en el footer y en enlaces del contenido.
+- **No hay páginas** para `mesa BKF`, `mesa ratona`, `muebles para living`, etc.
+  porque el taller no fabrica esos productos. Crearlas exige ampliar el catálogo
+  en `data/products.js`, no solo escribir texto.
+- **Precio:** ningún producto lo tiene (se cotiza por WhatsApp). Si se decide
+  publicarlo, se carga `price: { amount, currency, validUntil?, note? }` en el
+  producto y la ficha, `/sillon-bkf/` y el JSON-LD lo toman solos.
+- **Performance (Lighthouse mobile, 99 en las 16 páginas en lab):** la fuente
+  Archivo está **autoalojada** (`public/fonts/`, `@font-face` en `global.css`,
+  preload en `index.html`); los íconos son **SVG en línea** (`Icon.jsx`: para uno
+  nuevo hay que copiar su SVG al mapa); el mapa de Google se monta al llegar al
+  footer; el script de GA4 se descarga en la primera interacción o 3 s tras el
+  `load` (la cola de eventos se define al instante). No volver a agregar hojas de
+  estilo ni fuentes de terceros en el `<head>`.
+- **Antes de dar por buena una pantalla mobile**, probar a 360 px (es el ancho de
+  Android más común). Un `grid-template-columns: repeat(2, max-content)` en el
+  footer ya causó un desborde a ese ancho; usar `minmax(0, …)` y envolver texto.
+- **Fuera del código (Cloudflare):** `http://` no redirige a `https://`, el email
+  del HTML visible sale ofuscado y el caché de estáticos es corto. Detalle en el
+  documento de la fase 2, §9.
+
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 

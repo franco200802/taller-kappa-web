@@ -92,11 +92,11 @@ export default function Contacto() {
           </address>
           <p>
             Taller Kappa vende por cotización: indicá el producto, la cantidad, el color y la zona de entrega. Antes de escribir,
-            podés ver las <Link to="/envios/">zonas y tiempos de envío</Link> y la <Link to="/garantia/">garantía</Link>.
+            podés ver las <Link to="/envios/">zonas y tiempos de envío</Link> y la <Link to="/garantia/">garantía</Link>, o conocer a la empresa en <Link to="/nosotros/">quiénes somos</Link>.
           </p>
           <p>
             ¿Buscás un producto en particular? Mirá el <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link> o
-            todo sobre el <Link to="/sillon-bkf/">Sillón BKF</Link>.
+            todo sobre el <Link to="/sillon-bkf/">sillón BKF en Argentina</Link>. Si es para un negocio, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
           </p>
         </aside>
       </section>

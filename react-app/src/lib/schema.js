@@ -24,6 +24,7 @@ import { SITE, absoluteUrl, assetUrl, breadcrumbId, breadcrumbList, pageId } fro
 export const ORG_ID = `${SITE}/#organization`;
 export const BRAND_ID = `${SITE}/#brand`;
 export const WEBSITE_ID = `${SITE}/#website`;
+export const articleId = (path) => `${absoluteUrl(path)}#articulo`;
 export const productId = (slug) => `${absoluteUrl(`/catalogo/${slug}`)}#producto`;
 
 const ref = (id) => ({ '@id': id });
@@ -82,7 +83,12 @@ export function organizationNode() {
         },
       },
     },
-    areaServed: COUNTRY,
+    // Las zonas de entrega que publica /envios/: CABA, GBA (norte, oeste, sur) e interior del país.
+    areaServed: [
+      { '@type': 'AdministrativeArea', name: 'Ciudad Autónoma de Buenos Aires' },
+      { '@type': 'AdministrativeArea', name: 'Gran Buenos Aires' },
+      COUNTRY,
+    ],
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: BUSINESS.hours.days,
@@ -159,14 +165,70 @@ export function productNode(p, extra = {}) {
       .filter(([label]) => label !== 'Precio')
       .map(([name, value]) => ({ '@type': 'PropertyValue', name, value })),
     isRelatedTo: relatedProducts(p).map(productStub),
-    offers: {
-      '@type': 'Offer',
-      url: absoluteUrl(`/catalogo/${p.slug}`),
-      availability: p.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
-      itemCondition: 'https://schema.org/NewCondition',
-      seller: ref(ORG_ID),
-    },
+    offers: offerNode(p),
     ...extra,
+  };
+}
+
+/**
+ * Oferta de un producto. Sin `price` en data/products.js la oferta lleva solo
+ * disponibilidad (el sitio cotiza por WhatsApp y no inventa precios). Si se
+ * carga `price: { amount, currency, validUntil? }` en el producto, la oferta
+ * pasa a incluir price/priceCurrency y el producto queda elegible para
+ * resultados enriquecidos de producto.
+ */
+export function offerNode(p) {
+  const price = p.price;
+  return {
+    '@type': 'Offer',
+    url: absoluteUrl(`/catalogo/${p.slug}`),
+    availability: p.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+    itemCondition: 'https://schema.org/NewCondition',
+    seller: ref(ORG_ID),
+    ...(price?.amount ? { price: String(price.amount), priceCurrency: price.currency ?? 'ARS' } : {}),
+    ...(price?.amount && price.validUntil ? { priceValidUntil: price.validUntil } : {}),
+  };
+}
+
+/**
+ * Artículo educativo (guía). El autor y el publicador son la empresa; no se
+ * inventa un autor persona. `datePublished` es la fecha real de publicación;
+ * `dateModified` solo se agrega si se pasa (no se aparenta frescura).
+ */
+export function articleNode({ path, headline, description, image, about, datePublished, dateModified, citations = [] }) {
+  return {
+    '@type': 'Article',
+    '@id': articleId(path),
+    headline,
+    description,
+    inLanguage: 'es-AR',
+    mainEntityOfPage: ref(pageId(path)),
+    image: image ? [assetUrl(image)] : undefined,
+    author: ref(ORG_ID),
+    publisher: ref(ORG_ID),
+    datePublished,
+    ...(dateModified ? { dateModified } : {}),
+    ...(about ? { about } : {}),
+    ...(citations.length ? { citation: citations.map((url) => ({ '@type': 'CreativeWork', url })) } : {}),
+  };
+}
+
+/** Servicio de fabricación para empresas (página /mobiliario-comercial/). */
+export function serviceNode({ path, name, serviceType, description, offers }) {
+  return {
+    '@type': 'Service',
+    '@id': `${absoluteUrl(path)}#servicio`,
+    name,
+    serviceType,
+    description,
+    provider: ref(ORG_ID),
+    areaServed: COUNTRY,
+    audience: { '@type': 'BusinessAudience', name: 'Locales gastronómicos, estaciones de servicio, comercios, hoteles y oficinas' },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name,
+      itemListElement: offers.map((p) => ({ '@type': 'Offer', itemOffered: productStub(p) })),
+    },
   };
 }
 

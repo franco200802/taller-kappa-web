@@ -76,8 +76,8 @@ export default function Envios() {
             </Link>
           </div>
           <p className="cta-links">
-            Conocé también nuestras <Link to="/garantia/">condiciones de garantía</Link> o
-            todo sobre el <Link to="/sillon-bkf/">Sillón BKF</Link>.
+            Conocé también nuestras <Link to="/garantia/">condiciones de garantía</Link>,
+            el <Link to="/sillon-bkf/">sillón BKF</Link> o el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
           </p>
         </div>
       </section>
