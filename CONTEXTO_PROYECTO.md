@@ -272,6 +272,31 @@ autoridad externa) en `docs/seo/seo-google-fase-3.md`. Lo que hay que saber del 
   recortan para ocultarla; hay que reemplazarlas por fotos reales (también las
   exige el Perfil de Empresa de Google).
 
+## 5e. Recuperación SEO (1/10/2026) — reglas que NO hay que romper
+
+Auditoría completa en `docs/seo/recuperacion-seo.md` (línea de tiempo, causas con
+evidencia, mapa query → URL y qué revisar en Search Console). Reglas que salen de ella:
+
+- **No cambiar URLs publicadas.** El sitio ya cambió de esquema tres veces en 15 días
+  (`.html` → sin barra → con barra) y las URLs viejas dieron 404; eso es la causa más
+  probable de la pérdida de posiciones. Si una URL cambia, hay que dejar una redirección
+  en `LEGACY_PAGES` (`scripts/prerender.js`) y, mejor, un 301 real en Cloudflare.
+- **El Sillón BKF tiene UNA sola URL: `/sillon-bkf/`** (`path` en `data/products.js`).
+  `/catalogo/sillon-bkf-premium/` es solo una redirección. Los enlaces a un producto se
+  arman siempre con `productHref(p)`, no con `/catalogo/${slug}/`. No volver a crear una
+  ficha aparte: competiría contra la landing.
+- **"Buenos Aires" va en el título y el H1** de las páginas que apuntan a búsquedas
+  geográficas (landing, catálogo, categorías, fichas, mobiliario comercial, nosotros,
+  home). La fase 2 lo había quitado de `/sillon-bkf/` y fue una regresión.
+- **Una intención = una URL principal** (tabla en el documento). `/sillon-bkf/` es la
+  única que disputa "sillón BKF / comprar sillón BKF / … Buenos Aires"; `/bkf/` es
+  informativa; no crear páginas como `/comprar-bkf-buenos-aires/`.
+- **Variar los anchors** hacia las páginas clave; no repetir el mismo.
+- **El sitio no vende ni cobra**: se arma un presupuesto que llega a WhatsApp. El
+  contenido de "comprar" explica ese flujo (pasos, plazos por zona, retiro), sin pago online.
+- **Fotos con los nombres viejos** (`bkf1.jpg`, `bkfapoyapies.jpg`, `mesa.jpeg`) siguen en
+  `public/images/` solo para que Google Imágenes no reciba 404. No borrarlas.
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
