@@ -87,11 +87,14 @@ h1, h2, h3 {
     font-weight: 800;
     line-height: 1.02;
     letter-spacing: -0.01em;
+    /* El espacio de Archivo se angosta junto con el eje de ancho: a 62-70% las
+       palabras de un título casi se pegan ("Loquefabricamos"). */
+    word-spacing: 0.1em;
     text-wrap: balance;
 }
 h1 { font-size: var(--t-xl); }
 h2 { font-size: var(--t-xl); }
-h3 { font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; }
+h3 { font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; word-spacing: 0.06em; }
 p  { max-width: 68ch; text-wrap: pretty; }
 strong { font-weight: 650; }
 
@@ -216,7 +219,7 @@ p a:hover, li a:hover { color: var(--kappa); }
     display: flex; flex-direction: column; justify-content: center; gap: 24px;
     padding: 48px var(--gutter) 64px var(--pad-x);
 }
-.home-hero h1 { font-size: var(--t-hero); font-stretch: 62%; font-weight: 850; line-height: 0.98; letter-spacing: -0.015em; }
+.home-hero h1 { font-size: var(--t-hero); font-stretch: 62%; font-weight: 850; line-height: 0.98; letter-spacing: -0.015em; word-spacing: 0.12em; }
 .home-hero-lead { font-size: var(--t-md); color: var(--grafito); max-width: 34ch; }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 @media (max-width: 560px) { .home-hero-actions > *, .bkf-actions > *, .cta-btns > * { flex: 1 1 100%; } }
@@ -609,6 +612,22 @@ footer a:hover { color: var(--blanco); }
 .bkf-history-card h3 { font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; margin-bottom: 6px; }
 .bkf-history-card p { color: var(--grafito); font-size: var(--t-sm); }
 @media (max-width: 860px) { .bkf-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Desktop: el texto de lectura (68ch) dejaba casi la mitad derecha vacía.
+   Texto a la izquierda; los datos clave (about) y la tabla (specs) a la derecha. */
+@media (min-width: 861px) {
+    .bkf-about .bkf-about-inner,
+    .bkf-comparison .bkf-about-inner {
+        display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        column-gap: clamp(40px, 6vw, 96px); align-items: start;
+    }
+    .bkf-about .bkf-about-inner > :not(.bkf-history-grid),
+    .bkf-comparison .bkf-about-inner > :not(.comparison-table-wrapper) { grid-column: 1; }
+    .bkf-about .bkf-history-grid { grid-column: 2; grid-row: 1 / span 4; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 28px; margin-top: 0; }
+    .bkf-comparison .comparison-table-wrapper { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+    .bkf-comparison .comparison-table { max-width: none; }
+    .bkf-comparison .section-subtitle { margin-bottom: 0; }
+}
 
 .comparison-table-wrapper { overflow-x: auto; margin-top: 24px; }
 .comparison-table { width: 100%; max-width: 760px; border-collapse: collapse; }
