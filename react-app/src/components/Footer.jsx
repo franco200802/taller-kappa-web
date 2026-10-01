@@ -69,7 +69,7 @@ export default function Footer() {
             <p><strong>Fábrica &amp; Showroom</strong></p>
             <p><Icon name="map-marker-alt" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
             <p><Icon name="clock" /> <span>Retiro en el taller: {BUSINESS.hours.label}. <a href={BUSINESS.directionsUrl} target="_blank" rel="noopener noreferrer">Cómo llegar</a></span></p>
-            <p><Icon name="truck" /> <span>Entregas en San Martín, CABA, Gran Buenos Aires y todo el país. <Link to="/envios/">Zonas y tiempos</Link></span></p>
+            <p><Icon name="truck" /> <span>Entregas en San Martín, Capital Federal, Gran Buenos Aires y todo el país. <Link to="/envios/">Zonas y tiempos</Link></span></p>
             <p><Icon name="whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
           </address>

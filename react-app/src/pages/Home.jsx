@@ -127,7 +127,7 @@ export default function Home() {
         </div>
         <div>
           <p>
-            Entregamos en San Martín y alrededores, en CABA, en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
+            Entregamos en San Martín y alrededores, en Capital Federal (CABA), en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
             <Link to="/envios/">zonas y tiempos de envío</Link>.
           </p>
           <p>

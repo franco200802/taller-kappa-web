@@ -23,7 +23,7 @@ const FAQ_ITEMS = [
   { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
   { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
   { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
-  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en CABA, de 2 a 4 días hábiles; en el resto del Gran Buenos Aires, de 2 a 5 días hábiles según la zona; y en el interior del país, de 5 a 10 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
+  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en Capital Federal (CABA), de 2 a 4 días hábiles; en el resto del Gran Buenos Aires, de 2 a 5 días hábiles según la zona; y en el interior del país, de 5 a 10 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
   { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
   { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
 ];
@@ -63,7 +63,7 @@ export default function SillonBKF() {
     <>
       <Seo
         title="Sillón BKF Buenos Aires: Comprar Directo de Fábrica | Taller Kappa"
-        description="Comprá el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hecho en San Martín. Presupuesto por WhatsApp y envíos a todo el país."
+        description="Comprá el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hecho en San Martín. Envíos a Capital Federal, GBA y todo el país."
         path="/sillon-bkf"
         image={assetUrl(socialImage(PRODUCT))}
         imageWidth={SOCIAL_IMAGE_SIZE.width}
@@ -89,7 +89,7 @@ export default function SillonBKF() {
         lead={(
           <>
             Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín.{' '}
-            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller o lo recibís en CABA, GBA y todo el país.
+            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller o lo recibís en Capital Federal, GBA y todo el país.
           </>
         )}
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]}
@@ -174,7 +174,7 @@ export default function SillonBKF() {
           <div><dt>Cómo se compra</dt><dd>Presupuesto por WhatsApp, sin pago online</dd></div>
           <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
           <div><dt>San Martín y alrededores</dt><dd>24 a 48 hs con stock</dd></div>
-          <div><dt>CABA</dt><dd>2 a 4 días hábiles</dd></div>
+          <div><dt>Capital Federal (CABA)</dt><dd>2 a 4 días hábiles</dd></div>
           <div><dt>Gran Buenos Aires</dt><dd>2 a 5 días hábiles según la zona</dd></div>
           <div><dt>Interior del país</dt><dd>5 a 10 días hábiles por expreso</dd></div>
           <div><dt>Facturación</dt><dd>Factura A y B</dd></div>

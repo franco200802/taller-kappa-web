@@ -320,6 +320,12 @@ que respetar si se usan en otro lado:
   - **`/sillon-bkf/`:** destello en "Pedís el presupuesto por WhatsApp" (el `lead` de `PageHero` acepta
     un nodo), typewriter con los acabados junto a las muestras de color (`FINISHES`) y `ScrollText` en
     "De qué está hecho el sillón BKF" (`MADE_OF`, los mismos datos de la ficha técnica y la garantía).
+  - **`/mobiliario-comercial/`:** destello en "Cotizamos por WhatsApp.", typewriter con los rubros
+    (`SECTOR_PHRASES`, derivadas de `SECTORS`, una sola fuente) y `ScrollText` en "Para qué tipo de
+    negocio". En pantallas de 560 px o menos la frase del typewriter va en su propio renglón y el
+    contenedor reserva dos (`min-height`), para que el alto no cambie al escribir.
+  - Cobertura geográfica: el contenido dice "Capital Federal (CABA)", porque así lo busca la gente; el
+    schema de `areaServed` lleva `alternateName` ['Capital Federal', 'CABA'].
   - Los H1 siguen siendo estáticos. El typewriter se pausa fuera de pantalla: si queda debajo de la
     primera pantalla (como en la landing) no anima hasta que se hace scroll hasta él; es lo esperado.
 - Si se prueba con un iframe, ojo: dentro de un iframe el `IntersectionObserver` mide contra la

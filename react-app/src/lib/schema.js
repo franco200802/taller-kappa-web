@@ -99,7 +99,7 @@ export function organizationNode() {
     },
     // Las zonas de entrega que publica /envios/: CABA, GBA (norte, oeste, sur) e interior del país.
     areaServed: [
-      { '@type': 'AdministrativeArea', name: 'Ciudad Autónoma de Buenos Aires' },
+      { '@type': 'AdministrativeArea', name: 'Ciudad Autónoma de Buenos Aires', alternateName: ['Capital Federal', 'CABA'] },
       { '@type': 'AdministrativeArea', name: 'Gran Buenos Aires' },
       { '@type': 'AdministrativeArea', name: 'Zona Norte del Gran Buenos Aires' },
       { '@type': 'AdministrativeArea', name: 'Zona Oeste del Gran Buenos Aires' },
