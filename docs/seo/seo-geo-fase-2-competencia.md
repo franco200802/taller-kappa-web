@@ -1,5 +1,11 @@
 # SEO + GEO — Fase 2: competencia real, content gap y arquitectura
 
+> **Actualización (auditoría de recuperación, 1/10/2026):** la ficha
+> `/catalogo/sillon-bkf-premium/` se unió a la landing `/sillon-bkf/`, que ahora es la única
+> página del Sillón BKF; la ficha quedó como redirección y el sitemap tiene 15 URLs. Las
+> menciones de abajo a la ficha y a las 16 URLs son del estado de la fase 2. Ver
+> `recuperacion-seo.md`.
+
 > Fecha de la investigación: 1/10/2026. Las SERPs se consultaron con una
 > herramienta de búsqueda web (resultados con sesgo de EE.UU., en español) y el
 > HTML de los competidores se descargó y se analizó con `curl`. **No hay datos de

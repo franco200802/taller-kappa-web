@@ -46,7 +46,7 @@ el tamaño: sus páginas pesan 0,8 a 5,7 MB y la nuestra, 0,27 MB.
 | medidas sillón BKF (**nueva**) | Informativa/comercial | `/sillon-bkf/`, `/bkf/` (FAQ), ficha | 78 x 70 x 90 cm visible en tabla, lista y FAQ | Sillón | Landing, ficha |
 | cómo cuidar/limpiar sillón BKF de cuero (**nueva**) | Informativa | `/bkf/` (FAQ), `/garantia/` | Cuidados del cuero y la estructura | Sillón | Guía → garantía |
 | sillón BKF · sillón BKF Argentina · BKF Argentina | Comercial | `/sillon-bkf/` | Título/H1 con Argentina, origen, envíos, tabla, FAQ | Sillón Premium | Menú, home, guía |
-| comprar sillón BKF · sillón BKF comprar | Transaccional | `/sillon-bkf/`, `/catalogo/sillon-bkf-premium/` | CTA WhatsApp, cómo se cotiza, envíos | Sillón Premium | Menú |
+| comprar sillón BKF · sillón BKF comprar | Transaccional | `/sillon-bkf/` (única página del producto desde la recuperación SEO) | CTA WhatsApp, cómo se cotiza, envíos | Sillón Premium | Menú |
 | sillón BKF precio | Transaccional | `/sillon-bkf/` (FAQ) | Dice que no hay precio de lista y cómo cotizar | — | **Requiere precio publicado** (§5) |
 | mejor sillón BKF · cuál elegir | Investigación comercial | `/bkf/` ("Cómo elegir") | Criterios verificables, sin afirmar "el mejor" | Sillón | Landing → guía |
 | banco BKF · banqueta BKF | Comercial | `/catalogo/banco-bkf/` | Definición con el alias, medidas | Banco | Categoría asientos |
@@ -70,7 +70,7 @@ exige ampliar el catálogo.
 | `ProductGroup` (variantes) | **No se implementa** | Google lo pide para variantes con oferta/URL/SKU propios. Los colores del Sillón BKF son opciones de cotización sin precio ni SKU: agregarlas sería ruido. Los colores van en `additionalProperty` |
 | Tipo de negocio | `LocalBusiness` + `FurnitureStore` | Es una fábrica con showroom donde se retira y se compra directo; Google recomienda el subtipo más específico |
 | `Product.offers` sin precio | Se mantiene (solo disponibilidad) | No existe precio; ver §5 |
-| `FAQPage` | Se mantiene en páginas con preguntas visibles | Google ya no muestra resultado enriquecido de FAQ para la mayoría de sitios; sigue sirviendo a otros motores y a la lectura de la página. 48 preguntas, ninguna repetida |
+| `FAQPage` | Se mantiene en páginas con preguntas visibles | Google ya no muestra resultado enriquecido de FAQ para la mayoría de sitios; sigue sirviendo a otros motores y a la lectura de la página. 51 preguntas, ninguna repetida |
 | `llms.txt` | Se mantiene | No ayuda ni perjudica en Google; es una convención útil para otros sistemas y se genera solo |
 | `sameAs` | No se agrega | No hay perfiles oficiales verificados |
 | Renombrar imágenes | No | Los nombres ya son descriptivos y renombrar rompe URLs de imagen ya indexadas |
@@ -120,7 +120,7 @@ dueño: publicar un precio de lista o un "desde", con fecha de vigencia.
 ## 7. Checklist de Search Console
 
 1. Agregar la propiedad **de dominio** `tallerkappa.com.ar` (verificación por DNS).
-2. Enviar `https://tallerkappa.com.ar/sitemap.xml` (16 URLs).
+2. Enviar `https://tallerkappa.com.ar/sitemap.xml` (15 URLs).
 3. Inspeccionar y **solicitar indexación** de `/`, `/sillon-bkf/`, `/bkf/`,
    `/mobiliario-comercial/`, `/catalogo/`, `/catalogo/asientos/`, `/catalogo/mesas/`
    (el título viejo de la home se actualiza al reindexar).

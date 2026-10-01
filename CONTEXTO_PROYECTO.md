@@ -60,7 +60,7 @@ termina en un link de WhatsApp con el detalle del pedido.
      `<h1>`, title/description únicos, JSON-LD parseable con todos sus `@id`
      resueltos y el nodo `WebPage` de la página, links internos rotos,
      páginas huérfanas, `<img>` sin `alt` e imágenes que no existen.
-  - Resultado esperado de `npm run build`: **"16 rutas + 404.html"**
+  - Resultado esperado de `npm run build`: **"15 rutas + 404.html"**
     sin errores ni warnings. Si ese número cambia sin que vos hayas
     agregado/quitado una página, algo se rompió.
 
@@ -196,8 +196,8 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   la página (WebPage/AboutPage/ContactPage/CollectionPage), su breadcrumb y lo
   extra (Product, FAQPage, ItemList, Service). Los productos referencian a la
   empresa por `@id` (`manufacturer`, `brand`), no con un objeto suelto.
-- **El Sillón BKF es UNA entidad**: `/sillon-bkf/` (guía) y
-  `/catalogo/sillon-bkf-premium/` (ficha) emiten el mismo `@id` de producto.
+- **El Sillón BKF es UNA entidad con UNA URL**: `/sillon-bkf/` es la página del producto y
+  su `@id` (`/catalogo/sillon-bkf-premium/` es solo una redirección).
 - **Datos reales o nada.** Sin precio, SKU, GTIN, reviews ni rating. Todo lo que
   figura en `business.js`/`products.js` ya estaba publicado en el sitio. Si
   un dato nuevo no se puede demostrar, no se agrega.
@@ -296,6 +296,29 @@ evidencia, mapa query → URL y qué revisar en Search Console). Reglas que sale
   contenido de "comprar" explica ese flujo (pasos, plazos por zona, retiro), sin pago online.
 - **Fotos con los nombres viejos** (`bkf1.jpg`, `bkfapoyapies.jpg`, `mesa.jpeg`) siguen en
   `public/images/` solo para que Google Imágenes no reciba 404. No borrarlas.
+
+## 5f. Texto animado (TypeWriter, ShimmerText, ScrollText)
+
+Basados en los componentes de KokonutUI (kokonutui.com/docs/texts/…), pero **reimplementados sin
+Tailwind ni `motion`**: los originales los necesitan (más ~40 kB de JS) y el proyecto no los usa.
+Están en `src/components/` y su CSS en la sección 19d de `global.css`. Reglas que cumplen y que hay
+que respetar si se usan en otro lado:
+
+- **El contenido siempre está en el HTML**, visible y completo. `TypeWriter` arranca mostrando la
+  primera frase entera (no vacío) y lleva el texto de todas las frases en un `visually-hidden`;
+  `ScrollText` nunca empieza en `opacity: 0`. Nada que dependa de JS para existir.
+- **`prefers-reduced-motion` desactiva la animación** (el tipeo queda fijo, el destello es texto
+  normal y el resaltado cambia solo el color). El destello también se apaga con colores forzados.
+- **Sin saltos de layout**: el renglón del typewriter reserva su alto.
+- **Contraste AA**: `ShimmerText` va del color del texto al rojo de marca; `ScrollText` alterna
+  `--hierro` (activo) y `--grafito` (atenuado, 7:1). No usar opacidades que bajen del contraste.
+- `ScrollText` usa el scroll de la página (el original usa un contenedor de 300 px con scroll
+  propio, que atrapa el scroll).
+- Usos hoy: la home (typewriter en el hero con las frases de `HERO_PHRASES`, destello en
+  "Cotizamos por WhatsApp en el día.", y `ScrollText` en "Por qué pedirle el presupuesto a la
+  fábrica"). El H1 sigue siendo estático.
+- Si se prueba con un iframe, ojo: dentro de un iframe el `IntersectionObserver` mide contra la
+  ventana superior y el resaltado de `ScrollText` parece no funcionar; probar a nivel superior.
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 

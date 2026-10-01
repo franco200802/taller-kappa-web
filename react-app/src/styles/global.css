@@ -256,6 +256,7 @@ p a:hover, li a:hover { color: var(--kappa); }
     .home-hero-text > * { animation: hero-text 0.7s var(--ease) both; }
     .home-hero-text > :nth-child(2) { animation-delay: .08s; }
     .home-hero-text > :nth-child(3) { animation-delay: .16s; }
+    .home-hero-text > :nth-child(4) { animation-delay: .24s; }
 }
 @keyframes hero-reveal { from { clip-path: inset(0 0 0 100%); transform: scale(1.06); } to { clip-path: inset(0); transform: none; } }
 @keyframes hero-text { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
@@ -901,6 +902,42 @@ address { font-style: normal; }
     .guide-toc { position: static; }
 }
 .faq-heading { margin: 40px 0 8px; font-size: var(--t-lg); }
+
+/* ---------- 19d. Texto animado (TypeWriter, ShimmerText, ScrollText) ---------- */
+/* Basados en los componentes de KokonutUI, reimplementados con CSS puro (sin Tailwind ni motion). */
+
+/* TypeWriter: el contenedor reserva una línea para que escribir y borrar no mueva nada. */
+.home-hero-typed { font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; line-height: 1.15; min-height: 1.3em; color: var(--hierro); }
+.typewriter { display: inline-block; white-space: nowrap; }
+.typewriter-cursor { display: inline-block; width: 3px; height: 1em; margin-left: 3px; vertical-align: -0.12em; background: var(--kappa); animation: tw-blink 1s steps(1) infinite; }
+@keyframes tw-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .typewriter-cursor { animation: none; } }
+
+/* ShimmerText: el destello va del color del texto al rojo de marca (5,4:1 sobre el fondo claro, AA).
+   El fondo se REPITE (mide 200% y se desplaza 400% = dos períodos exactos): con no-repeat, parte de las
+   letras quedaba sin gradiente y, al ser transparentes, desaparecía. clone: cada renglón tiene el suyo. */
+.shimmer-text { color: var(--hierro); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .shimmer-text {
+        background: linear-gradient(90deg, var(--hierro) 0%, var(--hierro) 40%, var(--kappa) 50%, var(--hierro) 60%, var(--hierro) 100%) 0 0 / 200% 100% repeat-x;
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: transparent;
+        -webkit-box-decoration-break: clone; box-decoration-break: clone;
+        animation: shimmer-sweep 3.2s linear infinite;
+    }
+}
+@keyframes shimmer-sweep { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    .shimmer-text { background: none; -webkit-text-fill-color: currentColor; color: var(--hierro); animation: none; }
+}
+
+/* ScrollText: el item que cruza el centro de la pantalla pasa a --hierro; los demás, a --grafito (7:1 sobre el fondo). */
+.scroll-text { list-style: none; display: grid; margin-top: 24px; max-width: 920px; }
+.scroll-text-item { padding: clamp(20px, 4vw, 40px) 0 clamp(20px, 4vw, 40px) 22px; border-left: 3px solid var(--linea); color: var(--grafito); transition: color .3s, border-color .3s, transform .45s var(--ease); }
+.scroll-text-item h3 { font-size: clamp(2rem, 5.5vw, 3.75rem); font-stretch: 70%; font-weight: 800; line-height: 1.02; }
+.scroll-text-item p { max-width: 52ch; margin-top: 10px; color: inherit; }
+.scroll-text-item.is-active { color: var(--hierro); border-left-color: var(--kappa); transform: translateX(10px); }
+@media (prefers-reduced-motion: reduce) { .scroll-text-item { transition: color .01ms, border-color .01ms; } .scroll-text-item.is-active { transform: none; } }
 
 /* ---------- 20. Utilidades y preferencias ---------- */
 .contact-layout { display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr); gap: 32px 64px; align-items: start; }
