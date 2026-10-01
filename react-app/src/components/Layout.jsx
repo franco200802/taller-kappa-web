@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Icon from './Icon';
 import { Suspense, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { initGA, trackPageview, trackEvent } from '../lib/analytics';
+import { initGA, trackAiReferral, trackPageview, trackEvent } from '../lib/analytics';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -49,7 +49,7 @@ export default function Layout() {
   // configurado en lib/analytics.js, o en desarrollo/SSR). El pageview se
   // envía a mano en cada cambio de ruta porque gtag.js no detecta navegación
   // de una SPA por sí solo (no hay recarga de documento).
-  useEffect(() => { initGA(); }, []);
+  useEffect(() => { initGA(); trackAiReferral(); }, []);
   useEffect(() => { trackPageview(pathname); }, [pathname]);
 
   return (

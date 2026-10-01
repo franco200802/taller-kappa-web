@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { formatPrice, getProductBySlug, getCategory, relatedProducts } from '../data/products';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, getCategory, relatedProducts, socialImage } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { assetUrl } from '../lib/site';
 import { faqNode, productId, productNode } from '../lib/schema';
@@ -46,9 +46,9 @@ export default function Producto() {
         title={product.seoTitle}
         description={product.seoDescription}
         path={path}
-        image={assetUrl(product.image)}
-        imageWidth={product.imageWidth}
-        imageHeight={product.imageHeight}
+        image={assetUrl(socialImage(product))}
+        imageWidth={SOCIAL_IMAGE_SIZE.width}
+        imageHeight={SOCIAL_IMAGE_SIZE.height}
         imageAlt={product.alt}
         type="product"
         mainEntity={productId(product.slug)}

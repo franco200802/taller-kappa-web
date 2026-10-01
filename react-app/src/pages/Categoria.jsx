@@ -3,9 +3,10 @@ import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import ProductTable from '../components/ProductTable';
-import { CATEGORIES, getCategoryBySlug, productsInCategory } from '../data/products';
+import { CATEGORIES, SOCIAL_IMAGE_SIZE, getCategoryBySlug, productsInCategory, socialImage } from '../data/products';
+import { assetUrl } from '../lib/site';
 import { whatsappUrl } from '../data/contact';
-import { itemListNode } from '../lib/schema';
+import { faqNode, itemListNode } from '../lib/schema';
 
 const lcFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 
@@ -30,10 +31,14 @@ export default function Categoria() {
         title={category.seoTitle}
         description={category.seoDescription}
         path={path}
+        image={assetUrl(socialImage(products[0]))}
+        imageWidth={SOCIAL_IMAGE_SIZE.width}
+        imageHeight={SOCIAL_IMAGE_SIZE.height}
+        imageAlt={products[0].alt}
         pageType="CollectionPage"
         mainEntity={list['@id']}
         breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Catálogo', path: '/catalogo' }, { name: category.name, path }]}
-        jsonLd={list}
+        jsonLd={[list, ...(category.faq?.length ? [faqNode(category.faq, path)] : [])]}
       />
       <PageHero
         title={category.heading}
@@ -64,6 +69,20 @@ export default function Categoria() {
         <p className="section-subtitle">{category.difference}</p>
         <ProductTable products={products} showCategory={false} />
       </section>
+
+      {category.faq?.length > 0 && (
+        <section className="section-padding section-fade">
+          <div className="bkf-about-inner">
+            <h2>Preguntas frecuentes sobre {lcFirst(category.name)}</h2>
+            {category.faq.map(({ q, a }) => (
+              <div key={q} className="bkf-faq-item">
+                <h3>{q}</h3>
+                <p>{a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="section-padding home-links">
         <div>

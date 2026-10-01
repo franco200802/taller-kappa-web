@@ -35,6 +35,8 @@ export const BUSINESS = {
   /** Mismas coordenadas del mapa embebido en el footer. */
   geo: { latitude: -34.5851938, longitude: -58.5281526 },
   mapUrl: 'https://maps.google.com/?q=-34.5851938,-58.5281526',
+  /** Ruta hasta el taller en Google Maps (destino = las mismas coordenadas). */
+  directionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=-34.5851938,-58.5281526',
   /** Horario de retiro en el taller que ya publica /envios/. */
   hours: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00', label: 'lunes a viernes de 9 a 18 hs' },
   phone: '+541161242498',

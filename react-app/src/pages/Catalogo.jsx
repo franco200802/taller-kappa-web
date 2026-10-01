@@ -102,7 +102,7 @@ export default function Catalogo() {
   return (
     <>
       <Seo
-        title="Catálogo: sillones BKF, bancos y bases de mesa | Taller Kappa"
+        title="Muebles de Hierro y Cuero: Sillones BKF, Bancos y Bases | Taller Kappa"
         description="Catálogo de sillones BKF, bancos y bases de mesa de hierro macizo y cuero vacuno. Fabricación propia en San Martín, Buenos Aires."
         path="/catalogo"
         pageType="CollectionPage"
@@ -111,7 +111,7 @@ export default function Catalogo() {
         jsonLd={itemList}
       />
       <section id="catalogo" className="section-padding">
-        <h1 className="section-title">Sillones, bancos y bases de mesa de hierro y cuero</h1>
+        <h1 className="section-title">Muebles de hierro y cuero: sillones, bancos y bases de mesa</h1>
         <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
           Conocé en detalle nuestro producto insignia, el <Link to="/sillon-bkf/">sillón BKF</Link>, o leé <Link to="/bkf/">qué es el sillón BKF</Link>.

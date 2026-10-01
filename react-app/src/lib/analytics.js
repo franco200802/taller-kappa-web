@@ -66,6 +66,42 @@ export function initGA() {
   loadGtagLater();
 }
 
+/**
+ * Tráfico que llega desde asistentes de IA. Se reconoce por el referrer o por el
+ * `utm_source` que algunos asistentes agregan al enlace (ChatGPT usa
+ * utm_source=chatgpt.com). Los asistentes que muestran enlaces a un sitio (ChatGPT,
+ * Perplexity, Gemini, Copilot, Claude) mandan su dominio como referrer; las
+ * respuestas de Google AI Overviews / AI Mode, en cambio, llegan como tráfico
+ * orgánico de Google y se miden en Search Console, no acá.
+ */
+const AI_REFERRERS = {
+  'chatgpt.com': 'chatgpt', 'chat.openai.com': 'chatgpt',
+  'perplexity.ai': 'perplexity', 'www.perplexity.ai': 'perplexity',
+  'gemini.google.com': 'gemini',
+  'copilot.microsoft.com': 'copilot', 'www.bing.com/chat': 'copilot',
+  'claude.ai': 'claude',
+};
+let aiTracked = false;
+
+export function detectAiSource() {
+  if (typeof window === 'undefined') return null;
+  const utm = new URLSearchParams(window.location.search).get('utm_source')?.toLowerCase();
+  if (utm && AI_REFERRERS[utm]) return AI_REFERRERS[utm];
+  try {
+    return AI_REFERRERS[new URL(document.referrer).hostname.toLowerCase()] ?? null;
+  } catch {
+    return null; // sin referrer o inválido
+  }
+}
+
+/** Envía un evento `ai_referral` (una vez por carga) si la visita viene de un asistente de IA. */
+export function trackAiReferral() {
+  if (aiTracked) return;
+  aiTracked = true;
+  const source = detectAiSource();
+  if (source) trackEvent('ai_referral', { ai_source: source, landing_page: window.location.pathname });
+}
+
 export function trackPageview(path) {
   if (typeof window === 'undefined' || !window.gtag) return;
   window.gtag('event', 'page_view', {

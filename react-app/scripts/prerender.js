@@ -162,7 +162,7 @@ for (const { path, page: pageName } of PRERENDER_PAGES) {
     const webpage = nodes.find((n) => n['@id'] === pageId(path));
     if (!webpage) problems.push(`${path}: falta el nodo WebPage ${pageId(path)} en el JSON-LD`);
     else if (path !== '/' && !webpage.breadcrumb) problems.push(`${path}: el WebPage no enlaza su BreadcrumbList`);
-    if (!nodes.some((n) => n['@type'] === 'LocalBusiness')) problems.push(`${path}: falta la entidad LocalBusiness en el JSON-LD`);
+    if (!nodes.some((n) => [].concat(n['@type']).includes('LocalBusiness'))) problems.push(`${path}: falta la entidad LocalBusiness en el JSON-LD`);
   }
 
   // --- enlaces e imágenes locales ---
