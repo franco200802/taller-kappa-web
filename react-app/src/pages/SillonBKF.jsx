@@ -4,6 +4,9 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
+import ScrollText from '../components/ScrollText';
+import ShimmerText from '../components/ShimmerText';
+import TypeWriter from '../components/TypeWriter';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrl } from '../data/contact';
 import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, productHref, relatedProducts, socialImage } from '../data/products';
@@ -31,6 +34,17 @@ const COLORS = [
   { name: 'Cromado', swatch: 'linear-gradient(135deg,#ccc,#fff,#aaa)' },
   { name: 'Verde Oliva', swatch: '#556b2f' },
   { name: 'Rojo Kappa', swatch: '#b71c1c' },
+];
+
+// Los acabados que se escriben junto a las muestras de color (la primera es la que ve quien no ejecuta JavaScript).
+const FINISHES = ['negro mate', 'blanco crema', 'cromado', 'verde oliva', 'rojo Kappa', 'el color que necesites'];
+
+// De qué está hecho: los mismos datos de la ficha técnica y la garantía, uno por renglón.
+const MADE_OF = [
+  { title: 'Hierro macizo de 12 mm', text: 'Estructura de hierro redondo macizo, sin tubos ni rellenos. Tiene garantía de por vida contra deformaciones.' },
+  { title: 'Cuero vacuno curtido al vegetal', text: 'Cuero de primera selección que toma color con el uso. Garantía de 1 año contra defectos de fabricación.' },
+  { title: 'Epoxi anticorrosiva o cromado', text: 'Pintura epoxi de doble capa, con 2 años de garantía, o terminación cromada. Negro mate, blanco o el color que necesites.' },
+  { title: 'A medida, sin costo adicional', text: '78 x 70 x 90 cm en la versión estándar. Las medidas, los colores y los acabados se adaptan a tu espacio.' },
 ];
 
 const PRODUCT = getProductBySlug('sillon-bkf-premium');
@@ -72,7 +86,12 @@ export default function SillonBKF() {
       />
       <PageHero
         title="Sillón BKF de hierro y cuero, fabricado en Buenos Aires"
-        lead="Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín. Pedís el presupuesto por WhatsApp y lo retirás en el taller o lo recibís en CABA, GBA y todo el país."
+        lead={(
+          <>
+            Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín.{' '}
+            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller o lo recibís en CABA, GBA y todo el país.
+          </>
+        )}
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]}
       />
 
@@ -114,6 +133,10 @@ export default function SillonBKF() {
               </a>
             </div>
             <div>
+              <p className="bkf-typed">
+                Se pide en{' '}
+                <TypeWriter sequences={FINISHES} srText="negro mate, blanco crema, cromado, verde oliva, rojo Kappa o el color que necesites" />
+              </p>
               <p className="color-label">Agregar en otro acabado:</p>
               <div className="bkf-color-swatches">
                 {COLORS.map((c) => (
@@ -171,11 +194,6 @@ export default function SillonBKF() {
             <Link to="/proyectos/">proyectos que hicimos</Link>.
           </p>
           <p>
-            La estructura es de <strong>hierro redondo macizo de 12 mm</strong>, sin tubos ni rellenos, con pintura epoxi anticorrosiva de doble capa o cromado.
-            El asiento es de <strong>cuero vacuno de primera selección</strong>, curtido al vegetal, que toma color con el uso. Se pide en negro mate, blanco, cromado o
-            en el color que necesites, y a medida sin costo adicional.
-          </p>
-          <p>
             Para conocer el origen del diseño y cómo elegir uno, leé <Link to="/bkf/">qué es el sillón BKF: historia y características</Link>. Los cuidados y las
             condiciones están en <Link to="/garantia/">garantía y cuidados</Link>.
           </p>
@@ -203,6 +221,11 @@ export default function SillonBKF() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="why-section section-fade" aria-labelledby="de-que-esta-hecho">
+        <h2 className="section-title" id="de-que-esta-hecho">De qué está hecho el sillón BKF</h2>
+        <ScrollText items={MADE_OF} />
       </section>
 
       <section className="bkf-comparison section-fade">

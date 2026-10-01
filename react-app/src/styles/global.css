@@ -908,6 +908,7 @@ address { font-style: normal; }
 
 /* TypeWriter: el contenedor reserva una línea para que escribir y borrar no mueva nada. */
 .home-hero-typed { font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; line-height: 1.15; min-height: 1.3em; color: var(--hierro); }
+.bkf-typed { font-size: var(--t-md); font-stretch: 70%; font-weight: 800; line-height: 1.2; min-height: 1.4em; }
 .typewriter { display: inline-block; white-space: nowrap; }
 .typewriter-cursor { display: inline-block; width: 3px; height: 1em; margin-left: 3px; vertical-align: -0.12em; background: var(--kappa); animation: tw-blink 1s steps(1) infinite; }
 @keyframes tw-blink { 50% { opacity: 0; } }
