@@ -27,3 +27,17 @@ export function absoluteUrl(path = '/') {
 export function assetUrl(src) {
   return `${SITE}${src}`;
 }
+
+/** JSON-LD BreadcrumbList a partir de [{ name, path }]. */
+export function breadcrumbList(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}

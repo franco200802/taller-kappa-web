@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
+import { breadcrumbList } from '../lib/site';
 import PageHero from '../components/PageHero';
 import { trackEvent } from '../lib/analytics';
 import { loadFireDB } from '../lib/firebaseConfig';

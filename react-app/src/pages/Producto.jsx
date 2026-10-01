@@ -1,11 +1,11 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import { getProductBySlug } from '../data/products';
 import { whatsappUrl } from '../data/contact';
-import { absoluteUrl } from '../lib/site';
+import { absoluteUrl, breadcrumbList } from '../lib/site';
 
 /**
  * Página individual de producto — URL propia, indexable y prerenderizada

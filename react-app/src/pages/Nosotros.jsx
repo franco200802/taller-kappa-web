@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
+import { breadcrumbList } from '../lib/site';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';

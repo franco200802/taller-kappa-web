@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import Seo, { breadcrumbList } from '../components/Seo';
+import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import { PRODUCTS } from '../data/products';
 import { whatsappUrl } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
-import { absoluteUrl } from '../lib/site';
+import { absoluteUrl, breadcrumbList } from '../lib/site';
 
 const FALLBACK_PRODUCTS = PRODUCTS;
 
