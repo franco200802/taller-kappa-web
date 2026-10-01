@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import Icon from './Icon';
 import { Link } from 'react-router-dom';
 
 /**
@@ -16,11 +17,11 @@ export default function PageHero({ title, lead, current, trail = [] }) {
           <Link to="/">Inicio</Link>
           {trail.map((t) => (
             <Fragment key={t.to}>
-              <i className="fas fa-chevron-right" aria-hidden="true" />
+              <Icon name="chevron-right" />
               <Link to={t.to}>{t.label}</Link>
             </Fragment>
           ))}
-          <i className="fas fa-chevron-right" aria-hidden="true" />
+          <Icon name="chevron-right" />
           <span aria-current="page">{current}</span>
         </nav>
       </div>

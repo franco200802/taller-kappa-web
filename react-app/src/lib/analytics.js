@@ -22,17 +22,39 @@ export const GA_MEASUREMENT_ID = 'G-2FDMN51XDY'; // Measurement ID real de la pr
 
 let gaLoaded = false;
 
+/**
+ * Carga diferida de gtag.js (~175 kB). La cola de eventos (dataLayer + gtag)
+ * se define de inmediato, así que los pageviews y eventos que ocurran antes
+ * de que baje el script quedan encolados y se envían cuando llega: no se
+ * pierde ninguno. Solo se difiere la descarga, hasta la primera interacción
+ * del usuario o 3 s después del `load`, lo que ocurra primero. Así no compite
+ * con el render inicial (LCP) ni con el hilo principal durante la hidratación.
+ * Compromiso: una visita que se va en menos de 3 s sin tocar nada no llega a
+ * enviar su pageview.
+ */
+function loadGtagLater() {
+  const INTERACTIONS = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+  let timer;
+  const inject = () => {
+    INTERACTIONS.forEach((e) => window.removeEventListener(e, inject));
+    window.clearTimeout(timer);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script);
+  };
+  INTERACTIONS.forEach((e) => window.addEventListener(e, inject, { once: true, passive: true }));
+  const armTimer = () => { timer = window.setTimeout(inject, 3000); };
+  if (document.readyState === 'complete') armTimer();
+  else window.addEventListener('load', armTimer, { once: true });
+}
+
 export function initGA() {
   if (typeof window === 'undefined') return; // SSR/prerender: no-op
   if (!import.meta.env.PROD) return; // no trackear en desarrollo
   if (GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') return; // placeholder sin configurar (ya no aplica, queda como guard defensivo)
   if (gaLoaded) return;
   gaLoaded = true;
-
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-  document.head.appendChild(script);
 
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
@@ -41,6 +63,7 @@ export function initGA() {
   // send_page_view: false porque enviamos el page_view manualmente por ruta
   // (ver trackPageview) — evita el pageview duplicado del load inicial.
   gtag('config', GA_MEASUREMENT_ID, { send_page_view: false });
+  loadGtagLater();
 }
 
 export function trackPageview(path) {

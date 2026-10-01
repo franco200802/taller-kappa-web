@@ -23,14 +23,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <!-- Archivo (Omnibus-Type, Buenos Aires): una sola familia variable con eje de ancho -->
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..100,400..900&display=swap" rel="stylesheet">
-
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <!-- Archivo autoalojada (ver @font-face en global.css): se precarga porque el
+         h1 del hero (el LCP de la home) se pinta con ella. crossorigin es obligatorio
+         para fuentes aunque sean del mismo origen. Los íconos son SVG en línea
+         (components/Icon.jsx): ya no hay CSS ni fuentes de terceros que bloqueen el render. -->
+    <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
     <div id="root"></div>

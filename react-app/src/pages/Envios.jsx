@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { whatsappUrl } from '../data/contact';
@@ -40,9 +41,9 @@ export default function Envios() {
         <div className="shipping-grid">
           {ZONES.map((z) => (
             <div className={`shipping-card ${z.featured ? 'featured' : ''}`} key={z.title}>
-              <div className="shipping-icon"><i className={`fas ${z.icon}`} /></div>
+              <div className="shipping-icon"><Icon name={z.icon} /></div>
               <h3>{z.title}</h3>
-              <p className="shipping-time"><i className="far fa-clock" /> {z.time}</p>
+              <p className="shipping-time"><Icon name="clock" /> {z.time}</p>
               <p>{z.desc}</p>
               <span className={`shipping-badge ${z.free ? 'free' : ''}`}>{z.badge}</span>
             </div>
@@ -68,15 +69,15 @@ export default function Envios() {
           <div className="cta-btns">
             <a href={whatsappUrl('Hola, quiero saber el costo de envío a mi zona.')}
               target="_blank" rel="noopener noreferrer" className="btn-main">
-              <i className="fab fa-whatsapp" /> Consultar envío
+              <Icon name="whatsapp" /> Consultar envío
             </a>
             <Link to="/catalogo/" className="btn-outline">
-              <i className="fas fa-th-large" /> Ver catálogo
+              <Icon name="th-large" /> Ver catálogo
             </Link>
           </div>
           <p className="cta-links">
-            Conocé también nuestras <Link to="/garantia/">condiciones de garantía</Link> o
-            todo sobre el <Link to="/sillon-bkf/">Sillón BKF</Link>.
+            Conocé también nuestras <Link to="/garantia/">condiciones de garantía</Link>,
+            el <Link to="/sillon-bkf/">sillón BKF</Link> o el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
           </p>
         </div>
       </section>

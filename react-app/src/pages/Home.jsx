@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import { PRODUCTS } from '../data/products';
@@ -44,7 +45,7 @@ export default function Home() {
               href={whatsappUrl('Hola, soy una empresa y necesito cotización mayorista.')}
               target="_blank" rel="noopener noreferrer" className="btn-outline"
             >
-              <i className="fab fa-whatsapp" /> Cotizar para empresas
+              <Icon name="whatsapp" /> Cotizar para empresas
             </a>
           </div>
         </div>
@@ -78,8 +79,8 @@ export default function Home() {
           <h2 className="section-title" id="que-es-kappa">Qué es Taller Kappa</h2>
           <p>{BUSINESS.summary}</p>
           <p>
-            {BUSINESS.salesModel} Las piezas se pueden fabricar a medida. Si es para un local o una empresa,
-            mirá el <Link to="/proyectos/">mobiliario comercial de hierro que fabricamos para franquicias y locales</Link>.
+            {BUSINESS.salesModel} Las piezas se pueden fabricar a medida. Conocé la historia de la empresa en <Link to="/nosotros/">quiénes somos</Link>. Si es para un local o una empresa,
+            mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida para locales y franquicias</Link>.
           </p>
         </div>
         <dl className="facts">
@@ -133,17 +134,21 @@ export default function Home() {
 
       <section className="section-padding home-links">
         <div>
-          <h2 className="section-title">Antes de pedir</h2>
+          <h2 className="section-title">Para elegir y pedir</h2>
           <p>
-            Conocé la historia y las medidas del <Link to="/sillon-bkf/">Sillón BKF</Link>, mirá las{' '}
-            <Link to="/catalogo/asientos/">categorías de sillones y bancos BKF</Link> y de{' '}
-            <Link to="/catalogo/mesas/">bases de mesa</Link>, o los{' '}
-            <Link to="/proyectos/">proyectos que hicimos</Link> para YPF, McDonald&apos;s y Burger King.
+            <strong>Sillón BKF:</strong> conocé el <Link to="/sillon-bkf/">sillón BKF fabricado en Argentina</Link>, leé{' '}
+            <Link to="/bkf/">qué es el sillón BKF, su historia y cómo elegir uno</Link> o mirá los{' '}
+            <Link to="/catalogo/asientos/">sillones y bancos BKF</Link> del catálogo.
           </p>
           <p>
-            Revisá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
+            <strong>Mesas y locales:</strong> las <Link to="/catalogo/mesas/">bases de mesa de hierro</Link> para bares y restaurantes, el{' '}
+            <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link> y los <Link to="/proyectos/">proyectos que hicimos</Link> para YPF,
+            McDonald&apos;s y Burger King.
+          </p>
+          <p>
+            <strong>Antes de comprar:</strong> revisá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
             <Link to="/garantia/">condiciones de garantía</Link>. Si te queda alguna duda, están las{' '}
-            <Link to="/faq/">preguntas frecuentes</Link> o nos podés <Link to="/contacto/">escribir directamente</Link>.
+            <Link to="/faq/">preguntas frecuentes</Link> o podés <Link to="/contacto/">escribirnos directamente</Link>.
           </p>
         </div>
       </section>

@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import Icon from './Icon';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
@@ -6,7 +7,7 @@ const NAV_LINKS = [
   { to: '/', label: 'Inicio' },
   { to: '/catalogo/', label: 'Catálogo' },
   { to: '/sillon-bkf/', label: 'Sillón BKF' },
-  { to: '/proyectos/', label: 'Proyectos' },
+  { to: '/mobiliario-comercial/', label: 'Mobiliario comercial' },
   { to: '/nosotros/', label: 'Nosotros' },
   { to: '/faq/', label: 'Preguntas' },
   { to: '/contacto/', label: 'Contacto' },
@@ -44,7 +45,7 @@ export default function Navbar() {
           aria-label="Abrir presupuesto"
           onClick={() => setIsOpen(true)}
         >
-          <i className="fas fa-shopping-bag" style={{ fontSize: '1.2rem' }} />
+          <Icon name="shopping-bag" style={{ fontSize: '1.2rem' }} />
           <span className="cart-badge" style={{ opacity: totalItems > 0 ? 1 : 0 }}>{totalItems}</span>
         </button>
         <button

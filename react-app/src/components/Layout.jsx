@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import Icon from './Icon';
 import { Suspense, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { initGA, trackPageview, trackEvent } from '../lib/analytics';
@@ -76,7 +77,7 @@ export default function Layout() {
       <Toast />
       <a href={whatsappUrl()} className={`float-wa${waHidden ? ' is-hidden' : ''}`} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
         onClick={() => trackEvent('whatsapp_click', { location: 'float_button', page: pathname })}>
-        <i className="fab fa-whatsapp" />
+        <Icon name="whatsapp" />
       </a>
     </div>
   );

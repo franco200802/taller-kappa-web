@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
@@ -40,22 +41,22 @@ function ProductCard({ p, onOpen }) {
       <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
         <span className="stock-dot-small" /> {p.stock ? 'En stock' : 'Consultar'}
       </div>
-      <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Ver detalle de ${p.name}`}
+      <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Vista rápida: ${p.name}`}
         onClick={() => onOpen(p)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
         <Picture src={p.image} alt={p.alt ?? p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
         <div className="card-overlay" aria-hidden="true">Vista rápida</div>
       </div>
       <div className="card-info">
-        <h3>{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h3>
+        <h2 className="card-title">{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h2>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
           href={whatsappUrl('Hola! Quisiera consultar el precio de: ' + p.name)}>
-          <i className="fab fa-whatsapp" /> Consultar precio
+          <Icon name="whatsapp" /> Consultar precio
         </a>
         <div className="card-actions">
           {detailHref && <Link to={detailHref} className="btn-detail" aria-label={`Ver ficha de ${p.name}`}>Ver ficha</Link>}
-          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><i className="fas fa-plus" /> Agregar al presupuesto</button>
+          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><Icon name="plus" /> Agregar al presupuesto</button>
         </div>
       </div>
     </article>
@@ -101,7 +102,7 @@ export default function Catalogo() {
   return (
     <>
       <Seo
-        title="Catálogo de Sillas de Hierro y Cuero | Taller Kappa Buenos Aires"
+        title="Catálogo: sillones BKF, bancos y bases de mesa | Taller Kappa"
         description="Catálogo de sillones BKF, bancos y bases de mesa de hierro macizo y cuero vacuno. Fabricación propia en San Martín, Buenos Aires."
         path="/catalogo"
         pageType="CollectionPage"
@@ -110,10 +111,10 @@ export default function Catalogo() {
         jsonLd={itemList}
       />
       <section id="catalogo" className="section-padding">
-        <h1 className="section-title">Sillas de hierro y cuero en Buenos Aires</h1>
+        <h1 className="section-title">Sillones, bancos y bases de mesa de hierro y cuero</h1>
         <p className="section-subtitle">
           Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
-          Conocé en detalle nuestro producto insignia: el <Link to="/sillon-bkf/">Sillón BKF</Link>.
+          Conocé en detalle nuestro producto insignia, el <Link to="/sillon-bkf/">sillón BKF</Link>, o leé <Link to="/bkf/">qué es el sillón BKF</Link>.
         </p>
         <p className="catalog-categories">
           Categorías:{' '}
@@ -125,7 +126,7 @@ export default function Catalogo() {
         <div className="filters" role="group" aria-label="Filtrar productos">
           {FILTERS.map((f) => (
             <button key={f.key} className={`filter-btn ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
-              <i className={`fas ${f.icon}`} /> {f.label}
+              <Icon name={f.icon} /> {f.label}
             </button>
           ))}
         </div>
@@ -184,7 +185,7 @@ export default function Catalogo() {
               <div className="modal-stock"><span className="stock-dot" /> {modalProduct.stock ? 'En stock, entrega coordinada' : 'Consultar disponibilidad'}</div>
               <p>{modalProduct.desc}</p>
               <ul className="modal-specs">
-                {modalProduct.specs?.map((s) => <li key={s}><i className="fas fa-check" /> {s}</li>)}
+                {modalProduct.specs?.map((s) => <li key={s}><Icon name="check" /> {s}</li>)}
               </ul>
               <div className="color-selector">
                 <p className="color-label">Acabado: <strong>{modalColor}</strong></p>
@@ -197,9 +198,9 @@ export default function Catalogo() {
                 </div>
               </div>
               <button className="btn-main" onClick={() => { addToCart(modalProduct, modalColor); closeModal(); }}>
-                <i className="fas fa-plus" /> Agregar al presupuesto
+                <Icon name="plus" /> Agregar al presupuesto
               </button>
-              <p className="modal-hint"><i className="fab fa-whatsapp" /> Te pasamos el precio por WhatsApp</p>
+              <p className="modal-hint"><Icon name="whatsapp" /> Te pasamos el precio por WhatsApp</p>
             </div>
           </div>
         )}

@@ -15,6 +15,22 @@
    El botón principal es negro hierro.
    ========================================================== */
 
+/* ---------- 0. Tipografía autoalojada ---------- */
+/* Archivo (Omnibus-Type, SIL OFL 1.1), subconjunto latin de Google Fonts: cubre
+   todo el español. Antes venía de fonts.googleapis.com como hoja de estilos que
+   bloqueaba el render; cuando ese tercero respondía lento, la primera pantalla
+   tardaba segundos más (Lighthouse en producción: FCP entre 2,2 s y 5,6 s según
+   la corrida). Se precarga desde index.html. */
+@font-face {
+    font-family: 'Archivo';
+    font-style: normal;
+    font-weight: 400 900;
+    font-stretch: 62% 100%;
+    font-display: swap;
+    src: url('/fonts/archivo-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* ---------- 1. Tokens ---------- */
 :root {
     color-scheme: light;
@@ -76,6 +92,9 @@ body {
 #contenido { padding-top: var(--nav-h); outline: none; }
 
 img { display: block; max-width: 100%; height: auto; }
+/* Íconos SVG en línea (components/Icon.jsx). */
+.icon { display: inline-block; width: calc(var(--icon-w, 1) * 1em); height: 1em; line-height: 1; font-style: normal; vertical-align: -0.125em; flex-shrink: 0; }
+.icon svg { display: block; width: 100%; height: 100%; fill: currentColor; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 /* Táctil: sin el flash azul del tap ni la demora de doble toque. */
@@ -267,11 +286,11 @@ p a:hover, li a:hover { color: var(--kappa); }
 .home-product h3 { margin-bottom: 4px; }
 .home-product p { color: var(--grafito); font-size: var(--t-sm); }
 /* Hover: la varilla crece bajo el nombre (el rojo queda para la marca). */
-.home-product h3, .card-info h3 a {
+.home-product h3, .card-info .card-title a {
     background: linear-gradient(var(--hierro), var(--hierro)) no-repeat 0 100% / 0 2px;
     transition: background-size .35s var(--ease); padding-bottom: 2px;
 }
-.home-product a:hover h3, .home-product a:focus-visible h3, .card-info h3 a:hover { background-size: 100% 2px; }
+.home-product a:hover h3, .home-product a:focus-visible h3, .card-info .card-title a:hover { background-size: 100% 2px; }
 /* En mobile, carrusel horizontal nativo (sin JS) en vez de tres fotos
    apiladas de 1100px; conserva el 4:5, que muestra la mesa entera. */
 @media (max-width: 760px) {
@@ -356,14 +375,16 @@ p a:hover, li a:hover { color: var(--kappa); }
 @media (hover: none) { .card-overlay { opacity: 1; } }
 
 .card-info { padding-top: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-.card-info h3 a { text-decoration: none; }
+/* El título de cada tarjeta es un h2 (cuelga del h1 de la página, sin saltar de nivel) con el aspecto de un h3. */
+.card-info .card-title { font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; word-spacing: 0.06em; }
+.card-info .card-title a { text-decoration: none; }
 .card-specs-preview { color: var(--grafito); font-size: var(--t-sm); }
 .card-consult {
     align-self: flex-start;
     display: inline-flex; align-items: center; gap: 8px;
-    color: var(--wa); font-weight: 600; text-decoration: none; min-height: 32px;
+    color: var(--wa-osc); font-weight: 600; text-decoration: none; min-height: 32px; /* --wa-osc: --wa sobre el fondo gris daba 4,1:1, bajo el 4,5:1 de AA */
 }
-.card-consult:hover { color: var(--wa-osc); text-decoration: underline; }
+.card-consult:hover { text-decoration: underline; }
 .card-actions { display: grid; grid-template-columns: auto 1fr; gap: 8px; margin-top: auto; }
 .btn-detail, .btn-add-cart {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -559,7 +580,7 @@ footer a:hover { color: var(--blanco); }
 .footer-info p { display: flex; gap: 10px; align-items: baseline; margin-bottom: 8px; }
 .footer-info i { width: 16px; color: var(--grafito-claro); }
 .footer-info a { text-decoration: underline; text-decoration-color: rgba(255,255,255,.3); }
-.footer-nav { display: grid; grid-template-columns: repeat(2, max-content); gap: 6px 32px; margin-top: 28px; }
+.footer-nav { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: 6px 32px; margin-top: 28px; }
 .footer-nav a { display: inline-block; padding: 6px 0; }
 /* El mapa tiene fondo propio (no queda un hueco negro mientras el iframe
    lazy carga) y va en grises para no meter los colores de Google Maps. */
@@ -850,6 +871,31 @@ address { font-style: normal; }
     .home-products > .home-product:only-child p { align-self: start; font-size: var(--t-base); max-width: 48ch; }
 }
 .comparison-table caption { text-align: left; }
+
+/* ---------- 19c. Guía (/bkf/) ---------- */
+/* Texto de lectura a 68ch con un índice de saltos a la izquierda en desktop. */
+.guide { display: grid; grid-template-columns: minmax(180px, 0.28fr) minmax(0, 1fr); gap: 32px clamp(32px, 6vw, 88px); align-items: start; }
+.guide-toc { position: sticky; top: calc(var(--nav-h) + 24px); border-top: 2px solid var(--hierro); padding-top: 12px; }
+.guide-toc-title { font-weight: 650; margin-bottom: 8px; }
+.guide-toc ol { list-style: none; display: grid; gap: 4px; font-size: var(--t-sm); }
+.guide-toc a { display: block; padding: 6px 0; color: var(--grafito); text-decoration: none; }
+.guide-toc a:hover, .guide-toc a:focus-visible { color: var(--hierro); text-decoration: underline; }
+.guide-body { max-width: 68ch; }
+.guide-body > h2 { margin: 48px 0 16px; }
+.guide-body > h2:first-child { margin-top: 0; }
+.guide-body > h3 { margin: 32px 0 12px; }
+.guide-body > p, .guide-list { margin-bottom: 16px; }
+.guide-body .facts { margin: 24px 0 8px; }
+.guide-list { padding-left: 1.2em; display: grid; gap: 8px; }
+.guide-figure { margin: 28px 0; }
+.guide-figure img { width: 100%; border-radius: var(--r); }
+.guide-figure figcaption { margin-top: 8px; color: var(--grafito); font-size: var(--t-sm); }
+@media (max-width: 860px) {
+    /* minmax(0, 1fr), no 1fr: con 1fr el ancho mínimo de la tabla del contenido estiraba la columna más allá de la pantalla. */
+    .guide { grid-template-columns: minmax(0, 1fr); }
+    .guide-toc { position: static; }
+}
+.faq-heading { margin: 40px 0 8px; font-size: var(--t-lg); }
 
 /* ---------- 20. Utilidades y preferencias ---------- */
 .contact-layout { display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr); gap: 32px 64px; align-items: start; }
