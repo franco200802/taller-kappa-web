@@ -250,6 +250,28 @@ saber al tocar el código:
   documento de la fase 2, §9.
 
 
+## 5d. SEO Google + Local + IA, fase 3 (1/10/2026)
+
+Detalle, evidencia y checklists (Search Console, Perfil de Empresa de Google,
+autoridad externa) en `docs/seo/seo-google-fase-3.md`. Lo que hay que saber del código:
+
+- **Imágenes:** cada foto de producto tiene además `-4x3.jpg` (1200x900) y
+  `-16x9.jpg` (1200x675), generadas con `scripts/build-social-images.sh` (se corre
+  aparte de `build-images.sh`). Las 16:9 son el `og:image`; las tres proporciones
+  van al `Product` como `ImageObject`. Si se reemplaza una foto, correr ambos scripts.
+- **Robots meta:** `max-image-preview:large, max-snippet:-1, max-video-preview:-1`
+  en todas las páginas indexables (en `Seo.jsx`).
+- **Entidad:** `LocalBusiness` + `FurnitureStore`; `WebSite.alternateName`. `sameAs`
+  sigue sin agregarse porque no hay perfiles oficiales verificados.
+- **`ProductGroup` no se usa a propósito:** los colores son opciones de cotización
+  sin precio ni SKU propios.
+- **Medición de IA:** `analytics.js` envía el evento `ai_referral` a GA4 si la visita
+  viene de ChatGPT, Perplexity, Gemini, Copilot o Claude (referrer o `utm_source`).
+  Google AI Overviews / AI Mode se mide en Search Console, no acá.
+- **Las fotos de producto están generadas con IA** (marca ✦ visible). No se
+  recortan para ocultarla; hay que reemplazarlas por fotos reales (también las
+  exige el Perfil de Empresa de Google).
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
