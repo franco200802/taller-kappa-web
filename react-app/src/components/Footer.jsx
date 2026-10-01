@@ -51,7 +51,7 @@ function LazyMap() {
         <iframe
           src="https://maps.google.com/maps?q=-34.5851938,-58.5281526&t=&z=16&ie=UTF8&iwloc=&output=embed"
           title="Ubicación Taller Kappa en Google Maps"
-          sandbox="allow-scripts allow-same-origin allow-popups"
+          sandbox="allow-scripts allow-popups"
           referrerPolicy="no-referrer-when-downgrade"
         />
       )}
@@ -68,8 +68,8 @@ export default function Footer() {
           <address className="footer-info">
             <p><strong>Fábrica &amp; Showroom</strong></p>
             <p><Icon name="map-marker-alt" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
-            <p><Icon name="clock" /> Retiro en el taller: {BUSINESS.hours.label}. <a href={BUSINESS.directionsUrl} target="_blank" rel="noopener noreferrer">Cómo llegar</a></p>
-            <p><Icon name="truck" /> Entregas en San Martín, CABA, Gran Buenos Aires y todo el país. <Link to="/envios/">Zonas y tiempos</Link></p>
+            <p><Icon name="clock" /> <span>Retiro en el taller: {BUSINESS.hours.label}. <a href={BUSINESS.directionsUrl} target="_blank" rel="noopener noreferrer">Cómo llegar</a></span></p>
+            <p><Icon name="truck" /> <span>Entregas en San Martín, CABA, Gran Buenos Aires y todo el país. <Link to="/envios/">Zonas y tiempos</Link></span></p>
             <p><Icon name="whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
           </address>

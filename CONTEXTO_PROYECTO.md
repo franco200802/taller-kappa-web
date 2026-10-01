@@ -60,7 +60,7 @@ termina en un link de WhatsApp con el detalle del pedido.
      `<h1>`, title/description únicos, JSON-LD parseable con todos sus `@id`
      resueltos y el nodo `WebPage` de la página, links internos rotos,
      páginas huérfanas, `<img>` sin `alt` e imágenes que no existen.
-  - Resultado esperado de `npm run build`: **"16 rutas + 404.html"**
+  - Resultado esperado de `npm run build`: **"15 rutas + 404.html"**
     sin errores ni warnings. Si ese número cambia sin que vos hayas
     agregado/quitado una página, algo se rompió.
 
@@ -196,8 +196,8 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   la página (WebPage/AboutPage/ContactPage/CollectionPage), su breadcrumb y lo
   extra (Product, FAQPage, ItemList, Service). Los productos referencian a la
   empresa por `@id` (`manufacturer`, `brand`), no con un objeto suelto.
-- **El Sillón BKF es UNA entidad**: `/sillon-bkf/` (guía) y
-  `/catalogo/sillon-bkf-premium/` (ficha) emiten el mismo `@id` de producto.
+- **El Sillón BKF es UNA entidad con UNA URL**: `/sillon-bkf/` es la página del producto y
+  su `@id` (`/catalogo/sillon-bkf-premium/` es solo una redirección).
 - **Datos reales o nada.** Sin precio, SKU, GTIN, reviews ni rating. Todo lo que
   figura en `business.js`/`products.js` ya estaba publicado en el sitio. Si
   un dato nuevo no se puede demostrar, no se agrega.

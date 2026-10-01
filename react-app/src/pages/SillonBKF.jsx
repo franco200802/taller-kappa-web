@@ -40,14 +40,9 @@ export default function SillonBKF() {
   const related = relatedProducts(PRODUCT);
 
   const handleAdd = (color) => {
-    addToCart({
-      _id: 'bkf-landing',
-      id: 'bkf-landing',
-      name: 'Sillón BKF Premium',
-      image: '/images/sillon-bkf-hierro-cuero.jpg',
-      specs: ['Hierro macizo 12mm', 'Cuero vacuno de 1ra'],
-    }, color);
-    trackEvent('add_to_cart', { item: 'Sillón BKF Premium', color, location: 'sillon-bkf' });
+    // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
+    addToCart(PRODUCT, color);
+    trackEvent('add_to_cart', { item: PRODUCT.name, color, location: 'sillon-bkf' });
   };
 
   return (
