@@ -42,6 +42,7 @@ const { PRERENDER_PAGES } = await import(pathToFileURL(resolve(root, 'src/routes
 const { absoluteUrl, withSlash, assetUrl, pageId } = await import(pathToFileURL(resolve(root, 'src/lib/site.js')).href);
 const { BUSINESS, addressLine } = await import(pathToFileURL(resolve(root, 'src/data/business.js')).href);
 const { PRODUCTS, CATEGORIES, factOf, productPath } = await import(pathToFileURL(resolve(root, 'src/data/products.js')).href);
+const { FAQS } = await import(pathToFileURL(resolve(root, 'src/data/faq.js')).href);
 
 /**
  * El template de Vite trae meta tags por defecto (los del Home) que deben
@@ -72,6 +73,7 @@ const PAGES_WITH_PRODUCT_DATA = new Set(['Home', 'Catalogo', 'Categoria', 'Produ
 function lastModified(page) {
   const files = [`src/pages/${page}.jsx`];
   if (PAGES_WITH_PRODUCT_DATA.has(page)) files.push('src/data/products.js');
+  if (page === 'FAQ') files.push('src/data/faq.js');
   try {
     const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', ...files], { cwd: root, encoding: 'utf-8' }).trim();
     return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : null;
@@ -264,7 +266,7 @@ const llms = [
   `- Email: ${BUSINESS.email}`,
   '',
   '## Productos',
-  ...PRODUCTS.map((p) => `- [${p.name}](${absoluteUrl(productPath(p))}): ${factOf(p, 'Categoría')}. ${factOf(p, 'Estructura')}. Medidas: ${factOf(p, 'Medidas')}.`),
+  ...PRODUCTS.map((p) => `- [${p.name}](${absoluteUrl(productPath(p))}): ${factOf(p, 'Categoría')}. ${p.material}. Medidas: ${factOf(p, 'Medidas')}. Garantía: ${factOf(p, 'Garantía')}.`),
   '',
   '## Categorías',
   ...CATEGORIES.map((c) => `- [${c.heading}](${absoluteUrl(`/catalogo/${c.slug}`)}): ${c.definition}`),
@@ -285,6 +287,14 @@ const llms = [
   bullet('Nosotros', '/nosotros'),
   bullet('Proyectos y clientes', '/proyectos'),
   '',
+  '## Cómo se compra',
+  '- No hay compra ni pago online: se arma un presupuesto en el sitio (o se escribe directo) y se envía por WhatsApp.',
+  '- Taller Kappa responde con el precio final y el plazo de entrega; el pedido se acuerda con el taller.',
+  `- Se retira en el taller (${BUSINESS.hours.label}) o se envía a Capital Federal, el Gran Buenos Aires y el interior del país.`,
+  '- Precios: no hay precio de lista publicado. Los precios que figuraron en versiones anteriores del sitio pueden no estar vigentes; el precio actual se confirma por WhatsApp.',
+  '',
+  '## Preguntas frecuentes',
+  ...FAQS.flatMap((f) => [`### ${f.question}`, f.answer, '']),
 ].join('\n');
 writeFileSync(resolve(distDir, 'llms.txt'), llms, 'utf-8');
 

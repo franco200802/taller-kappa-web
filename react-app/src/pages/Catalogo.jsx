@@ -6,8 +6,8 @@ import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
-import { CATEGORIES, PRODUCTS, productHref } from '../data/products';
-import { whatsappUrl } from '../data/contact';
+import { CATEGORIES, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
+import { whatsappUrl, whatsappUrlFor } from '../data/contact';
 import { loadFireDB } from '../lib/firebaseConfig';
 import { itemListNode } from '../lib/schema';
 
@@ -36,7 +36,7 @@ function ProductCard({ p, onOpen }) {
   // a /catalogo/undefined en vez de simplemente no enlazar a un detalle.
   const detailHref = p.slug ? productHref(p) : null;
   return (
-    <article className="product-card" data-category={p.category}>
+    <article className="product-card" data-category={p.category} data-cta="catalogo_card" data-item={p.name}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
       <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
         <span className="stock-dot-small" /> {p.stock ? 'En stock' : 'Consultar'}
@@ -51,7 +51,7 @@ function ProductCard({ p, onOpen }) {
         <h2 className="card-title">{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h2>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
-          href={whatsappUrl('Hola! Quisiera consultar el precio de: ' + p.name)}>
+          href={p.slug ? whatsappUrlFor(priceQuestion(p), productPath(p)) : whatsappUrl(priceQuestion(p))}>
           <Icon name="whatsapp" /> Consultar precio
         </a>
         <div className="card-actions">

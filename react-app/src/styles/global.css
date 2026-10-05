@@ -241,6 +241,7 @@ p a:hover, li a:hover { color: var(--kappa); }
 .home-hero h1 { font-size: var(--t-hero); font-stretch: 62%; font-weight: 850; line-height: 0.98; letter-spacing: -0.015em; word-spacing: 0.12em; }
 .home-hero-lead { font-size: var(--t-md); color: var(--grafito); max-width: 34ch; }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.home-hero-b2b { font-size: var(--t-sm); color: var(--grafito); }
 @media (max-width: 560px) { .home-hero-actions > *, .bkf-actions > *, .cta-btns > * { flex: 1 1 100%; } }
 .home-hero-media { position: relative; overflow: hidden; background: var(--blanco); }
 .home-hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
@@ -908,10 +909,19 @@ address { font-style: normal; }
 
 /* TypeWriter: el contenedor reserva una línea para que escribir y borrar no mueva nada. */
 .home-hero-typed { font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; line-height: 1.15; min-height: 1.3em; color: var(--hierro); }
+.page-typed { display: block; margin-top: 12px; font-size: var(--t-lg); font-stretch: 70%; font-weight: 800; line-height: 1.15; min-height: 1.3em; color: var(--hierro); }
+.bkf-typed { font-size: var(--t-md); font-stretch: 70%; font-weight: 800; line-height: 1.2; min-height: 1.4em; }
 .typewriter { display: inline-block; white-space: nowrap; }
 .typewriter-cursor { display: inline-block; width: 3px; height: 1em; margin-left: 3px; vertical-align: -0.12em; background: var(--kappa); animation: tw-blink 1s steps(1) infinite; }
 @keyframes tw-blink { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .typewriter-cursor { animation: none; } }
+/* En pantallas angostas las frases largas no entran al lado de la etiqueta y saltaban a un 2.º renglón (el bloque
+   crecía de 33 a 58 px y empujaba el contenido). Ahí la frase va siempre en su propio renglón, un poco más chica,
+   y el contenedor reserva dos renglones: el alto no cambia mientras escribe y borra. */
+@media (max-width: 560px) {
+    .home-hero-typed, .page-typed { font-size: var(--t-md); min-height: 2.4em; }
+    .home-hero-typed .typewriter, .page-typed .typewriter { display: block; }
+}
 
 /* ShimmerText: el destello va del color del texto al rojo de marca (5,4:1 sobre el fondo claro, AA).
    El fondo se REPITE (mide 200% y se desplaza 400% = dos períodos exactos): con no-repeat, parte de las

@@ -6,7 +6,7 @@ import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
 import { PRODUCTS, productHref } from '../data/products';
-import { whatsappUrl } from '../data/contact';
+import { whatsappUrlFor } from '../data/contact';
 import { BUSINESS, addressLine } from '../data/business';
 import { ORG_ID } from '../lib/schema';
 
@@ -52,15 +52,18 @@ export default function Home() {
             Directo de fábrica: hierro macizo de 12 mm y cuero vacuno, hechos en nuestro taller de
             San Martín. <ShimmerText>Cotizamos por WhatsApp en el día.</ShimmerText>
           </p>
-          <div className="home-hero-actions">
+          <div className="home-hero-actions" data-cta="home_hero">
             <Link to="/sillon-bkf/" className="btn-main">Ver el sillón BKF</Link>
             <a
-              href={whatsappUrl('Hola, soy una empresa y necesito cotización mayorista.')}
+              href={whatsappUrlFor('Hola, quiero consultar el precio del sillón BKF.', '/')}
               target="_blank" rel="noopener noreferrer" className="btn-outline"
             >
-              <Icon name="whatsapp" /> Cotizar para empresas
+              <Icon name="whatsapp" /> Consultar precio
             </a>
           </div>
+          <p className="home-hero-b2b">
+            ¿Es para un local o una empresa? <Link to="/mobiliario-comercial/">Cotizá mobiliario comercial a medida</Link>
+          </p>
         </div>
         <div className="home-hero-media">
           <Picture
@@ -127,7 +130,7 @@ export default function Home() {
         </div>
         <div>
           <p>
-            Entregamos en San Martín y alrededores, en CABA, en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
+            Entregamos en San Martín y alrededores, en Capital Federal (CABA), en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
             <Link to="/envios/">zonas y tiempos de envío</Link>.
           </p>
           <p>

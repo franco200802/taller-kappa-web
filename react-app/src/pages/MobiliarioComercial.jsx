@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
+import ScrollText from '../components/ScrollText';
+import ShimmerText from '../components/ShimmerText';
+import TypeWriter from '../components/TypeWriter';
 import ProductTable from '../components/ProductTable';
 import { PRODUCTS } from '../data/products';
 import { whatsappUrl } from '../data/contact';
@@ -37,6 +40,10 @@ const SECTORS = [
   ['Hoteles y oficinas', 'Asientos y mesas de hierro y cuero en medidas y colores a pedido.'],
 ];
 
+// Los rubros que escribe el hero son los de SECTORS: se detallan más abajo, en "Para qué tipo de negocio".
+const lcFirst = (t) => t.charAt(0).toLowerCase() + t.slice(1);
+const SECTOR_PHRASES = SECTORS.map(([name]) => lcFirst(name));
+
 export default function MobiliarioComercial() {
   const description = 'Taller Kappa fabrica en San Martín, Buenos Aires, mobiliario comercial de hierro a medida: bases de mesa, bancos y sillones BKF para locales y empresas de todo el país.';
   const service = serviceNode({
@@ -60,7 +67,16 @@ export default function MobiliarioComercial() {
       />
       <PageHero
         title="Mobiliario comercial de hierro a medida"
-        lead="Taller Kappa fabrica en San Martín, Buenos Aires, mobiliario de hierro y cuero a medida para locales gastronómicos, estaciones de servicio, comercios y empresas: bases de mesa, bancos y sillones BKF."
+        lead={(
+          <>
+            Taller Kappa fabrica en San Martín, Buenos Aires, mobiliario de hierro y cuero a medida para locales y empresas: bases de mesa, bancos y
+            sillones BKF. <ShimmerText>Cotizamos por WhatsApp.</ShimmerText>
+            <span className="page-typed">
+              Equipamos{' '}
+              <TypeWriter sequences={SECTOR_PHRASES} srText={SECTOR_PHRASES.join(', ')} />
+            </span>
+          </>
+        )}
         current="Mobiliario comercial"
       />
 
@@ -82,7 +98,7 @@ export default function MobiliarioComercial() {
           <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
           <div><dt>Pedidos mayoristas</dt><dd>3 o más unidades: envío bonificado dentro de GBA</dd></div>
           <div><dt>Garantía</dt><dd>Estructura de hierro de por vida; pintura epoxi 2 años</dd></div>
-          <div><dt>Envíos</dt><dd>CABA, GBA y todo el país</dd></div>
+          <div><dt>Envíos</dt><dd>Capital Federal, GBA y todo el país</dd></div>
         </dl>
       </section>
 
@@ -101,11 +117,7 @@ export default function MobiliarioComercial() {
 
       <section className="section-padding section-fade">
         <h2 className="section-title">Para qué tipo de negocio</h2>
-        <ul className="related-list">
-          {SECTORS.map(([name, text]) => (
-            <li key={name}><strong>{name}</strong><span>{text}</span></li>
-          ))}
-        </ul>
+        <ScrollText items={SECTORS.map(([title, text]) => ({ title, text }))} />
         <p>
           Estos son algunos de los clientes y trabajos que ya hicimos: <Link to="/proyectos/">proyectos de mobiliario de hierro para YPF, McDonald&apos;s, Burger King, Shell Select y Sandro</Link>.
         </p>

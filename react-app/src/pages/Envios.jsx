@@ -23,14 +23,14 @@ export default function Envios() {
   return (
     <>
       <Seo
-        title="Envíos — Zonas y Tiempos de Entrega | Taller Kappa"
-        description="Entregamos muebles de hierro y cuero en Capital Federal, GBA, Zona Norte, Zona Sur y al interior del país por expreso. Conocé zonas y tiempos."
+        title="Envíos de Muebles de Hierro: Zonas y Plazos de Entrega | Taller Kappa"
+        description="Plazos con stock: San Martín 24-48 hs, Capital Federal y Zona Norte 2-4 días hábiles, Oeste y Sur hasta 5, interior 5-10 por expreso. Retiro sin cargo."
         path="/envios"
         breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Envíos', path: '/envios' }]}
       />
       <PageHero
         title="Envíos de muebles de hierro en Buenos Aires"
-        lead="Llegamos a Capital Federal, GBA y al interior del país con embalaje profesional."
+        lead="Con unidades en stock, entregamos en 24-48 hs en San Martín y alrededores, en 2 a 5 días hábiles en Capital Federal y el resto del GBA, y en 5 a 10 días hábiles en el interior del país por expreso. También podés retirar sin cargo en el taller."
         current="Envíos"
       />
 

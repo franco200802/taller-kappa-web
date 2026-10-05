@@ -4,9 +4,11 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { trackEvent } from '../lib/analytics';
-import { whatsappUrl } from '../data/contact';
-import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, productHref, relatedProducts, socialImage } from '../data/products';
+import ScrollText from '../components/ScrollText';
+import ShimmerText from '../components/ShimmerText';
+import TypeWriter from '../components/TypeWriter';
+import { whatsappUrlFor } from '../data/contact';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
 import { BUSINESS } from '../data/business';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
@@ -15,13 +17,15 @@ import { assetUrl, pageId } from '../lib/site';
 // de data/products.js (acá viven las preguntas que antes estaban en la ficha del producto).
 const FAQ_ITEMS = [
   { q: '¿Quién fabrica sillones BKF en Buenos Aires y cómo se compran?', a: 'Taller Kappa S.R.L. fabrica sillones BKF en su taller de Villa Chacabuco, San Martín, provincia de Buenos Aires, y los vende directo de fábrica. No se compran por la web: se pide el presupuesto por WhatsApp, se confirma el precio final y el plazo, y se retira en el taller o se recibe por envío.' },
-  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
+  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Los precios que figuraron en versiones anteriores de este sitio pueden no estar vigentes. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
   { q: '¿Qué diferencia hay entre un sillón BKF de hierro macizo y uno de tubo?', a: 'El hierro macizo es una varilla sólida y el tubo es hueco. A igual diámetro, la varilla maciza resiste más la flexión y pesa más que un tubo de pared fina. El diseño original usa varilla maciza de alrededor de 12 mm. El sillón de Taller Kappa es de hierro redondo macizo de 12 mm, sin tubos ni rellenos.' },
   { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
   { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
   { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
-  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en CABA, de 2 a 4 días hábiles; en el resto del Gran Buenos Aires, de 2 a 5 días hábiles según la zona; y en el interior del país, de 5 a 10 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
+  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en Capital Federal (CABA), de 2 a 4 días hábiles; en el resto del Gran Buenos Aires, de 2 a 5 días hábiles según la zona; y en el interior del país, de 5 a 10 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
   { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
+  { q: '¿Se puede usar el sillón BKF en exterior?', a: 'Conviene usarlo en interiores o bajo techo. La garantía de 2 años de la pintura epoxi es para uso interior, conviene evitar que la estructura pintada quede expuesta mucho tiempo a la lluvia directa, el cromado no va en exteriores húmedos y el cuero no debe recibir sol directo por períodos prolongados.' },
+  { q: '¿Cómo se cuida el cuero del sillón BKF?', a: 'Se limpia con un paño seco o apenas húmedo y se le aplica crema hidratante para cuero cada 6 meses. No hay que usar alcohol ni solventes ni dejarlo al sol directo por mucho tiempo. El cuero se oscurece con el uso: es normal. La estructura pintada se limpia con paño húmedo y detergente neutro.' },
   { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
 ];
 
@@ -33,6 +37,17 @@ const COLORS = [
   { name: 'Rojo Kappa', swatch: '#b71c1c' },
 ];
 
+// Los acabados que se escriben junto a las muestras de color (la primera es la que ve quien no ejecuta JavaScript).
+const FINISHES = ['negro mate', 'blanco crema', 'cromado', 'verde oliva', 'rojo Kappa', 'el color que necesites'];
+
+// De qué está hecho: los mismos datos de la ficha técnica y la garantía, uno por renglón.
+const MADE_OF = [
+  { title: 'Hierro macizo de 12 mm', text: 'Estructura de hierro redondo macizo, sin tubos ni rellenos. Tiene garantía de por vida contra deformaciones.' },
+  { title: 'Cuero vacuno curtido al vegetal', text: 'Cuero de primera selección que toma color con el uso. Garantía de 1 año contra defectos de fabricación.' },
+  { title: 'Epoxi anticorrosiva o cromado', text: 'Pintura epoxi de doble capa, con 2 años de garantía, o terminación cromada. Negro mate, blanco o el color que necesites.' },
+  { title: 'A medida, sin costo adicional', text: '78 x 70 x 90 cm en la versión estándar. Las medidas, los colores y los acabados se adaptan a tu espacio.' },
+];
+
 const PRODUCT = getProductBySlug('sillon-bkf-premium');
 
 export default function SillonBKF() {
@@ -42,14 +57,13 @@ export default function SillonBKF() {
   const handleAdd = (color) => {
     // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
     addToCart(PRODUCT, color);
-    trackEvent('add_to_cart', { item: PRODUCT.name, color, location: 'sillon-bkf' });
   };
 
   return (
     <>
       <Seo
         title="Sillón BKF Buenos Aires: Comprar Directo de Fábrica | Taller Kappa"
-        description="Comprá el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hecho en San Martín. Presupuesto por WhatsApp y envíos a todo el país."
+        description="Comprá el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hecho en San Martín. Envíos a Capital Federal, GBA y todo el país."
         path="/sillon-bkf"
         image={assetUrl(socialImage(PRODUCT))}
         imageWidth={SOCIAL_IMAGE_SIZE.width}
@@ -72,7 +86,12 @@ export default function SillonBKF() {
       />
       <PageHero
         title="Sillón BKF de hierro y cuero, fabricado en Buenos Aires"
-        lead="Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín. Pedís el presupuesto por WhatsApp y lo retirás en el taller o lo recibís en CABA, GBA y todo el país."
+        lead={(
+          <>
+            Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín.{' '}
+            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller o lo recibís en Capital Federal, GBA y todo el país.
+          </>
+        )}
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]}
       />
 
@@ -90,8 +109,8 @@ export default function SillonBKF() {
             <h2>Sillón BKF Premium</h2>
             <p className="bkf-tagline">Diseño argentino de 1938, fabricado con hierro macizo de 12 mm y cuero vacuno curtido al vegetal.</p>
             <div className="bkf-price-box">
-              <span className="bkf-price">{formatPrice(PRODUCT) ?? 'Cotización personalizada'}</span>
-              <span className="bkf-price-note">{PRODUCT.price?.note ?? 'Consultanos por WhatsApp para recibir tu presupuesto'}</span>
+              <span className="bkf-price">{formatPrice(PRODUCT) ?? 'Precio a consultar'}</span>
+              <span className="bkf-price-note">{PRODUCT.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
             </div>
             <ul className="bkf-specs">
               <li><Icon name="check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
@@ -103,17 +122,20 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
               <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
             </ul>
-            <div className="bkf-actions">
+            <div className="bkf-actions" data-cta="sillon-bkf_actions">
               <button className="btn-main" onClick={() => handleAdd('Negro Mate')}>
                 <Icon name="plus" /> Agregar al presupuesto
               </button>
-              <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF Premium.')}
-                target="_blank" rel="noopener noreferrer" className="btn-outline"
-                onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_actions' })}>
-                <Icon name="whatsapp" /> Cotizar por WhatsApp
+              <a href={whatsappUrlFor(priceQuestion(PRODUCT), '/sillon-bkf')}
+                target="_blank" rel="noopener noreferrer" className="btn-outline">
+                <Icon name="whatsapp" /> Consultar precio
               </a>
             </div>
             <div>
+              <p className="bkf-typed">
+                Se pide en{' '}
+                <TypeWriter sequences={FINISHES} srText="negro mate, blanco crema, cromado, verde oliva, rojo Kappa o el color que necesites" />
+              </p>
               <p className="color-label">Agregar en otro acabado:</p>
               <div className="bkf-color-swatches">
                 {COLORS.map((c) => (
@@ -151,7 +173,7 @@ export default function SillonBKF() {
           <div><dt>Cómo se compra</dt><dd>Presupuesto por WhatsApp, sin pago online</dd></div>
           <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
           <div><dt>San Martín y alrededores</dt><dd>24 a 48 hs con stock</dd></div>
-          <div><dt>CABA</dt><dd>2 a 4 días hábiles</dd></div>
+          <div><dt>Capital Federal (CABA)</dt><dd>2 a 4 días hábiles</dd></div>
           <div><dt>Gran Buenos Aires</dt><dd>2 a 5 días hábiles según la zona</dd></div>
           <div><dt>Interior del país</dt><dd>5 a 10 días hábiles por expreso</dd></div>
           <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
@@ -169,11 +191,6 @@ export default function SillonBKF() {
             Sirve para interiores residenciales, como un living, y para locales gastronómicos con uso intensivo. Nuestros sillones equipan locales de
             YPF, McDonald&apos;s, Burger King y Shell: mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida</Link> y los{' '}
             <Link to="/proyectos/">proyectos que hicimos</Link>.
-          </p>
-          <p>
-            La estructura es de <strong>hierro redondo macizo de 12 mm</strong>, sin tubos ni rellenos, con pintura epoxi anticorrosiva de doble capa o cromado.
-            El asiento es de <strong>cuero vacuno de primera selección</strong>, curtido al vegetal, que toma color con el uso. Se pide en negro mate, blanco, cromado o
-            en el color que necesites, y a medida sin costo adicional.
           </p>
           <p>
             Para conocer el origen del diseño y cómo elegir uno, leé <Link to="/bkf/">qué es el sillón BKF: historia y características</Link>. Los cuidados y las
@@ -203,6 +220,11 @@ export default function SillonBKF() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="why-section section-fade" aria-labelledby="de-que-esta-hecho">
+        <h2 className="section-title" id="de-que-esta-hecho">De qué está hecho el sillón BKF</h2>
+        <ScrollText items={MADE_OF} />
       </section>
 
       <section className="bkf-comparison section-fade">
@@ -264,11 +286,10 @@ export default function SillonBKF() {
       <section className="cta-section section-fade">
         <div className="cta-box">
           <h2>¿Querés un sillón BKF?</h2>
-          <p>Escribinos por WhatsApp y te respondemos con el presupuesto. Precios de fábrica, envíos a todo el país.</p>
-          <div className="cta-btns">
-            <a href={whatsappUrl('Hola, quiero pedir un presupuesto del Sillón BKF.')}
-              target="_blank" rel="noopener noreferrer" className="btn-main"
-              onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
+          <p>Escribinos por WhatsApp con el color, la cantidad y la zona de entrega, y te respondemos con el precio y el plazo. Directo de fábrica, envíos a todo el país.</p>
+          <div className="cta-btns" data-cta="sillon-bkf_cta_final">
+            <a href={whatsappUrlFor('Hola, quiero pedir un presupuesto del Sillón BKF Premium.', '/sillon-bkf')}
+              target="_blank" rel="noopener noreferrer" className="btn-main">
               <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
             </a>
             <Link to="/catalogo/" className="btn-outline">

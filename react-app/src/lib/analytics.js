@@ -111,11 +111,61 @@ export function trackPageview(path) {
 }
 
 /**
- * trackEvent — para acciones puntuales (ej. click en "Cotizar por WhatsApp",
- * agregar producto al presupuesto). No se llama todavía desde ningún lado:
- * queda disponible para usarse a medida que se decida qué eventos importan.
+ * trackEvent — para acciones puntuales (agregar al presupuesto, formulario de
+ * contacto…). Los clics a WhatsApp, email y fichas de producto NO se trackean
+ * a mano: los mide trackClicks() desde un solo listener.
  */
 export function trackEvent(action, params = {}) {
   if (typeof window === 'undefined' || !window.gtag) return;
   window.gtag('event', action, params);
+}
+
+/**
+ * Dónde está el enlace: el `data-cta` más cercano (lo ponen los botones
+ * principales) o, si no hay, la zona de la página.
+ */
+function ctaLocation(el) {
+  const tagged = el.closest('[data-cta]');
+  if (tagged) return tagged.dataset.cta;
+  if (el.closest('footer')) return 'footer';
+  if (el.closest('header')) return 'menu';
+  if (el.closest('dialog')) return 'modal';
+  if (el.closest('.cta-section')) return 'cta_final';
+  return 'contenido';
+}
+
+let clicksTracked = false;
+
+/**
+ * Un solo listener para todas las salidas que importan para vender, así ningún
+ * CTA queda sin medir (antes 17 de los 22 enlaces a WhatsApp no enviaban nada):
+ *
+ *  - `whatsapp_click`: todo enlace a wa.me. Es LA conversión del sitio (marcarlo
+ *    como evento clave en GA4). Parámetros: `location` (data-cta o zona),
+ *    `page_path` (página desde donde se escribió) e `item_name` (producto, si
+ *    el enlace está dentro de un `data-item` o la página es la de un producto).
+ *  - `email_click`: enlaces mailto:.
+ *  - `select_item`: clic hacia la página de un producto (qué producto interesa).
+ *
+ * `productNameForPath(pathname)` devuelve el nombre del producto de una URL, o null.
+ */
+export function trackClicks(productNameForPath) {
+  if (typeof window === 'undefined' || clicksTracked) return;
+  clicksTracked = true;
+  document.addEventListener('click', (e) => {
+    const a = e.target instanceof Element ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    const href = a.getAttribute('href');
+    const page_path = window.location.pathname;
+    const location = ctaLocation(a);
+    if (href.startsWith('https://wa.me/')) {
+      const item_name = a.closest('[data-item]')?.dataset.item ?? productNameForPath(page_path) ?? undefined;
+      trackEvent('whatsapp_click', { location, page_path, item_name });
+    } else if (href.startsWith('mailto:')) {
+      trackEvent('email_click', { location, page_path });
+    } else if (href.startsWith('/')) {
+      const item_name = productNameForPath(href);
+      if (item_name && href.replace(/\/+$/, '') !== page_path.replace(/\/+$/, '')) trackEvent('select_item', { item_name, location, page_path });
+    }
+  }, { capture: true });
 }

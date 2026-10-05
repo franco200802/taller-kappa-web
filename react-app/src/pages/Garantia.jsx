@@ -21,14 +21,14 @@ export default function Garantia() {
   return (
     <>
       <Seo
-        title="Garantía y Cuidados — Muebles de Hierro y Cuero | Taller Kappa"
-        description="Política de garantía de Taller Kappa. Todos nuestros muebles de hierro y cuero tienen garantía de fabricación. Conocé cómo cuidar tus productos."
+        title="Garantía de Muebles de Hierro y Cuero y Cómo Cuidarlos | Taller Kappa"
+        description="Garantía de Taller Kappa: estructura de hierro de por vida, pintura epoxi 2 años y cuero 1 año. Defectos al recibir, sin costo de envío. Cuidados por material."
         path="/garantia"
         breadcrumb={[{ name: 'Inicio', path: '/' }, { name: 'Garantía', path: '/garantia' }]}
       />
       <PageHero
         title="Garantía y cuidados de muebles de hierro y cuero"
-        lead="Respaldamos cada pieza que fabricamos con garantía de calidad."
+        lead="La estructura de hierro tiene garantía de por vida, la pintura epoxi 2 años y el cuero 1 año contra defectos de fabricación. Si un producto llega con un defecto, avisanos dentro de las 72 hs y lo resolvemos sin costo de envío."
         current="Garantía"
       />
 

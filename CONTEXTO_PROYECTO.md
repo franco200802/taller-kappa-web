@@ -151,11 +151,16 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
 - **Estilo de textos**: títulos en mayúscula inicial (castellano, no
   "Title Case"), sin mayúsculas forzadas ni el patrón "Palabra — fragmento".
   Botones con verbos que dicen qué pasa ("Agregar al presupuesto").
-- **Analytics (GA4) manual en cada CTA**: cada botón/link de WhatsApp o
-  acción de conversión importante llama a `trackEvent(nombre, params)` de
-  `lib/analytics.js`. Si agregás un CTA nuevo, seguí el mismo patrón
-  (`whatsapp_click`, `add_to_cart`, etc.) con un `location` descriptivo en
-  los params.
+- **Analytics (GA4) automático para WhatsApp, email y productos**: `trackClicks()`
+  (`lib/analytics.js`, lo activa `Layout`) mide todo enlace a `wa.me`
+  (`whatsapp_click`), `mailto:` (`email_click`) y a la página de un producto
+  (`select_item`), con `location`, `page_path` e `item_name`. **No agregues
+  `trackEvent('whatsapp_click')` a mano** (duplicaría el evento): poné
+  `data-cta="nombre"` en el botón o su contenedor y, si no es la página del
+  producto, `data-item="Nombre del producto"`. `add_to_cart` lo envía
+  `CartContext`. Para otras acciones, `trackEvent(nombre, params)`.
+- **Links de WhatsApp de producto**: `whatsappUrlFor(priceQuestion(p), productPath(p))`
+  (`data/contact.js`, `data/products.js`): el mensaje dice el producto y termina con la URL.
 - **Fallback-first para datos de Firestore**: páginas como `Catalogo.jsx`,
   `Nosotros.jsx` (testimonios) y `FAQ.jsx` arrancan con un array
   `FALLBACK_*` hardcodeado y llaman a `loadFireDB()` (de
@@ -183,7 +188,7 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   errores #418 falsos.
 - **Validación de cada cambio**: el flujo de trabajo establecido en este
   proyecto es siempre: editar → `get_errors` en los archivos tocados →
-  `npm run build` completo (esperar "12 rutas + 404.html" sin warnings) →
+  `npm run build` completo (esperar "15 rutas + 404.html" sin warnings) →
   `npx react-doctor@latest --verbose --scope changed` (el puntaje no debe
   bajar) → commit descriptivo (explicando el *por qué*, no solo el *qué*) → push.
 
@@ -314,11 +319,39 @@ que respetar si se usan en otro lado:
   `--hierro` (activo) y `--grafito` (atenuado, 7:1). No usar opacidades que bajen del contraste.
 - `ScrollText` usa el scroll de la página (el original usa un contenedor de 300 px con scroll
   propio, que atrapa el scroll).
-- Usos hoy: la home (typewriter en el hero con las frases de `HERO_PHRASES`, destello en
-  "Cotizamos por WhatsApp en el día.", y `ScrollText` en "Por qué pedirle el presupuesto a la
-  fábrica"). El H1 sigue siendo estático.
+- Usos hoy:
+  - **Home:** typewriter en el hero (frases de `HERO_PHRASES`), destello en "Cotizamos por WhatsApp en
+    el día." y `ScrollText` en "Por qué pedirle el presupuesto a la fábrica".
+  - **`/sillon-bkf/`:** destello en "Pedís el presupuesto por WhatsApp" (el `lead` de `PageHero` acepta
+    un nodo), typewriter con los acabados junto a las muestras de color (`FINISHES`) y `ScrollText` en
+    "De qué está hecho el sillón BKF" (`MADE_OF`, los mismos datos de la ficha técnica y la garantía).
+  - **`/mobiliario-comercial/`:** destello en "Cotizamos por WhatsApp.", typewriter con los rubros
+    (`SECTOR_PHRASES`, derivadas de `SECTORS`, una sola fuente) y `ScrollText` en "Para qué tipo de
+    negocio". En pantallas de 560 px o menos la frase del typewriter va en su propio renglón y el
+    contenedor reserva dos (`min-height`), para que el alto no cambie al escribir.
+  - Cobertura geográfica: el contenido dice "Capital Federal (CABA)", porque así lo busca la gente; el
+    schema de `areaServed` lleva `alternateName` ['Capital Federal', 'CABA'].
+  - Los H1 siguen siendo estáticos. El typewriter se pausa fuera de pantalla: si queda debajo de la
+    primera pantalla (como en la landing) no anima hasta que se hace scroll hasta él; es lo esperado.
 - Si se prueba con un iframe, ojo: dentro de un iframe el `IntersectionObserver` mide contra la
   ventana superior y el resaltado de `ScrollText` parece no funcionar; probar a nivel superior.
+
+## 5g. Fase 4: de la búsqueda a la venta (5/10/2026)
+
+Diagnóstico, competencia con precios, mapa keyword → URL → CTA, priorización y
+pendientes en `docs/seo/fase-4-ventas.md`. Lo que hay que saber del código:
+
+- **La conversión del sitio es `whatsapp_click`** (marcarla como evento clave en GA4).
+  Ver la convención de analytics en la sección 5.
+- **FAQ general en `data/faq.js`**: la usan `/faq/` y `llms.txt`. Los plazos tienen que
+  coincidir con `/envios/` y con la FAQ de `/sillon-bkf/`.
+- **Productos**: `article: 'la'` para nombres femeninos (`theName(p)`, `ofName(p)`:
+  "de la Base de Mesa Flat") y `heading` para el H1 de la ficha (con "Buenos Aires").
+- **Los buscadores con IA todavía citan el precio viejo ($280.000, mayo 2026)** y "compra
+  online" de versiones anteriores del sitio. La FAQ y `llms.txt` aclaran que no hay
+  precio de lista; la solución de fondo es publicar el precio vigente.
+- **No crear `/bkf-cuero`, `/comprar-bkf-buenos-aires`, `/fabricante-bkf`, etc.**: misma
+  intención y mismo producto que `/sillon-bkf/` (ver §3 del documento).
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 

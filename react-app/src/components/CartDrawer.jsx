@@ -95,6 +95,8 @@ export default function CartDrawer() {
                 href={whatsappLink}
                 className="btn-whatsapp-checkout"
                 target="_blank" rel="noopener noreferrer"
+                // whatsapp_click lo envía trackClicks (con estos data-*); whatsapp_checkout suma el detalle del presupuesto.
+                data-cta="presupuesto" data-item={cart.map((i) => i.product.name).join(', ')}
                 onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
               >
                 <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
