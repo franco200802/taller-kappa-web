@@ -241,6 +241,7 @@ p a:hover, li a:hover { color: var(--kappa); }
 .home-hero h1 { font-size: var(--t-hero); font-stretch: 62%; font-weight: 850; line-height: 0.98; letter-spacing: -0.015em; word-spacing: 0.12em; }
 .home-hero-lead { font-size: var(--t-md); color: var(--grafito); max-width: 34ch; }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.home-hero-b2b { font-size: var(--t-sm); color: var(--grafito); }
 @media (max-width: 560px) { .home-hero-actions > *, .bkf-actions > *, .cta-btns > * { flex: 1 1 100%; } }
 .home-hero-media { position: relative; overflow: hidden; background: var(--blanco); }
 .home-hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }

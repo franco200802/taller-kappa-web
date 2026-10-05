@@ -111,9 +111,10 @@ export const PRODUCTS = [
     slug: 'banco-bkf',
     category: 'asientos',
     name: 'Banco BKF',
+    heading: 'Banco BKF de hierro y cuero, fabricado en Buenos Aires',
     alternateName: ['Banco BKF de hierro y cuero', 'Banqueta BKF'],
     seoTitle: 'Banco BKF de Hierro y Cuero en Buenos Aires | Taller Kappa',
-    seoDescription: 'Banco BKF de hierro macizo de 12 mm, 38 x 38 x 45 cm: pie de cama o asiento auxiliar en la línea del sillón BKF. Fabricado por Taller Kappa en San Martín.',
+    seoDescription: 'Banco BKF de hierro macizo de 12 mm y asiento de cuero, 38 x 38 x 45 cm: pie de cama o asiento auxiliar en la línea del sillón BKF. Hecho en San Martín.',
     image: '/images/banco-bkf-hierro-cuero.jpg',
     imageWidth: 1024,
     imageHeight: 1024,
@@ -127,9 +128,10 @@ export const PRODUCTS = [
     facts: [
       ['Categoría', 'Asientos (bancos BKF)'],
       ['Estructura', 'Hierro macizo de 12 mm'],
+      ['Tapizado', 'Asiento de cuero'],
       ['Medidas', '38 x 38 x 45 cm (altura 45 cm)'],
       ['Uso', 'Pie de cama o asiento auxiliar'],
-      ['Garantía', GARANTIA_HIERRO],
+      ['Garantía', `${GARANTIA_HIERRO}; cuero 1 año`],
       ['Precio', 'Cotización por WhatsApp'],
     ],
     faq: [
@@ -142,6 +144,8 @@ export const PRODUCTS = [
     slug: 'base-de-mesa-flat',
     category: 'mesas',
     name: 'Base de Mesa Flat',
+    article: 'la',
+    heading: 'Base de Mesa Flat de hierro, fabricada en Buenos Aires',
     alternateName: ['Base de mesa de hierro', 'Base Flat'],
     seoTitle: 'Base de Mesa Flat de Hierro en Buenos Aires | Taller Kappa',
     seoDescription: 'Base de Mesa Flat: chapa de 10 mm, columna de 77/101 mm, altura de mesa (73 cm) o de barra (105 cm). Para uso gastronómico. Taller Kappa, San Martín.',
@@ -194,6 +198,20 @@ export function formatPrice(product) {
 export const productPath = (p) => p.path ?? `/catalogo/${p.slug}`;
 /** Igual, con barra final: es la forma de los enlaces internos y de la URL canónica. */
 export const productHref = (p) => `${productPath(p)}/`;
+
+/** Producto cuya página es `pathname` (con o sin barra final), o null. */
+export function productByPath(pathname) {
+  const clean = pathname.replace(/\/+$/, '') || '/';
+  return PRODUCTS.find((p) => productPath(p) === clean) ?? null;
+}
+
+/** "el Banco BKF" / "la Base de Mesa Flat" (`article` es opcional; por defecto "el"). */
+export const theName = (p) => `${p.article ?? 'el'} ${p.name}`;
+/** "del Banco BKF" / "de la Base de Mesa Flat". */
+export const ofName = (p) => (p.article === 'la' ? `de la ${p.name}` : `del ${p.name}`);
+
+/** Primer mensaje de WhatsApp para pedir el precio de un producto. */
+export const priceQuestion = (p) => `Hola, quiero consultar el precio ${ofName(p)}.`;
 
 export function getProductBySlug(slug) {
   return PRODUCTS.find((p) => p.slug === slug) ?? null;

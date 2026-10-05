@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { whatsappUrl } from '../data/contact';
+import { trackEvent } from '../lib/analytics';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
@@ -59,6 +60,8 @@ export function CartProvider({ children }) {
       return [...prev, { key, product, color, qty: 1 }];
     });
     showToast(`"${product.name}" (${color}) agregado al presupuesto`);
+    // Se mide acá y no en cada botón: así cuentan igual la landing, la ficha, el catálogo y el modal.
+    trackEvent('add_to_cart', { item_name: product.name, color, page_path: window.location.pathname });
   }, [showToast]);
 
   const changeQty = useCallback((key, delta) => {

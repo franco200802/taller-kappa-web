@@ -4,8 +4,8 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, productHref, relatedProducts, socialImage } from '../data/products';
-import { whatsappUrl } from '../data/contact';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, ofName, priceQuestion, productHref, relatedProducts, socialImage, theName } from '../data/products';
+import { whatsappUrlFor } from '../data/contact';
 import { assetUrl } from '../lib/site';
 import { faqNode, productId, productNode } from '../lib/schema';
 
@@ -42,6 +42,7 @@ export default function Producto() {
   const path = `/catalogo/${product.slug}`;
   const related = relatedProducts(product);
   const faq = faqNode(product.faq ?? [], path);
+  const waPrice = whatsappUrlFor(priceQuestion(product), path);
 
   return (
     <>
@@ -65,7 +66,7 @@ export default function Producto() {
         jsonLd={[productNode(product), ...(product.faq?.length ? [faq] : [])]}
       />
       <PageHero
-        title={product.name}
+        title={product.heading ?? product.name}
         lead={product.definition}
         current={product.name}
         trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: `/catalogo/${category.slug}/`, label: category.name }]}
@@ -94,8 +95,8 @@ export default function Producto() {
             <h2>{product.name}</h2>
             <p className="bkf-tagline">{product.desc}</p>
             <div className="bkf-price-box">
-              <span className="bkf-price">{formatPrice(product) ?? 'Cotización personalizada'}</span>
-              <span className="bkf-price-note">{product.price?.note ?? 'Consultanos por WhatsApp para recibir tu presupuesto'}</span>
+              <span className="bkf-price">{formatPrice(product) ?? 'Precio a consultar'}</span>
+              <span className="bkf-price-note">{product.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
             </div>
             {product.specs?.length > 0 && (
               <ul className="bkf-specs">
@@ -104,15 +105,12 @@ export default function Producto() {
                 ))}
               </ul>
             )}
-            <div className="bkf-actions">
+            <div className="bkf-actions" data-cta="ficha_actions">
               <button className="btn-main" onClick={() => addToCart(product, 'Negro Mate')}>
                 <Icon name="plus" /> Agregar al presupuesto
               </button>
-              <a
-                href={whatsappUrl('Hola, quiero cotizar: ' + product.name)}
-                target="_blank" rel="noopener noreferrer" className="btn-outline"
-              >
-                <Icon name="whatsapp" /> Cotizar por WhatsApp
+              <a href={waPrice} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                <Icon name="whatsapp" /> Consultar precio
               </a>
             </div>
           </div>
@@ -121,11 +119,11 @@ export default function Producto() {
 
       <section className="bkf-comparison section-fade">
         <div className="bkf-about-inner">
-          <h2>Ficha técnica del {product.name}</h2>
+          <h2>Ficha técnica {ofName(product)}</h2>
           <p className="section-subtitle">Datos del producto tal como los fabrica Taller Kappa en San Martín, Buenos Aires.</p>
           <div className="comparison-table-wrapper">
             <table className="comparison-table">
-              <caption className="visually-hidden">Ficha técnica del {product.name}</caption>
+              <caption className="visually-hidden">Ficha técnica {ofName(product)}</caption>
               <tbody>
                 {product.facts.map(([label, value]) => (
                   <tr key={label}>
@@ -142,7 +140,7 @@ export default function Producto() {
       {product.faq?.length > 0 && (
         <section className="section-padding section-fade">
           <div className="bkf-about-inner">
-            <h2>Preguntas sobre el {product.name}</h2>
+            <h2>Preguntas sobre {theName(product)}</h2>
             {product.faq.map(({ q, a }) => (
               <div key={q} className="bkf-faq-item">
                 <h3>{q}</h3>
@@ -178,14 +176,11 @@ export default function Producto() {
 
       <section className="cta-section section-fade">
         <div className="cta-box">
-          <h2>¿Querés cotizar el {product.name}?</h2>
+          <h2>¿Querés cotizar {theName(product)}?</h2>
           <p>Escribinos por WhatsApp con la cantidad, el color y la zona de entrega, y te enviamos el presupuesto.</p>
-          <div className="cta-btns">
-            <a
-              href={whatsappUrl('Hola, quiero cotizar: ' + product.name)}
-              target="_blank" rel="noopener noreferrer" className="btn-main"
-            >
-              <Icon name="whatsapp" /> Cotizar por WhatsApp
+          <div className="cta-btns" data-cta="ficha_cta_final">
+            <a href={waPrice} target="_blank" rel="noopener noreferrer" className="btn-main">
+              <Icon name="whatsapp" /> Consultar precio
             </a>
             <Link to="/envios/" className="btn-outline">
               <Icon name="truck" /> Zonas y tiempos de envío

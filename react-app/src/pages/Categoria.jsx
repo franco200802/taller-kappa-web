@@ -5,7 +5,7 @@ import Picture from '../components/Picture';
 import ProductTable from '../components/ProductTable';
 import { CATEGORIES, SOCIAL_IMAGE_SIZE, getCategoryBySlug, productHref, productsInCategory, socialImage } from '../data/products';
 import { assetUrl } from '../lib/site';
-import { whatsappUrl } from '../data/contact';
+import { whatsappUrlFor } from '../data/contact';
 import { faqNode, itemListNode } from '../lib/schema';
 
 const lcFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);
@@ -88,7 +88,7 @@ export default function Categoria() {
         <div>
           <h2 className="section-title">Cómo consultar</h2>
           <p>
-            Taller Kappa vende por cotización: escribinos por <a href={whatsappUrl(`Hola, quiero cotizar: ${category.name.toLowerCase()}.`)} target="_blank" rel="noopener noreferrer">WhatsApp</a> o
+            Taller Kappa vende por cotización: escribinos por <a href={whatsappUrlFor(`Hola, quiero consultar precios de ${category.name.toLowerCase()}.`, `/catalogo/${category.slug}`)} target="_blank" rel="noopener noreferrer">WhatsApp</a> o
             usá el <Link to="/contacto/">formulario de contacto</Link> y te enviamos el presupuesto.
           </p>
           <p>

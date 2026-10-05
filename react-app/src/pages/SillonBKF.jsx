@@ -7,9 +7,8 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
-import { trackEvent } from '../lib/analytics';
-import { whatsappUrl } from '../data/contact';
-import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, productHref, relatedProducts, socialImage } from '../data/products';
+import { whatsappUrlFor } from '../data/contact';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
 import { BUSINESS } from '../data/business';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
@@ -18,13 +17,15 @@ import { assetUrl, pageId } from '../lib/site';
 // de data/products.js (acá viven las preguntas que antes estaban en la ficha del producto).
 const FAQ_ITEMS = [
   { q: '¿Quién fabrica sillones BKF en Buenos Aires y cómo se compran?', a: 'Taller Kappa S.R.L. fabrica sillones BKF en su taller de Villa Chacabuco, San Martín, provincia de Buenos Aires, y los vende directo de fábrica. No se compran por la web: se pide el presupuesto por WhatsApp, se confirma el precio final y el plazo, y se retira en el taller o se recibe por envío.' },
-  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
+  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Los precios que figuraron en versiones anteriores de este sitio pueden no estar vigentes. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
   { q: '¿Qué diferencia hay entre un sillón BKF de hierro macizo y uno de tubo?', a: 'El hierro macizo es una varilla sólida y el tubo es hueco. A igual diámetro, la varilla maciza resiste más la flexión y pesa más que un tubo de pared fina. El diseño original usa varilla maciza de alrededor de 12 mm. El sillón de Taller Kappa es de hierro redondo macizo de 12 mm, sin tubos ni rellenos.' },
   { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
   { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
   { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
   { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en Capital Federal (CABA), de 2 a 4 días hábiles; en el resto del Gran Buenos Aires, de 2 a 5 días hábiles según la zona; y en el interior del país, de 5 a 10 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
   { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
+  { q: '¿Se puede usar el sillón BKF en exterior?', a: 'Conviene usarlo en interiores o bajo techo. La garantía de 2 años de la pintura epoxi es para uso interior, conviene evitar que la estructura pintada quede expuesta mucho tiempo a la lluvia directa, el cromado no va en exteriores húmedos y el cuero no debe recibir sol directo por períodos prolongados.' },
+  { q: '¿Cómo se cuida el cuero del sillón BKF?', a: 'Se limpia con un paño seco o apenas húmedo y se le aplica crema hidratante para cuero cada 6 meses. No hay que usar alcohol ni solventes ni dejarlo al sol directo por mucho tiempo. El cuero se oscurece con el uso: es normal. La estructura pintada se limpia con paño húmedo y detergente neutro.' },
   { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
 ];
 
@@ -56,7 +57,6 @@ export default function SillonBKF() {
   const handleAdd = (color) => {
     // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
     addToCart(PRODUCT, color);
-    trackEvent('add_to_cart', { item: PRODUCT.name, color, location: 'sillon-bkf' });
   };
 
   return (
@@ -109,8 +109,8 @@ export default function SillonBKF() {
             <h2>Sillón BKF Premium</h2>
             <p className="bkf-tagline">Diseño argentino de 1938, fabricado con hierro macizo de 12 mm y cuero vacuno curtido al vegetal.</p>
             <div className="bkf-price-box">
-              <span className="bkf-price">{formatPrice(PRODUCT) ?? 'Cotización personalizada'}</span>
-              <span className="bkf-price-note">{PRODUCT.price?.note ?? 'Consultanos por WhatsApp para recibir tu presupuesto'}</span>
+              <span className="bkf-price">{formatPrice(PRODUCT) ?? 'Precio a consultar'}</span>
+              <span className="bkf-price-note">{PRODUCT.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
             </div>
             <ul className="bkf-specs">
               <li><Icon name="check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
@@ -122,14 +122,13 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
               <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
             </ul>
-            <div className="bkf-actions">
+            <div className="bkf-actions" data-cta="sillon-bkf_actions">
               <button className="btn-main" onClick={() => handleAdd('Negro Mate')}>
                 <Icon name="plus" /> Agregar al presupuesto
               </button>
-              <a href={whatsappUrl('Hola, quiero cotizar el Sillón BKF Premium.')}
-                target="_blank" rel="noopener noreferrer" className="btn-outline"
-                onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_actions' })}>
-                <Icon name="whatsapp" /> Cotizar por WhatsApp
+              <a href={whatsappUrlFor(priceQuestion(PRODUCT), '/sillon-bkf')}
+                target="_blank" rel="noopener noreferrer" className="btn-outline">
+                <Icon name="whatsapp" /> Consultar precio
               </a>
             </div>
             <div>
@@ -287,11 +286,10 @@ export default function SillonBKF() {
       <section className="cta-section section-fade">
         <div className="cta-box">
           <h2>¿Querés un sillón BKF?</h2>
-          <p>Escribinos por WhatsApp y te respondemos con el presupuesto. Precios de fábrica, envíos a todo el país.</p>
-          <div className="cta-btns">
-            <a href={whatsappUrl('Hola, quiero pedir un presupuesto del Sillón BKF.')}
-              target="_blank" rel="noopener noreferrer" className="btn-main"
-              onClick={() => trackEvent('whatsapp_click', { location: 'sillon-bkf_cta_final' })}>
+          <p>Escribinos por WhatsApp con el color, la cantidad y la zona de entrega, y te respondemos con el precio y el plazo. Directo de fábrica, envíos a todo el país.</p>
+          <div className="cta-btns" data-cta="sillon-bkf_cta_final">
+            <a href={whatsappUrlFor('Hola, quiero pedir un presupuesto del Sillón BKF Premium.', '/sillon-bkf')}
+              target="_blank" rel="noopener noreferrer" className="btn-main">
               <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
             </a>
             <Link to="/catalogo/" className="btn-outline">

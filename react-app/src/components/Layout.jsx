@@ -2,13 +2,25 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Icon from './Icon';
 import { Suspense, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { initGA, trackAiReferral, trackPageview, trackEvent } from '../lib/analytics';
+import { initGA, trackAiReferral, trackClicks, trackPageview } from '../lib/analytics';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
 import Toast from './Toast';
-import { whatsappUrl } from '../data/contact';
+import { whatsappUrlFor } from '../data/contact';
+import { priceQuestion, productByPath } from '../data/products';
 import { siteNodes } from '../lib/schema';
+
+const productNameForPath = (pathname) => productByPath(pathname)?.name ?? null;
+
+/**
+ * Mensaje del WhatsApp flotante: en la página de un producto pide su precio; en
+ * el resto, una consulta general. Siempre lleva la URL de la página.
+ */
+const floatWaUrl = (pathname) => {
+  const product = productByPath(pathname);
+  return whatsappUrlFor(product ? priceQuestion(product) : 'Hola, quiero hacer una consulta.', pathname);
+};
 
 // Empresa + marca + sitio como un solo grafo enlazado por @id (ver lib/schema.js).
 // Es constante: se calcula una vez al cargar el módulo.
@@ -49,7 +61,7 @@ export default function Layout() {
   // configurado en lib/analytics.js, o en desarrollo/SSR). El pageview se
   // envía a mano en cada cambio de ruta porque gtag.js no detecta navegación
   // de una SPA por sí solo (no hay recarga de documento).
-  useEffect(() => { initGA(); trackAiReferral(); }, []);
+  useEffect(() => { initGA(); trackAiReferral(); trackClicks(productNameForPath); }, []);
   useEffect(() => { trackPageview(pathname); }, [pathname]);
 
   return (
@@ -75,8 +87,8 @@ export default function Layout() {
       <Footer />
       <CartDrawer />
       <Toast />
-      <a href={whatsappUrl()} className={`float-wa${waHidden ? ' is-hidden' : ''}`} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
-        onClick={() => trackEvent('whatsapp_click', { location: 'float_button', page: pathname })}>
+      <a href={floatWaUrl(pathname)} className={`float-wa${waHidden ? ' is-hidden' : ''}`} target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp"
+        data-cta="float_button">
         <Icon name="whatsapp" />
       </a>
     </div>
