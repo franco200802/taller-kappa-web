@@ -62,7 +62,7 @@ const COUNTRY = { '@type': 'Country', name: BUSINESS.address.country };
 export function organizationNode() {
   const a = BUSINESS.address;
   return {
-    // LocalBusiness + el subtipo más específico: fábrica con showroom donde se retira lo pedido y se cotiza directo.
+    // LocalBusiness + el subtipo más específico: fábrica con showroom (visitas con turno) y retiro con coordinación previa.
     '@type': ['LocalBusiness', 'FurnitureStore'],
     '@id': ORG_ID,
     name: BUSINESS.name,
@@ -77,9 +77,10 @@ export function organizationNode() {
     email: BUSINESS.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: `${a.street}, ${a.neighborhood}`,
+      streetAddress: a.street,
       addressLocality: a.locality,
       addressRegion: a.region,
+      postalCode: a.postalCode,
       addressCountry: a.countryCode,
     },
     geo: { '@type': 'GeoCoordinates', latitude: BUSINESS.geo.latitude, longitude: BUSINESS.geo.longitude },
@@ -106,6 +107,7 @@ export function organizationNode() {
       { '@type': 'AdministrativeArea', name: 'Zona Sur del Gran Buenos Aires' },
       COUNTRY,
     ],
+    // Horario de atención del local (showroom con turno y retiro coordinado), no solo de retiro.
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: BUSINESS.hours.days,

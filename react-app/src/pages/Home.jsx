@@ -14,7 +14,7 @@ const REASONS = [
   { title: 'Directo de fábrica', text: 'Sin intermediarios: comprás al productor, con cotización directa por WhatsApp.' },
   { title: 'Hecho para uso intensivo', text: 'Hierro macizo de 12 mm. Nuestras piezas soportan el uso gastronómico diario sin deformarse.' },
   { title: 'A medida, sin recargo', text: 'Adaptamos medidas, colores y acabados a lo que necesites, sin costo adicional.' },
-  { title: 'Factura A y B', text: 'Somos responsables inscriptos. Emitimos comprobante para personas y empresas.' },
+  { title: 'Factura A y B', text: 'Emitimos factura A y B para personas y empresas.' },
 ];
 
 // Lo que se escribe en el hero (la primera frase es la que ve quien no ejecuta JavaScript).
@@ -101,7 +101,7 @@ export default function Home() {
         </div>
         <dl className="facts">
           <div><dt>Empresa</dt><dd>{BUSINESS.legalName}</dd></div>
-          <div><dt>Dónde está</dt><dd>{addressLine()}, Argentina</dd></div>
+          <div><dt>Dónde está</dt><dd>{addressLine()}</dd></div>
           <div>
             <dt>Qué fabrica</dt>
             <dd>
@@ -111,7 +111,8 @@ export default function Home() {
             </dd>
           </div>
           <div><dt>Para quién</dt><dd>Particulares, empresas y locales gastronómicos o comerciales</dd></div>
-          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
+          <div><dt>Showroom</dt><dd>{BUSINESS.showroom.short}</dd></div>
+          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.pickup.short}; {BUSINESS.hours.label}</dd></div>
           <div><dt>Cómo consultar</dt><dd><Link to="/contacto/">WhatsApp {BUSINESS.phoneDisplay} o formulario de contacto</Link></dd></div>
         </dl>
       </section>
@@ -125,7 +126,7 @@ export default function Home() {
           <ol className="buy-steps">
             <li><strong>Elegí en el catálogo</strong> y agregá los productos al presupuesto.</li>
             <li><strong>Enviá el presupuesto por WhatsApp</strong> y te respondemos con el precio final y el plazo.</li>
-            <li><strong>Fabricamos a medida</strong> y coordinamos el envío o el retiro en el taller de San Martín.</li>
+            <li><strong>Fabricamos a medida</strong> y coordinamos el envío o el retiro en el taller de San Martín (el plazo depende del stock).</li>
           </ol>
         </div>
         <div>

@@ -7,7 +7,7 @@ import PageHero from '../components/PageHero';
 import { trackEvent } from '../lib/analytics';
 import { loadFireDB } from '../lib/firebaseConfig';
 import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
-import { BUSINESS } from '../data/business';
+import { BUSINESS, addressLine } from '../data/business';
 import { ORG_ID } from '../lib/schema';
 
 export default function Contacto() {
@@ -85,12 +85,21 @@ export default function Contacto() {
         <aside className="contact-aside" aria-label="Datos de contacto">
           <h2 className="contact-aside-title">Cómo contactar a {BUSINESS.name}</h2>
           <address className="contact-info">
-            <p><Icon name="map-marker-alt" /> Calle&nbsp;28 Nº&nbsp;3779, Villa Chacabuco (San Martín), Buenos Aires.</p>
+            <p><Icon name="map-marker-alt" /> {addressLine()}</p>
             <p><Icon name="whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-            <p><Icon name="clock" /> Retiro en el taller: {BUSINESS.hours.label}.</p>
-            <p><Icon name="map-marker-alt" /> <a href={BUSINESS.directionsUrl} target="_blank" rel="noopener noreferrer">Cómo llegar en Google Maps</a></p>
+            <p><Icon name="clock" /> Atención: {BUSINESS.hours.label}.</p>
+            <p><Icon name="map-marker-alt" /> <a href={BUSINESS.mapUrl} target="_blank" rel="noopener noreferrer">Cómo llegar en Google Maps</a></p>
           </address>
+          <h3>Showroom y retiro</h3>
+          <p>{BUSINESS.showroom.text}</p>
+          <p>
+            <a href={whatsappUrl('Hola, quiero pedir un turno para visitar el showroom.')} target="_blank" rel="noopener noreferrer">
+              Pedir turno por WhatsApp
+            </a>{' '}
+            o por teléfono al <a href={`tel:${BUSINESS.phone}`}>{WHATSAPP_DISPLAY}</a>.
+          </p>
+          <p>{BUSINESS.pickup.text}</p>
           <p>
             Taller Kappa vende por cotización: indicá el producto, la cantidad, el color y la zona de entrega. Antes de escribir,
             podés ver las <Link to="/envios/">zonas y tiempos de envío</Link> y la <Link to="/garantia/">garantía</Link>, o conocer a la empresa en <Link to="/nosotros/">quiénes somos</Link>.

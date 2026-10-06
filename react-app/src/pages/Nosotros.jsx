@@ -15,14 +15,12 @@ const WHY = [
   { title: 'Directo de fábrica', desc: 'Sin intermediarios: comprás al productor, con cotización directa por WhatsApp.' },
   { title: 'Garantía de resistencia', desc: 'Hierro macizo de primera calidad. Nuestras piezas soportan el uso gastronómico intensivo sin deformarse.' },
   { title: 'Fabricación a medida', desc: 'Adaptamos cada pieza a tus necesidades. Medidas, colores y acabados personalizados sin costo adicional.' },
-  { title: 'Factura A y B', desc: 'Somos contribuyentes responsables. Emitimos cualquier tipo de comprobante para personas y empresas.' },
+  { title: 'Factura A y B', desc: 'Emitimos factura A y B para personas y empresas.' },
 ];
 
 const NUMBERS = [
   { target: 15, suffix: '+', label: 'Años de experiencia' },
-  { target: 100, suffix: '%', label: 'Fabricación nacional' },
   { target: 12, suffix: '', label: 'mm de hierro macizo' },
-  { target: 5, suffix: '', label: 'Grandes marcas equipadas' },
 ];
 
 const FALLBACK_TESTIMONIOS = [
@@ -84,7 +82,7 @@ export default function Nosotros() {
             <h2 className="section-title">Nuestra historia</h2>
             <p>Taller Kappa nació hace más de <strong>15 años</strong> en San Martín, Buenos Aires, con el objetivo de fabricar mobiliario de hierro y cuero de calidad industrial, accesible a locales, empresas y particulares.</p>
             <p>Desde el primer día trabajamos con hierro macizo de 12mm, cuero vacuno de primera selección y pintura epoxi de doble capa. Sin atajos, sin materiales baratos.</p>
-            <p>Hoy somos el proveedor de confianza de <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>, entre otras marcas que eligieron nuestra calidad para sus espacios. Conocé nuestro <Link to="/sillon-bkf/">Sillón BKF</Link> o mirá el <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link>.</p>
+            <p>Entre nuestros clientes y proyectos figuran <strong>YPF, McDonald's, Burger King, Shell Select y Sandro</strong>. Conocé nuestro <Link to="/sillon-bkf/">Sillón BKF</Link> o mirá el <Link to="/catalogo/">catálogo de sillones, bancos y bases de mesa</Link>.</p>
             <Link to="/contacto/" className="btn-main" style={{ marginTop: 8 }}>
               Contactarnos
             </Link>
@@ -106,7 +104,7 @@ export default function Nosotros() {
         </div>
         <dl className="facts">
           <div><dt>Razón social</dt><dd>{BUSINESS.legalName}</dd></div>
-          <div><dt>Ubicación</dt><dd>{addressLine()}, Argentina</dd></div>
+          <div><dt>Ubicación</dt><dd>{addressLine()}</dd></div>
           <div>
             <dt>Productos</dt>
             <dd>
@@ -117,7 +115,8 @@ export default function Nosotros() {
           </div>
           <div><dt>Atiende a</dt><dd>Particulares, empresas, locales gastronómicos, estaciones de servicio, comercios, hoteles y oficinas</dd></div>
           <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
-          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
+          <div><dt>Showroom</dt><dd>{BUSINESS.showroom.short}</dd></div>
+          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.pickup.short}; {BUSINESS.hours.label}</dd></div>
           <div>
             <dt>Contacto</dt>
             <dd>
@@ -165,10 +164,11 @@ export default function Nosotros() {
 
       <section className="testimonials section-fade" aria-label="Testimonios de clientes">
         <h2>Lo que dicen quienes nos eligen</h2>
+        <p className="section-subtitle">Testimonios de clientes recibidos por WhatsApp.</p>
         <div className="testimonial-grid">
           {testimonios.map((t) => (
             <article className="testimonial-card" key={t.id}>
-              <div className="stars" role="img" aria-label="5 estrellas">
+              <div className="stars" aria-hidden="true">
                 <Icon name="star" /><Icon name="star" /><Icon name="star" />
                 <Icon name="star" /><Icon name="star" />
               </div>

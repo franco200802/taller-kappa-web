@@ -16,13 +16,15 @@ import { assetUrl, pageId } from '../lib/site';
 // Las respuestas tienen que coincidir con /envios/ y /garantia/ (misma fuente de verdad) y con la ficha
 // de data/products.js (acá viven las preguntas que antes estaban en la ficha del producto).
 const FAQ_ITEMS = [
-  { q: '¿Quién fabrica sillones BKF en Buenos Aires y cómo se compran?', a: 'Taller Kappa S.R.L. fabrica sillones BKF en su taller de Villa Chacabuco, San Martín, provincia de Buenos Aires, y los vende directo de fábrica. No se compran por la web: se pide el presupuesto por WhatsApp, se confirma el precio final y el plazo, y se retira en el taller o se recibe por envío.' },
+  { q: '¿Quién fabrica sillones BKF en Buenos Aires y cómo se compran?', a: 'Taller Kappa S.R.L. fabrica sillones BKF en su taller de Villa Chacabuco, San Martín, provincia de Buenos Aires, y los vende directo de fábrica. No se compran por la web: se pide el presupuesto por WhatsApp, se confirma el precio final y el plazo, y se retira en el taller (con coordinación previa) o se recibe por envío.' },
   { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Los precios que figuraron en versiones anteriores de este sitio pueden no estar vigentes. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
   { q: '¿Qué diferencia hay entre un sillón BKF de hierro macizo y uno de tubo?', a: 'El hierro macizo es una varilla sólida y el tubo es hueco. A igual diámetro, la varilla maciza resiste más la flexión y pesa más que un tubo de pared fina. El diseño original usa varilla maciza de alrededor de 12 mm. El sillón de Taller Kappa es de hierro redondo macizo de 12 mm, sin tubos ni rellenos.' },
   { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
   { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
   { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
-  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'Si hay unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores; en Capital Federal (CABA), de 2 a 4 días hábiles; en el resto del Gran Buenos Aires, de 2 a 5 días hábiles según la zona; y en el interior del país, de 5 a 10 días hábiles. Para pedidos a medida, el plazo de fabricación es de 5 a 10 días hábiles. Consultá disponibilidad por WhatsApp.' },
+  { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'El plazo de entrega depende de la disponibilidad de stock. Consultanos por WhatsApp con el color, la cantidad y la zona de entrega.' },
+  { q: '¿El BKF de cuero y el BKF Premium son el mismo sillón?', a: 'Sí. El Sillón BKF Premium de Taller Kappa es el sillón BKF de hierro y cuero: estructura de hierro redondo macizo de 12 mm y funda de cuero vacuno. Es el mismo modelo, no dos productos distintos.' },
+  { q: '¿Se puede visitar el showroom para ver el sillón BKF?', a: `Sí, con turno previo. ${BUSINESS.showroom.text}` },
   { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
   { q: '¿Se puede usar el sillón BKF en exterior?', a: 'Conviene usarlo en interiores o bajo techo. La garantía de 2 años de la pintura epoxi es para uso interior, conviene evitar que la estructura pintada quede expuesta mucho tiempo a la lluvia directa, el cromado no va en exteriores húmedos y el cuero no debe recibir sol directo por períodos prolongados.' },
   { q: '¿Cómo se cuida el cuero del sillón BKF?', a: 'Se limpia con un paño seco o apenas húmedo y se le aplica crema hidratante para cuero cada 6 meses. No hay que usar alcohol ni solventes ni dejarlo al sol directo por mucho tiempo. El cuero se oscurece con el uso: es normal. La estructura pintada se limpia con paño húmedo y detergente neutro.' },
@@ -160,7 +162,7 @@ export default function SillonBKF() {
             <li><strong>Elegí el color y las medidas</strong> (estándar o a medida) y agregá el sillón al presupuesto.</li>
             <li><strong>Enviá el presupuesto por WhatsApp</strong>; podés sumar tu nombre y la zona de entrega.</li>
             <li><strong>Te respondemos con el precio final</strong> y el plazo de entrega.</li>
-            <li><strong>Retirás el sillón en el taller</strong> o lo recibís por envío.</li>
+            <li><strong>Retirás el sillón en el taller</strong> (coordinando antes) o lo recibís por envío.</li>
           </ol>
           <p>
             Si es para un local o una empresa, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida</Link>. También podés
@@ -171,11 +173,9 @@ export default function SillonBKF() {
           <div><dt>Fabricante</dt><dd>{BUSINESS.legalName}</dd></div>
           <div><dt>Dónde se fabrica</dt><dd>{BUSINESS.address.neighborhood}, {BUSINESS.address.locality}, Buenos Aires</dd></div>
           <div><dt>Cómo se compra</dt><dd>Presupuesto por WhatsApp, sin pago online</dd></div>
-          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.hours.label}</dd></div>
-          <div><dt>San Martín y alrededores</dt><dd>24 a 48 hs con stock</dd></div>
-          <div><dt>Capital Federal (CABA)</dt><dd>2 a 4 días hábiles</dd></div>
-          <div><dt>Gran Buenos Aires</dt><dd>2 a 5 días hábiles según la zona</dd></div>
-          <div><dt>Interior del país</dt><dd>5 a 10 días hábiles por expreso</dd></div>
+          <div><dt>Showroom</dt><dd>{BUSINESS.showroom.short}</dd></div>
+          <div><dt>Retiro en el taller</dt><dd>{BUSINESS.pickup.short}; {BUSINESS.hours.label}</dd></div>
+          <div><dt>Plazo de entrega</dt><dd>Depende de la disponibilidad de stock; consultá por WhatsApp</dd></div>
           <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
         </dl>
       </section>
@@ -210,8 +210,8 @@ export default function SillonBKF() {
             </div>
             <div className="bkf-history-card">
               <Icon name="industry" />
-              <h3>Fábrica AR</h3>
-              <p>100% fabricado en Argentina, en nuestro taller de San Martín, Bs. As.</p>
+              <h3>Fabricación propia</h3>
+              <p>Fabricado en nuestro taller de San Martín, Bs. As.</p>
             </div>
             <div className="bkf-history-card">
               <Icon name="shield-alt" />

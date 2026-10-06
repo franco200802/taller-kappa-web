@@ -77,7 +77,7 @@ export const PRODUCTS = [
     path: '/sillon-bkf',
     category: 'asientos',
     name: 'Sillón BKF Premium',
-    alternateName: ['Sillón BKF', 'Silla BKF', 'Silla paleta', 'Butterfly chair'],
+    alternateName: ['Sillón BKF', 'Sillón BKF de cuero', 'Silla BKF', 'Silla paleta', 'Butterfly chair'],
     seoTitle: 'Sillón BKF Premium de Hierro y Cuero | Taller Kappa',
     seoDescription: 'Sillón BKF Premium: hierro macizo de 12 mm y cuero vacuno curtido al vegetal, 78 x 70 x 90 cm. Fabricado por Taller Kappa en San Martín, Buenos Aires.',
     image: '/images/sillon-bkf-hierro-cuero.jpg',

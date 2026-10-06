@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from './Icon';
 import { useCart } from '../context/CartContext';
 import { WHATSAPP_DISPLAY } from '../data/contact';
+import { BUSINESS } from '../data/business';
 import Picture from './Picture';
 import Modal from './Modal';
 import { trackEvent } from '../lib/analytics';
@@ -30,7 +31,7 @@ export default function CartDrawer() {
       .footer{margin-top:30px;font-size:.8rem;color:#999;border-top:1px solid #eee;padding-top:15px}</style>
       </head><body>
       <h1>Taller Kappa S.R.L.</h1>
-      <p style="color:#888;font-size:.9rem;margin-bottom:20px">Calle 28 Nº 3779 · San Martín · ${WHATSAPP_DISPLAY} · tallerkappa.com.ar</p>
+      <p style="color:#888;font-size:.9rem;margin-bottom:20px">${BUSINESS.address.street} · ${BUSINESS.address.locality} · CP ${BUSINESS.address.postalCode} · ${WHATSAPP_DISPLAY} · tallerkappa.com.ar</p>
       <p class="note">⚠️ Presupuesto orientativo. Precios finales se confirman por WhatsApp.</p>
       <table><thead><tr><th>Producto</th><th>Acabado</th><th>Cant.</th><th>Precio</th></tr></thead>
       <tbody>${lines}</tbody></table>

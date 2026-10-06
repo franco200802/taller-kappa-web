@@ -29,8 +29,8 @@ const FAQ = [
   { q: '¿Se pueden pedir medidas, colores y acabados a medida?', a: 'Sí. Se adaptan medidas, colores y terminaciones al local, sin costo adicional.' },
   { q: '¿Emiten factura A?', a: 'Sí. Taller Kappa emite factura A y B, para empresas y particulares.' },
   { q: '¿Hay condiciones para pedidos mayoristas?', a: 'En pedidos mayoristas (3 o más unidades) y en la primera compra, el envío dentro de GBA es bonificado. Las condiciones se consultan por WhatsApp.' },
-  { q: '¿Cuánto tarda un pedido?', a: 'Con unidades en stock, la entrega es en 24-48 horas en San Martín y alrededores y de 2 a 5 días hábiles en el resto de CABA y GBA. Los pedidos a medida se fabrican en 5 a 10 días hábiles. Las zonas están en la página de envíos.' },
-  { q: '¿Envían a negocios fuera de Buenos Aires?', a: 'Sí, a todas las provincias por expreso, en 5 a 10 días hábiles, con embalaje bonificado.' },
+  { q: '¿Cuánto tarda un pedido?', a: 'El plazo de entrega depende de la disponibilidad de stock. Consultanos por WhatsApp con el producto, la cantidad y la zona. Las zonas de entrega están en la página de envíos.' },
+  { q: '¿Envían a negocios fuera de Buenos Aires?', a: 'Sí, a todas las provincias por expreso, con embalaje bonificado. El plazo depende de la disponibilidad de stock: consultanos por WhatsApp.' },
 ];
 
 const SECTORS = [
