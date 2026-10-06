@@ -64,8 +64,8 @@ export default function SillonBKF() {
   return (
     <>
       <Seo
-        title="Sillón BKF Buenos Aires: Comprar Directo de Fábrica | Taller Kappa"
-        description="Comprá el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hecho en San Martín. Envíos a Capital Federal, GBA y todo el país."
+        title="Sillón BKF de Cuero en Buenos Aires | Fábrica Taller Kappa"
+        description="Taller Kappa fabrica el sillón BKF de hierro macizo y cuero vacuno en San Martín, Buenos Aires. Consultá disponibilidad por WhatsApp o visitá el showroom con turno."
         path="/sillon-bkf"
         image={assetUrl(socialImage(PRODUCT))}
         imageWidth={SOCIAL_IMAGE_SIZE.width}
@@ -90,8 +90,8 @@ export default function SillonBKF() {
         title="Sillón BKF de hierro y cuero, fabricado en Buenos Aires"
         lead={(
           <>
-            Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín.{' '}
-            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller (con coordinación previa) o lo recibís en Capital Federal, GBA y todo el país.
+            Taller Kappa fabrica y vende el sillón BKF, la clásica silla mariposa argentina, en hierro macizo de 12 mm y cuero vacuno, en su taller de San Martín, Buenos Aires.{' '}
+            <ShimmerText>Consultá la disponibilidad y pedí el presupuesto por WhatsApp</ShimmerText>, coordiná una visita al showroom (con turno) o retirá en el taller con coordinación previa; también enviamos a Capital Federal, GBA y todo el país.
           </>
         )}
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]}
