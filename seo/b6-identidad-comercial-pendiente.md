@@ -1,5 +1,7 @@
 # B6.0 — Identidad comercial pendiente (fuente única de verdad)
 
+> **Documento histórico.** Varios puntos "pendientes" y "contradicciones" de este informe (showroom vs retiro, fabricante vs revendedor, CP, horario, Cylex, email) quedaron resueltos con las respuestas del propietario del 6/10/2026. La versión vigente es `seo/b6-1a-confirmacion-identidad-comercial.md`.
+>
 > Auditoría y documentación. No se modificó código, schema, páginas, rutas ni componentes.
 > Fecha: 6/10/2026 · Rama `main` (`24603a6`, igual a `origin/main`).
 > Etiquetas: `[V]` verificado en repositorio · `[DUEÑO]` afirmación que `CONTEXTO_PROYECTO.md` registra como confirmada por el dueño el 1/10/2026 (nota escrita por un asistente: no es un documento firmado ni verificable de forma independiente) · `REQUIERE CONFIRMACIÓN DEL CLIENTE` · `NO ENCONTRADO`.
