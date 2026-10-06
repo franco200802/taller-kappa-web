@@ -38,7 +38,7 @@ export default function Envios() {
 
       <section className="shipping-section section-padding section-fade">
         <h2 className="section-title">Zonas de entrega</h2>
-        <p className="section-subtitle">Hacemos envíos a domicilio y también podés retirar en nuestro taller.</p>
+        <p className="section-subtitle">Hacemos envíos a domicilio y también podés retirar en nuestro taller, con coordinación previa.</p>
 
         <div className="shipping-grid">
           {ZONES.map((z) => (

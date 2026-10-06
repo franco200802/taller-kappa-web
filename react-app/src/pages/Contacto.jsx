@@ -46,7 +46,7 @@ export default function Contacto() {
     <>
       <Seo
         title="Contacto y Dirección en San Martín, Buenos Aires | Taller Kappa"
-        description="Cómo contactar a Taller Kappa: WhatsApp 11 6124-2498, email y dirección en Villa Chacabuco, San Martín. Cotizá sillones BKF, bancos y bases de mesa."
+        description={`Cómo contactar a Taller Kappa: WhatsApp ${WHATSAPP_DISPLAY}, email y dirección en Villa Chacabuco, San Martín. Cotizá sillones BKF, bancos y bases de mesa.`}
         path="/contacto"
         pageType="ContactPage"
         about={[ORG_ID]}

@@ -39,7 +39,7 @@ function ProductCard({ p, onOpen }) {
     <article className="product-card" data-category={p.category} data-cta="catalogo_card" data-item={p.name}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
       <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
-        <span className="stock-dot-small" /> {p.stock ? 'En stock' : 'Consultar'}
+        <span className="stock-dot-small" /> Consultar disponibilidad
       </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Vista rápida: ${p.name}`}
         onClick={() => onOpen(p)}
@@ -185,7 +185,7 @@ export default function Catalogo() {
                 {modalProduct.badge && <span className="modal-badge">{modalProduct.badge}</span>}
               </div>
               <h2>{modalProduct.name}</h2>
-              <div className="modal-stock"><span className="stock-dot" /> {modalProduct.stock ? 'En stock, entrega coordinada' : 'Consultar disponibilidad'}</div>
+              <div className="modal-stock"><span className="stock-dot" /> Consultar disponibilidad por WhatsApp</div>
               <p>{modalProduct.desc}</p>
               <ul className="modal-specs">
                 {modalProduct.specs?.map((s) => <li key={s}><Icon name="check" /> {s}</li>)}

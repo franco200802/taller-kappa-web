@@ -160,7 +160,7 @@ export default function GuiaBKF() {
             <h2 id="donde-comprar">Dónde comprar un sillón BKF en Buenos Aires y Argentina</h2>
             <p>
               {BUSINESS.legalName} fabrica el <Link to="/sillon-bkf/">sillón BKF de hierro y cuero</Link>, en su taller de Villa Chacabuco, San Martín (provincia de
-              Buenos Aires), y lo vende directo de fábrica. Se puede retirar en el taller o recibir en todo el país: consultá las{' '}
+              Buenos Aires), y lo vende directo de fábrica. Se puede retirar en el taller (con coordinación previa) o recibir en todo el país: consultá las{' '}
               <Link to="/envios/">zonas y tiempos de envío</Link>. El pedido se cotiza por{' '}
               <a href={whatsappUrl('Hola, quiero cotizar un sillón BKF.')} target="_blank" rel="noopener noreferrer">WhatsApp</a>, según acabado, cantidad y destino.
             </p>

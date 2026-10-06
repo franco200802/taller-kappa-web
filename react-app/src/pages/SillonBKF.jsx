@@ -17,7 +17,7 @@ import { assetUrl, pageId } from '../lib/site';
 // de data/products.js (acá viven las preguntas que antes estaban en la ficha del producto).
 const FAQ_ITEMS = [
   { q: '¿Quién fabrica sillones BKF en Buenos Aires y cómo se compran?', a: 'Taller Kappa S.R.L. fabrica sillones BKF en su taller de Villa Chacabuco, San Martín, provincia de Buenos Aires, y los vende directo de fábrica. No se compran por la web: se pide el presupuesto por WhatsApp, se confirma el precio final y el plazo, y se retira en el taller (con coordinación previa) o se recibe por envío.' },
-  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Los precios que figuraron en versiones anteriores de este sitio pueden no estar vigentes. Escribinos por WhatsApp al 11 6124-2498 con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
+  { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Los precios que figuraron en versiones anteriores de este sitio pueden no estar vigentes. Escribinos por WhatsApp al ' + BUSINESS.phoneDisplay + ' con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
   { q: '¿Qué diferencia hay entre un sillón BKF de hierro macizo y uno de tubo?', a: 'El hierro macizo es una varilla sólida y el tubo es hueco. A igual diámetro, la varilla maciza resiste más la flexión y pesa más que un tubo de pared fina. El diseño original usa varilla maciza de alrededor de 12 mm. El sillón de Taller Kappa es de hierro redondo macizo de 12 mm, sin tubos ni rellenos.' },
   { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
   { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
@@ -91,7 +91,7 @@ export default function SillonBKF() {
         lead={(
           <>
             Taller Kappa fabrica y vende el sillón BKF directo de fábrica en Buenos Aires: hierro macizo de 12 mm y cuero vacuno, hechos en San Martín.{' '}
-            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller o lo recibís en Capital Federal, GBA y todo el país.
+            <ShimmerText>Pedís el presupuesto por WhatsApp</ShimmerText> y lo retirás en el taller (con coordinación previa) o lo recibís en Capital Federal, GBA y todo el país.
           </>
         )}
         current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]}
