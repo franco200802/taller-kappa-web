@@ -78,7 +78,7 @@ const AI_REFERRERS = {
   'chatgpt.com': 'chatgpt', 'chat.openai.com': 'chatgpt',
   'perplexity.ai': 'perplexity', 'www.perplexity.ai': 'perplexity',
   'gemini.google.com': 'gemini',
-  'copilot.microsoft.com': 'copilot', 'www.bing.com/chat': 'copilot',
+  'copilot.microsoft.com': 'copilot', // (la clave 'www.bing.com/chat' nunca coincidía con un hostname)
   'claude.ai': 'claude',
 };
 let aiTracked = false;
@@ -145,6 +145,7 @@ let clicksTracked = false;
  *    `page_path` (página desde donde se escribió) e `item_name` (producto, si
  *    el enlace está dentro de un `data-item` o la página es la de un producto).
  *  - `email_click`: enlaces mailto:.
+ *  - `phone_click`: enlaces tel: (llamadas; antes no se medían).
  *  - `select_item`: clic hacia la página de un producto (qué producto interesa).
  *
  * `productNameForPath(pathname)` devuelve el nombre del producto de una URL, o null.
@@ -163,6 +164,8 @@ export function trackClicks(productNameForPath) {
       trackEvent('whatsapp_click', { location, page_path, item_name });
     } else if (href.startsWith('mailto:')) {
       trackEvent('email_click', { location, page_path });
+    } else if (href.startsWith('tel:')) {
+      trackEvent('phone_click', { location, page_path });
     } else if (href.startsWith('/')) {
       const item_name = productNameForPath(href);
       if (item_name && href.replace(/\/+$/, '') !== page_path.replace(/\/+$/, '')) trackEvent('select_item', { item_name, location, page_path });

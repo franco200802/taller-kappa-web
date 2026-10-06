@@ -203,7 +203,9 @@ export function offerNode(p) {
   return {
     '@type': 'Offer',
     url: absoluteUrl(productPath(p)),
-    availability: p.stock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+    // Sin `availability`: el sitio dice "Consultar disponibilidad" y el stock no está
+    // confirmado (seo/b9-pendientes-propietario.md #3). Declarar InStock sería afirmar algo
+    // que la página no afirma. Se vuelve a agregar solo cuando el propietario lo confirme.
     itemCondition: 'https://schema.org/NewCondition',
     seller: ref(ORG_ID),
     ...(price?.amount ? { price: String(price.amount), priceCurrency: price.currency ?? 'ARS' } : {}),
