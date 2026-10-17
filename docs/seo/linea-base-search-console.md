@@ -117,6 +117,21 @@ como evento clave: los eventos clave eran `close_convert_lead`, `purchase` y
 como evento clave**; GA4 lo cuenta como conversión desde esa fecha, no hacia
 atrás.
 
+## 5c. Lighthouse en producción (17/10/2026, celular emulado 412 px, red 4G lenta simulada)
+
+| Página | Rendimiento | Accesibilidad | Buenas prácticas | SEO | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|
+| `/bkf/` | 95 | 100 | 100 | 100 | 2,6 s | 0 | 40 ms |
+| `/sillon-bkf/` | 92 | 100 | 100 | 100 | 2,9 s | 0 | 60 ms |
+
+El LCP es el párrafo de introducción (texto), no una imagen: casi todo es
+"render delay" de la simulación. Sin limitar la red, CSS (10 KiB), JS
+(80 KiB) y la fuente (89 KiB) terminan de bajar antes de 0,9 s. Lo único que
+quedaría es aligerar la fuente, con una ganancia de décimas solo en
+laboratorio; no se hizo porque Google usa datos de campo (CrUX), que este
+sitio todavía no tiene en volumen. Ningún elemento se sale del ancho en
+celular (captura completa de Lighthouse).
+
 ## 6. Cambios de infraestructura hechos el mismo día (Cloudflare)
 
 Redirecciones 301 reales, forzado de `http` a `https`, caché larga de
