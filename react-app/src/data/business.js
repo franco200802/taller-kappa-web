@@ -47,6 +47,13 @@ export const BUSINESS = {
   geo: { latitude: -34.5851938, longitude: -58.5281526 },
   /** Enlace de ubicación provisto por el propietario. */
   mapUrl: 'https://maps.app.goo.gl/96acmiHnvF2ZA4KM7',
+  /**
+   * Ficha "Taller Kappa" de Google Maps / Perfil de Empresa (reclamada el
+   * 17/10/2026). El CID (0x5433fc202692f29c en la URL de mapUrl) y el Place ID
+   * salen de esa misma ficha. Se usan en schema `sameAs` y en /resena/.
+   */
+  googleMapsCid: '6067470338014507676',
+  googlePlaceId: 'ChIJK5VczqO3vJURnPKSJiD8M1Q',
   /** Horario de atención del local (showroom y retiro, ambos con coordinación previa). */
   hours: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00', label: 'lunes a viernes de 9 a 18 hs' },
   /** Showroom en la misma dirección. Las visitas requieren turno (WhatsApp o teléfono). */
@@ -77,6 +84,12 @@ export const BUSINESS = {
   /** Temas de los que el sitio trata (schema `knowsAbout`). */
   topics: ['Sillón BKF', 'Banco BKF', 'Base de mesa de hierro', 'Muebles de hierro y cuero', 'Mobiliario comercial y gastronómico'],
 };
+
+/** Ficha pública de Google Maps (estable: por CID, no depende del nombre ni de la URL corta). */
+export const googleProfileUrl = () => `https://maps.google.com/?cid=${BUSINESS.googleMapsCid}`;
+
+/** Formulario de reseña de Google de la ficha. Lo usa la página /resena/ (prerender). */
+export const googleReviewUrl = () => `https://search.google.com/local/writereview?placeid=${BUSINESS.googlePlaceId}`;
 
 /** "Vélez Sársfield 3779 (Calle 28), Villa Chacabuco, San Martín, Buenos Aires, Argentina, CP 1650" */
 export function addressLine() {

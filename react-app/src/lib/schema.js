@@ -17,7 +17,7 @@
  * Los nodos NO llevan '@context': Seo.jsx y Layout.jsx los agrupan en un
  * único `@graph` con un solo contexto.
  */
-import { BUSINESS } from '../data/business';
+import { BUSINESS, googleProfileUrl } from '../data/business';
 import { CATEGORIES, PRODUCTS, getCategory, productImages, productPath, productsInCategory, relatedProducts, socialImage } from '../data/products';
 import { SITE, absoluteUrl, assetUrl, breadcrumbId, breadcrumbList, pageId } from './site';
 
@@ -85,6 +85,8 @@ export function organizationNode() {
     },
     geo: { '@type': 'GeoCoordinates', latitude: BUSINESS.geo.latitude, longitude: BUSINESS.geo.longitude },
     hasMap: BUSINESS.mapUrl,
+    // La ficha de Google Maps de la misma empresa: une la entidad del sitio con el Perfil de Empresa.
+    sameAs: [googleProfileUrl()],
     location: {
       '@type': 'Place',
       name: a.neighborhood,

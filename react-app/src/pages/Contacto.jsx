@@ -7,7 +7,7 @@ import PageHero from '../components/PageHero';
 import { trackEvent } from '../lib/analytics';
 import { loadFireDB } from '../lib/firebaseConfig';
 import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
-import { BUSINESS, addressLine } from '../data/business';
+import { BUSINESS, addressLine, googleProfileUrl } from '../data/business';
 import { ORG_ID } from '../lib/schema';
 
 export default function Contacto() {
@@ -90,6 +90,7 @@ export default function Contacto() {
             <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
             <p><Icon name="clock" /> Atención: {BUSINESS.hours.label}.</p>
             <p><Icon name="map-marker-alt" /> <a href={BUSINESS.mapUrl} target="_blank" rel="noopener noreferrer">Cómo llegar en Google Maps</a></p>
+            <p><Icon name="star" /> <a href={googleProfileUrl()} target="_blank" rel="noopener noreferrer">Opiniones de clientes en Google</a></p>
           </address>
           <h3>Showroom y retiro</h3>
           <p>{BUSINESS.showroom.text}</p>
