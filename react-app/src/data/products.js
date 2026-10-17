@@ -47,7 +47,7 @@ export const CATEGORIES = [
     definition: 'Los asientos de Taller Kappa son el sillón BKF y el banco BKF: piezas de estructura de hierro macizo de 12 mm y asiento de cuero, fabricadas en San Martín, Buenos Aires.',
     faq: [
       { q: '¿Para qué espacios sirven los sillones y bancos BKF de Taller Kappa?', a: 'Para interiores residenciales y para locales gastronómicos con uso intensivo. El banco BKF, además, se usa como pie de cama o asiento auxiliar.' },
-      { q: '¿Los sillones y bancos BKF se pueden pedir en otros colores o medidas?', a: 'Sí. Se fabrican con colores y medidas a pedido, sin costo adicional. Los acabados habituales de la estructura son negro mate, blanco y cromado.' },
+      { q: '¿Los sillones y bancos BKF se pueden pedir en otros colores o medidas?', a: 'Sí. Se fabrican con colores y medidas a pedido, sin costo adicional. Los acabados habituales de la estructura son negro mate, blanco crema y cromado.' },
     ],
     difference: 'Comparten diseño y materiales y se diferencian por tamaño y uso: el Sillón BKF Premium mide 78 x 70 x 90 cm y el Banco BKF, 38 x 38 x 45 cm, y se usa como pie de cama o asiento auxiliar.',
   },
@@ -95,7 +95,7 @@ export const PRODUCTS = [
       ['Estructura', 'Hierro redondo macizo de 12 mm'],
       ['Tapizado', 'Cuero vacuno de primera selección, curtido al vegetal'],
       ['Terminación', 'Pintura epoxi anticorrosiva de doble capa o cromado'],
-      ['Colores', 'Negro mate, blanco, cromado y colores a pedido'],
+      ['Colores', 'Negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)'],
       ['Medidas', '78 x 70 x 90 cm (estándar); a medida sin costo adicional'],
       ['Uso', 'Residencial e intensivo gastronómico'],
       ['Garantía', 'Estructura de por vida; pintura epoxi 2 años; cuero 1 año'],

@@ -28,7 +28,7 @@ const FAQ_ITEMS = [
   { q: '¿El sillón BKF tiene garantía?', a: 'Sí. La estructura de hierro tiene garantía de por vida contra deformaciones. La pintura epoxi tiene garantía de 2 años. El cuero vacuno tiene garantía de 1 año contra defectos de fabricación.' },
   { q: '¿Se puede usar el sillón BKF en exterior?', a: 'Conviene usarlo en interiores o bajo techo. La garantía de 2 años de la pintura epoxi es para uso interior, conviene evitar que la estructura pintada quede expuesta mucho tiempo a la lluvia directa, el cromado no va en exteriores húmedos y el cuero no debe recibir sol directo por períodos prolongados.' },
   { q: '¿Cómo se cuida el cuero del sillón BKF?', a: 'Se limpia con un paño seco o apenas húmedo y se le aplica crema hidratante para cuero cada 6 meses. No hay que usar alcohol ni solventes ni dejarlo al sol directo por mucho tiempo. El cuero se oscurece con el uso: es normal. La estructura pintada se limpia con paño húmedo y detergente neutro.' },
-  { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco, colores a pedido y cromado. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
+  { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco crema, cromado y colores a pedido, como verde oliva o rojo Kappa. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
 ];
 
 const COLORS = [
@@ -46,7 +46,7 @@ const FINISHES = ['negro mate', 'blanco crema', 'cromado', 'verde oliva', 'rojo 
 const MADE_OF = [
   { title: 'Hierro macizo de 12 mm', text: 'Estructura de hierro redondo macizo, sin tubos ni rellenos. Tiene garantía de por vida contra deformaciones.' },
   { title: 'Cuero vacuno curtido al vegetal', text: 'Cuero de primera selección que toma color con el uso. Garantía de 1 año contra defectos de fabricación.' },
-  { title: 'Epoxi anticorrosiva o cromado', text: 'Pintura epoxi de doble capa, con 2 años de garantía, o terminación cromada. Negro mate, blanco o el color que necesites.' },
+  { title: 'Epoxi anticorrosiva o cromado', text: 'Pintura epoxi de doble capa, con 2 años de garantía, o terminación cromada. Negro mate, blanco crema o el color que necesites.' },
   { title: 'A medida, sin costo adicional', text: '78 x 70 x 90 cm en la versión estándar. Las medidas, los colores y los acabados se adaptan a tu espacio.' },
 ];
 
@@ -65,7 +65,7 @@ export default function SillonBKF() {
     <>
       <Seo
         title="Sillón BKF de Cuero en Buenos Aires | Fábrica Taller Kappa"
-        description="Taller Kappa fabrica el sillón BKF de hierro macizo y cuero vacuno en San Martín, Buenos Aires. Consultá disponibilidad por WhatsApp o visitá el showroom con turno."
+        description="Sillón BKF de hierro macizo y cuero, directo de fábrica en San Martín, Buenos Aires. A medida sin costo, garantía de por vida y envíos a todo el país."
         path="/sillon-bkf"
         image={assetUrl(socialImage(PRODUCT))}
         imageWidth={SOCIAL_IMAGE_SIZE.width}
@@ -118,7 +118,7 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
               <li><Icon name="check" /> <strong>Tapizado:</strong> Cuero vacuno de primera selección curtido al vegetal</li>
               <li><Icon name="check" /> <strong>Pintura:</strong> Epoxi anticorrosiva doble capa</li>
-              <li><Icon name="check" /> <strong>Colores:</strong> Negro mate, blanco, colores a pedido, cromado</li>
+              <li><Icon name="check" /> <strong>Colores:</strong> Negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)</li>
               <li><Icon name="check" /> <strong>Medidas:</strong> 78 x 70 x 90 cm (estándar) o a medida sin cargo adicional</li>
               <li><Icon name="check" /> <strong>Uso:</strong> Residencial e intensivo gastronómico</li>
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
@@ -200,12 +200,12 @@ export default function SillonBKF() {
           <div className="bkf-history-grid">
             <div className="bkf-history-card">
               <Icon name="calendar-alt" />
-              <h3>1938</h3>
+              <h3>Diseño de 1938</h3>
               <p>Año de creación por Bonet, Kurchan y Ferrari Hardoy en Buenos Aires</p>
             </div>
             <div className="bkf-history-card">
               <Icon name="globe-americas" />
-              <h3>Mundial</h3>
+              <h3>En el MoMA</h3>
               <p>Incluido en la colección permanente del MoMA de Nueva York</p>
             </div>
             <div className="bkf-history-card">
