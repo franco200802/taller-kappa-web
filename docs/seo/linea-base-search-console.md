@@ -70,7 +70,15 @@ Motivos de las 12 no indexadas:
 |---|---|---|
 | Página con redirección | 9 | URLs `.html` viejas. Esperado |
 | No se ha encontrado (404) | 2 | `/cdn-cgi/l/email-protection` (rastreada el 6/10, residuo de la ofuscación de email de Cloudflare, ya apagada) y `http://tallerkappa.com.ar/garantia.html` (rastreada el 23/9, ahora redirige con 301) |
-| Alternativa con canónica adecuada | 1 | Sin detalle revisado |
+| Alternativa con canónica adecuada | 1 | `http://tallerkappa.com.ar/` (rastreada el 11/10): la versión sin HTTPS. Desde el 17/10 redirige con 301 a `https://`, así que es esperable que desaparezca |
+
+**`/mobiliario-comercial/` sin indexar:** se revisó el 17/10 y está bien
+técnicamente: título y descripción propios, canonical a sí misma, `index,
+follow`, presente en el sitemap, enlazada desde todas las páginas del sitio
+(menú y footer) y con unas 1.000 palabras. Se publicó el 1/10, así que a los 16 días es
+normal que Google la tenga "descubierta" sin haberla rastreado todavía. Se pidió
+la indexación. Si el 31/10 sigue sin indexar, revisar si Google la considera
+demasiado parecida a `/catalogo/`.
 
 ## 5. Inspección de URLs (17/10/2026)
 
@@ -90,6 +98,22 @@ prevista en `seo-google-fase-3.md` §7 y no es una penalización.
 Indexación solicitada el 17/10/2026 para las 7 URLs de la tabla. Sitemap
 `https://tallerkappa.com.ar/sitemap.xml` enviado el mismo día: estado Correcto,
 15 páginas descubiertas.
+
+## 5b. GA4 (propiedad `G-2FDMN51XDY`, 19/9 a 16/10/2026)
+
+| Evento | Eventos | Usuarios |
+|---|---|---|
+| `page_view` | 541 | 202 |
+| `first_visit` | 198 | 198 |
+| `ai_referral` | 26 | 21 |
+| `whatsapp_click` | 13 | 10 |
+| `select_item` | 10 | 8 |
+| `404_not_found` | 2 | 1 |
+
+Total: 203 usuarios. `ai_referral` alcanza ~10 % de los usuarios. 
+`whatsapp_click` (la conversión del sitio) **no está marcado como evento
+clave** en GA4; los eventos clave configurados son `close_convert_lead`,
+`purchase` y `qualify_lead`, y ninguno recibe datos.
 
 ## 6. Cambios de infraestructura hechos el mismo día (Cloudflare)
 
