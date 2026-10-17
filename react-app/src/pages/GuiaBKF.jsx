@@ -93,6 +93,27 @@ export default function GuiaBKF() {
           </nav>
 
           <div className="guide-body">
+            {/* Search Console (17/10/2026): todas las búsquedas con "bkf", incluidas las de compra, muestran
+                esta guía y no /sillon-bkf/. Quien viene a comprar tiene la salida acá, sin leer la historia. */}
+            <aside className="guide-buy" aria-label="Comprar un sillón BKF">
+              <p className="guide-buy-title">¿Querés comprar un sillón BKF?</p>
+              <p>
+                {BUSINESS.name} lo fabrica en su taller de {BUSINESS.address.locality} (Buenos Aires), en hierro macizo y cuero, con medidas y
+                colores a pedido. Envíos a todo el país.
+              </p>
+              <div className="cta-btns">
+                <Link to="/sillon-bkf/" className="btn-main" data-cta="guia_bkf_top">Ver el sillón BKF de {BUSINESS.name}</Link>
+                <a
+                  href={whatsappUrl('Hola, quiero consultar por el sillón BKF.')}
+                  className="btn-outline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cta="guia_bkf_top"
+                >
+                  Consultar por WhatsApp
+                </a>
+              </div>
+            </aside>
             <h2 id="que-es">¿Qué es el sillón BKF?</h2>
             <p>
               El sillón BKF es un diseño argentino de 1938: una estructura de hierro doblado que sostiene un asiento de cuero tensado, de modo que el

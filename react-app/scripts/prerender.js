@@ -40,7 +40,7 @@ const { render } = await import(pathToFileURL(resolve(ssrDir, 'entry-server.js')
 // dependemos de cómo Vite haya agrupado los chunks del bundle de SSR.
 const { PRERENDER_PAGES } = await import(pathToFileURL(resolve(root, 'src/routes.js')).href);
 const { absoluteUrl, withSlash, assetUrl, pageId } = await import(pathToFileURL(resolve(root, 'src/lib/site.js')).href);
-const { BUSINESS, addressLine } = await import(pathToFileURL(resolve(root, 'src/data/business.js')).href);
+const { BUSINESS, addressLine, googleReviewUrl } = await import(pathToFileURL(resolve(root, 'src/data/business.js')).href);
 const { PRODUCTS, CATEGORIES, factOf, productPath } = await import(pathToFileURL(resolve(root, 'src/data/products.js')).href);
 const { FAQS } = await import(pathToFileURL(resolve(root, 'src/data/faq.js')).href);
 
@@ -356,6 +356,28 @@ for (const [file, to] of Object.entries(LEGACY_PAGES)) {
 </html>
 `, 'utf-8');
 }
+
+/**
+ * /resena/ — enlace corto para pedirles reseña a los clientes por WhatsApp
+ * (tallerkappa.com.ar/resena/). Lleva directo al formulario de reseña de la
+ * ficha de Google. Es una página de paso, no contenido: noindex y fuera del
+ * sitemap.
+ */
+const reviewUrl = googleReviewUrl();
+mkdirSync(resolve(distDir, 'resena'), { recursive: true });
+writeFileSync(resolve(distDir, 'resena/index.html'), `<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dejá tu reseña | Taller Kappa</title>
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=${attr(reviewUrl)}">
+<script>location.replace(${JSON.stringify(reviewUrl)})</script>
+</head>
+<body><p>Te llevamos a Google para dejar tu reseña de Taller Kappa. Si no pasa nada, <a href="${attr(reviewUrl)}">tocá acá</a>.</p></body>
+</html>
+`, 'utf-8');
 
 rmSync(ssrDir, { recursive: true, force: true });
 

@@ -889,7 +889,11 @@ address { font-style: normal; }
 .guide-toc a:hover, .guide-toc a:focus-visible { color: var(--hierro); text-decoration: underline; }
 .guide-body { max-width: 68ch; }
 .guide-body > h2 { margin: 48px 0 16px; }
-.guide-body > h2:first-child { margin-top: 0; }
+.guide-body > h2:first-child, .guide-buy + h2 { margin-top: 0; }
+/* Salida comercial al principio de la guía: Google muestra /bkf/ para búsquedas de compra ("sillón bkf"). */
+.guide-buy { margin-bottom: 40px; padding: 20px 24px; background: var(--blanco); border: 1px solid var(--linea); border-left: 3px solid var(--kappa); border-radius: var(--r); }
+.guide-buy p { margin-bottom: 4px; }
+.guide-buy-title { font-weight: 650; font-size: var(--t-md); }
 .guide-body > h3 { margin: 32px 0 12px; }
 .guide-body > p, .guide-list { margin-bottom: 16px; }
 .guide-body .facts { margin: 24px 0 8px; }

@@ -131,10 +131,21 @@ Requieren crear cuentas o iniciar sesión, por eso quedan de tu lado.
 
 ## 6. Reseñas
 
-El perfil tiene 2 reseñas (5,0). Pedirles una reseña a clientes reales, con el
-enlace directo que da el perfil una vez verificado, sin ofrecer nada a cambio y
-sin elegir solo a los contentos. Responder todas, también las malas.
-**Nunca** comprar reseñas ni escribirlas.
+El perfil tiene 2 reseñas (5,0) y es lo que más pesa en las búsquedas locales.
+El sitio tiene un enlace corto que abre directo el formulario de reseña de
+Google: **<https://tallerkappa.com.ar/resena/>**. Funciona aunque el perfil
+todavía no esté verificado.
+
+Mandáselo a **todos** los clientes cuando reciben el mueble (no solo a los que
+quedaron contentos: Google prohíbe pedir reseñas de forma selectiva). Mensaje
+para WhatsApp:
+
+```
+¡Hola! Gracias por elegir Taller Kappa. Si tenés un minuto, nos ayudaría mucho que dejes tu opinión en Google: https://tallerkappa.com.ar/resena/
+```
+
+Sin ofrecer nada a cambio (descuentos, regalos). Responder todas las reseñas,
+también las malas. **Nunca** comprar reseñas ni escribirlas.
 
 ## 7. Perfiles en redes (opcional)
 
