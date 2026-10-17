@@ -66,3 +66,29 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Avisa a Bing, Yandex, Seznam y Naver (protocolo IndexNow) que el sitio
+  # cambió, con todas las URLs del sitemap. Bing alimenta a Copilot y a la
+  # búsqueda de ChatGPT. La clave es pública por diseño: el archivo
+  # react-app/public/<clave>.txt prueba que el sitio es nuestro. Si falla,
+  # no rompe el deploy (el sitio ya está publicado en el paso anterior).
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      HOST: tallerkappa.com.ar
+      KEY: a4bee4f062d4041dde7097ffb1d1efc0
+    steps:
+      - name: Enviar URLs a IndexNow
+        run: |
+          # Margen para que GitHub Pages sirva la versión nueva.
+          sleep 60
+          urls=$(curl -fsS "https://$HOST/sitemap.xml?v=$GITHUB_RUN_ID" | grep -o '<loc>[^<]*</loc>' | sed -E 's#</?loc>##g' | jq -R . | jq -s .)
+          echo "URLs: $(echo "$urls" | jq length)"
+          body=$(jq -n --arg host "$HOST" --arg key "$KEY" --argjson urls "$urls" \
+            '{host: $host, key: $key, keyLocation: ("https://" + $host + "/" + $key + ".txt"), urlList: $urls}')
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' -d "$body")
+          echo "IndexNow respondió HTTP $code"
+          [ "$code" = 200 ] || [ "$code" = 202 ]
