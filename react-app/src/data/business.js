@@ -24,7 +24,13 @@ export const BUSINESS = {
   /** Cómo se vende: lo dice el sitio en cada ficha. */
   salesModel: 'Se vende por cotización: no hay precios publicados ni compra online, y se consulta por WhatsApp o por el formulario de contacto.',
   address: {
-    street: 'Calle 28 Nº 3779',
+    /**
+     * Igual que en el Perfil de Empresa de Google, letra por letra: Google
+     * compara la dirección del sitio (JSON-LD) con la del perfil.
+     */
+    street: 'Vélez Sársfield 3779',
+    /** Nombre numérico de la misma calle en San Martín (confirmado por el propietario). */
+    streetAlias: 'Calle 28',
     neighborhood: 'Villa Chacabuco',
     locality: 'San Martín',
     region: 'Buenos Aires',
@@ -49,7 +55,7 @@ export const BUSINESS = {
     appointmentRequired: true,
     appointmentChannels: ['WhatsApp', 'teléfono'],
     short: 'Visitas con turno previo, que se pide por WhatsApp o teléfono',
-    text: `Taller Kappa tiene showroom en su taller de Calle 28 Nº 3779, Villa Chacabuco, San Martín. Se puede visitar con turno previo, que se solicita por WhatsApp o por teléfono al ${WHATSAPP_DISPLAY}.`,
+    text: `Taller Kappa tiene showroom en su taller de Vélez Sársfield 3779 (Calle 28), Villa Chacabuco, San Martín. Se puede visitar con turno previo, que se solicita por WhatsApp o por teléfono al ${WHATSAPP_DISPLAY}.`,
   },
   /** Retiro presencial: requiere coordinación previa. */
   pickup: {
@@ -72,8 +78,8 @@ export const BUSINESS = {
   topics: ['Sillón BKF', 'Banco BKF', 'Base de mesa de hierro', 'Muebles de hierro y cuero', 'Mobiliario comercial y gastronómico'],
 };
 
-/** "Calle 28 Nº 3779, Villa Chacabuco, San Martín, Buenos Aires, Argentina, CP 1650" */
+/** "Vélez Sársfield 3779 (Calle 28), Villa Chacabuco, San Martín, Buenos Aires, Argentina, CP 1650" */
 export function addressLine() {
   const a = BUSINESS.address;
-  return `${a.street}, ${a.neighborhood}, ${a.locality}, ${a.region}, ${a.country}, CP ${a.postalCode}`;
+  return `${a.street} (${a.streetAlias}), ${a.neighborhood}, ${a.locality}, ${a.region}, ${a.country}, CP ${a.postalCode}`;
 }
