@@ -46,7 +46,7 @@ Sin problemas: `robots.txt` (solo `Disallow: /admin`, con referencia al sitemap)
 | O5 | Primeras 100 palabras | Bien | Responden quién, qué, dónde, cómo se compra y envíos. Formato ideal para fragmentos y para IA | — |
 | O6 | Imágenes | **Débil** | **Una sola imagen** en la landing de producto, generada con IA. Para un mueble, Google Imágenes y la galería son tráfico y conversión. Faltan detalles (costura, cuero, soldadura), producto en ambiente, variantes de color, el taller y entregas a locales | **2** |
 | O7 | Enlazado interno | Bien | 14 páginas enlazan a `/sillon-bkf/` (home 7, catálogo 6, `/bkf/` 6, asientos 5). Las anclas son descriptivas y no hay enlaces rotos | — |
-| O8 | Coherencia de colores | Inconsistente | La ficha decía "negro mate, blanco, colores a pedido, cromado" y las muestras/TypeWriter "blanco crema, verde oliva, rojo Kappa". **Aplicado:** ficha (`data/products.js`, que alimenta schema y `llms.txt`), lista de la landing, FAQ y FAQ de categoría dicen "negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)" | ✅ |
+| O8 | Coherencia de colores | Inconsistente | La ficha decía "negro mate, blanco, colores a pedido, cromado" y las muestras/TypeWriter "blanco crema, verde oliva, rojo Kappa". **Aplicado:** ficha (`data/products.js`, que alimenta la ficha técnica visible y el `additionalProperty` del schema; `llms.txt` no lista colores por producto, así que no cambia), lista de la landing, FAQ y FAQ de categoría dicen "negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)" | ✅ |
 
 ## Contenido y E-E-A-T
 
