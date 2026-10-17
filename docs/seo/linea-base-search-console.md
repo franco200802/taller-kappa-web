@@ -111,9 +111,11 @@ Indexación solicitada el 17/10/2026 para las 7 URLs de la tabla. Sitemap
 | `404_not_found` | 2 | 1 |
 
 Total: 203 usuarios. `ai_referral` alcanza ~10 % de los usuarios. 
-`whatsapp_click` (la conversión del sitio) **no está marcado como evento
-clave** en GA4; los eventos clave configurados son `close_convert_lead`,
-`purchase` y `qualify_lead`, y ninguno recibe datos.
+Hasta el 17/10 `whatsapp_click` (la conversión del sitio) no estaba marcado
+como evento clave: los eventos clave eran `close_convert_lead`, `purchase` y
+`qualify_lead`, y ninguno recibía datos. **El 17/10 se marcó `whatsapp_click`
+como evento clave**; GA4 lo cuenta como conversión desde esa fecha, no hacia
+atrás.
 
 ## 6. Cambios de infraestructura hechos el mismo día (Cloudflare)
 

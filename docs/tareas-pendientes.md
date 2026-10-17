@@ -18,9 +18,18 @@
 - **Sitio:** la dirección ahora dice "Vélez Sársfield 3779 (Calle 28)", igual
   que el perfil de Google.
 - **GA4:** los eventos `whatsapp_click` y `ai_referral` llegan bien (13 y 26
-  en los últimos 28 días).
+  en los últimos 28 días), y `whatsapp_click` quedó marcado como evento clave
+  (conversión) desde el 17/10.
 
 ---
+
+## 0. Mergear el PR #9 (2 minutos)
+
+<https://github.com/franco200802/taller-kappa-web/pull/9> → **Merge pull
+request**. Publica en el sitio la dirección "Vélez Sársfield 3779 (Calle 28)",
+igual a la del perfil de Google. El deploy corre solo (pestaña *Actions*,
+unos minutos). Conviene hacerlo antes de que Google revise el video del
+punto 1, así el sitio y el perfil ya coinciden.
 
 ## 1. Verificar el Perfil de Empresa de Google (urgente)
 
