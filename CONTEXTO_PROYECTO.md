@@ -201,6 +201,10 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   la página (WebPage/AboutPage/ContactPage/CollectionPage), su breadcrumb y lo
   extra (Product, FAQPage, ItemList, Service). Los productos referencian a la
   empresa por `@id` (`manufacturer`, `brand`), no con un objeto suelto.
+- **`Product` se declara una sola vez, en su ficha.** En listas, catálogo de la
+  empresa y relacionados, `productStub()` es una referencia (`@id`, `name`,
+  `url`) **sin `@type`**: tipada, Google la contaba como Product suelto sin
+  `offers` (36 errores en Search Console hasta el 31/10/2026).
 - **El Sillón BKF es UNA entidad con UNA URL**: `/sillon-bkf/` es la página del producto y
   su `@id` (`/catalogo/sillon-bkf-premium/` es solo una redirección).
 - **Datos reales o nada.** Sin precio, SKU, GTIN, reviews ni rating. Todo lo que
@@ -214,8 +218,11 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   que la agregue con la fuente.
 - **`llms.txt`** se genera en cada build desde los mismos datos. Es una ayuda
   opcional: ningún buscador ni asistente garantiza usarlo.
-- **robots.txt**: sin reglas por agente (no se bloquea ningún rastreador de IA);
-  solo `Disallow: /admin`.
+- **robots.txt**: el del repo no tiene reglas por agente, solo `Disallow: /admin`.
+  El publicado empieza con el bloque gestionado de Cloudflare, que bloquea a los
+  rastreadores de **entrenamiento** de IA y agrega `Content-Signal` (decisión del
+  dueño, `docs/seo/cloudflare-paso-a-paso.md` paso 6). Los de búsqueda y
+  asistentes siguen permitidos. Lighthouse da SEO 92 solo por esa línea.
 - **Textos que deben coincidir entre sí** (cambiar uno obliga a revisar los
   otros): plazos de entrega (`/envios/` ↔ FAQ del Sillón BKF ↔ FAQ general),
   garantía (`/garantia/` ↔ fichas), dirección/horario (`business.js` ↔ footer ↔
@@ -396,9 +403,12 @@ Sigue abierto: si se venden tapas de mesa (hoy el catálogo solo tiene la base y
 (redes sociales, CUIT, año de fundación), por eso no figuran en el schema
 (`sameAs`, `taxID`, `foundingDate`).
 
-### 🟡 Pendiente — Search Console / Google Business Profile
-No están configurados todavía (requiere acceso del dueño del sitio a esas
-cuentas de Google, no es algo que se resuelva solo con código).
+### 🟡 Pendiente — Google Business Profile y medición
+Search Console está verificado (17/10/2026, propiedad de dominio) y tiene línea
+base y primera medición en `docs/seo/linea-base-search-console.md`; próxima
+revisión ~28/11/2026. El Perfil de Empresa está reclamado pero falta
+verificarlo (video) y conseguir reseñas. Lo que depende del dueño está en
+`docs/tareas-pendientes.md`.
 
 ### 🟢 Ya resuelto recientemente (por si aparece en el historial de git)
 - Modales migrados a `<dialog>` nativo (`components/Modal.jsx`): carrito,
