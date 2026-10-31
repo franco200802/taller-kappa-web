@@ -79,7 +79,7 @@ Una intención = una URL principal. La segunda columna es la *única* que debe d
 | Query | URL principal | Title | H1 | Intención |
 |---|---|---|---|---|
 | sillón BKF · sillón BKF Buenos Aires · comprar sillón BKF · BKF comprar Buenos Aires · comprar BKF Buenos Aires · sillón BKF cuero · sillón BKF hierro | `/sillon-bkf/` | Sillón BKF Buenos Aires: Comprar Directo de Fábrica | Taller Kappa | Sillón BKF de hierro y cuero, fabricado en Buenos Aires | Comercial / transaccional (por presupuesto) |
-| BKF · qué es BKF · silla BKF historia · sillón mariposa | `/bkf/` | Qué es el sillón BKF: historia y características | Sillón BKF: qué es, historia y características | Informativa |
+| BKF · qué es BKF · silla BKF historia · sillón mariposa | `/bkf/` | Sillón BKF: qué es, historia y dónde comprarlo | Sillón BKF: qué es, historia y dónde comprarlo | Informativa (31/10/2026: Google la muestra también para "sillon bkf" y "silla bkf"; el título anuncia la compra, ver `linea-base-search-console.md` §8) |
 | fábrica BKF Buenos Aires · Taller Kappa | `/` | Fábrica de Sillón BKF y Muebles de Hierro \| Taller Kappa, Buenos Aires | Sillones BKF y muebles de hierro en Buenos Aires | Navegacional / marca |
 | muebles de hierro Buenos Aires · muebles de hierro y cuero | `/catalogo/` | Muebles de Hierro y Cuero en Buenos Aires \| Catálogo | Muebles de hierro y cuero en Buenos Aires: … | Comercial (explorar) |
 | muebles San Martín Buenos Aires · fábrica de muebles San Martín | `/nosotros/` (+ `/contacto/`) | Fábrica de Muebles de Hierro, San Martín, Buenos Aires | Una fábrica de muebles de hierro en San Martín | Local |

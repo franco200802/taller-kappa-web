@@ -275,7 +275,7 @@ const llms = [
   '',
   '## Guías y páginas principales',
   bullet('Sillón BKF fabricado en Argentina', '/sillon-bkf'),
-  bullet('Qué es el sillón BKF: historia y características', '/bkf'),
+  bullet('Sillón BKF: qué es, historia y dónde comprarlo', '/bkf'),
   bullet('Mobiliario comercial de hierro a medida', '/mobiliario-comercial'),
   '',
   '## Información para clientes',

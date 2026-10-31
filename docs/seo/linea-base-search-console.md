@@ -152,3 +152,69 @@ período anterior) y anotar:
 5. Que la home deje de mostrar el título viejo en los resultados.
 6. Cuántas de las impresiones corresponden a búsquedas de la otra marca Kappa
    frente a búsquedas de muebles, para no leer mal el CTR medio.
+
+## 8. Primera medición: 31/10/2026
+
+Últimos 28 días que muestra Search Console (4/10 a 28/10/2026) contra los 28
+días anteriores. Copiado de la interfaz, sin estimaciones.
+
+| Métrica | 28 días anteriores | Últimos 28 días |
+|---|---|---|
+| Clics | 8 | **46** |
+| Impresiones | 112 | **1,82 mil** |
+| CTR medio | 7,1 % | 2,5 % |
+| Posición media | 6,4 | 6,9 |
+
+El CTR y la posición bajan porque las impresiones se multiplicaron por 16 con
+búsquedas nuevas (casi todas de "bkf"), no porque las de antes empeoraran.
+
+**Páginas (28 días):**
+
+| URL | Clics | Impresiones | CTR | Posición |
+|---|---|---|---|---|
+| `/` | 15 | 498 | 3 % | 6,3 |
+| `/bkf/` | 12 | 944 | 1,3 % | 7,3 |
+| `/mobiliario-comercial/` | 5 | 37 | 13,5 % | 7,6 |
+| `/catalogo/mesas/` | 3 | 35 | 8,6 % | 8,3 |
+| `/sillon-bkf/` | 2 | 90 | 2,2 % | 6,5 |
+| `/catalogo/asientos/` | 2 | 88 | 2,3 % | 5,3 |
+| `/contacto/` | 2 | 78 | 2,6 % | 5,7 |
+| `/proyectos/` | 2 | 59 | 3,4 % | 5,8 |
+| `/catalogo/` | 2 | 35 | 5,7 % | 9,9 |
+| `/nosotros/` | 1 | 124 | 0,8 % | 6,1 |
+
+**Consultas BKF (28 días):** `sillon bkf` 1 clic / 63 imp. / pos. 9,7;
+`silla bkf` 0 / 73 / 10,1; `bkf` 0 / 48 / 8,4; `bkf silla` 0 / 31 / 8,8;
+`bkf sillon` 0 / 22 / 5,6; `sillón bkf` 0 / 16 / 8,9; `sillones bkf` 0 / 11 / 13,2.
+Las posiciones siguen en el borde de la primera página, igual que el 17/10.
+
+**Respuestas a §7:**
+
+1. Las URLs `.html` siguen como "Página con redirección" (ahora 10). Los dos 404
+   (`/cdn-cgi/l/email-protection` y `http://…/garantia.html`) siguen listados
+   porque Google no los volvió a rastrear desde el 6/10 y el 23/9; no hace falta
+   hacer nada.
+2. `/sillon-bkf/`: 90 impresiones y 2 clics (antes 24 y 0), pero casi ninguna
+   de las búsquedas BKF.
+3. Ver tabla de consultas: sin cambio real de posición.
+4. `/mobiliario-comercial/` **ya está indexada** y es la página con mejor CTR
+   (13,5 %). La que quedó "Descubierta, sin indexar" desde el 20/10 es
+   `/catalogo/base-de-mesa-flat/` (está en el sitemap, Google no la rastreó).
+   Se pidió su indexación el 31/10 ("Se ha solicitado la indexación").
+5. Sin verificar en esta medición.
+6. Las consultas de la otra marca Kappa (`kappa`, `kappa argentina`, `kapa`,
+   `locales kappa`, etc.) suman unas 350 impresiones y ningún clic.
+
+Indexación: 14 páginas indexadas (antes 13) y 13 sin indexar (10 redirecciones,
+2 404, 1 descubierta). Compras: 38 fragmentos de producto y 2 fichas de
+comerciante no válidos, por falta de `price` (decisión del dueño, ver
+`tareas-pendientes.md`).
+
+**Hallazgo principal:** Google trata a `/bkf/` como la página del BKF para
+todas las búsquedas, incluidas las de compra (944 impresiones contra 90 de
+`/sillon-bkf/`). El título "Qué es el sillón BKF: historia y características"
+no le habla a quien quiere comprar y el CTR queda en 1,3 %. Cambio aplicado el
+31/10: el título pasa a "Sillón BKF: qué es, historia y dónde comprarlo" y la
+descripción menciona que Taller Kappa lo fabrica y lo envía. **Próxima medición
+(~28/11):** CTR de `/bkf/` en las consultas BKF y clics en el bloque de compra
+(`data-cta="guia_bkf_top"` en GA4).
