@@ -42,10 +42,14 @@ export const imageNode = ({ path, width, height }, caption) => ({
   caption,
 });
 
-/** Nodo mínimo de un producto (enlace con nombre y URL), para listas y relaciones. */
+/**
+ * Referencia a un producto (enlace con nombre y URL), para listas y relaciones.
+ * Sin '@type': el Product completo se declara una sola vez, en su ficha, con el
+ * mismo @id. Search Console (31/10/2026) contaba cada referencia tipada como un
+ * Product suelto sin offers: 36 elementos "no válidos" en home, catálogo, etc.
+ */
 export function productStub(p) {
   return {
-    '@type': 'Product',
     '@id': productId(p.slug),
     name: p.name,
     url: absoluteUrl(productPath(p)),
