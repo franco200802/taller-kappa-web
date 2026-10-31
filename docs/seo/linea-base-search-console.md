@@ -185,6 +185,7 @@ Las posiciones siguen en el borde de la primera página, igual que el 17/10.
 4. `/mobiliario-comercial/` **ya está indexada** y es la página con mejor CTR
    (13,5 %). La que quedó "Descubierta, sin indexar" desde el 20/10 es
    `/catalogo/base-de-mesa-flat/` (está en el sitemap, Google no la rastreó).
+   Se pidió su indexación el 31/10 ("Se ha solicitado la indexación").
 5. Sin verificar en esta medición.
 6. Las consultas de la otra marca Kappa (`kappa`, `kappa argentina`, `kapa`,
    `locales kappa`, etc.) suman unas 350 impresiones y ningún clic.
