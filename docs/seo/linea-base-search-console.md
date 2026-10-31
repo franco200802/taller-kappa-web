@@ -206,15 +206,28 @@ Las posiciones siguen en el borde de la primera página, igual que el 17/10.
    `locales kappa`, etc.) suman unas 350 impresiones y ningún clic.
 
 Indexación: 14 páginas indexadas (antes 13) y 13 sin indexar (10 redirecciones,
-2 404, 1 descubierta). Compras: 38 fragmentos de producto y 2 fichas de
-comerciante no válidos, por falta de `price` (decisión del dueño, ver
-`tareas-pendientes.md`).
+2 404, 1 descubierta).
+
+Compras: 38 fragmentos de producto no válidos. **36** eran por "Debe
+especificarse offers, review o aggregateRating": las referencias a productos del
+catálogo de la empresa (presente en todas las páginas) iban tipadas como
+`Product`. Se corrigió el 31/10 (PR #13: `productStub()` sin `@type`) y se
+inició la validación en Search Console ese mismo día. Los otros 2 fragmentos y
+las 2 fichas de comerciante fallan por falta de `price` (decisión del dueño, ver
+`tareas-pendientes.md`); sus avisos de `availability`, `shippingDetails` y
+`hasMerchantReturnPolicy` dependen de datos no confirmados y no se tocan.
+
+GA4, 17/10 a 30/10/2026 (desde que `whatsapp_click` es evento clave): 82
+usuarios, 192 `page_view`, 14 `ai_referral`, 7 `select_item` y **5
+`whatsapp_click`** (5 usuarios). Muestra chica para sacar conclusiones.
 
 **Hallazgo principal:** Google trata a `/bkf/` como la página del BKF para
 todas las búsquedas, incluidas las de compra (944 impresiones contra 90 de
 `/sillon-bkf/`). El título "Qué es el sillón BKF: historia y características"
 no le habla a quien quiere comprar y el CTR queda en 1,3 %. Cambio aplicado el
 31/10: el título pasa a "Sillón BKF: qué es, historia y dónde comprarlo" y la
-descripción menciona que Taller Kappa lo fabrica y lo envía. **Próxima medición
-(~28/11):** CTR de `/bkf/` en las consultas BKF y clics en el bloque de compra
-(`data-cta="guia_bkf_top"` en GA4).
+descripción menciona que Taller Kappa lo fabrica y lo envía. Se pidió la reindexación
+de `/bkf/` el 31/10. **Próxima medición (~28/11):** CTR de `/bkf/` en las
+consultas BKF, clics en el bloque de compra (`data-cta="guia_bkf_top"` en GA4),
+resultado de la validación de fragmentos de producto y `whatsapp_click` contra
+los 5 de esta medición.
