@@ -1,8 +1,14 @@
 # Taller Kappa — tallerkappa.com.ar
-# Todo el sitio público es rastreable (páginas, CSS, JS e imágenes), también
-# para los rastreadores de buscadores con IA y asistentes: no hay reglas por
-# agente, así que ninguno queda bloqueado. /admin es el panel interno: no
-# tiene contenido público.
+# Todo el sitio público es rastreable (páginas, CSS, JS e imágenes) por los
+# buscadores y por los rastreadores de búsqueda con IA y asistentes. /admin es
+# el panel interno: no tiene contenido público.
+#
+# Este archivo NO es todo el robots.txt publicado: Cloudflare antepone su
+# bloque gestionado ("Cloudflare Managed content"), que bloquea a los
+# rastreadores de ENTRENAMIENTO de IA (GPTBot, ClaudeBot, Google-Extended…) y
+# agrega la línea Content-Signal. Es una decisión del dueño, no un error
+# (docs/seo/cloudflare-paso-a-paso.md, paso 6). Lighthouse marca Content-Signal
+# como directiva desconocida (SEO 92 en vez de 100); Google la ignora.
 #
 # Ojo: un bot que tiene su propio grupo (User-agent: Googlebot) ignora el
 # grupo "*". Por eso no hay grupos por bot: con uno para Googlebot, el
