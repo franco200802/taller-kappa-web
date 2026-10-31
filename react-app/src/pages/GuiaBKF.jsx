@@ -49,12 +49,15 @@ const TOC = [
 
 export default function GuiaBKF() {
   const sillon = getProductBySlug('sillon-bkf-premium');
-  const description = 'Qué es el sillón BKF, qué significa BKF, quién lo creó en 1938 y cómo elegir uno: estructura, cuero y medidas. Guía de Taller Kappa, fábrica en San Martín.';
+  // Search Console (31/10/2026): Google muestra esta guía, no /sillon-bkf/, para "sillon bkf", "silla bkf" y
+  // "sillones bkf" (944 impresiones contra 90 en 28 días, CTR 1,3 %). El título y la descripción anuncian también
+  // dónde comprarlo para que quien busca comprar haga clic; la sección "donde-comprar" y el bloque de compra lo cumplen.
+  const description = 'Silla o sillón BKF: qué significa, quién lo creó en 1938 y cómo elegir uno. Taller Kappa lo fabrica en hierro y cuero en San Martín y lo envía a todo el país.';
 
   return (
     <>
       <Seo
-        title="Qué es el sillón BKF: historia y características | Taller Kappa"
+        title="Sillón BKF: qué es, historia y dónde comprarlo | Taller Kappa"
         description={description}
         path={PATH}
         image={assetUrl(socialImage(sillon))}
@@ -66,7 +69,7 @@ export default function GuiaBKF() {
         jsonLd={[
           articleNode({
             path: PATH,
-            headline: 'Sillón BKF: qué es, historia y características',
+            headline: 'Sillón BKF: qué es, historia y dónde comprarlo',
             description,
             image: socialImage(sillon),
             datePublished: '2026-10-01',
@@ -78,7 +81,7 @@ export default function GuiaBKF() {
         ]}
       />
       <PageHero
-        title="Sillón BKF: qué es, historia y características"
+        title="Sillón BKF: qué es, historia y dónde comprarlo"
         lead="El BKF, también llamado silla BKF, sillón mariposa o butterfly chair, es un sillón de estructura de hierro y asiento de cuero suspendido, creado en Buenos Aires a fines de 1938 por los arquitectos Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy."
         current="Qué es el sillón BKF"
       />
