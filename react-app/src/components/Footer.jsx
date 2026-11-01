@@ -81,7 +81,7 @@ export default function Footer() {
           <LazyMap />
         </div>
       </div>
-      <p className="footer-copy">© {__BUILD_YEAR__} {BUSINESS.legalName} Todos los derechos reservados.</p>
+      <p className="footer-copy">© {__BUILD_YEAR__} {BUSINESS.legalName} Todos los derechos reservados. Fotos de producto ilustrativas: el fondo fue editado digitalmente.</p>
     </footer>
   );
 }
