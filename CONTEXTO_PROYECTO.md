@@ -280,8 +280,12 @@ autoridad externa) en `docs/seo/seo-google-fase-3.md`. Lo que hay que saber del 
 - **Medición de IA:** `analytics.js` envía el evento `ai_referral` a GA4 si la visita
   viene de ChatGPT, Perplexity, Gemini, Copilot o Claude (referrer o `utm_source`).
   Google AI Overviews / AI Mode se mide en Search Console, no acá.
-- **Las fotos de producto están generadas con IA** (marca ✦ visible). No se
-  recortan para ocultarla; hay que reemplazarlas por fotos reales (también las
+- **Fotos de producto (sillón y banco):** son fotos del producto con el fondo
+  reemplazado con IA (Gemini). Desde el 31/10/2026 se publican SIN la marca ✦
+  visible (se limpió con inpainting, no recortando), y el pie de todas las
+  páginas avisa «Fotos de producto ilustrativas: el fondo fue editado
+  digitalmente». Mantener ese aviso mientras sean estas fotos. La base de mesa
+  no tenía marca. Siguen siendo reemplazables por fotos reales del taller (las
   exige el Perfil de Empresa de Google).
 
 ## 5e. Recuperación SEO (1/10/2026) — reglas que NO hay que romper
@@ -383,11 +387,13 @@ Firebase. Esto significa:
 Pedidos/Clientes/Stats del `admin.html` viejo. Hoy solo muestra el login y
 un conteo básico de pedidos.
 
-### 🟡 Pendiente — Fotos de producto generadas con IA
-`bkf1.jpg`, `bkfapoyapies.jpg` y `mesa.jpeg` muestran la marca de agua ✦ de
-Gemini en la esquina inferior derecha. Conviene reemplazarlas por fotos
-reales de los productos del taller (mismo nombre de archivo, y regenerar
-el `.webp` de cada una).
+### 🟡 Pendiente — Fotos de producto con fondo editado con IA
+Desde el 31/10/2026 el sillón (`bkf1.jpg`) y el banco (`bkfapoyapies.jpg`) están
+sin la marca ✦ de Gemini y con aviso en el pie. `mesa.jpeg` (base) nunca la tuvo.
+Conviene reemplazarlas por fotos reales del taller (mismo nombre de archivo en
+`assets-src/fotos/`, correr `build-images.sh` y `build-social-images.sh`; en
+Windows sin ImageMagick se regeneraron con Pillow, mismos parámetros).
+Si se purga Cloudflare, las fotos nuevas se ven al instante.
 
 ### 🟢 Confirmado por el dueño (1/10/2026) — afirmaciones del sitio
 El dueño confirmó que son ciertas las afirmaciones que el sitio publica y que
