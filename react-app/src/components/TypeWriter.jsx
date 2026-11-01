@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createTypewriter } from '../lib/typewriter';
+import { useLang } from '../i18n/LangContext';
 
 /**
  * TypeWriter — escribe y borra una lista de frases con un cursor que parpadea.
@@ -72,5 +73,10 @@ function TypeWriterBody({
  * (por ejemplo definido inline) no reinicia el tipeo.
  */
 export default function TypeWriter(props) {
-  return <TypeWriterBody key={props.sequences.join('\u0000')} {...props} />;
+  // El tipeo escribe de a una letra: el traductor del DOM no puede traducir frases a medio escribir, así que se traducen acá.
+  const { t } = useLang();
+  const sequences = props.sequences.map(t);
+  // srText igual a las frases unidas → que el cuerpo lo arme con las ya traducidas.
+  const srText = props.srText === undefined || props.srText === props.sequences.join(', ') ? undefined : t(props.srText);
+  return <TypeWriterBody key={sequences.join('\u0000')} {...props} sequences={sequences} srText={srText} />;
 }

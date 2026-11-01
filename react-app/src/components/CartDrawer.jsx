@@ -6,6 +6,7 @@ import { BUSINESS } from '../data/business';
 import Picture from './Picture';
 import Modal from './Modal';
 import { trackEvent } from '../lib/analytics';
+import { useLang } from '../i18n/LangContext';
 
 // Los nombres pueden venir de Firestore: se escapan antes de interpolarlos
 // en el HTML de la ventana de impresión.
@@ -13,16 +14,17 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 
 export default function CartDrawer() {
   const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast, quote, setQuote } = useCart();
+  const { lang, t } = useLang();
 
   const printBudget = () => {
-    if (cart.length === 0) { showToast('Tu presupuesto está vacío.'); return; }
+    if (cart.length === 0) { showToast(t('Tu presupuesto está vacío.')); return; }
     const lines = cart.map(({ product, color, qty }) =>
-      `<tr><td>${esc(product.name)}</td><td>${esc(color)}</td><td style="text-align:center">${qty}</td><td style="color:#888;font-style:italic">A cotizar</td></tr>`
+      `<tr><td>${esc(product.name)}</td><td>${esc(color)}</td><td style="text-align:center">${qty}</td><td style="color:#888;font-style:italic">${t('A cotizar')}</td></tr>`
     ).join('');
     const win = window.open('', '_blank');
-    if (!win) { showToast('El navegador bloqueó la ventana emergente.'); return; }
-    win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-      <title>Presupuesto - Taller Kappa</title>
+    if (!win) { showToast(t('El navegador bloqueó la ventana emergente.')); return; }
+    win.document.write(`<!DOCTYPE html><html lang="${lang}"><head><meta charset="UTF-8">
+      <title>${t('Presupuesto - Taller Kappa')}</title>
       <style>body{font-family:Arial,sans-serif;padding:40px;color:#222}h1{color:#b71c1c}
       table{width:100%;border-collapse:collapse;margin-bottom:30px}
       th{background:#b71c1c;color:#fff;padding:12px;text-align:left}
@@ -32,11 +34,11 @@ export default function CartDrawer() {
       </head><body>
       <h1>Taller Kappa S.R.L.</h1>
       <p style="color:#888;font-size:.9rem;margin-bottom:20px">${BUSINESS.address.street} · ${BUSINESS.address.locality} · CP ${BUSINESS.address.postalCode} · ${WHATSAPP_DISPLAY} · tallerkappa.com.ar</p>
-      <p class="note">⚠️ Presupuesto orientativo. Precios finales se confirman por WhatsApp.</p>
-      <table><thead><tr><th>Producto</th><th>Acabado</th><th>Cant.</th><th>Precio</th></tr></thead>
+      <p class="note">⚠️ ${t('Presupuesto orientativo. Precios finales se confirman por WhatsApp.')}</p>
+      <table><thead><tr><th>${t('Producto')}</th><th>${t('Acabado')}</th><th>${t('Cant.')}</th><th>${t('Precio')}</th></tr></thead>
       <tbody>${lines}</tbody></table>
-      <div class="footer"><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}<br>
-      Para el presupuesto final escribinos por WhatsApp al <strong>${WHATSAPP_DISPLAY}</strong></div>
+      <div class="footer"><strong>${t('Fecha:')}</strong> ${new Date().toLocaleDateString(lang === 'en' ? 'en-US' : 'es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}<br>
+      ${t('Para el presupuesto final escribinos por WhatsApp al')} <strong>${WHATSAPP_DISPLAY}</strong></div>
       <script>window.onload=()=>{window.print();}<\/script></body></html>`);
     win.document.close();
   };
