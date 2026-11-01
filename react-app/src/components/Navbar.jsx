@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import Icon from './Icon';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useLang } from '../i18n/LangContext';
 
 const NAV_LINKS = [
   { to: '/', label: 'Inicio' },
@@ -16,6 +17,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { totalItems, setIsOpen } = useCart();
+  const { isEn, toggle } = useLang();
 
   return (
     <nav id="main-nav">
@@ -39,6 +41,19 @@ export default function Navbar() {
       </ul>
 
       <div className="nav-actions">
+        {/* translate="no": el traductor del DOM (i18n/translate.js) no toca este botón, que siempre habla en el idioma al que lleva. */}
+        <button
+          type="button"
+          className="lang-toggle"
+          translate="no"
+          lang={isEn ? 'es' : 'en'}
+          aria-label={isEn ? 'Ver esta página en español' : 'View this page in English'}
+          title={isEn ? 'Ver en español' : 'View in English'}
+          onClick={toggle}
+        >
+          <Icon name="globe-americas" />
+          <span>{isEn ? 'ES' : 'EN'}</span>
+        </button>
         <button
           type="button"
           className="cart-icon-container"

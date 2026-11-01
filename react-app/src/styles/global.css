@@ -974,3 +974,13 @@ address { font-style: normal; }
 .buy-steps { list-style: none; counter-reset: paso; display: grid; gap: 10px; margin: 8px 0 16px; padding: 0; }
 .buy-steps li { counter-increment: paso; position: relative; padding-left: 40px; color: var(--hierro); }
 .buy-steps li::before { content: counter(paso); position: absolute; left: 0; top: 0; width: 28px; height: 28px; display: grid; place-items: center; border: 1.5px solid var(--hierro); border-radius: 50%; font-weight: 700; font-size: var(--t-sm); }
+
+/* Botón de idioma (ES/EN) de la barra de navegación */
+.lang-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 48px; padding: 0 10px; border: 0; border-radius: var(--r);
+    background: none; color: var(--hierro);
+    font: inherit; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em;
+}
+.lang-toggle:hover { background: rgba(27, 28, 30, 0.06); }
+.lang-toggle i { font-size: 1.05rem; }

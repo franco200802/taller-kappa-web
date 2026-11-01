@@ -364,6 +364,36 @@ pendientes en `docs/seo/fase-4-ventas.md`. Lo que hay que saber del código:
 - **No crear `/bkf-cuero`, `/comprar-bkf-buenos-aires`, `/fabricante-bkf`, etc.**: misma
   intención y mismo producto que `/sillon-bkf/` (ver §3 del documento).
 
+## 5h. Modo en inglés (31/10/2026)
+
+Botón **EN/ES** en la barra de navegación (`Navbar.jsx`). El español sigue siendo el idioma
+del sitio y el único que se prerenderiza/indexa; el inglés es un modo secundario del lado
+del cliente. Código en `src/i18n/`:
+
+- `LangContext.jsx`: estado del idioma (`useLang()`: `lang`, `isEn`, `t`, `toggle`). Guarda la
+  elección en `localStorage` (`kappa-lang`); también acepta `?lang=en`. **No detecta el idioma
+  del navegador a propósito**: Googlebot renderiza con `en-US` y terminaría indexando inglés.
+- `translate.js`: traduce el DOM ya hidratado (nodos de texto, `alt`/`aria-label`/`title`/
+  `placeholder`, `<title>` y metas) con un `MutationObserver`; al volver a español restaura los
+  originales. Reglas regex para textos con datos (avisos del carrito, `Ficha de X`…).
+- `en.js`: diccionario ES→EN (~830 entradas). La clave es el texto en español tal como sale en
+  pantalla, con espacios normalizados. **Lo que no está en el diccionario queda en español.**
+
+Reglas para no romperlo:
+
+- **Si agregás o cambiás un texto visible, agregalo a `en.js`** (si no, en inglés se ve en español).
+  Los textos con variables se parten en nodos de texto: traducir cada fragmento, o agregar una
+  regla en `RULES`. Textos que se escriben letra por letra (`TypeWriter`) se traducen en React con
+  `t()`, no en el DOM.
+- La traducción del DOM arranca recién cuando la página lazy hidrató (`markReady()` lo llama
+  `FloatWaSentinel` en `Layout.jsx`); el idioma guardado se aplica en ese momento y no antes.
+  Si se cambia el contexto antes, React descarta el HTML prerenderizado.
+- `translate="no"` en un elemento lo excluye de la traducción (lo usa el propio botón).
+- El mensaje prellenado de WhatsApp (`data/contact.js`, `CartContext`) sigue en español: el taller
+  atiende en español. El `en.js` se dejó fuera del bundle principal (chunk aparte, solo se baja en inglés).
+- Pendiente conocido ya antes de este cambio: React #421 en consola al hidratar (la página lazy
+  dentro de `<Suspense>` recibe una actualización antes de terminar de hidratar).
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder

@@ -10,6 +10,7 @@ import Toast from './Toast';
 import { whatsappUrlFor } from '../data/contact';
 import { priceQuestion, productByPath } from '../data/products';
 import { siteNodes } from '../lib/schema';
+import { useLang } from '../i18n/LangContext';
 
 const productNameForPath = (pathname) => productByPath(pathname)?.name ?? null;
 
@@ -37,6 +38,9 @@ const SITE_GRAPH = JSON.stringify({ '@context': 'https://schema.org', '@graph': 
 const WA_HIDE_TARGETS = '.home-hero-actions, .bkf-actions, .cta-btns, .form-submit, footer';
 function FloatWaSentinel({ onChange }) {
   const { pathname } = useLocation();
+  const { markReady } = useLang();
+  // Este efecto corre recién cuando la página lazy terminó de hidratar: desde acá se puede traducir el DOM.
+  useEffect(() => { markReady(); }, [markReady]);
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return undefined;
     const visible = new Set();

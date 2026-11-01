@@ -2,6 +2,7 @@ import { lazy, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
+import { LangProvider } from './i18n/LangContext';
 import AppRoutes from './AppRoutes';
 import { PAGE_LOADERS } from './routes';
 
@@ -17,6 +18,7 @@ export default function App() {
 
   return (
     <HelmetProvider>
+      <LangProvider>
       <CartProvider>
         {/* v7_startTransition: al navegar a una página cuyo chunk todavía no
             se descargó, se sigue mostrando la página actual en vez del
@@ -26,6 +28,7 @@ export default function App() {
           <AppRoutes components={components} />
         </BrowserRouter>
       </CartProvider>
+      </LangProvider>
     </HelmetProvider>
   );
 }
