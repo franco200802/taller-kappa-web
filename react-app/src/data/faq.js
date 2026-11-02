@@ -34,5 +34,7 @@ export const FAQS = [
   { id: '14', question: '¿Fabrican productos a medida?', answer: 'Sí, adaptamos medidas, colores y terminaciones según lo que necesite cada cliente, sin costo adicional.' },
   { id: '14b', question: '¿Venden al por mayor o para empresas?', answer: 'Sí. Taller Kappa fabrica mobiliario de hierro para empresas y locales. En pedidos mayoristas (3 o más unidades) y en la primera compra, el envío dentro de GBA es bonificado; las condiciones se consultan por WhatsApp.' },
   { id: '15', question: '¿Emiten factura?', answer: 'Sí. Taller Kappa emite factura A y B, para personas y empresas.' },
+  // Confirmado por el dueño el 1/11/2026: no hay cuotas. Los medios de pago no están confirmados, por eso no se listan.
+  { id: '15b', question: '¿Se puede pagar en cuotas?', answer: 'No. Por ahora Taller Kappa no ofrece pago en cuotas. El medio de pago se acuerda directamente con el taller al confirmar el presupuesto por WhatsApp.' },
   { id: '16', question: '¿Cómo los contacto?', answer: `Por WhatsApp o teléfono al ${BUSINESS.phoneDisplay}, por email a ${BUSINESS.email}, o mediante el formulario de la sección de contacto.` },
 ];

@@ -111,7 +111,7 @@ justificaría páginas nuevas, cuando exista:
 | 🟧 | `llms.txt` incompleto (I) | Material y garantía por producto, cómo se compra, FAQ completas | Medio (GEO) | Bajo | Baja | ✅ Hecho |
 | 🟧 | Search Console y GA4 sin configurar como conversión | §6 | Alto | Alto | Baja (cuentas) | **Pendiente (dueño)** |
 | 🟧 | Perfil de Empresa de Google y reseñas | `seo-google-fase-3.md` §6b | Muy alto (local) | Alto | Media | **Pendiente (dueño)** |
-| 🟨 | Formas de pago, cuotas, si llega armado, capacidad | Agregar a la ficha y la FAQ cuando el dueño lo confirme | Medio | Alto | Baja | **Pendiente (dato)** |
+| 🟨 | Formas de pago, cuotas, si llega armado, capacidad | Agregar a la ficha y la FAQ cuando el dueño lo confirme | Medio | Alto | Baja | **Cuotas: hecho (1/11/2026, no hay cuotas; FAQ general y de `/sillon-bkf/`). Medios de pago, armado y capacidad: pendiente (dato)** |
 | 🟩 | WhatsApp del footer sin texto | Mismo helper que el flotante | — | Bajo | Baja | Medido; mensaje pendiente |
 
 ## 5. Qué se implementó
