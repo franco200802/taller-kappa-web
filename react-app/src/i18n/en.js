@@ -1,6 +1,10 @@
 // Diccionario ES → EN para el modo en inglés (ver src/i18n/). Generado a mano: la clave es el texto en español
 // tal como aparece en pantalla (espacios normalizados); lo que no está acá se muestra en español.
 export default {
+  "¿Ya nos compraste?": "Already bought from us?",
+  "Dejanos tu reseña en Google": "Leave us a Google review",
+  ". Nos ayuda a que más gente nos encuentre.": ". It helps more people find us.",
+  "Dejar una reseña en Google": "Leave a Google review",
   "Sillón BKF: qué es, historia y dónde comprarlo | Taller Kappa": "BKF armchair: what it is, its history and where to buy one | Taller Kappa",
   "Silla o sillón BKF: qué significa, quién lo creó en 1938 y cómo elegir uno. Taller Kappa lo fabrica en hierro y cuero en San Martín y lo envía a todo el país.": "BKF chair or armchair: what the name means, who created it in 1938 and how to choose one. Taller Kappa makes it in iron and leather in San Martín and ships it across Argentina.",
   "Inicio — Taller Kappa": "Home — Taller Kappa",
@@ -832,8 +836,4 @@ export default {
   "Hierro macizo de 12 mm y asiento de cuero": "12 mm solid iron and leather seat",
   "Chapa torneada de 10 mm con columna central de 77 o 101 mm": "10 mm spun sheet with a 77 or 101 mm central column",
   "Base de mesa de hierro": "Iron table base",
-  "¿Ya nos compraste?": "Already bought from us?",
-  "Dejanos tu reseña en Google": "Leave us a Google review",
-  ". Nos ayuda a que más gente nos encuentre.": ". It helps more people find us.",
-  "Dejar una reseña en Google": "Leave a Google review",
 };
