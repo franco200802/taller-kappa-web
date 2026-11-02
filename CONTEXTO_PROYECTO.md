@@ -391,8 +391,24 @@ Reglas para no romperlo:
 - `translate="no"` en un elemento lo excluye de la traducción (lo usa el propio botón).
 - El mensaje prellenado de WhatsApp (`data/contact.js`, `CartContext`) sigue en español: el taller
   atiende en español. El `en.js` se dejó fuera del bundle principal (chunk aparte, solo se baja en inglés).
-- Pendiente conocido ya antes de este cambio: React #421 en consola al hidratar (la página lazy
-  dentro de `<Suspense>` recibe una actualización antes de terminar de hidratar).
+- El React #421 que salía al hidratar quedó resuelto el 1/11/2026 (ver §5i).
+
+## 5i. Hidratación sin #421 (1/11/2026)
+
+`main.jsx` descarga el chunk de la página de la URL de entrada **antes** de llamar a `hydrateRoot`
+(`matchRoutes` sobre `ROUTES` → `PAGE_LOADERS[page]()`) y se lo pasa a `App` como `initialPage`;
+`App` usa ese componente ya resuelto en lugar de su `lazy()`. Así la hidratación no se suspende: antes
+el `<Suspense>` de `Layout` quedaba a medio hidratar y la primera actualización de estado lo pasaba a
+render de cliente (React #421), tirando el HTML prerenderizado en cada carga. El resto de las páginas
+sigue siendo lazy. Si el import falla, se sigue con `lazy()` como antes.
+
+- Ojo al probar con `vite preview`: para URLs que no existen sirve el HTML de la home (no `404.html`),
+  así que al hidratar `NotFound` aparecen #418/#422. Es solo del servidor local; GitHub Pages
+  devuelve `404.html` con `#root` vacío y ahí se monta con `createRoot`.
+- Lighthouse (12, móvil) el 1/11: home 88 rendimiento / 100 accesibilidad / 92 SEO; `/sillon-bkf/` 97.
+  El 92 de SEO es la línea `Content-Signal` que Cloudflare antepone a `robots.txt` (ver §5): no se
+  arregla desde el código. Se probó sacar la animación del hero y no cambió FCP/LCP (la foto ya se
+  pinta en el primer cuadro), así que se dejó.
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 

@@ -13,8 +13,16 @@ const lazyComponents = Object.fromEntries(
   Object.entries(PAGE_LOADERS).map(([name, loader]) => [name, lazy(loader)])
 );
 
-export default function App() {
-  const components = useMemo(() => lazyComponents, []);
+/**
+ * `initialPage` ({ name, Component }) es la página de la URL de entrada, ya descargada por main.jsx
+ * antes de hidratar. Se usa tal cual en vez de su lazy(): así la hidratación no se suspende y no queda
+ * un <Suspense> a medio hidratar que cualquier actualización tumbe (error #421, React descartaba el HTML).
+ */
+export default function App({ initialPage = null }) {
+  const components = useMemo(
+    () => (initialPage ? { ...lazyComponents, [initialPage.name]: initialPage.Component } : lazyComponents),
+    [initialPage]
+  );
 
   return (
     <HelmetProvider>
