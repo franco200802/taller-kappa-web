@@ -436,8 +436,9 @@ todas las páginas que la repiten.
 
 Sigue abierto: si se venden tapas de mesa (hoy el catálogo solo tiene la base y
 `CATEGORIES.mesas.difference` lo dice así) y los datos que el sitio no publica
-(redes sociales, CUIT, año de fundación), por eso no figuran en el schema
-(`sameAs`, `taxID`, `foundingDate`).
+(Facebook, CUIT, año de fundación), por eso no figuran en el schema
+(`taxID`, `foundingDate`). Instagram sí: `@tallerkappa` (verificada el 1/11/2026,
+`BUSINESS.instagram`) va en el footer, en `sameAs` y en `llms.txt`.
 
 ### 🟡 Pendiente — Google Business Profile y medición
 Search Console está verificado (17/10/2026, propiedad de dominio) y tiene línea

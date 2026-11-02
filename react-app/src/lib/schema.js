@@ -89,8 +89,9 @@ export function organizationNode() {
     },
     geo: { '@type': 'GeoCoordinates', latitude: BUSINESS.geo.latitude, longitude: BUSINESS.geo.longitude },
     hasMap: BUSINESS.mapUrl,
-    // La ficha de Google Maps de la misma empresa: une la entidad del sitio con el Perfil de Empresa.
-    sameAs: [googleProfileUrl()],
+    // Perfiles oficiales de la misma empresa (ficha de Google Maps e Instagram): unen la entidad del
+    // sitio con el Perfil de Empresa y la cuenta de la red, que a su vez enlaza al sitio.
+    sameAs: [googleProfileUrl(), BUSINESS.instagram.url],
     location: {
       '@type': 'Place',
       name: a.neighborhood,

@@ -266,6 +266,7 @@ const llms = [
   `- Retiro: ${BUSINESS.pickup.short}`,
   `- WhatsApp: ${BUSINESS.phoneDisplay}`,
   `- Email: ${BUSINESS.email}`,
+  `- Instagram: [${BUSINESS.instagram.handle}](${BUSINESS.instagram.url})`,
   '',
   '## Productos',
   ...PRODUCTS.map((p) => `- [${p.name}](${absoluteUrl(productPath(p))}): ${factOf(p, 'Categoría')}. ${p.material}. Medidas: ${factOf(p, 'Medidas')}. Garantía: ${factOf(p, 'Garantía')}.`),
