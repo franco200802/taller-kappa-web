@@ -162,6 +162,9 @@ export function trackClicks(productNameForPath) {
     if (href.startsWith('https://wa.me/')) {
       const item_name = a.closest('[data-item]')?.dataset.item ?? productNameForPath(page_path) ?? undefined;
       trackEvent('whatsapp_click', { location, page_path, item_name });
+    } else if (href.startsWith('https://search.google.com/local/writereview')) {
+      // Reseñas de Google: pesan en el ranking local, así que se mide quién va a dejar una desde el sitio.
+      trackEvent('review_click', { location, page_path });
     } else if (href.startsWith('mailto:')) {
       trackEvent('email_click', { location, page_path });
     } else if (href.startsWith('tel:')) {

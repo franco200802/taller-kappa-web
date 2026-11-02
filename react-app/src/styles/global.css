@@ -702,6 +702,8 @@ footer a:hover { color: var(--blanco); }
 .testimonials { padding: var(--sec) var(--pad-x); background: var(--blanco); }
 .testimonials h2 { margin-bottom: 32px; }
 .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px; }
+.testimonials-review { margin-top: 32px; color: var(--grafito); font-size: var(--t-md); }
+.testimonials-review a { font-weight: 700; }
 .testimonial-card { border-top: 2px solid var(--hierro); padding-top: 18px; display: flex; flex-direction: column; gap: 12px; }
 .testimonial-card > p:first-of-type { font-size: var(--t-md); line-height: 1.45; }
 .stars { color: var(--hierro); font-size: 0.8rem; letter-spacing: 2px; }

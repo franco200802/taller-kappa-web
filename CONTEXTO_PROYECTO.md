@@ -153,7 +153,8 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   Botones con verbos que dicen qué pasa ("Agregar al presupuesto").
 - **Analytics (GA4) automático para WhatsApp, email y productos**: `trackClicks()`
   (`lib/analytics.js`, lo activa `Layout`) mide todo enlace a `wa.me`
-  (`whatsapp_click`), `mailto:` (`email_click`) y a la página de un producto
+  (`whatsapp_click`), `mailto:` (`email_click`), al formulario de reseña de Google
+  (`review_click`, desde 1/11/2026: Nosotros y Contacto) y a la página de un producto
   (`select_item`), con `location`, `page_path` e `item_name`. **No agregues
   `trackEvent('whatsapp_click')` a mano** (duplicaría el evento): poné
   `data-cta="nombre"` en el botón o su contenedor y, si no es la página del
