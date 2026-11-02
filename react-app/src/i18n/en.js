@@ -832,4 +832,5 @@ export default {
   "Hierro macizo de 12 mm y asiento de cuero": "12 mm solid iron and leather seat",
   "Chapa torneada de 10 mm con columna central de 77 o 101 mm": "10 mm spun sheet with a 77 or 101 mm central column",
   "Base de mesa de hierro": "Iron table base",
+  "Instagram de Taller Kappa: @tallerkappa": "Taller Kappa on Instagram: @tallerkappa",
 };

@@ -149,7 +149,10 @@ también las malas. **Nunca** comprar reseñas ni escribirlas.
 
 ## 7. Perfiles en redes (opcional)
 
-No hay Instagram ni Facebook oficiales del taller. Si se crean, avisá y se agregan
+Instagram: **hecho** (1/11/2026). La cuenta `@tallerkappa` está en el footer, en
+`sameAs` y en `llms.txt`, y su bio enlaza al sitio.
+
+No hay Facebook oficial del taller. Si se crea, avisá y se agrega
 al sitio (`sameAs` en `react-app/src/lib/schema.js`) para que Google los
 asocie con la empresa.
 
