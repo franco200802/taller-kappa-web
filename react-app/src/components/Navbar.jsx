@@ -47,7 +47,8 @@ export default function Navbar() {
           className="lang-toggle"
           translate="no"
           lang={isEn ? 'es' : 'en'}
-          aria-label={isEn ? 'Ver esta página en español' : 'View this page in English'}
+          // El nombre accesible empieza con el texto visible (ES/EN): quien maneja la página por voz dice lo que ve.
+          aria-label={isEn ? 'ES: ver esta página en español' : 'EN: view this page in English'}
           title={isEn ? 'Ver en español' : 'View in English'}
           onClick={toggle}
         >
