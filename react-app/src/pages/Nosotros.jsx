@@ -7,7 +7,7 @@ import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import { loadFireDB } from '../lib/firebaseConfig';
 import { PRODUCTS, productHref } from '../data/products';
-import { BUSINESS, addressLine } from '../data/business';
+import { BUSINESS, addressLine, googleReviewUrl } from '../data/business';
 import { CONTACT_EMAIL, whatsappUrl } from '../data/contact';
 import { ORG_ID } from '../lib/schema';
 
@@ -177,6 +177,9 @@ export default function Nosotros() {
             </article>
           ))}
         </div>
+        <p className="testimonials-review">
+          ¿Ya nos compraste? <a href={googleReviewUrl()} target="_blank" rel="noopener noreferrer" data-cta="nosotros_review">Dejanos tu reseña en Google</a>. Nos ayuda a que más gente nos encuentre.
+        </p>
       </section>
 
       <section className="gallery-section section-fade" aria-label="Galería de trabajos">
