@@ -4,8 +4,8 @@
  * Los consumen el JSON-LD (lib/schema.js), el footer, Contacto, Nosotros,
  * las FAQ y el llms.txt que genera scripts/prerender.js. Todo lo que hay acá
  * ya figuraba en el sitio (footer, contacto, envíos, mapa); no se agregó
- * ningún dato nuevo. Lo que NO se sabe o no se publica (CUIT, redes sociales,
- * año exacto de fundación, precios, perfiles de Google/Bing) no está: no se inventa.
+ * ningún dato nuevo. Lo que NO se sabe o no se publica (CUIT, Facebook,
+ * año exacto de fundación, precios, perfil de Bing) no está: no se inventa.
  *
  * Los imports llevan extensión .js porque scripts/prerender.js carga este
  * archivo directo con Node.
@@ -54,6 +54,11 @@ export const BUSINESS = {
    */
   googleMapsCid: '6067470338014507676',
   googlePlaceId: 'ChIJK5VczqO3vJURnPKSJiD8M1Q',
+  /**
+   * Cuenta oficial de Instagram del taller (verificada el 1/11/2026: "Taller Kappa", mismo
+   * WhatsApp, y su bio enlaza a tallerkappa.com.ar). Va en el footer y en schema `sameAs`.
+   */
+  instagram: { handle: '@tallerkappa', url: 'https://www.instagram.com/tallerkappa/' },
   /** Horario de atención del local (showroom y retiro, ambos con coordinación previa). */
   hours: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00', label: 'lunes a viernes de 9 a 18 hs' },
   /** Showroom en la misma dirección. Las visitas requieren turno (WhatsApp o teléfono). */

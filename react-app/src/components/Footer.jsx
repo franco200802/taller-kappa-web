@@ -72,6 +72,7 @@ export default function Footer() {
             <p><Icon name="truck" /> <span>Entregas en San Martín, Capital Federal, Gran Buenos Aires y todo el país. <Link to="/envios/">Zonas y tiempos</Link></span></p>
             <p><Icon name="whatsapp" /> <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a></p>
             <p><Icon name="envelope" /> <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
+            <p><Icon name="instagram" /> <a href={BUSINESS.instagram.url} target="_blank" rel="me noopener noreferrer" aria-label={`Instagram de Taller Kappa: ${BUSINESS.instagram.handle}`}>{BUSINESS.instagram.handle}</a></p>
           </address>
           <div className="footer-nav">
             {FOOTER_LINKS.map((l) => <NavLink key={l.to} to={l.to}>{l.label}</NavLink>)}
