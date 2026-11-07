@@ -31,6 +31,18 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Respaldo con las métricas de Archivo (peso 400, ancho 100%) calculadas sobre Arial: mientras baja la
+   fuente real, el texto ocupa el mismo ancho y alto, así el cambio no mueve el layout. En /sillon-bkf/ el
+   párrafo del hero saltaba con la fuente (CLS 0,32 en Lighthouse móvil, 6/11/2026). */
+@font-face {
+    font-family: 'Archivo Fallback';
+    src: local('Arial'), local('ArialMT'), local('Helvetica Neue'), local('Helvetica');
+    size-adjust: 97.58%;
+    ascent-override: 89.98%;
+    descent-override: 21.52%;
+    line-gap-override: 0%;
+}
+
 /* ---------- 1. Tokens ---------- */
 :root {
     color-scheme: light;
@@ -47,7 +59,7 @@
     --wa:        #1E7F47;  /* WhatsApp, oscurecido para contraste AA con blanco */
     --wa-osc:    #16663A;
 
-    --font: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font: 'Archivo', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
     /* Escala tipográfica (razón 1.25, cuerpo 17px) */
     --t-sm:   0.875rem;
