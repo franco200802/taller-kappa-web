@@ -23,7 +23,7 @@ lo demás es potencial y está marcado como tal.
 | 2 | La FOTOCONMEDIDAS.png (sin trackear en la raíz) muestra medidas **77 x 77 x 102 cm** (y 87, 73); el sitio publica **78 x 70 x 90 cm** | Alta | **Requiere decisión del dueño**: no se tocó ninguna medida |
 | 3 | `max-age=600` en archivos estáticos (Lighthouse `uses-long-cache-ttl`, 2 a 10 recursos por página) | Media | Fuera del código: regla de caché de Cloudflare (`docs/seo/cloudflare-paso-a-paso.md` paso 4) |
 | 4 | SEO 92 en Lighthouse por `Content-Signal` del bloque gestionado de Cloudflare | Baja | Decisión del dueño ya documentada; Google la ignora |
-| 5 | Home: TBT 240 ms, JS sin usar ~91 KiB, LCP 2,6 s (producción, móvil simulado) | Media | Pendiente; sin medir causa raíz en esta pasada |
+| 5 | Home: TBT 240 ms, JS sin usar ~91 KiB, LCP 2,6 s (producción, móvil simulado) | Media | **Investigado (§3b): casi todo es el script de Google Analytics, no el código propio. No se cambió nada.** |
 | 6 | Precio no publicado: sin resultados enriquecidos de producto | Media | Decisión del dueño (`docs/tareas-pendientes.md` §4) |
 | 7 | Perfil de Empresa sin verificar, pocas reseñas, sin fotos reales | Alta | Del dueño (`docs/tareas-pendientes.md` §1, §2, §6) |
 
@@ -44,6 +44,23 @@ Notas de honestidad: sin throttling real el problema no se reproduce en local (C
 reproducción fiel de 0,32 se logró recién con la red simulada. El 0,06 restante es de otro desplazamiento menor
 del mismo párrafo. **No está verificado en producción**: hay que medirlo después del deploy.
 En dispositivos sin Arial/Helvetica (p. ej. Android) el respaldo no aplica y el comportamiento es el de antes.
+
+## 3b. Investigación del JavaScript de la home (sin cambios de código)
+
+Medido con Lighthouse 12 móvil contra producción (`tallerkappa.com.ar/`), 3 corridas con y 3 sin el script de GA bloqueado:
+
+| | TBT | TTI |
+|---|---|---|
+| Con GA (cuando llega a cargarse dentro de la medición) | 110 y 170 ms (y 240 ms en la primera pasada) | 4,4 a 4,6 s |
+| Sin GA | 10 a 30 ms | 2,6 a 3,0 s |
+
+- Los "91 KiB sin usar" son 70 KiB del `gtag.js` de Google (169 KiB en total) y 21 KiB del bundle propio (`index-*.js`, React + router + helmet).
+- `gtag.js` ejecuta ~350 ms de scripting (CPU simulada x4). Se descarga 3 s después del `load` o en la primera interacción (`lib/analytics.js`), por eso a veces cae dentro de la ventana de medición y otras no (1 de 3 corridas no lo cargó): el TBT alto es un efecto de la medición de laboratorio, no un valor fijo.
+- El bundle propio hace ~156 ms de scripting en la misma simulación. Firebase (440 KiB) y el inglés (97 KiB) **no se descargan** en la home.
+- Cloudflare inyecta su propio `beacon.min.js` (10 KiB, ~50 ms): es analítica web de Cloudflare, aparte de GA4.
+- **No hay datos de campo (CrUX)**: no se sabe si usuarios reales lo notan. La corrida local no reproduce el problema (la página termina antes de los 3 s).
+
+Opciones (decisión del dueño, ninguna implementada): (a) dejar todo igual; (b) cargar GA solo en la primera interacción, lo que baja el TBT de laboratorio pero pierde las visitas que se van sin tocar nada; (c) apagar Cloudflare Web Analytics si no se usa.
 
 ## 4. Tests ejecutados
 
