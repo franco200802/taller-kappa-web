@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import { trackEvent } from '../lib/analytics';
-import { loadFireDB } from '../lib/firebaseConfig';
+import { isFirebaseConfigured, loadFireDB } from '../lib/firebaseConfig';
 import { whatsappUrl, WHATSAPP_DISPLAY, CONTACT_EMAIL } from '../data/contact';
 import { BUSINESS, addressLine, googleProfileUrl, googleReviewUrl } from '../data/business';
 import { ORG_ID } from '../lib/schema';
@@ -88,6 +88,7 @@ export default function Contacto() {
           </div>
           <div className="form-submit">
             <button type="submit" className="btn-main"><Icon name="whatsapp" /> Enviar por WhatsApp</button>
+            {isFirebaseConfigured && <small className="form-hint">Al enviarlo guardamos una copia del mensaje para poder responderte.</small>}
           </div>
         </form>
         <aside className="contact-aside" aria-label="Datos de contacto">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
@@ -8,10 +8,7 @@ import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
 import { CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
 import { whatsappUrl, whatsappUrlFor } from '../data/contact';
-import { loadFireDB } from '../lib/firebaseConfig';
 import { itemListNode } from '../lib/schema';
-
-const FALLBACK_PRODUCTS = PRODUCTS;
 
 const MATERIALS = [
   { color: '#1a1a1a', title: 'Hierro macizo', desc: 'Varilla redonda de 12 mm, sin costuras ni rellenos. Indeformable ante el uso intensivo.' },
@@ -58,23 +55,16 @@ function ProductCard({ p, onOpen }) {
 
 export default function Catalogo() {
   const { addToCart } = useCart();
-  const [products, setProducts] = useState(FALLBACK_PRODUCTS);
+  // El catálogo sale de data/products.js, la misma fuente del HTML prerenderizado, el sitemap y el
+  // JSON-LD. Antes, si Firestore tenía una colección `productos`, la página la descargaba al cargar y
+  // reemplazaba lo que el visitante (y Google) ya habían recibido.
+  const products = PRODUCTS;
   const [filter, setFilter] = useState('all');
   // El producto queda cargado al cerrar el modal: así el contenido no
   // desaparece mientras corre la animación de salida.
   const [modalProduct, setModalProduct] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalColor, setModalColor] = useState('Negro Mate');
-
-  useEffect(() => {
-    let cancelled = false;
-    // loadFireDB solo descarga el chunk de Firebase (~105kB gzip) si hay
-    // credenciales reales; si no, se queda con los productos locales.
-    loadFireDB().then((db) => db.getProducts())
-      .then((data) => { if (!cancelled && data.length) setProducts(data); })
-      .catch(() => { /* se queda con el fallback */ });
-    return () => { cancelled = true; };
-  }, []);
 
   const openModal = (p) => {
     setModalColor('Negro Mate');

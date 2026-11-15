@@ -862,4 +862,6 @@ export default {
   "Visitar el showroom": "Visit the showroom",
   "Con la zona podemos incluir el envío en el presupuesto.": "With the area we can include shipping in the quote.",
   "Contanos qué necesitás: producto, cantidad y color.": "Tell us what you need: product, quantity and color.",
+  "Al enviarlo guardamos una copia del pedido para poder responderte.": "When you send it we keep a copy of the request so we can reply.",
+  "Al enviarlo guardamos una copia del mensaje para poder responderte.": "When you send it we keep a copy of the message so we can reply.",
 };

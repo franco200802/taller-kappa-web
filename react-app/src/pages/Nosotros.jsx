@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Icon from '../components/Icon';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
-import { loadFireDB } from '../lib/firebaseConfig';
 import { PRODUCTS, productHref } from '../data/products';
 import { BUSINESS, addressLine, googleReviewUrl } from '../data/business';
 import { CONTACT_EMAIL, whatsappUrl } from '../data/contact';
@@ -39,15 +38,8 @@ const GALLERY = [
 ];
 
 export default function Nosotros() {
-  const [testimonios, setTestimonios] = useState(FALLBACK_TESTIMONIOS);
+  const testimonios = FALLBACK_TESTIMONIOS;
   const [lightbox, setLightbox] = useState(null);
-
-  useEffect(() => {
-    loadFireDB()
-      .then((db) => db.getTestimonios())
-      .then((data) => { if (data.length) setTestimonios(data); })
-      .catch(() => {});
-  }, []);
 
   const shiftLightbox = (dir) => {
     setLightbox((i) => (i === null ? i : (i + dir + GALLERY.length) % GALLERY.length));

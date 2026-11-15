@@ -1,120 +1,130 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { isFirebaseConfigured } from '../lib/firebaseConfig';
+import { firebaseConfig, isFirebaseConfigured, useEmulators } from '../lib/firebaseConfig';
+import { COLLECTIONS } from '../lib/leads';
 import Seo from '../components/Seo';
+import AdminLogin from './admin/AdminLogin';
+import { authError } from './admin/authErrors';
+import AdminLeads from './admin/AdminLeads';
+import AdminProducts from './admin/AdminProducts';
 
 /**
- * /admin — panel interno (no se prerenderiza ni se indexa).
+ * /admin — panel interno (no se prerenderiza ni se indexa; robots.txt lo excluye).
  *
- * - Mientras lib/firebaseConfig.js tenga credenciales de ejemplo, el panel lo DICE y no
- *   descarga el SDK ni muestra un login: antes aparecía el formulario y cualquier intento
- *   terminaba en "Usuario o contraseña incorrectos", que era falso (no había proyecto).
- * - El SDK (firebase/auth + firestore, ~105 kB gzip) se importa recién acá, de forma dinámica.
- * - Los errores de login distinguen credenciales incorrectas de red, bloqueo o configuración.
- * - Con sesión iniciada muestra las consultas del formulario de contacto (colección
- *   `contactos`) y permite marcarlas como leídas. Las reglas (firestore.rules) solo dejan
- *   leerlas a la cuenta administradora con el email verificado.
+ * - Sin credenciales de Firebase lo DICE y no descarga el SDK ni muestra un login.
+ * - El SDK (auth + Firestore Lite) se importa recién acá, de forma dinámica.
+ * - Con sesión: consultas del formulario y presupuestos enviados (búsqueda, estados, nota
+ *   interna, detalle, borrado, exportación) y la lista de productos en solo lectura.
+ * - La seguridad NO depende de este código: la deciden las reglas (firestore.rules), que
+ *   solo dejan leer a la cuenta administradora con el email verificado. Si alguien llega a
+ *   esta pantalla con otra cuenta, las listas responden "sin permiso".
  *
- * Pasos para ponerlo en marcha: docs/firebase-puesta-en-marcha.md.
+ * Puesta en marcha: docs/firebase-puesta-en-marcha.md. Pruebas: tests/e2e/admin.e2e.mjs.
  */
 
-const LOGIN_ERRORS = {
-  'auth/invalid-credential': 'Usuario o contraseña incorrectos.',
-  'auth/wrong-password': 'Usuario o contraseña incorrectos.',
-  'auth/user-not-found': 'Usuario o contraseña incorrectos.',
-  'auth/invalid-email': 'El email no tiene un formato válido.',
-  'auth/user-disabled': 'Esta cuenta está deshabilitada.',
-  'auth/too-many-requests': 'Demasiados intentos. Esperá unos minutos y volvé a probar.',
-  'auth/network-request-failed': 'No hay conexión con Firebase. Revisá tu conexión a internet.',
-  'auth/operation-not-allowed': 'El acceso con email y contraseña no está habilitado en el proyecto de Firebase.',
-  'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'La clave de Firebase (apiKey) no es válida. Revisá lib/firebaseConfig.js.',
-};
+const kindLabel = { particular: 'Particular', empresa: 'Local o empresa' };
 
-const loginError = (err) => LOGIN_ERRORS[err?.code] ?? `No se pudo iniciar sesión (${err?.code ?? 'error desconocido'}).`;
-
-const dataError = (err) => (err?.code === 'permission-denied'
-  ? 'Esta cuenta no tiene permiso para leer las consultas. Tiene que ser la cuenta administradora y tener el email verificado.'
-  : `No se pudieron cargar las consultas (${err?.code ?? 'error desconocido'}).`);
-
-const formatDate = (ts) => {
-  const date = ts?.toDate?.();
-  return date ? date.toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' }) : 'Sin fecha';
-};
+const VIEWS = [
+  {
+    key: 'consultas', tab: 'Consultas', collection: COLLECTIONS.contactos,
+    noun: 'consultas', singular: 'la consulta',
+    searchHint: 'Nombre, zona o texto del mensaje',
+    empty: 'Todavía no llegó ninguna consulta por el formulario de contacto.',
+    title: (i) => i.name || 'Sin nombre',
+    snippet: (i) => [i.interest, i.message].filter(Boolean).join(' · '),
+    fields: [
+      { label: 'Nombre', value: (i) => i.name },
+      { label: 'Le interesa', value: (i) => i.interest },
+      { label: 'Zona de entrega', value: (i) => i.zone },
+      { label: 'Mensaje', value: (i) => i.message, long: true },
+    ],
+  },
+  {
+    key: 'presupuestos', tab: 'Presupuestos', collection: COLLECTIONS.presupuestos,
+    noun: 'presupuestos', singular: 'el presupuesto',
+    searchHint: 'Nombre, zona o producto',
+    empty: 'Todavía no se envió ningún presupuesto desde el sitio.',
+    title: (i) => i.name || 'Sin nombre',
+    snippet: (i) => `${i.totalQty} ${i.totalQty === 1 ? 'unidad' : 'unidades'} · ${String(i.detalle ?? '').replace(/\n/g, ' · ')}`,
+    fields: [
+      { label: 'Nombre', value: (i) => i.name },
+      { label: 'Es para', value: (i) => kindLabel[i.kind] ?? '' },
+      { label: 'Zona de entrega', value: (i) => i.zone },
+      { label: 'Unidades', value: (i) => String(i.totalQty ?? '') },
+      { label: 'Pedido', value: (i) => i.detalle, long: true },
+    ],
+  },
+];
 
 const SEO = <Seo title="Admin | Taller Kappa" description="Panel de administración interno." path="/admin" noindex />;
 
+function Shell({ wide, children }) {
+  return (
+    <section className={`section-padding admin-panel${wide ? ' admin-panel--wide' : ''}`} translate="no">
+      {SEO}
+      {children}
+    </section>
+  );
+}
+
 function NotConfigured() {
   return (
-    <section className="section-padding admin-panel" translate="no">
-      {SEO}
+    <Shell>
       <h1>Panel de administración</h1>
       <p className="admin-notice" role="status">
         <strong>Firebase todavía no está configurado.</strong> El panel no puede iniciar sesión ni leer consultas hasta que
-        se carguen las credenciales del proyecto en <code>react-app/src/lib/firebaseConfig.js</code>.
+        se carguen los datos del proyecto (variables <code>VITE_FIREBASE_*</code>).
       </p>
       <p>
         Mientras tanto el sitio público funciona igual: los productos salen del código y las consultas llegan por WhatsApp.
-        Lo único que no se guarda es la copia de cada mensaje del formulario de contacto.
+        Lo único que no se guarda es la copia de los mensajes del formulario y de los presupuestos.
       </p>
       <p>Los pasos están en <code>docs/firebase-puesta-en-marcha.md</code>.</p>
-    </section>
+    </Shell>
   );
 }
 
-function LoginForm({ sdk }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+/** Aviso mientras la cuenta no verificó el email: las reglas no la dejan leer nada. */
+function VerifyEmail({ sdk, user, onVerified }) {
+  const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (busy || !sdk.current) return; // evita el doble envío
-    setError('');
-    setBusy(true);
-    try { await sdk.current.authApi.signInWithEmailAndPassword(sdk.current.auth, email.trim(), password); }
-    catch (err) { setError(loginError(err)); }
+  const run = async (action) => {
+    if (busy) return;
+    setBusy(true); setMessage('');
+    try { await action(); }
+    catch (err) { setMessage(authError(err)); }
     finally { setBusy(false); }
   };
+  const send = () => run(async () => {
+    await sdk.authApi.sendEmailVerification(user);
+    setMessage(`Te enviamos un email a ${user.email}. Abrí el enlace y después tocá "Ya lo verifiqué".`);
+  });
+  const recheck = () => run(async () => {
+    await user.reload();
+    if (!user.emailVerified) { setMessage('El email todavía figura sin verificar.'); return; }
+    await user.getIdToken(true); // las reglas leen email_verified del token: hay que renovarlo
+    onVerified();
+  });
 
   return (
-    <section className="section-padding admin-panel" translate="no">
-      {SEO}
-      <h1>Panel de administración</h1>
-      <form onSubmit={handleLogin} className="admin-form">
-        <label htmlFor="admin-email">Email</label>
-        <input id="admin-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <label htmlFor="admin-password">Contraseña</label>
-        <input id="admin-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit" className="btn-main" disabled={busy}>{busy ? 'Ingresando…' : 'Ingresar'}</button>
-        {error && <p role="alert" className="admin-error">{error}</p>}
-      </form>
-    </section>
-  );
-}
-
-function ContactList({ contactos, onRead }) {
-  return (
-    <ul className="admin-list">
-      {contactos.map((c) => (
-        <li key={c.id} className={c.leido ? 'is-read' : undefined}>
-          <p className="admin-list-meta">
-            <strong>{c.name}</strong> · {formatDate(c.createdAt)}
-            {c.interest ? ` · ${c.interest}` : ''}{c.zone ? ` · ${c.zone}` : ''}
-          </p>
-          <p>{c.message}</p>
-          {!c.leido && <button className="btn-detail" onClick={() => onRead(c.id)}>Marcar como leída</button>}
-        </li>
-      ))}
-    </ul>
+    <div className="admin-notice" role="status">
+      <p><strong>Falta verificar el email de esta cuenta.</strong> Hasta entonces las reglas de seguridad no dejan leer las consultas.</p>
+      <div className="admin-dialog-actions">
+        <button type="button" className="btn-main" disabled={busy} onClick={send}>Enviar email de verificación</button>
+        <button type="button" className="btn-outline" disabled={busy} onClick={recheck}>Ya lo verifiqué</button>
+      </div>
+      {message && <p>{message}</p>}
+    </div>
   );
 }
 
 export default function Admin() {
   // null = todavía no se sabe (se está cargando el SDK o resolviendo la sesión); false = sin sesión.
   const [user, setUser] = useState(null);
+  const [verified, setVerified] = useState(false);
   const [sdkError, setSdkError] = useState('');
-  const [contactos, setContactos] = useState(null);
-  const [loadError, setLoadError] = useState('');
+  const [tab, setTab] = useState(VIEWS[0].key);
+  const [news, setNews] = useState({});
   const sdk = useRef(null);
 
   useEffect(() => {
@@ -124,59 +134,60 @@ export default function Admin() {
     Promise.all([import('firebase/auth'), import('../lib/firebase'), import('../lib/firedb')])
       .then(([authApi, { auth }, { FireDB }]) => {
         if (cancelled) return;
-        sdk.current = { authApi, auth, FireDB };
-        unsubscribe = authApi.onAuthStateChanged(auth, (u) => setUser(u ?? false));
+        sdk.current = { authApi, auth, db: FireDB };
+        unsubscribe = authApi.onAuthStateChanged(auth, (u) => { setUser(u ?? false); setVerified(!!u?.emailVerified); });
       })
       .catch(() => { if (!cancelled) setSdkError('No se pudo cargar Firebase. Revisá tu conexión y recargá la página.'); });
     return () => { cancelled = true; unsubscribe?.(); };
   }, []);
 
-  const loadContactos = useCallback(() => {
-    setLoadError('');
-    sdk.current.FireDB.getContactos()
-      .then(setContactos)
-      .catch((err) => { setContactos([]); setLoadError(dataError(err)); });
-  }, []);
-
-  useEffect(() => { if (user) loadContactos(); else setContactos(null); }, [user, loadContactos]);
-
-  const markRead = async (id) => {
-    try {
-      await sdk.current.FireDB.markContactoLeido(id);
-      setContactos((list) => list.map((c) => (c.id === id ? { ...c, leido: true } : c)));
-    } catch (err) { setLoadError(`No se pudo marcar como leída (${err?.code ?? 'error'}).`); }
-  };
+  const onCount = useCallback((key, count) => setNews((prev) => (prev[key] === count ? prev : { ...prev, [key]: count })), []);
 
   if (!isFirebaseConfigured) return <NotConfigured />;
 
   if (sdkError || user === null) {
-    return (
-      <section className="section-padding admin-panel" translate="no">
-        {SEO}
-        <h1>Panel de administración</h1>
-        <p role="status">{sdkError || 'Cargando…'}</p>
-      </section>
-    );
+    return <Shell><h1>Panel de administración</h1><p role="status">{sdkError || 'Cargando…'}</p></Shell>;
   }
 
-  if (!user) return <LoginForm sdk={sdk} />;
+  if (!user) {
+    return <Shell><h1>Panel de administración</h1><AdminLogin sdk={sdk.current} /></Shell>;
+  }
 
-  const unread = contactos?.filter((c) => !c.leido).length ?? 0;
+  const tabs = [...VIEWS.map((v) => ({ key: v.key, label: v.tab, badge: news[v.key] })), { key: 'productos', label: 'Productos' }];
 
   return (
-    <section className="section-padding admin-panel admin-panel--wide" translate="no">
-      {SEO}
-      <div className="section-head">
-        <h1>Panel de administración</h1>
-        <button className="btn-outline" onClick={() => sdk.current.authApi.signOut(sdk.current.auth)}>Cerrar sesión</button>
+    <Shell wide>
+      <div className="section-head admin-head">
+        <div>
+          <h1>Panel de administración</h1>
+          <p className="admin-session">
+            {user.email} · proyecto {firebaseConfig.projectId}{useEmulators ? ' (emulador de pruebas)' : ''}
+          </p>
+        </div>
+        <button type="button" className="btn-outline" onClick={() => sdk.current.authApi.signOut(sdk.current.auth)}>Cerrar sesión</button>
       </div>
-      <p>Sesión: {user.email}{user.emailVerified ? '' : ' (email sin verificar: las reglas no dejan leer datos hasta verificarlo)'}</p>
 
-      <h2>Consultas del formulario{contactos ? ` (${contactos.length}, ${unread} sin leer)` : ''}</h2>
-      {loadError && <p role="alert" className="admin-error">{loadError}</p>}
-      {contactos === null && <p role="status">Cargando consultas…</p>}
-      {contactos?.length === 0 && !loadError && <p>Todavía no hay consultas guardadas.</p>}
-      {contactos?.length > 0 && <ContactList contactos={contactos} onRead={markRead} />}
-    </section>
+      {!verified && <VerifyEmail sdk={sdk.current} user={user} onVerified={() => setVerified(true)} />}
+
+      <div className="admin-tabs" role="tablist" aria-label="Secciones del panel">
+        {tabs.map((t) => (
+          <button key={t.key} type="button" role="tab" id={`tab-${t.key}`} aria-selected={tab === t.key} aria-controls="admin-tabpanel"
+            className={`admin-tab${tab === t.key ? ' active' : ''}`} onClick={() => setTab(t.key)}>
+            {t.label}{t.badge > 0 && <span className="admin-badge" aria-label={`${t.badge} sin atender`}>{t.badge}</span>}
+          </button>
+        ))}
+      </div>
+
+      <div id="admin-tabpanel" role="tabpanel" aria-labelledby={`tab-${tab}`}>
+        {/* Las dos listas quedan montadas (la que no se ve, oculta): así las pestañas muestran cuántas hay
+            sin atender desde el principio y cada una conserva su búsqueda. Sin email verificado no se pide nada. */}
+        {verified && VIEWS.map((v) => (
+          <div key={v.key} hidden={tab !== v.key}>
+            <AdminLeads view={v} db={sdk.current.db} onCount={onCount} />
+          </div>
+        ))}
+        {tab === 'productos' && <AdminProducts />}
+      </div>
+    </Shell>
   );
 }

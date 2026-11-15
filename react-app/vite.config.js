@@ -16,6 +16,12 @@ export default defineConfig(({ isSsrBuild }) => ({
   // no coinciden y React descarta el HTML de toda la página al hidratar.
   define: { __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()) },
   base: '/', // GitHub Pages con dominio custom (CNAME) usa raíz
+  // El SDK de Firebase 13 usa literales BigInt, que no existen en es2018. En vez de subir el
+  // target de TODO el sitio (dejaría de transpilar `?.` y `??` para navegadores viejos), se le
+  // dice a esbuild que deje pasar solo BigInt. Ese código vive en el chunk de Firebase, que se
+  // descarga únicamente en /admin y al guardar la copia de una consulta: un navegador sin
+  // BigInt (Safari < 14) navega el sitio y abre WhatsApp igual; solo no guarda la copia.
+  esbuild: { supported: { bigint: true } },
   build: {
     target: 'es2018',
     sourcemap: false,
@@ -25,7 +31,7 @@ export default defineConfig(({ isSsrBuild }) => ({
       : {
           output: {
             manualChunks: {
-              firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth'],
+              firebase: ['firebase/app', 'firebase/firestore/lite', 'firebase/auth'],
             },
           },
         },

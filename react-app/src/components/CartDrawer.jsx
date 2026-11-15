@@ -6,6 +6,7 @@ import { BUSINESS } from '../data/business';
 import Picture from './Picture';
 import Modal from './Modal';
 import { trackEvent } from '../lib/analytics';
+import { isFirebaseConfigured } from '../lib/firebaseConfig';
 import { useLang } from '../i18n/LangContext';
 
 // Los nombres pueden venir de Firestore: se escapan antes de interpolarlos
@@ -13,7 +14,7 @@ import { useLang } from '../i18n/LangContext';
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 export default function CartDrawer() {
-  const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast, quote, setQuote } = useCart();
+  const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast, quote, setQuote, saveQuote } = useCart();
   const { lang, t } = useLang();
 
   const printBudget = () => {
@@ -105,7 +106,7 @@ export default function CartDrawer() {
                 target="_blank" rel="noopener noreferrer"
                 // whatsapp_click lo envía trackClicks (con estos data-*); whatsapp_checkout suma el detalle del presupuesto.
                 data-cta="presupuesto" data-item={cart.map((i) => i.product.name).join(', ')}
-                onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0), customer_type: quote.kind || '(sin especificar)', has_zone: quote.zone.trim() ? 'si' : 'no' })}
+                onClick={() => { saveQuote(); trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0), customer_type: quote.kind || '(sin especificar)', has_zone: quote.zone.trim() ? 'si' : 'no' }); }}
               >
                 <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
               </a>
@@ -115,6 +116,8 @@ export default function CartDrawer() {
             </>
           )}
           <p className="cart-hint">En el sitio no se paga nada: te respondemos con el presupuesto por WhatsApp.</p>
+          {/* Solo se muestra si de verdad se guarda (constante de compilación: igual en el prerender y en el cliente). */}
+          {isFirebaseConfigured && cart.length > 0 && <p className="cart-hint">Al enviarlo guardamos una copia del pedido para poder responderte.</p>}
         </div>
       </div>
     </Modal>
