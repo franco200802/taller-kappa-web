@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
-import { whatsappUrl } from '../data/contact';
+import { B2B_QUOTE_MESSAGE, whatsappUrl } from '../data/contact';
 import { ORG_ID } from '../lib/schema';
 
 const PROJECTS = [
@@ -86,8 +86,8 @@ export default function Proyectos() {
         <div className="cta-box">
           <h2>¿Querés equipar tu local o empresa?</h2>
           <p>Trabajamos con franquicias, restaurantes, bares, hoteles y oficinas. Pedí tu cotización sin compromiso.</p>
-          <div className="cta-btns">
-            <a href={whatsappUrl('Hola, soy de una empresa y necesito cotización para equipamiento.')}
+          <div className="cta-btns" data-cta="proyectos_cta_final">
+            <a href={whatsappUrl(B2B_QUOTE_MESSAGE)}
               target="_blank" rel="noopener noreferrer" className="btn-main">
               <Icon name="whatsapp" /> Cotizar por WhatsApp
             </a>

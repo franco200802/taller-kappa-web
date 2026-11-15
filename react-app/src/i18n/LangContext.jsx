@@ -35,7 +35,7 @@ export function LangProvider({ children }) {
       const fromUrl = new URLSearchParams(window.location.search).get('lang');
       wanted.current = fromUrl === 'en' || fromUrl === 'es' ? fromUrl : localStorage.getItem(STORAGE_KEY);
       // El diccionario se baja ya, en paralelo con la hidratación, para que el cambio sea inmediato.
-      if (wanted.current === 'en') import('./en').then((m) => setDict(m.default));
+      if (wanted.current === 'en') import('./en').then((m) => setDict(m.default)).catch(() => { /* sin red: el efecto de abajo lo reintenta y, si falla, vuelve a español */ });
     } catch { /* storage bloqueado: se queda en español */ }
   }, []);
   useEffect(() => {
@@ -45,7 +45,9 @@ export function LangProvider({ children }) {
 
   useEffect(() => {
     if (lang !== 'en' || dict) return;
-    import('./en').then((m) => setDict(m.default));
+    // Si el diccionario no baja (sin conexión, o un deploy cambió el nombre del archivo), se vuelve a español:
+    // antes el botón quedaba marcado en inglés con la página en español y una promesa rechazada sin atender.
+    import('./en').then((m) => setDict(m.default)).catch(() => setLangState('es'));
   }, [lang, dict]);
 
   // El español vuelve al lang original del HTML (es-AR), no a un 'es' genérico.

@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Seo from '../components/Seo';
 import { faqNode } from '../lib/schema';
 import PageHero from '../components/PageHero';
-import { loadFireDB } from '../lib/firebaseConfig';
 import { FAQS as FALLBACK_FAQS } from '../data/faq';
 
 function FaqItem({ f }) {
@@ -22,14 +21,7 @@ function FaqItem({ f }) {
 }
 
 export default function FAQ() {
-  const [faqs, setFaqs] = useState(FALLBACK_FAQS);
-
-  useEffect(() => {
-    loadFireDB()
-      .then((db) => db.getFAQs())
-      .then((data) => { if (data.length) setFaqs(data); })
-      .catch(() => {});
-  }, []);
+  const faqs = FALLBACK_FAQS;
 
   return (
     <>

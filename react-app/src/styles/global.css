@@ -31,6 +31,18 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Respaldo con las métricas de Archivo (peso 400, ancho 100%) calculadas sobre Arial: mientras baja la
+   fuente real, el texto ocupa el mismo ancho y alto, así el cambio no mueve el layout. En /sillon-bkf/ el
+   párrafo del hero saltaba con la fuente (CLS 0,32 en Lighthouse móvil, 6/11/2026). */
+@font-face {
+    font-family: 'Archivo Fallback';
+    src: local('Arial'), local('ArialMT'), local('Helvetica Neue'), local('Helvetica');
+    size-adjust: 97.58%;
+    ascent-override: 89.98%;
+    descent-override: 21.52%;
+    line-gap-override: 0%;
+}
+
 /* ---------- 1. Tokens ---------- */
 :root {
     color-scheme: light;
@@ -47,7 +59,7 @@
     --wa:        #1E7F47;  /* WhatsApp, oscurecido para contraste AA con blanco */
     --wa-osc:    #16663A;
 
-    --font: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font: 'Archivo', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
     /* Escala tipográfica (razón 1.25, cuerpo 17px) */
     --t-sm:   0.875rem;
@@ -363,7 +375,7 @@ p a:hover, li a:hover { color: var(--kappa); }
     font-size: var(--t-sm); font-weight: 600; font-stretch: 85%; padding: 6px 12px;
 }
 .stock-indicator {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px;
     color: var(--grafito); font-size: var(--t-sm);
 }
 .stock-dot-small, .stock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wa); display: inline-block; }
@@ -986,3 +998,173 @@ address { font-style: normal; }
 }
 .lang-toggle:hover { background: rgba(27, 28, 30, 0.06); }
 .lang-toggle i { font-size: 1.05rem; }
+
+/* ---------- 21. Home y landing del sillón (noviembre 2026) ---------- */
+
+/* Datos cortos bajo los botones del hero: cada uno con su tramo de varilla. */
+.hero-facts { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: 8px 28px; padding-top: 16px; border-top: 1px solid var(--linea); font-size: var(--t-sm); font-weight: 600; font-stretch: 88%; line-height: 1.3; }
+.hero-facts li { display: flex; align-items: baseline; gap: 8px; }
+.hero-facts li::before { content: ''; width: 12px; height: 2px; background: var(--kappa); flex-shrink: 0; transform: translateY(-4px); }
+@media (max-width: 400px) { .hero-facts { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: no-preference) {
+    .home-hero-text > :nth-child(5) { animation-delay: .32s; }
+    .home-hero-text > :nth-child(6) { animation-delay: .4s; }
+}
+
+/* Tarjetas de producto de la home: rótulo sobre la foto y "Ver ficha" con flecha. */
+.home-product-img { position: relative; }
+.home-product-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: var(--t-sm); font-weight: 650; color: var(--hierro); }
+.home-product-more .icon { font-size: .7em; transition: transform .3s var(--ease); }
+@media (hover: hover) {
+    .home-product a:hover .home-product-img img { transform: scale(1.03); }
+    .home-product a:hover .home-product-more .icon { transform: translateX(4px); }
+}
+
+/* Foto real del sillón: media pantalla de foto, media de datos (la composición del hero, espejada). */
+.home-feature { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); min-height: 640px; background: var(--blanco); border-block: 1px solid var(--linea); }
+.home-feature-media { position: relative; overflow: hidden; background: var(--cal); }
+.home-feature-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; }
+.home-feature-media figcaption, .bkf-gallery-main figcaption {
+    position: absolute; left: 0; bottom: 0;
+    background: var(--hierro); color: var(--blanco);
+    font-size: var(--t-sm); font-weight: 600; font-stretch: 85%; padding: 6px 12px;
+}
+.home-feature-text { display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: var(--sec) var(--pad-x) var(--sec) clamp(32px, 5vw, 72px); }
+.home-feature-text .section-title { margin-bottom: 0; }
+.home-feature-text > p { color: var(--grafito); font-size: var(--t-md); max-width: 44ch; }
+.home-feature-text .cta-btns { margin-top: 4px; }
+@media (max-width: 860px) {
+    .home-feature { grid-template-columns: 1fr; min-height: 0; }
+    .home-feature-media { aspect-ratio: 4 / 5; max-height: 78svh; }
+    .home-feature-text { padding: 40px var(--gutter) 56px; }
+}
+
+/* Cómo funciona: los pasos como tres columnas con el número grande. */
+.how-head p { color: var(--grafito); font-size: var(--t-md); }
+.buy-steps--cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin: 36px 0 0; }
+.buy-steps--cards li { padding: 68px 0 0; border-top: 2px solid var(--hierro); color: var(--grafito); }
+.buy-steps--cards li::before {
+    content: counter(paso, decimal-leading-zero);
+    top: 14px; width: auto; height: auto; border: 0; border-radius: 0; display: block;
+    font-size: 2.75rem; font-stretch: 62%; font-weight: 850; line-height: 1; color: var(--hierro);
+}
+.buy-steps--cards strong { display: block; margin-bottom: 6px; color: var(--hierro); font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; }
+.how-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 48px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--linea); }
+.how-notes p { color: var(--grafito); }
+@media (max-width: 760px) {
+    .buy-steps--cards { grid-template-columns: 1fr; gap: 24px; }
+    .how-notes { grid-template-columns: 1fr; }
+}
+
+/* "Para elegir y pedir": tres columnas en vez de tres párrafos apilados. */
+.home-links-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin-top: 20px; }
+.home-links-grid p { margin: 0; padding-top: 16px; border-top: 2px solid var(--hierro); }
+.home-links-grid strong { display: block; margin-bottom: 6px; color: var(--hierro); font-size: var(--t-md); font-stretch: 85%; font-weight: 700; line-height: 1.2; }
+@media (max-width: 860px) { .home-links-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+/* Galería de la landing del sillón: foto principal + miniaturas. */
+.bkf-gallery-main { position: relative; overflow: hidden; border-radius: var(--r); background: var(--blanco); }
+.bkf-img-col .bkf-gallery-main img { border-radius: 0; aspect-ratio: 1; }
+.bkf-gallery-thumbs { display: flex; gap: 10px; margin-top: 10px; }
+.bkf-gallery-thumb { width: 88px; padding: 0; border: 2px solid transparent; border-radius: var(--r); background: none; overflow: hidden; opacity: .75; transition: opacity .2s, border-color .2s; }
+.bkf-gallery-thumb:hover { opacity: 1; }
+.bkf-gallery-thumb.active { border-color: var(--hierro); opacity: 1; }
+.bkf-img-col .bkf-gallery-thumb img { aspect-ratio: 1; border-radius: 0; object-position: 50% 70%; }
+/* En desktop la foto acompaña mientras se lee la ficha, que es más alta. */
+@media (min-width: 861px) {
+    .bkf-product-section .bkf-img-col { position: sticky; top: calc(var(--nav-h) + 24px); }
+}
+
+/* Preguntas de la landing como acordeón nativo (<details>): 14 respuestas abiertas eran una pared de texto. */
+details.bkf-faq-item { padding: 0; }
+details.bkf-faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; min-height: 56px; cursor: pointer; list-style: none; }
+details.bkf-faq-item summary::-webkit-details-marker { display: none; }
+details.bkf-faq-item summary h3 { margin: 0; }
+details.bkf-faq-item summary:hover h3 { color: var(--grafito); }
+details.bkf-faq-item[open] .faq-icon-right { transform: rotate(180deg); }
+details.bkf-faq-item > p { padding-bottom: 20px; }
+details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margin-bottom: 24px; }
+
+/* El logo medía 38 px de alto: se lleva a los 44 px del resto de los controles táctiles. */
+.logo { display: inline-flex; align-items: center; gap: .25em; min-height: 44px; }
+
+/* Botón del presupuesto en la barra: en desktop lleva el nombre al lado del ícono. */
+.cart-label { display: none; }
+@media (min-width: 1180px) {
+    .cart-icon-container { width: auto; gap: 8px; padding: 0 14px 0 12px; border: 1.5px solid var(--linea); font-size: 0.9rem; font-weight: 650; }
+    .cart-icon-container:hover { border-color: var(--hierro); }
+    .cart-label { display: inline; }
+    .cart-badge { top: -8px; right: -8px; }
+}
+
+/* Presupuesto y contacto: el selector "¿Para quién es?" igual que los campos de texto, y la ayuda bajo un campo. */
+.cart-contact select { min-height: 44px; padding: 0 12px; border: 1.5px solid var(--linea); border-radius: var(--r); background: var(--blanco); }
+.cart-contact select:focus-visible { outline: 2px solid var(--kappa); outline-offset: 2px; border-color: var(--hierro); }
+.form-hint { color: var(--grafito); font-size: var(--t-sm); }
+
+/* ---------- 22. Panel de administración (/admin): interno, sin prerender ---------- */
+.admin-panel { max-width: calc(560px + 2 * var(--pad-x)); display: grid; gap: 16px; align-content: start; min-height: 60vh; }
+.admin-panel--wide { max-width: none; }
+.admin-panel h2 { font-size: var(--t-lg); }
+.admin-panel code { font-size: .9em; background: var(--blanco); border: 1px solid var(--linea); border-radius: 4px; padding: 1px 6px; overflow-wrap: anywhere; }
+.admin-notice { display: grid; gap: 12px; padding: 16px 20px; background: var(--blanco); border: 1px solid var(--linea); border-left: 3px solid var(--ocre); border-radius: var(--r); max-width: none; }
+.admin-head { margin-bottom: 0; align-items: start; }
+.admin-session { color: var(--grafito); font-size: var(--t-sm); margin-top: 6px; overflow-wrap: anywhere; }
+.admin-form label { font-weight: 600; font-size: var(--t-sm); margin-bottom: -6px; }
+.admin-panel button:disabled { opacity: .55; cursor: not-allowed; }
+.admin-link { justify-self: start; min-height: 44px; background: none; border: 0; text-decoration: underline; text-decoration-color: var(--kappa); text-underline-offset: 3px; }
+.admin-error { color: var(--kappa-osc); font-weight: 600; }
+.admin-status, .admin-empty { color: var(--grafito); font-size: var(--t-sm); }
+.admin-empty { font-size: var(--t-base); padding: 24px 0; }
+
+/* Pestañas: la activa lleva la varilla roja, como el menú principal. */
+.admin-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--linea); overflow-x: auto; scrollbar-width: none; }
+.admin-tabs::-webkit-scrollbar { display: none; }
+.admin-tab { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px; background: none; border: 0; color: var(--grafito); font-weight: 600; white-space: nowrap; }
+.admin-tab:hover { color: var(--hierro); }
+.admin-tab.active { color: var(--hierro); box-shadow: inset 0 -3px 0 var(--kappa); }
+.admin-badge { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--kappa); color: var(--blanco); font-size: .75rem; font-weight: 700; line-height: 22px; text-align: center; font-variant-numeric: tabular-nums; }
+
+.admin-leads { display: grid; gap: 14px; padding-top: 20px; }
+.admin-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 12px 16px; }
+.admin-search { flex: 1 1 280px; max-width: 520px; }
+.admin-toolbar-actions { display: flex; gap: 8px; }
+.admin-toolbar-actions .btn-detail { background: none; }
+.admin-filters { margin: 0; }
+.admin-count { font-variant-numeric: tabular-nums; opacity: .75; font-weight: 600; }
+
+.admin-list { list-style: none; display: grid; border-top: 2px solid var(--hierro); }
+.admin-list li { border-bottom: 1px solid var(--linea); }
+.admin-row { width: 100%; display: flex; justify-content: space-between; align-items: start; gap: 8px 24px; padding: 14px 8px 14px 14px; background: none; border: 0; border-left: 3px solid transparent; text-align: left; }
+.admin-row:hover { background: var(--blanco); }
+.admin-row.is-nueva { border-left-color: var(--kappa); }
+.admin-row.is-archivada { color: var(--grafito); }
+.admin-row-main { display: grid; gap: 4px; min-width: 0; }
+.admin-row-snippet { color: var(--grafito); font-size: var(--t-sm); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.admin-row-side { display: grid; gap: 6px; justify-items: end; flex-shrink: 0; }
+.admin-row-date { color: var(--grafito); font-size: var(--t-sm); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.admin-pill { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 1.5px solid var(--linea); font-size: var(--t-sm); font-weight: 600; white-space: nowrap; }
+.admin-pill.is-nueva { background: var(--kappa); border-color: var(--kappa); color: var(--blanco); }
+.admin-pill.is-en_curso { border-color: var(--ocre); }
+.admin-pill.is-respondida { border-color: var(--wa); color: var(--wa-osc); }
+@media (max-width: 560px) {
+    .admin-row { flex-direction: column; padding-right: 0; }
+    .admin-row-side { display: flex; align-items: center; justify-items: start; gap: 10px; }
+    .admin-toolbar-actions { width: 100%; }
+    .admin-toolbar-actions .btn-detail { flex: 1; }
+}
+
+/* Detalle: usa el <dialog> de la sección 9; en mobile sube como hoja desde abajo. */
+.admin-dialog { position: relative; width: min(640px, 100%); max-height: calc(100svh - 32px); overflow: auto; display: grid; gap: 18px; padding: 24px; background: var(--blanco); border-radius: 10px; }
+.admin-dialog-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.admin-dialog-head h2 { font-size: var(--t-lg); overflow-wrap: anywhere; }
+.admin-dialog .facts dd { overflow-wrap: anywhere; }
+.admin-long { white-space: pre-wrap; }
+.admin-dialog-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-danger { border-color: var(--kappa-osc); color: var(--kappa-osc); }
+.admin-danger:hover { background: var(--kappa-osc); color: var(--blanco); }
+@media (max-width: 760px) {
+    .admin-dialog { border-radius: 12px 12px 0 0; max-height: 92svh; padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
+    .admin-dialog-actions > * { flex: 1 1 100%; }
+}
+.admin-products { display: grid; gap: 16px; padding-top: 20px; }

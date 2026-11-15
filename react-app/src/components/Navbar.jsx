@@ -62,6 +62,8 @@ export default function Navbar() {
           onClick={() => setIsOpen(true)}
         >
           <Icon name="shopping-bag" style={{ fontSize: '1.2rem' }} />
+          {/* En desktop el ícono solo no decía qué era: acá no hay carrito de compra, hay un presupuesto. */}
+          <span className="cart-label" aria-hidden="true">Presupuesto</span>
           <span className="cart-badge" style={{ opacity: totalItems > 0 ? 1 : 0 }}>{totalItems}</span>
         </button>
         <button

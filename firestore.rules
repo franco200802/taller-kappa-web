@@ -1,62 +1,85 @@
 rules_version = '2';
+
+// Reglas de Firestore de Taller Kappa.
+//
+// El sitio usa dos colecciones (ver react-app/src/lib/firedb.js):
+//   contactos     copia de cada mensaje del formulario de contacto
+//   presupuestos  copia de cada presupuesto enviado por WhatsApp
+// Cualquier visitante puede CREAR un documento con la forma exacta que se valida acá;
+// solo la cuenta administradora puede leerlos, cambiarles el estado o la nota, y borrarlos.
+// Todo lo demás está cerrado para todos.
+//
+// Estas reglas tienen pruebas automatizadas: react-app/tests/rules/ (npm run test:rules).
+// Los largos máximos son los de LIMITS en react-app/src/lib/leads.js: cambiarlos juntos.
+//
+// Publicarlas: `npx firebase-tools deploy --only firestore:rules` o pegarlas en la consola.
+// El deploy de GitHub Pages NO las sube (docs/firebase-puesta-en-marcha.md).
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // PRODUCTOS — cualquiera lee, solo admin escribe
-    match /productos/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // FAQs — cualquiera lee, solo admin escribe
-    match /faqs/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // TESTIMONIOS — cualquiera lee, solo admin escribe
-    match /testimonios/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // CONTACTOS — cualquiera crea (con forma y tamaño validados), solo admin lee.
-    // Sin esta validación cualquiera podía escribir documentos arbitrarios
-    // (o gigantes) en la colección desde la consola del navegador.
-    match /contactos/{docId} {
-      allow create: if request.resource.data.keys().hasOnly(['name', 'interest', 'message', 'leido', 'createdAt'])
-        && request.resource.data.name is string
-        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100
-        && request.resource.data.message is string
-        && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 2000
-        && request.resource.data.interest is string && request.resource.data.interest.size() <= 100
-        && request.resource.data.leido == false
-        && request.resource.data.createdAt == request.time;
-      allow read, update, delete: if isAdmin();
-    }
-
-    // ÓRDENES — usuario logueado crea, admin lee todo
-    match /orders/{docId} {
-      allow create: if request.auth != null;
-      allow read: if request.auth != null && 
-        (resource.data.buyer.email == request.auth.token.email || isAdmin());
-      allow update: if isAdmin();
-    }
-
-    // USUARIOS — solo el propio usuario o admin
-    match /users/{userId} {
-      allow read: if request.auth != null && 
-        (request.auth.uid == userId || isAdmin());
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow update: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Helper: verificar si es admin
-    // Definí el admin email en Firebase Console → Authentication → Custom Claims
-    // O simplemente compará con tu email
+    // Cuenta administradora: este email Y verificado. Sin email_verified, si la cuenta
+    // todavía no existe o el registro queda abierto, cualquiera podría crear una cuenta con
+    // este email desde la API pública y pasar por administrador.
     function isAdmin() {
-      return request.auth != null && 
-        request.auth.token.email == 'ing.franciscomarotta@gmail.com';
+      return request.auth != null
+        && request.auth.token.email == 'ing.franciscomarotta@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    // Texto obligatorio, de 1 a `max` caracteres.
+    function isText(value, max) {
+      return value is string && value.size() > 0 && value.size() <= max;
+    }
+    // Texto que puede venir vacío.
+    function isOptionalText(value, max) {
+      return value is string && value.size() <= max;
+    }
+
+    // Lo único que el administrador puede cambiar de un documento: estado, nota y la fecha
+    // del cambio. El contenido que escribió el visitante no se puede editar.
+    function isAdminUpdate() {
+      let data = request.resource.data;
+      return isAdmin()
+        && data.diff(resource.data).affectedKeys().hasOnly(['estado', 'nota', 'updatedAt'])
+        && data.estado in ['nueva', 'en_curso', 'respondida', 'archivada']
+        && (!('nota' in data) || isOptionalText(data.nota, 1000))
+        && data.updatedAt == request.time;
+    }
+
+    match /contactos/{docId} {
+      allow create: if request.resource.data.keys().hasOnly(['name', 'interest', 'zone', 'message', 'estado', 'createdAt'])
+        && request.resource.data.keys().hasAll(['name', 'interest', 'zone', 'message', 'estado', 'createdAt'])
+        && isText(request.resource.data.name, 100)
+        && isOptionalText(request.resource.data.interest, 100)
+        && isOptionalText(request.resource.data.zone, 100)
+        && isText(request.resource.data.message, 2000)
+        && request.resource.data.estado == 'nueva'
+        && request.resource.data.createdAt == request.time;
+      allow read, delete: if isAdmin();
+      allow update: if isAdminUpdate();
+    }
+
+    match /presupuestos/{docId} {
+      allow create: if request.resource.data.keys().hasOnly(['detalle', 'totalQty', 'name', 'zone', 'kind', 'estado', 'createdAt'])
+        && request.resource.data.keys().hasAll(['detalle', 'totalQty', 'name', 'zone', 'kind', 'estado', 'createdAt'])
+        && isText(request.resource.data.detalle, 2000)
+        && request.resource.data.totalQty is int
+        && request.resource.data.totalQty >= 1 && request.resource.data.totalQty <= 9999
+        && isOptionalText(request.resource.data.name, 100)
+        && isOptionalText(request.resource.data.zone, 100)
+        && request.resource.data.kind in ['', 'particular', 'empresa']
+        && request.resource.data.estado == 'nueva'
+        && request.resource.data.createdAt == request.time;
+      allow read, delete: if isAdmin();
+      allow update: if isAdminUpdate();
+    }
+
+    // Cualquier otra colección (incluidas las del sitio viejo: productos, faqs, testimonios,
+    // orders, users) queda cerrada. El sitio actual no las lee ni las escribe: el catálogo,
+    // las preguntas y los testimonios salen del código. Si existieran datos viejos, se ven
+    // desde la consola de Firebase.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

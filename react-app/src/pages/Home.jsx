@@ -5,7 +5,7 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
-import { PRODUCTS, productHref } from '../data/products';
+import { PRODUCTS, factOf, productHref } from '../data/products';
 import { whatsappUrlFor } from '../data/contact';
 import { BUSINESS, addressLine } from '../data/business';
 import { ORG_ID } from '../lib/schema';
@@ -19,6 +19,20 @@ const REASONS = [
 
 // Lo que se escribe en el hero (la primera frase es la que ve quien no ejecuta JavaScript).
 const HERO_PHRASES = ['sillones BKF', 'bancos BKF', 'bases de mesa de hierro', 'mobiliario comercial a medida'];
+
+// Datos cortos bajo los botones del hero: salen de la ficha del sillón y de /garantia/ y /envios/.
+const HERO_FACTS = ['Hierro macizo de 12 mm', 'Garantía de por vida en la estructura', 'A medida, sin costo adicional', 'Envíos a todo el país'];
+
+// Foto sin editar del sillón en una casa (assets-src/fotos/sillon-bkf-cuero-en-casa.jpg).
+const REAL_PHOTO = {
+  src: '/images/sillon-bkf-cuero-en-casa.jpg',
+  alt: 'Sillón BKF de hierro negro y cuero marrón en el living de una casa, junto a un ventanal',
+  width: 960,
+  height: 1200,
+};
+const BKF = PRODUCTS[0];
+// Filas de la ficha del sillón que se repiten junto a la foto (misma fuente: data/products.js).
+const BKF_FACTS = ['Estructura', 'Tapizado', 'Medidas', 'Garantía'];
 
 const CLIENTS = [
   { src: '/images/logoypf.png', alt: 'YPF', w: 213, h: 60, wide: true },
@@ -61,6 +75,9 @@ export default function Home() {
               <Icon name="whatsapp" /> Consultar precio
             </a>
           </div>
+          <ul className="hero-facts">
+            {HERO_FACTS.map((f) => <li key={f}>{f}</li>)}
+          </ul>
           <p className="home-hero-b2b">
             ¿Es para un local o una empresa? <Link to="/mobiliario-comercial/">Cotizá mobiliario comercial a medida</Link>
           </p>
@@ -90,6 +107,84 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section-padding">
+        <div className="section-head">
+          <h2 className="section-title">Lo que fabricamos</h2>
+          <Link to="/catalogo/" className="btn-outline">Ver catálogo completo</Link>
+        </div>
+        <ul className="home-products">
+          {PRODUCTS.map((p) => (
+            <li className="home-product" key={p.slug}>
+              <Link to={productHref(p)}>
+                <div className="home-product-img">
+                  {p.badge && <span className="product-badge">{p.badge}</span>}
+                  <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
+                </div>
+                <h3>{p.name}</h3>
+                <p>{p.specs[0]}</p>
+                <span className="home-product-more" aria-hidden="true">Ver ficha <Icon name="chevron-right" /></span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="home-feature" aria-labelledby="bkf-en-casa">
+        <figure className="home-feature-media">
+          <Picture {...REAL_PHOTO} loading="lazy" sizes="(max-width: 860px) 100vw, 46vw" />
+          <figcaption>Foto sin editar, en una casa</figcaption>
+        </figure>
+        <div className="home-feature-text">
+          <h2 className="section-title" id="bkf-en-casa">El sillón BKF, puesto en una casa</h2>
+          <p>
+            Hierro redondo macizo de 12 mm y cuero vacuno curtido al vegetal, que toma color con el uso. Lo fabricamos en nuestro taller de San Martín y lo enviamos a todo el país.
+          </p>
+          <dl className="facts">
+            {BKF_FACTS.map((label) => (
+              <div key={label}><dt>{label}</dt><dd>{factOf(BKF, label)}</dd></div>
+            ))}
+          </dl>
+          <div className="cta-btns" data-cta="home_feature" data-item={BKF.name}>
+            <Link to="/sillon-bkf/" className="btn-main">Ver medidas y colores</Link>
+            <a
+              href={whatsappUrlFor('Hola, quiero pedir un presupuesto del Sillón BKF Premium.', '/')}
+              target="_blank" rel="noopener noreferrer" className="btn-outline"
+            >
+              <Icon name="whatsapp" /> Pedir presupuesto
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding how-section section-fade" aria-labelledby="como-comprar-home">
+        <div className="how-head">
+          <h2 className="section-title" id="como-comprar-home">Comprar en Taller Kappa: cómo funciona</h2>
+          <p>
+            Comprás directo a la fábrica, sin pagar nada en el sitio. Elegís lo que necesitás, pedís el presupuesto y el pedido se acuerda con el taller.
+          </p>
+        </div>
+        <ol className="buy-steps buy-steps--cards">
+          <li><strong>Elegí en el catálogo</strong> y agregá los productos al presupuesto.</li>
+          <li><strong>Enviá el presupuesto por WhatsApp</strong> y te respondemos con el precio final y el plazo.</li>
+          <li><strong>Fabricamos a medida</strong> y coordinamos el envío o el retiro en el taller de San Martín (el plazo depende del stock).</li>
+        </ol>
+        <div className="how-notes">
+          <p>
+            Entregamos en San Martín y alrededores, en Capital Federal (CABA), en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
+            <Link to="/envios/">zonas y tiempos de envío</Link>.
+          </p>
+          <p>
+            ¿Querés comprar un sillón BKF? Conocé el <Link to="/sillon-bkf/">Sillón BKF Premium</Link>, con medidas, colores, garantía y envíos.
+            Para locales y empresas, el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
+          </p>
+        </div>
+      </section>
+
+      <section className="why-section">
+        <h2 className="section-title">Por qué pedirle el presupuesto a la fábrica</h2>
+        <ScrollText items={REASONS.map((r) => ({ title: r.title, text: r.text }))} />
+      </section>
+
       <section className="section-padding about-facts" aria-labelledby="que-es-kappa">
         <div>
           <h2 className="section-title" id="que-es-kappa">Qué es Taller Kappa</h2>
@@ -117,58 +212,9 @@ export default function Home() {
         </dl>
       </section>
 
-      <section className="section-padding about-facts section-fade" aria-labelledby="como-comprar-home">
-        <div>
-          <h2 className="section-title" id="como-comprar-home">Comprar en Taller Kappa: cómo funciona</h2>
-          <p>
-            Comprás directo a la fábrica, sin pagar nada en el sitio. Elegís lo que necesitás, pedís el presupuesto y el pedido se acuerda con el taller.
-          </p>
-          <ol className="buy-steps">
-            <li><strong>Elegí en el catálogo</strong> y agregá los productos al presupuesto.</li>
-            <li><strong>Enviá el presupuesto por WhatsApp</strong> y te respondemos con el precio final y el plazo.</li>
-            <li><strong>Fabricamos a medida</strong> y coordinamos el envío o el retiro en el taller de San Martín (el plazo depende del stock).</li>
-          </ol>
-        </div>
-        <div>
-          <p>
-            Entregamos en San Martín y alrededores, en Capital Federal (CABA), en el Gran Buenos Aires (Zona Norte, Oeste y Sur) y en todo el país. Mirá las{' '}
-            <Link to="/envios/">zonas y tiempos de envío</Link>.
-          </p>
-          <p>
-            ¿Querés comprar un sillón BKF? Conocé el <Link to="/sillon-bkf/">Sillón BKF Premium</Link>, con medidas, colores, garantía y envíos.
-            Para locales y empresas, el <Link to="/mobiliario-comercial/">mobiliario comercial a medida</Link>.
-          </p>
-        </div>
-      </section>
-
-      <section className="section-padding">
-        <div className="section-head">
-          <h2 className="section-title">Lo que fabricamos</h2>
-          <Link to="/catalogo/" className="btn-outline">Ver catálogo completo</Link>
-        </div>
-        <ul className="home-products">
-          {PRODUCTS.map((p) => (
-            <li className="home-product" key={p.slug}>
-              <Link to={productHref(p)}>
-                <div className="home-product-img">
-                  <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
-                </div>
-                <h3>{p.name}</h3>
-                <p>{p.specs[0]}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="why-section">
-        <h2 className="section-title">Por qué pedirle el presupuesto a la fábrica</h2>
-        <ScrollText items={REASONS.map((r) => ({ title: r.title, text: r.text }))} />
-      </section>
-
       <section className="section-padding home-links">
-        <div>
-          <h2 className="section-title">Para elegir y pedir</h2>
+        <h2 className="section-title">Para elegir y pedir</h2>
+        <div className="home-links-grid">
           <p>
             <strong>Sillón BKF:</strong> conocé el <Link to="/sillon-bkf/">sillón BKF de hierro y cuero fabricado en Buenos Aires</Link>, leé{' '}
             <Link to="/bkf/">qué es el sillón BKF, su historia y cómo elegir uno</Link> o mirá los{' '}
@@ -184,6 +230,22 @@ export default function Home() {
             <Link to="/garantia/">condiciones de garantía</Link>. Si te queda alguna duda, están las{' '}
             <Link to="/faq/">preguntas frecuentes</Link> o podés <Link to="/contacto/">escribirnos directamente</Link>.
           </p>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="cta-box">
+          <h2>¿Armamos tu presupuesto?</h2>
+          <p>Contanos qué necesitás, la cantidad y la zona de entrega, y te respondemos por WhatsApp con el precio y el plazo.</p>
+          <div className="cta-btns" data-cta="home_cta_final">
+            <a
+              href={whatsappUrlFor('Hola, quiero pedir un presupuesto.', '/')}
+              target="_blank" rel="noopener noreferrer" className="btn-main"
+            >
+              <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
+            </a>
+            <Link to="/catalogo/" className="btn-outline">Ver catálogo completo</Link>
+          </div>
         </div>
       </section>
     </>

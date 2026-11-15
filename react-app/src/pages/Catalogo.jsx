@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
@@ -6,20 +6,9 @@ import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
-import { CATEGORIES, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
+import { CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
 import { whatsappUrl, whatsappUrlFor } from '../data/contact';
-import { loadFireDB } from '../lib/firebaseConfig';
 import { itemListNode } from '../lib/schema';
-
-const FALLBACK_PRODUCTS = PRODUCTS;
-
-const COLORS = [
-  { name: 'Negro Mate', swatch: '#1a1a1a' },
-  { name: 'Blanco Crema', swatch: '#f5f0e8' },
-  { name: 'Cromado', swatch: 'linear-gradient(135deg,#ccc,#fff,#aaa)' },
-  { name: 'Verde Oliva', swatch: '#556b2f' },
-  { name: 'Rojo Kappa', swatch: '#b71c1c' },
-];
 
 const MATERIALS = [
   { color: '#1a1a1a', title: 'Hierro macizo', desc: 'Varilla redonda de 12 mm, sin costuras ni rellenos. Indeformable ante el uso intensivo.' },
@@ -37,13 +26,14 @@ function ProductCard({ p, onOpen }) {
   const detailHref = p.slug ? productHref(p) : null;
   return (
     <article className="product-card" data-category={p.category} data-cta="catalogo_card" data-item={p.name}>
-      {p.badge && <div className="product-badge">{p.badge}</div>}
       <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
         <span className="stock-dot-small" /> Consultar disponibilidad
       </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Vista rápida: ${p.name}`}
         onClick={() => onOpen(p)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
+        {/* El rótulo va dentro de la foto: suelto en la tarjeta quedaba encima de "Consultar disponibilidad". */}
+        {p.badge && <span className="product-badge" aria-hidden="true">{p.badge}</span>}
         <Picture src={p.image} alt={p.alt ?? p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
         <div className="card-overlay" aria-hidden="true">Vista rápida</div>
       </div>
@@ -65,23 +55,16 @@ function ProductCard({ p, onOpen }) {
 
 export default function Catalogo() {
   const { addToCart } = useCart();
-  const [products, setProducts] = useState(FALLBACK_PRODUCTS);
+  // El catálogo sale de data/products.js, la misma fuente del HTML prerenderizado, el sitemap y el
+  // JSON-LD. Antes, si Firestore tenía una colección `productos`, la página la descargaba al cargar y
+  // reemplazaba lo que el visitante (y Google) ya habían recibido.
+  const products = PRODUCTS;
   const [filter, setFilter] = useState('all');
   // El producto queda cargado al cerrar el modal: así el contenido no
   // desaparece mientras corre la animación de salida.
   const [modalProduct, setModalProduct] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalColor, setModalColor] = useState('Negro Mate');
-
-  useEffect(() => {
-    let cancelled = false;
-    // loadFireDB solo descarga el chunk de Firebase (~105kB gzip) si hay
-    // credenciales reales; si no, se queda con los productos locales.
-    loadFireDB().then((db) => db.getProducts())
-      .then((data) => { if (!cancelled && data.length) setProducts(data); })
-      .catch(() => { /* se queda con el fallback */ });
-    return () => { cancelled = true; };
-  }, []);
 
   const openModal = (p) => {
     setModalColor('Negro Mate');

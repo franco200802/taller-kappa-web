@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { whatsappUrl } from '../data/contact';
+import { QUOTE_KINDS, whatsappUrl } from '../data/contact';
 import { trackEvent } from '../lib/analytics';
+import { isFirebaseConfigured, loadFireDB } from '../lib/firebaseConfig';
+import { presupuestoDoc, presupuestoKey, quoteLines } from '../lib/leads';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
@@ -16,14 +18,15 @@ export function CartProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState(null);
   // Datos opcionales que el taller necesita para cotizar (el destino cambia el costo de envío).
-  const [quote, setQuote] = useState({ name: '', zone: '' });
+  // `kind` separa la consulta de un particular de la de un local o empresa (cambia cómo responde el taller).
+  const [quote, setQuote] = useState({ name: '', zone: '', kind: '' });
 
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
       if (Array.isArray(saved) && saved.length) setCart(saved);
       const savedQuote = JSON.parse(sessionStorage.getItem(QUOTE_KEY) || 'null');
-      if (savedQuote && typeof savedQuote === 'object') setQuote({ name: String(savedQuote.name ?? ''), zone: String(savedQuote.zone ?? '') });
+      if (savedQuote && typeof savedQuote === 'object') setQuote({ name: String(savedQuote.name ?? ''), zone: String(savedQuote.zone ?? ''), kind: QUOTE_KINDS[savedQuote.kind] ? savedQuote.kind : '' });
     } catch { /* storage bloqueado o JSON inválido: se arranca vacío */ }
     setLoaded(true);
   }, []);
@@ -80,20 +83,38 @@ export function CartProvider({ children }) {
     if (cart.length === 0) return '#';
     // Pedido de presupuesto, no de compra: no se cobra nada en el sitio. El texto va
     // ordenado para que el taller pueda responder con precio y plazo sin repreguntar.
-    const lines = cart.map(({ product, color, qty }, i) =>
-      `${i + 1}. ${product.name} - ${qty} ${qty === 1 ? 'unidad' : 'unidades'} - Acabado: ${color}`).join('\n');
+    const lines = quoteLines(cart);
     const name = quote.name.trim();
     const zone = quote.zone.trim();
-    const details = [name && `Nombre: ${name}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
+    const kind = QUOTE_KINDS[quote.kind];
+    const details = [name && `Nombre: ${name}`, kind && `Es para: ${kind}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
     return whatsappUrl(
       `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${lines}\n\nTotal: ${totalItems} ${totalItems === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`);
   }, [cart, quote, totalItems]);
 
+  // Copia del presupuesto en Firestore, para verlo en /admin. Corre en segundo plano al tocar el
+  // botón de WhatsApp y nunca lo demora ni lo bloquea. Si el mismo pedido ya se guardó (la persona
+  // volvió a tocar el botón), no se duplica. Sin Firebase configurado no hace nada.
+  const savedQuote = useRef(null);
+  const saveQuote = useCallback(() => {
+    if (!isFirebaseConfigured || cart.length === 0) return;
+    const data = presupuestoDoc(cart, quote);
+    const key = presupuestoKey(data);
+    if (savedQuote.current === key) return;
+    savedQuote.current = key;
+    loadFireDB()
+      .then((db) => db.createPresupuesto(data))
+      .catch((err) => {
+        savedQuote.current = null; // se podrá reintentar en el próximo toque
+        trackEvent('presupuesto_save_failed', { reason: err?.code ?? 'error' });
+      });
+  }, [cart, quote]);
+
   const value = useMemo(() => ({
     cart, totalItems, isOpen, toast,
     quote, setQuote,
-    setIsOpen, addToCart, changeQty, removeItem, showToast, whatsappLink,
-  }), [cart, totalItems, isOpen, toast, quote, addToCart, changeQty, removeItem, showToast, whatsappLink]);
+    setIsOpen, addToCart, changeQty, removeItem, showToast, whatsappLink, saveQuote,
+  }), [cart, totalItems, isOpen, toast, quote, addToCart, changeQty, removeItem, showToast, whatsappLink, saveQuote]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

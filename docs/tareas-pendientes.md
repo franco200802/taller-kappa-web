@@ -23,6 +23,20 @@
 
 ---
 
+## Nuevo (15/11/2026): tres confirmaciones de la mejora integral
+
+Detalle en `docs/mejora-integral-2026-11.md`.
+
+1. **Medidas del sillón.** La imagen `FOTOCONMEDIDAS.png` dice 77 cm de ancho,
+   102 cm de alto y 87 cm; el sitio publica 78 × 70 × 90 cm. ¿Cuáles son las
+   reales? Hasta saberlo, la imagen no se publica y el sitio no se toca.
+2. **Foto del sillón en una casa** (`FOTOLINDABKF.jpeg`): confirmar que es un
+   sillón de Taller Kappa y que el dueño de la casa está de acuerdo con que se
+   publique. Ya está en la rama, en la home y en `/sillon-bkf/`.
+3. **Firebase**: crear el proyecto y cargar las credenciales siguiendo
+   `docs/firebase-puesta-en-marcha.md` (unos 20 minutos). Sin eso, el panel
+   `/admin` no funciona y no se guarda copia de los mensajes del formulario.
+
 ## 0. Mergear el PR #9 (2 minutos)
 
 <https://github.com/franco200802/taller-kappa-web/pull/9> → **Merge pull

@@ -22,6 +22,7 @@ import { forwardRef } from 'react';
 // Mantener en sincro con scripts/build-images.sh (anchos generados por foto).
 const RESPONSIVE = {
   '/images/sillon-bkf-hierro-cuero.jpg': [480, 800, 1200, 1600],
+  '/images/sillon-bkf-cuero-en-casa.jpg': [480, 800, 960],
   '/images/banco-bkf-hierro-cuero.jpg': [480, 800, 1024],
   '/images/base-mesa-flat-hierro.jpg': [480, 800, 1024],
 };

@@ -19,3 +19,9 @@ serviceAccountKey.json
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+# Build de las pruebas e2e
+react-app/dist-e2e/
+# Registros de los emuladores de Firebase
+*-debug.log
+.firebase/

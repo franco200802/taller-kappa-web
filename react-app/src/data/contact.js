@@ -18,6 +18,23 @@ export function whatsappUrl(text) {
   return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
 
+/** Para quién es el presupuesto: la clave se guarda en el navegador, el texto va en el mensaje de WhatsApp. */
+export const QUOTE_KINDS = { particular: 'Particular', empresa: 'Local o empresa' };
+
+/**
+ * Primer mensaje de una consulta de empresa o local. Deja escritos los datos que el taller
+ * necesita para cotizar sin repreguntar (los mismos que pide /mobiliario-comercial/ en
+ * "Cómo pedir"): la persona completa lo que sabe y envía.
+ */
+export const B2B_QUOTE_MESSAGE = [
+  'Hola, soy de una empresa y necesito cotización de mobiliario comercial.',
+  '',
+  'Rubro del local: ',
+  'Productos y cantidades: ',
+  'Medidas o color (si es a medida): ',
+  'Zona de entrega: ',
+].join('\n');
+
 /**
  * Link de WhatsApp cuyo mensaje termina con la URL de la página. El taller ve
  * qué producto o página estaba mirando la persona (WhatsApp muestra la vista
