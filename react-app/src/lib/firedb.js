@@ -3,7 +3,7 @@
  * pero usando el SDK modular: import solo de las funciones que usás)
  */
 import {
-  collection, getDocs, getDoc, doc, addDoc, updateDoc,
+  collection, getDocs, doc, addDoc, updateDoc,
   query, where, orderBy, serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -18,11 +18,6 @@ export const FireDB = {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   },
 
-  async getProduct(id) {
-    const snap = await getDoc(doc(db, 'productos', id));
-    return snap.exists() ? { id: snap.id, ...snap.data() } : null;
-  },
-
   async getFAQs() {
     const snap = await getDocs(query(col('faqs'), orderBy('order')));
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -33,8 +28,14 @@ export const FireDB = {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   },
 
-  async createContacto(data) {
-    return addDoc(col('contactos'), { ...data, leido: false, createdAt: serverTimestamp() });
+  // Solo los campos que aceptan las reglas (firestore.rules), recortados a su largo máximo:
+  // un campo de más o un texto más largo haría que Firestore rechace el documento entero.
+  async createContacto({ name = '', interest = '', zone = '', message = '' }) {
+    const clip = (v, max) => String(v).trim().slice(0, max);
+    return addDoc(col('contactos'), {
+      name: clip(name, 100), interest: clip(interest, 100), zone: clip(zone, 100), message: clip(message, 2000),
+      leido: false, createdAt: serverTimestamp(),
+    });
   },
 
   async getContactos() {
@@ -42,17 +43,7 @@ export const FireDB = {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   },
 
-  async getOrders() {
-    const snap = await getDocs(query(col('orders'), orderBy('createdAt', 'desc')));
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  },
-
-  async updateOrder(id, data) {
-    return updateDoc(doc(db, 'orders', id), { ...data, updatedAt: serverTimestamp() });
-  },
-
-  async getUsers() {
-    const snap = await getDocs(col('users'));
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  async markContactoLeido(id) {
+    return updateDoc(doc(db, 'contactos', id), { leido: true });
   },
 };

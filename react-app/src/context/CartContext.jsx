@@ -5,6 +5,8 @@ import { trackEvent } from '../lib/analytics';
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
 const QUOTE_KEY = 'kappa-quote-contact';
+/** Para quién es el presupuesto: la clave se guarda, el texto va en el mensaje de WhatsApp. */
+export const QUOTE_KINDS = { particular: 'Particular', empresa: 'Local o empresa' };
 
 export function CartProvider({ children }) {
   // El carrito guardado se lee DESPUÉS de montar, no en el estado inicial:
@@ -16,14 +18,15 @@ export function CartProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [toast, setToast] = useState(null);
   // Datos opcionales que el taller necesita para cotizar (el destino cambia el costo de envío).
-  const [quote, setQuote] = useState({ name: '', zone: '' });
+  // `kind` separa la consulta de un particular de la de un local o empresa (cambia cómo responde el taller).
+  const [quote, setQuote] = useState({ name: '', zone: '', kind: '' });
 
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
       if (Array.isArray(saved) && saved.length) setCart(saved);
       const savedQuote = JSON.parse(sessionStorage.getItem(QUOTE_KEY) || 'null');
-      if (savedQuote && typeof savedQuote === 'object') setQuote({ name: String(savedQuote.name ?? ''), zone: String(savedQuote.zone ?? '') });
+      if (savedQuote && typeof savedQuote === 'object') setQuote({ name: String(savedQuote.name ?? ''), zone: String(savedQuote.zone ?? ''), kind: QUOTE_KINDS[savedQuote.kind] ? savedQuote.kind : '' });
     } catch { /* storage bloqueado o JSON inválido: se arranca vacío */ }
     setLoaded(true);
   }, []);
@@ -84,7 +87,8 @@ export function CartProvider({ children }) {
       `${i + 1}. ${product.name} - ${qty} ${qty === 1 ? 'unidad' : 'unidades'} - Acabado: ${color}`).join('\n');
     const name = quote.name.trim();
     const zone = quote.zone.trim();
-    const details = [name && `Nombre: ${name}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
+    const kind = QUOTE_KINDS[quote.kind];
+    const details = [name && `Nombre: ${name}`, kind && `Es para: ${kind}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
     return whatsappUrl(
       `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${lines}\n\nTotal: ${totalItems} ${totalItems === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`);
   }, [cart, quote, totalItems]);

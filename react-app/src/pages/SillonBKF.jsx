@@ -9,7 +9,7 @@ import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
 import { whatsappUrlFor } from '../data/contact';
-import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
+import { FINISH_COLORS as COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
 import { BUSINESS } from '../data/business';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
@@ -31,14 +31,6 @@ const FAQ_ITEMS = [
   { q: '¿Se puede usar el sillón BKF en exterior?', a: 'Conviene usarlo en interiores o bajo techo. La garantía de 2 años de la pintura epoxi es para uso interior, conviene evitar que la estructura pintada quede expuesta mucho tiempo a la lluvia directa, el cromado no va en exteriores húmedos y el cuero no debe recibir sol directo por períodos prolongados.' },
   { q: '¿Cómo se cuida el cuero del sillón BKF?', a: 'Se limpia con un paño seco o apenas húmedo y se le aplica crema hidratante para cuero cada 6 meses. No hay que usar alcohol ni solventes ni dejarlo al sol directo por mucho tiempo. El cuero se oscurece con el uso: es normal. La estructura pintada se limpia con paño húmedo y detergente neutro.' },
   { q: '¿Puedo elegir el color del sillón BKF?', a: 'Sí. Ofrecemos el sillón BKF en negro mate, blanco crema, cromado y colores a pedido, como verde oliva o rojo Kappa. También podés elegir el color del cuero: negro, marrón, o cuero natural.' },
-];
-
-const COLORS = [
-  { name: 'Negro Mate', swatch: '#1a1a1a' },
-  { name: 'Blanco Crema', swatch: '#f5f0e8' },
-  { name: 'Cromado', swatch: 'linear-gradient(135deg,#ccc,#fff,#aaa)' },
-  { name: 'Verde Oliva', swatch: '#556b2f' },
-  { name: 'Rojo Kappa', swatch: '#b71c1c' },
 ];
 
 // Los acabados que se escriben junto a las muestras de color (la primera es la que ve quien no ejecuta JavaScript).

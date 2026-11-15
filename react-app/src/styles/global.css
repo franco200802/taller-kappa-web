@@ -375,7 +375,7 @@ p a:hover, li a:hover { color: var(--kappa); }
     font-size: var(--t-sm); font-weight: 600; font-stretch: 85%; padding: 6px 12px;
 }
 .stock-indicator {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px;
     color: var(--grafito); font-size: var(--t-sm);
 }
 .stock-dot-small, .stock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wa); display: inline-block; }
@@ -1084,3 +1084,24 @@ details.bkf-faq-item summary:hover h3 { color: var(--grafito); }
 details.bkf-faq-item[open] .faq-icon-right { transform: rotate(180deg); }
 details.bkf-faq-item > p { padding-bottom: 20px; }
 details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margin-bottom: 24px; }
+
+/* Presupuesto y contacto: el selector "¿Para quién es?" igual que los campos de texto, y la ayuda bajo un campo. */
+.cart-contact select { min-height: 44px; padding: 0 12px; border: 1.5px solid var(--linea); border-radius: var(--r); background: var(--blanco); }
+.cart-contact select:focus-visible { outline: 2px solid var(--kappa); outline-offset: 2px; border-color: var(--hierro); }
+.form-hint { color: var(--grafito); font-size: var(--t-sm); }
+
+/* Panel de administración (/admin): interno, sin prerender. */
+.admin-panel { max-width: calc(560px + 2 * var(--pad-x)); display: grid; gap: 16px; }
+.admin-panel--wide { max-width: none; }
+.admin-panel h2 { font-size: var(--t-lg); margin-top: 16px; }
+.admin-panel code { font-size: .9em; background: var(--blanco); border: 1px solid var(--linea); border-radius: 4px; padding: 1px 6px; overflow-wrap: anywhere; }
+.admin-notice { padding: 16px 20px; background: var(--blanco); border: 1px solid var(--linea); border-left: 3px solid var(--ocre); border-radius: var(--r); }
+.admin-form label { font-weight: 600; font-size: var(--t-sm); margin-bottom: -6px; }
+.admin-form .btn-main:disabled { opacity: .6; cursor: progress; }
+.admin-error { color: var(--kappa-osc); font-weight: 600; }
+.admin-list { list-style: none; display: grid; border-top: 2px solid var(--hierro); }
+.admin-list li { display: grid; gap: 8px; justify-items: start; padding: 16px 0 16px 14px; border-bottom: 1px solid var(--linea); border-left: 3px solid var(--kappa); }
+.admin-list li.is-read { border-left-color: transparent; color: var(--grafito); }
+.admin-list-meta { font-size: var(--t-sm); color: var(--grafito); }
+.admin-list-meta strong { color: var(--hierro); }
+.admin-list p { white-space: pre-wrap; overflow-wrap: anywhere; }

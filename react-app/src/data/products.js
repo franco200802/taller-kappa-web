@@ -175,6 +175,20 @@ export const PRODUCTS = [
 ];
 
 /**
+ * Acabados de la estructura que se pueden elegir al agregar al presupuesto (los mismos que
+ * lista la ficha: negro mate, blanco crema, cromado y, a pedido, verde oliva o rojo Kappa).
+ * `name` viaja tal cual en el mensaje de WhatsApp. Antes la lista estaba copiada en el
+ * catálogo y en la landing del sillón.
+ */
+export const FINISH_COLORS = [
+  { name: 'Negro Mate', swatch: '#1a1a1a' },
+  { name: 'Blanco Crema', swatch: '#f5f0e8' },
+  { name: 'Cromado', swatch: 'linear-gradient(135deg,#ccc,#fff,#aaa)' },
+  { name: 'Verde Oliva', swatch: '#556b2f' },
+  { name: 'Rojo Kappa', swatch: '#b71c1c' },
+];
+
+/**
  * Variantes de la foto principal que genera scripts/build-social-images.sh:
  * 16:9 (1200x675, og:image y twitter:image) y 4:3 (1200x900). Junto con la
  * original (1:1), son las tres proporciones que Google pide para un Product.

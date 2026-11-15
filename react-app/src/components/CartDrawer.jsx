@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import Icon from './Icon';
-import { useCart } from '../context/CartContext';
+import { QUOTE_KINDS, useCart } from '../context/CartContext';
 import { WHATSAPP_DISPLAY } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import Picture from './Picture';
@@ -91,6 +91,11 @@ export default function CartDrawer() {
               <div className="cart-contact">
                 <label htmlFor="quote-name">Tu nombre (opcional)</label>
                 <input id="quote-name" autoComplete="name" maxLength={80} value={quote.name} onChange={(e) => setQuote({ ...quote, name: e.target.value })} />
+                <label htmlFor="quote-kind">¿Para quién es? (opcional)</label>
+                <select id="quote-kind" value={quote.kind} onChange={(e) => setQuote({ ...quote, kind: e.target.value })}>
+                  <option value="">Elegí una opción…</option>
+                  {Object.entries(QUOTE_KINDS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+                </select>
                 <label htmlFor="quote-zone">Zona de entrega (opcional)</label>
                 <input id="quote-zone" autoComplete="address-level2" maxLength={80} placeholder="Barrio o localidad" value={quote.zone} onChange={(e) => setQuote({ ...quote, zone: e.target.value })} />
               </div>
@@ -100,7 +105,7 @@ export default function CartDrawer() {
                 target="_blank" rel="noopener noreferrer"
                 // whatsapp_click lo envía trackClicks (con estos data-*); whatsapp_checkout suma el detalle del presupuesto.
                 data-cta="presupuesto" data-item={cart.map((i) => i.product.name).join(', ')}
-                onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0) })}
+                onClick={() => trackEvent('whatsapp_checkout', { items: cart.length, qty: cart.reduce((s, i) => s + i.qty, 0), customer_type: quote.kind || '(sin especificar)', has_zone: quote.zone.trim() ? 'si' : 'no' })}
               >
                 <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
               </a>

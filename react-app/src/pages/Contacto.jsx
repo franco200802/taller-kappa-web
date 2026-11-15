@@ -12,7 +12,7 @@ import { ORG_ID } from '../lib/schema';
 
 export default function Contacto() {
   const { showToast } = useCart();
-  const [form, setForm] = useState({ name: '', interest: '', message: '' });
+  const [form, setForm] = useState({ name: '', interest: '', zone: '', message: '' });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,8 +25,9 @@ export default function Contacto() {
     // Firestore sin configurar (o sin red) el await podía colgarse y el
     // botón "no hacía nada".
     trackEvent('whatsapp_click', { location: 'contacto_form', interest: form.interest || '(sin especificar)' });
-    const interestLine = form.interest ? `\nProducto de interés: ${form.interest}` : '';
-    window.open(whatsappUrl(`Hola, soy ${form.name}.${interestLine}\n\n${form.message}`), '_blank', 'noopener');
+    const interestLine = form.interest ? `\nMe interesa: ${form.interest}` : '';
+    const zoneLine = form.zone.trim() ? `\nZona de entrega: ${form.zone.trim()}` : '';
+    window.open(whatsappUrl(`Hola, soy ${form.name.trim()}.${interestLine}${zoneLine}\n\n${form.message.trim()}`), '_blank', 'noopener');
 
     // El guardado del lead corre en segundo plano y nunca bloquea al usuario.
     // Si falla lo registramos para saber cuántos leads no se persisten;
@@ -38,7 +39,7 @@ export default function Contacto() {
         reason: err?.message === 'firebase_sin_configurar' ? 'firebase_sin_configurar' : 'error',
       }));
 
-    setForm({ name: '', interest: '', message: '' });
+    setForm({ name: '', interest: '', zone: '', message: '' });
     showToast('¡Mensaje listo! Se abrió WhatsApp.');
   };
 
@@ -72,11 +73,18 @@ export default function Contacto() {
               <option value="Banco BKF">Banco BKF</option>
               <option value="Base de Mesa">Base de Mesa</option>
               <option value="Pedido mayorista">Pedido mayorista</option>
+              <option value="Mobiliario para un local o empresa">Mobiliario para un local o empresa</option>
+              <option value="Visitar el showroom">Visitar el showroom</option>
             </select>
           </div>
           <div className="form-group">
+            <label htmlFor="contact-zone">Zona de entrega (opcional)</label>
+            <input id="contact-zone" name="zone" autoComplete="address-level2" maxLength={100} value={form.zone} onChange={(e) => setForm({ ...form, zone: e.target.value })} placeholder="Barrio o localidad" />
+            <small className="form-hint">Con la zona podemos incluir el envío en el presupuesto.</small>
+          </div>
+          <div className="form-group">
             <label htmlFor="contact-message">Tu mensaje</label>
-            <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos tu consulta o lo que necesitás…" />
+            <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos qué necesitás: producto, cantidad y color." />
           </div>
           <div className="form-submit">
             <button type="submit" className="btn-main"><Icon name="whatsapp" /> Enviar por WhatsApp</button>

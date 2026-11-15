@@ -854,4 +854,12 @@ export default {
   "Foto en una casa": "Photo in a home",
   "Foto de producto: el fondo fue editado digitalmente": "Product photo: the background was digitally edited",
   "Fotos del sillón BKF": "BKF armchair photos",
+  "¿Para quién es? (opcional)": "Who is it for? (optional)",
+  "Elegí una opción…": "Choose an option…",
+  "Particular": "Private customer",
+  "Local o empresa": "Shop or company",
+  "Mobiliario para un local o empresa": "Furniture for a shop or company",
+  "Visitar el showroom": "Visit the showroom",
+  "Con la zona podemos incluir el envío en el presupuesto.": "With the area we can include shipping in the quote.",
+  "Contanos qué necesitás: producto, cantidad y color.": "Tell us what you need: product, quantity and color.",
 };
