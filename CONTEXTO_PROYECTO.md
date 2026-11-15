@@ -100,7 +100,7 @@ taller-kappa-web/                  (raíz del repo)
 │   │   │   ├── firebase.js        (init del SDK; solo lo carga firedb.js o Admin)
 │   │   │   └── firedb.js          (capa de acceso a Firestore)
 │   │   └── styles/
-│   │       └── global.css         (TODO el CSS del sitio, ~730 líneas, secciones numeradas)
+│   │       └── global.css         (TODO el CSS del sitio, ~1.100 líneas, secciones numeradas)
 │   └── scripts/
 │       └── prerender.js           (genera el HTML estático, ver sección 2)
 ```
@@ -411,14 +411,49 @@ sigue siendo lazy. Si el import falla, se sigue con `lazy()` como antes.
   arregla desde el código. Se probó sacar la animación del hero y no cambió FCP/LCP (la foto ya se
   pinta en el primer cuadro), así que se dejó.
 
+## 5j. Mejora integral (15/11/2026)
+
+Diagnóstico, matriz priorizada, mediciones antes/después y pendientes en
+`docs/mejora-integral-2026-11.md`. Lo que hay que saber al tocar el código:
+
+- **Foto sin editar del sillón**: `sillon-bkf-cuero-en-casa.jpg` (recorte 4:5 de la
+  foto que dio el dueño; variantes de 480/800/960 px, en `RESPONSIVE` de `Picture.jsx`).
+  Va en la home (`.home-feature`) y en la galería de `/sillon-bkf/` (`SHOTS`). El pie
+  dice "Foto sin editar, en una casa"; el de la otra, "Foto de producto, fondo editado".
+  **No** es la imagen del `Product` en el JSON-LD ni el `og:image`: esas siguen siendo
+  las de `data/products.js`.
+- **Orden de la home**: hero → clientes → productos → foto real → cómo funciona →
+  por qué la fábrica → qué es Taller Kappa → para elegir y pedir → CTA. Los textos
+  institucionales (los que citan los buscadores con IA) siguen completos, más abajo.
+- **Preguntas en `<details>`** en `/sillon-bkf/` y `/mobiliario-comercial/`
+  (`details.bkf-faq-item`): la respuesta está siempre en el HTML, así que el
+  `FAQPage` sigue siendo válido. Las fichas y categorías, con dos preguntas, siguen abiertas.
+- **Presupuesto**: `quote.kind` (`QUOTE_KINDS` en `data/contact.js`) agrega "Es para:
+  Particular / Local o empresa" al mensaje. `whatsapp_checkout` lleva `customer_type`
+  y `has_zone`.
+- **Consultas de empresa**: usar `B2B_QUOTE_MESSAGE` (`data/contact.js`), que deja
+  escritos los datos para cotizar. No volver a escribir el mensaje a mano en cada página.
+- **Acabados**: `FINISH_COLORS` en `data/products.js` (antes copiado en dos páginas).
+- **Estilos nuevos**: sección 21 de `global.css`.
+- **Cómo se probó** (no quedó en el repo): Chrome automatizado con `puppeteer-core`
+  recorriendo 15 páginas en 9 anchos y los flujos de presupuesto, contacto, menú,
+  galería, idioma y `/admin`. Ojo: las capturas de página completa de páginas muy
+  altas salen con el layout de mobile mezclado; es un artefacto de la captura, medir
+  con `getComputedStyle` antes de creer que hay un bug.
+- **Medidas del sillón: sin resolver.** El dueño dejó una imagen con 77 × 102 × 87 cm
+  y el sitio publica 78 × 70 × 90 cm. No se publicó la imagen. No cambiar las medidas
+  hasta que el dueño confirme cuáles son.
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
 `src/lib/firebaseConfig.js` todavía tiene valores tipo
 `'REEMPLAZAR_CON_TU_API_KEY'` en vez de credenciales reales de un proyecto
-Firebase. Esto significa:
-- El login del panel `/admin` **no funciona** (Firebase Auth falla contra
-  un proyecto inexistente).
+Firebase. Los pasos para configurarlo están en `docs/firebase-puesta-en-marcha.md`.
+Esto significa:
+- El panel `/admin` **no funciona**: desde el 15/11/2026 lo dice en pantalla
+  ("Firebase todavía no está configurado") y no descarga el SDK. Antes mostraba
+  un login que siempre respondía "Usuario o contraseña incorrectos".
 - El formulario de contacto (`Contacto.jsx`) abre WhatsApp y después
   intenta guardar el lead en Firestore en segundo plano; mientras Firebase
   no esté configurado **no se guarda**. Cada lead no guardado se registra
@@ -430,9 +465,15 @@ Firebase. Esto significa:
   **publicar `firestore.rules`** (el deploy de GitHub Pages no las sube).
 
 ### 🟡 Pendiente — Admin panel incompleto
-`src/pages/Admin.jsx` tiene un TODO explícito: faltan migrar las tabs
-Pedidos/Clientes/Stats del `admin.html` viejo. Hoy solo muestra el login y
-un conteo básico de pedidos.
+Desde el 15/11/2026 `src/pages/Admin.jsx` lista las consultas del formulario de
+contacto (colección `contactos`) y permite marcarlas como leídas. **No se probó
+contra un proyecto real** (no hay credenciales): al configurarlo, seguir la
+lista de verificación de `docs/firebase-puesta-en-marcha.md`. Las pestañas
+Pedidos/Clientes/Stats del `admin.html` viejo no se migraron a propósito: el
+sitio actual no tiene pedidos online ni cuentas de clientes, y `firedb.js` ya
+no trae funciones para `orders`/`users`. Tampoco hay edición de productos desde
+el panel: la fuente de verdad sigue siendo `data/products.js` (de ahí salen el
+prerender, el sitemap y el JSON-LD).
 
 ### 🟡 Pendiente — Fotos de producto con fondo editado con IA
 Desde el 31/10/2026 el sillón (`bkf1.jpg`) y el banco (`bkfapoyapies.jpg`) están
