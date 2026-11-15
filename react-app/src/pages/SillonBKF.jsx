@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
@@ -53,9 +54,18 @@ const MADE_OF = [
 
 const PRODUCT = getProductBySlug('sillon-bkf-premium');
 
+// Fotos de la galería. La primera es la del producto (la que usan el og:image y el JSON-LD) y es la
+// que sale en el HTML prerenderizado; la segunda es una foto sin editar del sillón en una casa.
+const SHOTS = [
+  { src: '/images/sillon-bkf-hierro-cuero.jpg', alt: PRODUCT.alt, width: 1600, height: 1600, label: 'Foto de producto', caption: 'Foto de producto: el fondo fue editado digitalmente' },
+  { src: '/images/sillon-bkf-cuero-en-casa.jpg', alt: 'Sillón BKF de hierro negro y cuero marrón en el living de una casa, junto a un ventanal', width: 960, height: 1200, label: 'Foto en una casa', caption: 'Foto sin editar, en una casa', position: '50% 75%' },
+];
+
 export default function SillonBKF() {
   const { addToCart } = useCart();
   const related = relatedProducts(PRODUCT);
+  const [shot, setShot] = useState(0);
+  const current = SHOTS[shot];
 
   const handleAdd = (color) => {
     // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
@@ -101,7 +111,17 @@ export default function SillonBKF() {
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <Picture src="/images/sillon-bkf-hierro-cuero.jpg" alt={PRODUCT.alt} width={1600} height={1600} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
+            <figure className="bkf-gallery-main">
+              <Picture src={current.src} alt={current.alt} width={current.width} height={current.height} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" style={current.position ? { objectPosition: current.position } : undefined} />
+              <figcaption>{current.caption}</figcaption>
+            </figure>
+            <div className="bkf-gallery-thumbs" role="group" aria-label="Fotos del sillón BKF">
+              {SHOTS.map((s, i) => (
+                <button key={s.src} type="button" className={`bkf-gallery-thumb${i === shot ? ' active' : ''}`} aria-label={s.label} aria-pressed={i === shot} onClick={() => setShot(i)}>
+                  <Picture src={s.src} alt="" width={s.width} height={s.height} loading="lazy" sizes="88px" />
+                </button>
+              ))}
+            </div>
             <div className="bkf-badges">
               <span className="bkf-badge"><Icon name="star" /> Diseño icónico</span>
               <span className="bkf-badge"><Icon name="industry" /> Fábrica propia</span>
@@ -251,11 +271,12 @@ export default function SillonBKF() {
       <section className="section-padding section-fade">
         <div className="bkf-about-inner">
           <h2>Preguntas frecuentes sobre el Sillón BKF</h2>
-          {FAQ_ITEMS.map((f) => (
-            <div key={f.q} className="bkf-faq-item">
-              <h3>{f.q}</h3>
+          {/* <details> nativo: la respuesta está siempre en el HTML (la leen buscadores y asistentes) y no hace falta JS. */}
+          {FAQ_ITEMS.map((f, i) => (
+            <details key={f.q} className="bkf-faq-item" open={i === 0}>
+              <summary><h3>{f.q}</h3><Icon name="chevron-down" className="faq-icon-right" /></summary>
               <p>{f.a}</p>
-            </div>
+            </details>
           ))}
           <p>
             Ver todas las <Link to="/faq/">preguntas frecuentes de Taller Kappa</Link>, conocé nuestras{' '}
