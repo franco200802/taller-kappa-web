@@ -1085,6 +1085,18 @@ details.bkf-faq-item[open] .faq-icon-right { transform: rotate(180deg); }
 details.bkf-faq-item > p { padding-bottom: 20px; }
 details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margin-bottom: 24px; }
 
+/* El logo medía 38 px de alto: se lleva a los 44 px del resto de los controles táctiles. */
+.logo { display: inline-flex; align-items: center; gap: .25em; min-height: 44px; }
+
+/* Botón del presupuesto en la barra: en desktop lleva el nombre al lado del ícono. */
+.cart-label { display: none; }
+@media (min-width: 1180px) {
+    .cart-icon-container { width: auto; gap: 8px; padding: 0 14px 0 12px; border: 1.5px solid var(--linea); font-size: 0.9rem; font-weight: 650; }
+    .cart-icon-container:hover { border-color: var(--hierro); }
+    .cart-label { display: inline; }
+    .cart-badge { top: -8px; right: -8px; }
+}
+
 /* Presupuesto y contacto: el selector "¿Para quién es?" igual que los campos de texto, y la ayuda bajo un campo. */
 .cart-contact select { min-height: 44px; padding: 0 12px; border: 1.5px solid var(--linea); border-radius: var(--r); background: var(--blanco); }
 .cart-contact select:focus-visible { outline: 2px solid var(--kappa); outline-offset: 2px; border-color: var(--hierro); }

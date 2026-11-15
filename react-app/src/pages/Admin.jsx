@@ -60,14 +60,59 @@ function NotConfigured() {
   );
 }
 
-export default function Admin() {
-  // null = todavía no se sabe (se está cargando el SDK o resolviendo la sesión); false = sin sesión.
-  const [user, setUser] = useState(null);
-  const [sdkError, setSdkError] = useState('');
+function LoginForm({ sdk }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (busy || !sdk.current) return; // evita el doble envío
+    setError('');
+    setBusy(true);
+    try { await sdk.current.authApi.signInWithEmailAndPassword(sdk.current.auth, email.trim(), password); }
+    catch (err) { setError(loginError(err)); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <section className="section-padding admin-panel" translate="no">
+      {SEO}
+      <h1>Panel de administración</h1>
+      <form onSubmit={handleLogin} className="admin-form">
+        <label htmlFor="admin-email">Email</label>
+        <input id="admin-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <label htmlFor="admin-password">Contraseña</label>
+        <input id="admin-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="submit" className="btn-main" disabled={busy}>{busy ? 'Ingresando…' : 'Ingresar'}</button>
+        {error && <p role="alert" className="admin-error">{error}</p>}
+      </form>
+    </section>
+  );
+}
+
+function ContactList({ contactos, onRead }) {
+  return (
+    <ul className="admin-list">
+      {contactos.map((c) => (
+        <li key={c.id} className={c.leido ? 'is-read' : undefined}>
+          <p className="admin-list-meta">
+            <strong>{c.name}</strong> · {formatDate(c.createdAt)}
+            {c.interest ? ` · ${c.interest}` : ''}{c.zone ? ` · ${c.zone}` : ''}
+          </p>
+          <p>{c.message}</p>
+          {!c.leido && <button className="btn-detail" onClick={() => onRead(c.id)}>Marcar como leída</button>}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function Admin() {
+  // null = todavía no se sabe (se está cargando el SDK o resolviendo la sesión); false = sin sesión.
+  const [user, setUser] = useState(null);
+  const [sdkError, setSdkError] = useState('');
   const [contactos, setContactos] = useState(null);
   const [loadError, setLoadError] = useState('');
   const sdk = useRef(null);
@@ -95,16 +140,6 @@ export default function Admin() {
 
   useEffect(() => { if (user) loadContactos(); else setContactos(null); }, [user, loadContactos]);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (busy || !sdk.current) return; // evita el doble envío
-    setError('');
-    setBusy(true);
-    try { await sdk.current.authApi.signInWithEmailAndPassword(sdk.current.auth, email.trim(), password); }
-    catch (err) { setError(loginError(err)); }
-    finally { setBusy(false); }
-  };
-
   const markRead = async (id) => {
     try {
       await sdk.current.FireDB.markContactoLeido(id);
@@ -124,22 +159,7 @@ export default function Admin() {
     );
   }
 
-  if (!user) {
-    return (
-      <section className="section-padding admin-panel" translate="no">
-        {SEO}
-        <h1>Panel de administración</h1>
-        <form onSubmit={handleLogin} className="admin-form">
-          <label htmlFor="admin-email">Email</label>
-          <input id="admin-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <label htmlFor="admin-password">Contraseña</label>
-          <input id="admin-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <button type="submit" className="btn-main" disabled={busy}>{busy ? 'Ingresando…' : 'Ingresar'}</button>
-          {error && <p role="alert" className="admin-error">{error}</p>}
-        </form>
-      </section>
-    );
-  }
+  if (!user) return <LoginForm sdk={sdk} />;
 
   const unread = contactos?.filter((c) => !c.leido).length ?? 0;
 
@@ -156,20 +176,7 @@ export default function Admin() {
       {loadError && <p role="alert" className="admin-error">{loadError}</p>}
       {contactos === null && <p role="status">Cargando consultas…</p>}
       {contactos?.length === 0 && !loadError && <p>Todavía no hay consultas guardadas.</p>}
-      {contactos?.length > 0 && (
-        <ul className="admin-list">
-          {contactos.map((c) => (
-            <li key={c.id} className={c.leido ? 'is-read' : undefined}>
-              <p className="admin-list-meta">
-                <strong>{c.name}</strong> · {formatDate(c.createdAt)}
-                {c.interest ? ` · ${c.interest}` : ''}{c.zone ? ` · ${c.zone}` : ''}
-              </p>
-              <p>{c.message}</p>
-              {!c.leido && <button className="btn-detail" onClick={() => markRead(c.id)}>Marcar como leída</button>}
-            </li>
-          ))}
-        </ul>
-      )}
+      {contactos?.length > 0 && <ContactList contactos={contactos} onRead={markRead} />}
     </section>
   );
 }

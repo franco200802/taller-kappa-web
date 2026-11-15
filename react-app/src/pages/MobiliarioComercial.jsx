@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Icon from '../components/Icon';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import ScrollText from '../components/ScrollText';
@@ -6,7 +7,7 @@ import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
 import ProductTable from '../components/ProductTable';
 import { PRODUCTS } from '../data/products';
-import { whatsappUrl } from '../data/contact';
+import { B2B_QUOTE_MESSAGE, whatsappUrl } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import { ORG_ID, faqNode, serviceNode } from '../lib/schema';
 
@@ -126,18 +127,18 @@ export default function MobiliarioComercial() {
       <section className="section-padding section-fade">
         <h2 className="section-title">Cómo pedir mobiliario comercial</h2>
         <p>
-          Escribinos por <a href={whatsappUrl('Hola, soy de una empresa y necesito cotización de mobiliario comercial.')} target="_blank" rel="noopener noreferrer">WhatsApp</a> o
+          Escribinos por <a href={whatsappUrl(B2B_QUOTE_MESSAGE)} target="_blank" rel="noopener noreferrer">WhatsApp</a> o
           con el <Link to="/contacto/">formulario de contacto</Link> e indicá qué producto necesitás, la cantidad, las medidas o el color si son a medida, y la zona de
           entrega. Te respondemos con el presupuesto. Antes de pedir, mirá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
           <Link to="/garantia/">condiciones de garantía</Link>.
         </p>
         <h3 className="faq-heading">Preguntas frecuentes sobre mobiliario comercial</h3>
         <div className="bkf-about-inner">
-          {FAQ.map(({ q, a }) => (
-            <div key={q} className="bkf-faq-item">
-              <h3>{q}</h3>
+          {FAQ.map(({ q, a }, i) => (
+            <details key={q} className="bkf-faq-item" open={i === 0}>
+              <summary><h3>{q}</h3><Icon name="chevron-down" className="faq-icon-right" /></summary>
               <p>{a}</p>
-            </div>
+            </details>
           ))}
         </div>
       </section>
@@ -146,8 +147,8 @@ export default function MobiliarioComercial() {
         <div className="cta-box">
           <h2>¿Querés equipar tu local o empresa?</h2>
           <p>Pedí tu cotización por WhatsApp: trabajamos con franquicias, restaurantes, bares, hoteles y oficinas.</p>
-          <div className="cta-btns">
-            <a href={whatsappUrl('Hola, soy de una empresa y necesito cotización de mobiliario comercial.')} target="_blank" rel="noopener noreferrer" className="btn-main">Cotizar mobiliario comercial</a>
+          <div className="cta-btns" data-cta="mobiliario_cta_final">
+            <a href={whatsappUrl(B2B_QUOTE_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn-main">Cotizar mobiliario comercial</a>
             <Link to="/proyectos/" className="btn-outline">Ver proyectos y clientes</Link>
           </div>
         </div>

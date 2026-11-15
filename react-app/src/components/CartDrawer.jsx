@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Icon from './Icon';
-import { QUOTE_KINDS, useCart } from '../context/CartContext';
-import { WHATSAPP_DISPLAY } from '../data/contact';
+import { useCart } from '../context/CartContext';
+import { QUOTE_KINDS, WHATSAPP_DISPLAY } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import Picture from './Picture';
 import Modal from './Modal';

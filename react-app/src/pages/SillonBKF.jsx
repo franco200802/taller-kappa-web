@@ -49,7 +49,7 @@ const PRODUCT = getProductBySlug('sillon-bkf-premium');
 // Fotos de la galería. La primera es la del producto (la que usan el og:image y el JSON-LD) y es la
 // que sale en el HTML prerenderizado; la segunda es una foto sin editar del sillón en una casa.
 const SHOTS = [
-  { src: '/images/sillon-bkf-hierro-cuero.jpg', alt: PRODUCT.alt, width: 1600, height: 1600, label: 'Foto de producto', caption: 'Foto de producto: el fondo fue editado digitalmente' },
+  { src: '/images/sillon-bkf-hierro-cuero.jpg', alt: PRODUCT.alt, width: 1600, height: 1600, label: 'Foto de producto', caption: 'Foto de producto, fondo editado' },
   { src: '/images/sillon-bkf-cuero-en-casa.jpg', alt: 'Sillón BKF de hierro negro y cuero marrón en el living de una casa, junto a un ventanal', width: 960, height: 1200, label: 'Foto en una casa', caption: 'Foto sin editar, en una casa', position: '50% 75%' },
 ];
 

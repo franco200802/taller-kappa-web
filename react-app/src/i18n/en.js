@@ -852,7 +852,7 @@ export default {
   "Sillón BKF de hierro negro y cuero marrón en el living de una casa, junto a un ventanal": "BKF armchair in black iron and brown leather in a living room, next to a large window",
   "Foto de producto": "Product photo",
   "Foto en una casa": "Photo in a home",
-  "Foto de producto: el fondo fue editado digitalmente": "Product photo: the background was digitally edited",
+  "Foto de producto, fondo editado": "Product photo, edited background",
   "Fotos del sillón BKF": "BKF armchair photos",
   "¿Para quién es? (opcional)": "Who is it for? (optional)",
   "Elegí una opción…": "Choose an option…",

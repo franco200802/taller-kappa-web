@@ -1,12 +1,10 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { whatsappUrl } from '../data/contact';
+import { QUOTE_KINDS, whatsappUrl } from '../data/contact';
 import { trackEvent } from '../lib/analytics';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
 const QUOTE_KEY = 'kappa-quote-contact';
-/** Para quién es el presupuesto: la clave se guarda, el texto va en el mensaje de WhatsApp. */
-export const QUOTE_KINDS = { particular: 'Particular', empresa: 'Local o empresa' };
 
 export function CartProvider({ children }) {
   // El carrito guardado se lee DESPUÉS de montar, no en el estado inicial:
