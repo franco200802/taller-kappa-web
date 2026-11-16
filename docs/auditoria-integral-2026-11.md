@@ -44,6 +44,8 @@ Ordenados por impacto. "Hecho" = corregido en esta rama.
 | 5 | Panel `/admin`: con Firebase sin configurar, cualquier intento mostraba "Usuario o contraseña incorrectos" (falso) y descargaba el SDK (~105 kB gzip) para nada. Sin estado de carga ni distinción de errores. Con sesión, solo mostraba un conteo de pedidos (colección que el sitio no escribe) y nada de las consultas que el formulario sí guarda | Código + navegador | Robustez / uso real | Hecho |
 | 6 | Menú móvil: el botón decía siempre "Abrir menú", no se cerraba con Escape y no declaraba qué controla. El globo del presupuesto anunciaba "0" a lectores de pantalla | Código | Accesibilidad | Hecho |
 | 7 | El botón "Descargar presupuesto" no descarga: abre el diálogo de impresión | Código | Claridad | Hecho (rótulo) |
+| 7b | Presupuesto en celular: el total, los dos campos opcionales y los botones estaban en el pie fijo y dejaban menos de la mitad del alto para la lista; con dos productos, el segundo quedaba cortado | Captura a 360 × 740 px | Conversión móvil | Hecho |
+| 7c | Enlaces de la ruta de navegación (breadcrumb) con 22 px de alto táctil | Medición en navegador | Accesibilidad móvil | Hecho |
 | 8 | Fotos de producto generadas con IA, con la marca ✦ visible en la esquina | Ya documentado | **Confianza comercial (alto)** | Pendiente: requiere fotos reales |
 | 9 | Email de contacto público es una casilla personal de Gmail | `data/contact.js` | Imagen profesional | Pendiente: decisión del dueño |
 | 10 | `firestore.rules`: el admin se reconoce solo por el email del token, sin exigir email verificado; `orders` acepta cualquier documento de un usuario logueado; `users` deja al usuario escribir campos arbitrarios | `firestore.rules` | Seguridad (ver §7) | Pendiente: requiere aprobación |
@@ -85,7 +87,10 @@ Ordenados por impacto. "Hecho" = corregido en esta rama.
      conteo de pedidos.
 6. **Accesibilidad del menú:** rótulo "Abrir/Cerrar menú", `aria-controls`, Escape cierra; el botón
    del presupuesto anuncia la cantidad y el globo queda como adorno visual.
-7. **Presupuesto:** el botón ahora dice "Imprimir o guardar en PDF".
+7. **Presupuesto:** el botón ahora dice "Imprimir o guardar en PDF". El total y los campos opcionales
+   (nombre, zona) pasan a la zona que hace scroll; fijos quedan solo los dos botones y la aclaración.
+   En un celular de 740 px de alto se ven dos productos completos en vez de uno y medio.
+8. **Ruta de navegación:** los enlaces ganan área táctil (38 px) sin mover el resto del encabezado.
 
 ## 4. Archivos modificados
 
@@ -95,7 +100,7 @@ Ordenados por impacto. "Hecho" = corregido en esta rama.
 | `react-app/src/pages/Nosotros.jsx` | Galería derivada de `PRODUCTS`, sin duplicado ni recortes |
 | `react-app/src/components/ProductTable.jsx` | `data-label` por celda para la vista apilada |
 | `react-app/src/components/Navbar.jsx` | Accesibilidad del menú y del botón del presupuesto |
-| `react-app/src/components/CartDrawer.jsx` | Rótulo del botón de impresión |
+| `react-app/src/components/CartDrawer.jsx` | Rótulo del botón de impresión; total y campos opcionales dentro del área con scroll |
 | `react-app/src/pages/Admin.jsx` | Envoltorio liviano: aviso si falta Firebase, carga diferida del panel |
 | `react-app/src/pages/AdminPanel.jsx` (nuevo) | Login, sesión y bandeja de consultas |
 | `react-app/src/lib/firedb.js` | `setContactoLeido()` |
@@ -138,6 +143,9 @@ agregaron altas/bajas de productos ni estadísticas: no hay una necesidad comerc
   agregar al presupuesto y globo, enlace del presupuesto a `wa.me/541161242498` con el producto,
   filtro del catálogo, tabla móvil sin scroll lateral, 54 enlaces de WhatsApp correctos, lightbox,
   y `/admin` sin configurar (muestra el aviso y no descarga Firebase).
+- **Revisión adicional en celular** (modal de producto, presupuesto con productos, menú abierto y
+  las páginas de FAQ, envíos, garantía, proyectos, guía BKF y mobiliario): sin otros defectos; no hay
+  texto por debajo de 13 px.
 - **react-doctor** (`--scope changed`): 100/100, sin hallazgos.
 - **`git diff --check`:** OK.
 - **Tamaño:** JS principal 237,4 → 237,6 kB; CSS 41,1 → 43,1 kB (sin gzip). El panel son 5,6 kB

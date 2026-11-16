@@ -71,27 +71,31 @@ export default function CartDrawer() {
               </div>
             </div>
           ))}
-        </div>
-
-        <div id="cart-footer">
+          {/* El total y los datos opcionales van en la zona que hace scroll: en el pie fijo, en un
+              celular dejaban menos de la mitad del alto para la lista y el segundo producto quedaba cortado. */}
           {cart.length > 0 && (
-            <div className="cart-total" style={{ display: 'flex' }}>
-              <span>Productos:</span>
-              <span>{cart.reduce((s, i) => s + i.qty, 0)}</span>
-            </div>
-          )}
-          {cart.length === 0 ? (
-            // Con el presupuesto vacío no hay nada que cotizar: en lugar de un
-            // botón apagado (que igual se podía enfocar), una salida real.
-            <Link to="/catalogo/" className="btn-main" onClick={() => setIsOpen(false)}>Ver catálogo</Link>
-          ) : (
-            <>
+            <div className="cart-summary">
+              <div className="cart-total">
+                <span>Productos:</span>
+                <span>{cart.reduce((s, i) => s + i.qty, 0)}</span>
+              </div>
               <div className="cart-contact">
                 <label htmlFor="quote-name">Tu nombre (opcional)</label>
                 <input id="quote-name" autoComplete="name" maxLength={80} value={quote.name} onChange={(e) => setQuote({ ...quote, name: e.target.value })} />
                 <label htmlFor="quote-zone">Zona de entrega (opcional)</label>
                 <input id="quote-zone" autoComplete="address-level2" maxLength={80} placeholder="Barrio o localidad" value={quote.zone} onChange={(e) => setQuote({ ...quote, zone: e.target.value })} />
               </div>
+            </div>
+          )}
+        </div>
+
+        <div id="cart-footer">
+          {cart.length === 0 ? (
+            // Con el presupuesto vacío no hay nada que cotizar: en lugar de un
+            // botón apagado (que igual se podía enfocar), una salida real.
+            <Link to="/catalogo/" className="btn-main" onClick={() => setIsOpen(false)}>Ver catálogo</Link>
+          ) : (
+            <>
               <a
                 href={whatsappLink}
                 className="btn-whatsapp-checkout"
