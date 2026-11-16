@@ -31,12 +31,9 @@ const FALLBACK_TESTIMONIOS = [
 
 // La cuarta foto repite la de la Base de Mesa Flat (hoy hay tres fotos de producto):
 // va con alt vacío porque es decorativa, y el botón ya se llama por su `label`.
-const GALLERY = [
-  { src: PRODUCTS[0].image, alt: PRODUCTS[0].alt, label: PRODUCTS[0].name, tall: true, w: PRODUCTS[0].imageWidth, h: PRODUCTS[0].imageHeight },
-  { src: PRODUCTS[1].image, alt: PRODUCTS[1].alt, label: PRODUCTS[1].name, w: PRODUCTS[1].imageWidth, h: PRODUCTS[1].imageHeight },
-  { src: PRODUCTS[2].image, alt: PRODUCTS[2].alt, label: PRODUCTS[2].name, w: PRODUCTS[2].imageWidth, h: PRODUCTS[2].imageHeight },
-  { src: PRODUCTS[2].image, alt: '', label: PRODUCTS[2].name, wide: true, w: PRODUCTS[2].imageWidth, h: PRODUCTS[2].imageHeight },
-];
+// Una foto por producto, todas en 4:5 (la proporción que muestra la base de mesa entera, igual que en
+// la home). Antes la base aparecía dos veces en recuadros apaisados que solo dejaban ver el piso.
+const GALLERY = PRODUCTS.map((p) => ({ src: p.image, alt: p.alt, label: p.name, w: p.imageWidth, h: p.imageHeight }));
 
 export default function Nosotros() {
   const [testimonios, setTestimonios] = useState(FALLBACK_TESTIMONIOS);
@@ -184,11 +181,11 @@ export default function Nosotros() {
         <p className="section-subtitle">Cada pieza sale de nuestras manos directo a tu espacio.</p>
         <div className="gallery-grid">
           {GALLERY.map((g, i) => (
-            <div className={`gallery-item ${g.tall ? 'gallery-tall' : ''} ${g.wide ? 'gallery-wide' : ''}`}
-              key={g.wide ? `${g.src}-wide` : g.src} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
+            <div className="gallery-item"
+              key={g.src} role="button" tabIndex={0} aria-label={`Ampliar: ${g.label}`}
               onClick={() => setLightbox(i)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightbox(i); } }}>
-              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" sizes="(max-width: 760px) 50vw, 400px" />
+              <Picture src={g.src} alt={g.alt} width={g.w} height={g.h} loading="lazy" sizes="(max-width: 760px) 100vw, 400px" />
               <div className="gallery-overlay">{g.label}</div>
             </div>
           ))}

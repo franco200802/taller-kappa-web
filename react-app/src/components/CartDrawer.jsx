@@ -103,7 +103,7 @@ export default function CartDrawer() {
                 <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
               </a>
               <button className="btn-print-budget" onClick={printBudget}>
-                <Icon name="file-pdf" /> Descargar presupuesto
+                <Icon name="file-pdf" /> Imprimir o guardar en PDF
               </button>
             </>
           )}

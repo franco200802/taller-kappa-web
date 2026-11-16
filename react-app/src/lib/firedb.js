@@ -42,6 +42,11 @@ export const FireDB = {
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   },
 
+  /** Marca una consulta como leída o no leída (firestore.rules: solo el admin puede actualizar). */
+  async setContactoLeido(id, leido) {
+    return updateDoc(doc(db, 'contactos', id), { leido });
+  },
+
   async getOrders() {
     const snap = await getDocs(query(col('orders'), orderBy('createdAt', 'desc')));
     return snap.docs.map((d) => ({ id: d.id, ...d.data() }));

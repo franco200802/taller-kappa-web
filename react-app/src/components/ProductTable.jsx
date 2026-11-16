@@ -6,6 +6,8 @@ import { CATEGORIES, factOf, productHref } from '../data/products';
  * categoría, estructura, medidas y uso, leídos de `facts` en data/products.js.
  * Con `showCategory={false}` se oculta la columna de categoría (en la página
  * de una categoría sería redundante).
+ * En pantallas angostas cada producto se apila como una ficha (global.css, 19b):
+ * `data-label` repite ahí el encabezado de columna, que queda oculto a la vista.
  */
 export default function ProductTable({ products, showCategory = true, caption }) {
   const categoryName = (key) => CATEGORIES.find((c) => c.key === key)?.name ?? key;
@@ -26,10 +28,10 @@ export default function ProductTable({ products, showCategory = true, caption })
           {products.map((p) => (
             <tr key={p.slug}>
               <th scope="row"><Link to={productHref(p)}>{p.name}</Link></th>
-              {showCategory && <td>{categoryName(p.category)}</td>}
-              <td>{factOf(p, 'Estructura')}</td>
-              <td>{factOf(p, 'Medidas')}</td>
-              <td>{factOf(p, 'Uso')}</td>
+              {showCategory && <td data-label="Categoría">{categoryName(p.category)}</td>}
+              <td data-label="Estructura">{factOf(p, 'Estructura')}</td>
+              <td data-label="Medidas">{factOf(p, 'Medidas')}</td>
+              <td data-label="Uso">{factOf(p, 'Uso')}</td>
             </tr>
           ))}
         </tbody>

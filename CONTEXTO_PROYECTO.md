@@ -353,6 +353,13 @@ pendientes en `docs/seo/fase-4-ventas.md`. Lo que hay que saber del código:
 - **No crear `/bkf-cuero`, `/comprar-bkf-buenos-aires`, `/fabricante-bkf`, etc.**: misma
   intención y mismo producto que `/sillon-bkf/` (ver §3 del documento).
 
+## 5h. Auditoría integral (16/11/2026)
+
+Informe en `docs/auditoria-integral-2026-11.md`: estado, defectos encontrados, qué se
+cambió y qué se dejó. Para el código: `ProductTable` se apila como fichas en celular
+(cada `<td>` lleva `data-label`; si se agrega una columna, ponerle el suyo) y la
+galería de Nosotros sale de `PRODUCTS` (una foto por producto, en 4:5).
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
@@ -371,10 +378,14 @@ Firebase. Esto significa:
   los reales del proyecto (`apiKey`, `authDomain`, `projectId`, etc.) y
   **publicar `firestore.rules`** (el deploy de GitHub Pages no las sube).
 
-### 🟡 Pendiente — Admin panel incompleto
-`src/pages/Admin.jsx` tiene un TODO explícito: faltan migrar las tabs
-Pedidos/Clientes/Stats del `admin.html` viejo. Hoy solo muestra el login y
-un conteo básico de pedidos.
+### 🟡 Pendiente — Panel admin sin probar con datos reales
+`src/pages/Admin.jsx` es un envoltorio liviano: si Firebase no está configurado
+muestra un aviso y no descarga el SDK; si lo está, carga `AdminPanel.jsx` (login
+y bandeja de las consultas que guarda el formulario de contacto, con "marcar como
+leída"). Quién es admin lo deciden las reglas de Firestore. **El panel con sesión
+no se pudo probar contra un Firestore real** (nov. 2026): probarlo al configurar
+Firebase. Antes de publicar las reglas, leer §7 de
+`docs/auditoria-integral-2026-11.md` (registro público y colecciones heredadas).
 
 ### 🟡 Pendiente — Fotos de producto generadas con IA
 `bkf1.jpg`, `bkfapoyapies.jpg` y `mesa.jpeg` muestran la marca de agua ✦ de

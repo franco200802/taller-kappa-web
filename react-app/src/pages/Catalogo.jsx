@@ -38,9 +38,6 @@ function ProductCard({ p, onOpen }) {
   return (
     <article className="product-card" data-category={p.category} data-cta="catalogo_card" data-item={p.name}>
       {p.badge && <div className="product-badge">{p.badge}</div>}
-      <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
-        <span className="stock-dot-small" /> Consultar disponibilidad
-      </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Vista rápida: ${p.name}`}
         onClick={() => onOpen(p)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
@@ -50,6 +47,10 @@ function ProductCard({ p, onOpen }) {
       <div className="card-info">
         <h2 className="card-title">{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h2>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
+        {/* Va debajo del nombre: arriba de la foto quedaba tapado por la etiqueta (.product-badge). */}
+        <p className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
+          <span className="stock-dot-small" /> Consultar disponibilidad
+        </p>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
           href={p.slug ? whatsappUrlFor(priceQuestion(p), productPath(p)) : whatsappUrl(priceQuestion(p))}>
           <Icon name="whatsapp" /> Consultar precio
