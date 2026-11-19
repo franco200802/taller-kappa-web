@@ -128,6 +128,8 @@ export const PRODUCTS = [
     definition: 'El Banco BKF es un banco bajo (una banqueta) de hierro macizo de 12 mm y asiento de cuero que sigue la línea del sillón BKF en formato compacto: 38 x 38 x 45 cm. Taller Kappa lo fabrica en San Martín, Buenos Aires, para usarlo como pie de cama o asiento auxiliar.',
     material: 'Hierro macizo de 12 mm y asiento de cuero',
     specs: ['Hierro macizo 12mm', 'Altura 45cm', 'Ideal pie de cama o auxiliar', 'Medidas: 38x38x45 cm'],
+    // Medidas en cm (ancho, profundidad, alto): las de la ficha. Las usa el modelo 3D para escalar el banco.
+    dimensions: { width: 38, depth: 38, height: 45 },
     facts: [
       ['Categoría', 'Asientos (bancos BKF)'],
       ['Estructura', 'Hierro macizo de 12 mm'],
@@ -162,6 +164,9 @@ export const PRODUCTS = [
     definition: 'La Base de Mesa Flat es una base de mesa de chapa torneada de 10 mm con columna central de 77 o 101 mm, que Taller Kappa fabrica en San Martín, Buenos Aires, para uso gastronómico, como mesas de bares y restaurantes. Se ofrece en altura de mesa (73 cm) y de barra (105 cm), admite tapas grandes y su base pesada evita el balanceo.',
     material: 'Chapa torneada de 10 mm con columna central de 77 o 101 mm',
     specs: ['Base chapa torneada 10mm', 'Columna central 77/101mm', 'Alturas: 73cm (Mesa) / 105cm (Barra)', 'Apta tapas grandes'],
+    // Datos de la ficha que usa el modelo 3D: alturas en cm (mesa, barra), columnas y chapa en mm. El diámetro del
+    // disco de la base no se publica: el 3D lo estima desde la foto y no lo rotula.
+    dimensions: { heights: [73, 105], columnsMm: [77, 101], plateMm: 10 },
     facts: [
       ['Categoría', 'Mesas (bases de mesa)'],
       ['Estructura', 'Base de chapa torneada de 10 mm con columna central de 77 o 101 mm'],

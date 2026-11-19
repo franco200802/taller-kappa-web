@@ -1169,7 +1169,7 @@ details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margi
 }
 .admin-products { display: grid; gap: 16px; padding-top: 20px; }
 
-/* ---------- 23. Sillón BKF en 3D (galería de /sillon-bkf/, noviembre 2026) ---------- */
+/* ---------- 23. Producto en 3D (galería de las fichas, noviembre 2026) ---------- */
 /* El visor ocupa el mismo lugar y proporción que la foto (1:1, 5:4 en mobile): cambiar de foto a 3D no mueve nada. */
 .bkf3d-stage {
     position: relative; aspect-ratio: 1; overflow: hidden;
@@ -1179,7 +1179,7 @@ details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margi
 .bkf3d-stage:active { cursor: grabbing; }
 .bkf3d-stage canvas { display: block; width: 100%; height: 100%; }
 .bkf3d-status { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--grafito); font-size: var(--t-sm); }
-/* Etiquetas de las cotas: las posiciona bkf3d.js sobre el punto medio de cada línea. */
+/* Etiquetas de las cotas: las posiciona lib/product3d.js sobre el punto medio de cada línea. */
 .bkf3d-label {
     position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
     padding: 2px 9px; border: 1px solid var(--kappa); border-radius: 999px;
@@ -1204,9 +1204,9 @@ details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margi
     .bkf3d-panel .btn-main { justify-self: stretch; }
 }
 
-/* ---------- 24. Showroom 3D de la home: el sillón que se mueve con el scroll (noviembre 2026) ---------- */
+/* ---------- 24. Showroom 3D: el producto que se mueve con el scroll (home y fichas, noviembre 2026) ---------- */
 /* Escena fija (sticky) + 4 tarjetas que pasan por encima. Los textos son HTML normal: sin JS se leen igual.
-   --p (0 a 1) lo escribe BkfShowroom.jsx con el progreso del scroll. */
+   --p (0 a 1) lo escribe Showroom3D.jsx con el progreso del scroll. */
 .bkf-stage { --stage-h: calc(100svh - var(--nav-h)); position: relative; background: var(--hierro); color: var(--blanco); }
 .bkf-stage-sticky {
     position: sticky; top: var(--nav-h); height: var(--stage-h); overflow: hidden;
@@ -1276,3 +1276,17 @@ details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margi
     .bkf-stage-word { transform: translate(0, -50%); }
     .bkf-stage-card { transition: none; }
 }
+
+/* Opciones con texto del 3D (altura y columna de la base de mesa): botones juntos, uno elegido. */
+.seg-group { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--linea); border-radius: var(--r); background: var(--cal); }
+.seg-option {
+    min-height: 44px; padding: 0 16px; border: 0; border-radius: calc(var(--r) - 2px);
+    background: transparent; color: var(--grafito); font-weight: 650; font-variant-numeric: tabular-nums;
+    transition: background-color .2s, color .2s;
+}
+.seg-option:hover { color: var(--hierro); }
+.seg-option.active { background: var(--hierro); color: var(--blanco); }
+.bkf-stage .seg-group { border-color: var(--hierro-2); background: color-mix(in srgb, var(--blanco) 6%, transparent); }
+.bkf-stage .seg-option { color: var(--grafito-claro); }
+.bkf-stage .seg-option:hover { color: var(--blanco); }
+.bkf-stage .seg-option.active { background: var(--blanco); color: var(--hierro); }

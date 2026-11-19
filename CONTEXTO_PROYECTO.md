@@ -447,43 +447,74 @@ Diagnóstico, matriz priorizada, mediciones antes/después y pendientes en
   los textos que las repiten se buscan con `grep -rn "77 x 87 x 102\|77x87x102"`. La imagen en sí
   sigue sin publicarse.
 
-## 5k. Sillón BKF en 3D (19/11/2026)
+## 5k. Productos en 3D (19/11/2026)
 
-Tercera miniatura "3D" en la galería de `/sillon-bkf/`: el sillón modelado por código, a escala real,
-con los acabados de `FINISH_COLORS`, los colores de cuero de `LEATHER_COLORS` (los que nombra la FAQ:
-negro, marrón, natural), cotas de ancho/profundidad/alto y "Agregar este sillón al presupuesto"
-(el color viaja como `"Negro Mate, cuero marrón"`).
+Los tres productos están modelados por código y escalados a las medidas de `data/products.js`:
+sillón (77 x 87 x 102 cm), banco (38 x 38 x 45 cm) y Base de Mesa Flat (73/105 cm de alto, columna de
+77/101 mm, chapa de 10 mm). El diámetro del disco de la base **no está publicado**: se estimó desde la
+foto (con la columna de 77 mm como regla) y no se rotula en ningún lado. Se ven en dos lugares: la
+miniatura "3D" de la galería de cada ficha (`/sillon-bkf/`, `/catalogo/banco-bkf/`,
+`/catalogo/base-de-mesa-flat/`) y el showroom con scroll (§5l).
 
-- **Archivos:** `lib/bkf3d.js` (three.js puro: geometría, materiales, cámara, cotas) y
-  `components/Bkf3D.jsx` (visor + panel). Estilos en la sección 23 de `global.css`.
-- **Peso cero en la carga:** three.js (~144 kB gzip) es la única dependencia nueva y vive en su propio
-  chunk (`bkf3d-*.js`); se descarga con `import()` al tocar la miniatura (se adelanta al pasar el
-  mouse o enfocarla). Verificado: 0 descargas del chunk antes del clic. `chunkSizeWarningLimit` está en
-  600 kB solo por ese chunk. No importarlo de forma estática en ningún lado.
-- **Hidratación:** el estado inicial de la galería es la foto 0, igual que el HTML prerenderizado; el
-  visor existe solo después de un clic. No hacer que arranque en 3D.
-- **Medidas exactas:** la silla se construye con proporciones de la foto y después se escala para que
-  su caja mida exactamente `dimensions`. Si cambian las medidas, se cambian ahí y en los textos.
+- **Archivos:**
+  - `lib/product3d.js`: three.js puro, con los 3 modelos (`MODELS`), el visor (`createViewer`), el showroom
+    (`createStage`) y los capítulos de cámara (`STAGE_KF`).
+  - `data/product3d.js` (`PRODUCT_3D`): qué se elige en cada producto, las etiquetas de las cotas, cómo se
+    escribe en el presupuesto y los textos del showroom.
+  - `components/Product3D.jsx`: visor, panel y grupos de opciones.
+  - `components/Showroom3D.jsx`: el showroom.
+  - `lib/loadProduct3d.js`: el `import()`.
+  - Estilos: secciones 23 y 24 de `global.css`.
+- **Para sumar un producto:**
+  1. Agregar su modelo en `MODELS` (con `object`, `guides`, `size`, `setOption`, `update`, `setLayer` y
+     `setExplode`).
+  2. Agregar sus 4 keyframes en `STAGE_KF`.
+  3. Agregar su configuración en `PRODUCT_3D`.
+  4. Traducir los textos en `en.js`.
+- **Opciones = datos publicados:**
+  - sillón: acabado (`FINISH_COLORS`) y cuero (`LEATHER_COLORS`, los que nombra la FAQ);
+  - banco: solo acabado (la FAQ de asientos los publica para "sillones y bancos"; el color del cuero del
+    banco no está publicado);
+  - base: altura y columna.
+- **Cómo llega al presupuesto:** `addToCart(producto, describe(valores))`, por ejemplo `"Negro Mate, cuero marrón"`
+  o `"Barra (105 cm), columna de 101 mm"`. En inglés, el del cuero se traduce con una regla de
+  `translate.js` (`COLOR_WITH_LEATHER`) y los de la base, con entradas de `en.js`.
+- **Peso cero en la carga:** three.js (~145 kB gzip) es la única dependencia nueva y vive en su propio
+  chunk (`product3d-*.js`). Lo descarga `loadProduct3d()` al tocar la miniatura (se adelanta al pasar el
+  mouse o enfocarla) o al acercarse al showroom. `chunkSizeWarningLimit` está en 600 kB solo por ese
+  chunk. No importarlo de forma estática en ningún lado.
+- **Hidratación:** la galería arranca en la foto, igual que el HTML prerenderizado; el visor existe solo
+  después de un clic. En `Producto.jsx` la galería y el showroom llevan `key={slug}` para volver a cero
+  al pasar a otro producto.
 - **Sin React Three Fiber** a propósito (el sitio usa React 18 y evita librerías extra). El bucle de
   render se pausa fuera de pantalla y con la pestaña oculta; `prefers-reduced-motion` apaga el giro solo.
-- **Idioma:** los textos nuevos están en `en.js`; el color con cuero se traduce con una regla en
-  `translate.js` (`COLOR_WITH_LEATHER`), no con 15 entradas en el diccionario.
-- **Medición:** abrir el visor envía `view_3d` a GA4; el botón del panel dispara `add_to_cart` (como el
-  resto) y su contenedor lleva `data-cta="sillon-bkf_3d"`.
+  El `IntersectionObserver` del bucle usa el **último** cambio que recibe: con el primero, la escena de la
+  base quedaba congelada cuando llegaban "fuera" y "dentro" juntos.
+- **Medición:** `view_3d` con `location` (`ficha_galeria`, `ficha_showroom`, `home_showroom`); los botones
+  llevan `data-cta` (`sillon-bkf_3d`, `ficha_3d_galeria`, `ficha_3d_showroom`, `home_3d`).
 
-## 5l. Showroom 3D de la home (19/11/2026)
+## 5l. Showroom 3D con scroll (home y fichas, 19/11/2026)
 
-Sección oscura después de "Lo que fabricamos" (`components/BkfShowroom.jsx`, estilos en la sección 24 de
-`global.css`): el sillón en 3D queda fijo (sticky) y cambia con el scroll en 4 capítulos (diseño de 1938,
-estructura con el cuero que se disuelve, cuero, medidas con cotas + acabados y "Agregar al presupuesto").
-Es la única animación ligada al scroll del sitio y se agregó a pedido (el rediseño de sept. 2026 no tenía).
+Sección oscura con el producto en 3D fijo (sticky), que cambia con el scroll en 4 capítulos:
+- **Home**, después de "Lo que fabricamos": el sillón.
+- **Fichas del banco y de la base**, después de la ficha.
 
-- **Mismo modelo que la galería:** `createBkfStage` en `lib/bkf3d.js` usa `buildChair` (la silla a escala
-  exacta de `dimensions`). Los capítulos de la cámara están en `STAGE_KF`.
+Capítulos por producto:
+- **Sillón:** diseño de 1938, estructura (el cuero se disuelve), cuero, y medidas con cotas + acabados.
+- **Banco:** lo mismo en formato banqueta.
+- **Base:** la base completa; la chapa de 10 mm (la columna se levanta); la columna; las alturas, con
+  selector de altura y columna.
+
+Todos terminan en "Agregar al presupuesto". Es la única animación ligada al scroll del sitio y se agregó a
+pedido (el rediseño de sept. 2026 no tenía).
+
+- **Mismo modelo que la galería:** `createStage` y `createViewer` usan los mismos `MODELS`. Las distancias
+  de cámara de `STAGE_KF` están en la escala del sillón y se ajustan al tamaño de cada producto
+  (`frameScale`).
 - **Los textos no dependen de JS:** las tarjetas son HTML prerenderizado que pasa por encima de la escena; nada
   arranca oculto. No convertirlas en textos que aparecen/desaparecen con JS.
-- **three.js se descarga al acercarse** (una pantalla antes de la sección), nunca en la carga de la home: no cambia
-  LCP ni TBT. Con "ahorro de datos" o sin WebGL queda una foto. `prefers-reduced-motion`: la silla salta de un
+- **three.js se descarga al acercarse** (media pantalla antes de la sección), nunca en la carga de la página: no
+  cambia LCP ni TBT. Con "ahorro de datos" o sin WebGL queda una foto. `prefers-reduced-motion`: la silla salta de un
   capítulo al otro sin recorrido y no hay polvo ni balanceo.
 - **Rendimiento en pantalla:** el bucle de render se pausa fuera de la sección; la resolución tiene tope (`maxDpr`).
   El progreso del scroll se escribe en `--p` (CSS) y en la escena, sin re-render de React por cuadro.
@@ -492,7 +523,8 @@ Es la única animación ligada al scroll del sitio y se agregó a pedido (el red
   (`setFreeSpace`). Si se agrega texto a una tarjeta, la silla se achica sola.
 - **Color fiel a las muestras:** los dos visores usan `NeutralToneMapping` (Khronos PBR Neutral, pensado para
   productos). Con ACES y luz cálida el cuero marrón se veía naranja.
-- **Medición:** `view_3d` con `location: 'home_showroom'` cuando carga la escena; `data-cta="home_3d"` en los botones.
+- **Celular, ancho:** además del alto, el encuadre deja entrar el producto girado con sus cotas y etiquetas
+  (en el banco, la etiqueta "Alto" quedaba cortada).
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
