@@ -902,7 +902,8 @@ export default {
   "El banco BKF, pieza por pieza": "The BKF stool, piece by piece",
   "Sigue la línea del sillón BKF en formato compacto. Se usa como pie de cama o como asiento auxiliar.": "It follows the line of the BKF armchair in a compact format. It is used at the foot of the bed or as an extra seat.",
   "La misma varilla maciza del sillón, en un formato más chico. La estructura de hierro tiene garantía de por vida.": "The same solid rod as the armchair, in a smaller format. The iron frame has a lifetime warranty.",
-  "El asiento cuelga de las cuatro puntas, como el cuero del sillón. Tiene garantía de 1 año.": "The seat hangs from the four tips, like the armchair's leather. It has a 1-year warranty.",
+  "El asiento cuelga de las cuatro puntas, como el cuero del sillón. Se pide en negro, marrón o natural, con garantía de 1 año.": "The seat hangs from the four tips, like the armchair's leather. Available in black, brown or natural, with a 1-year warranty.",
+  "Asiento de cuero en negro, marrón o natural": "Leather seat in black, brown or natural",
   "38 x 38 x 45 cm, en el acabado que elijas": "38 x 38 x 45 cm, in the finish you choose",
   "Ancho, profundidad y alto. Se fabrica en otros colores y medidas a pedido, sin costo adicional.": "Width, depth and height. It is made in other colors and sizes on request, at no extra cost.",
   // Base de Mesa Flat en 3D (data/product3d.js)

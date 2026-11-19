@@ -473,8 +473,8 @@ miniatura "3D" de la galería de cada ficha (`/sillon-bkf/`, `/catalogo/banco-bk
   4. Traducir los textos en `en.js`.
 - **Opciones = datos publicados:**
   - sillón: acabado (`FINISH_COLORS`) y cuero (`LEATHER_COLORS`, los que nombra la FAQ);
-  - banco: solo acabado (la FAQ de asientos los publica para "sillones y bancos"; el color del cuero del
-    banco no está publicado);
+  - banco: acabado (la FAQ de asientos los publica para "sillones y bancos") y cuero negro, marrón o
+    natural (confirmado por el dueño el 19/11/2026; publicado en la fila "Tapizado" de su ficha);
   - base: altura y columna.
 - **Cómo llega al presupuesto:** `addToCart(producto, describe(valores))`, por ejemplo `"Negro Mate, cuero marrón"`
   o `"Barra (105 cm), columna de 101 mm"`. En inglés, el del cuero se traduce con una regla de

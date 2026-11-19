@@ -133,7 +133,7 @@ export const PRODUCTS = [
     facts: [
       ['Categoría', 'Asientos (bancos BKF)'],
       ['Estructura', 'Hierro macizo de 12 mm'],
-      ['Tapizado', 'Asiento de cuero'],
+      ['Tapizado', 'Asiento de cuero en negro, marrón o natural'],
       ['Medidas', '38 x 38 x 45 cm (altura 45 cm)'],
       ['Uso', 'Pie de cama o asiento auxiliar'],
       ['Garantía', `${GARANTIA_HIERRO}; cuero 1 año`],
