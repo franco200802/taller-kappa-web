@@ -25,8 +25,10 @@ function FichaGallery({ product, path, onAdd }) {
   const [is3d, setIs3d] = useState(false);
   const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
   const [measures, setMeasures] = useState(true);
+  // Las fotos verticales (la base de mesa es 2:3) van en una caja 3:4 para que no se vean recortadas (ver global.css).
   const photo = (
-    <Picture src={product.image} alt={product.alt} width={product.imageWidth} height={product.imageHeight} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
+    <Picture src={product.image} alt={product.alt} width={product.imageWidth} height={product.imageHeight} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px"
+      className={product.imageHeight > product.imageWidth ? 'is-portrait' : undefined} />
   );
   if (!cfg) return photo;
 
