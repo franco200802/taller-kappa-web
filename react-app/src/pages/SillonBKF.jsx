@@ -8,12 +8,12 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
-import { Product3DPanel, Product3DViewer } from '../components/Product3D';
+import { Product3DOptions, Product3DPanel, Product3DViewer } from '../components/Product3D';
 import { loadProduct3d } from '../lib/loadProduct3d';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrlFor } from '../data/contact';
 import { PRODUCT_3D, initialValues } from '../data/product3d';
-import { FINISH_COLORS as COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
+import { SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
 import { BUSINESS } from '../data/business';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
@@ -78,6 +78,11 @@ export default function SillonBKF() {
     if (!is3d) trackEvent('view_3d', { item_name: PRODUCT.name, location: 'ficha_galeria', page_path: '/sillon-bkf/' });
     setShot('3d');
   };
+  // Elegir una opción la muestra: si la galería estaba en una foto, pasa al 3D (las fotos no cambian de color).
+  const pickOption = (update) => {
+    setValues3d(update);
+    open3d();
+  };
 
   return (
     <>
@@ -137,13 +142,7 @@ export default function SillonBKF() {
                 <Icon name="cube" /> <span>3D</span>
               </button>
             </div>
-            {is3d && (
-              <Product3DPanel
-                slug={PRODUCT.slug} values={values3d} onChange={setValues3d}
-                measures={measures} onMeasures={setMeasures}
-                onAdd={() => handleAdd(CONFIG_3D.describe(values3d))} cta="sillon-bkf_3d"
-              />
-            )}
+            {is3d && <Product3DPanel measures={measures} onMeasures={setMeasures} />}
             <div className="bkf-badges">
               <span className="bkf-badge"><Icon name="star" /> Diseño icónico</span>
               <span className="bkf-badge"><Icon name="industry" /> Fábrica propia</span>
@@ -167,27 +166,23 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
               <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
             </ul>
+            {/* Un solo selector (antes había otro en el panel 3D y estas muestras agregaban al presupuesto con un
+                toque): las opciones cambian el 3D y el botón agrega exactamente lo elegido. */}
+            <div className="bkf-choose">
+              <p className="bkf-typed">
+                Se pide en{' '}
+                <TypeWriter sequences={FINISHES} srText="negro mate, blanco crema, cromado, verde oliva, rojo Kappa o el color que necesites" />
+              </p>
+              <Product3DOptions slug={PRODUCT.slug} values={values3d} onChange={pickOption} />
+            </div>
             <div className="bkf-actions" data-cta="sillon-bkf_actions">
-              <button className="btn-main" onClick={() => handleAdd('Negro Mate')}>
+              <button className="btn-main" onClick={() => handleAdd(CONFIG_3D.describe(values3d))}>
                 <Icon name="plus" /> Agregar al presupuesto
               </button>
               <a href={whatsappUrlFor(priceQuestion(PRODUCT), '/sillon-bkf')}
                 target="_blank" rel="noopener noreferrer" className="btn-outline">
                 <Icon name="whatsapp" /> Consultar precio
               </a>
-            </div>
-            <div>
-              <p className="bkf-typed">
-                Se pide en{' '}
-                <TypeWriter sequences={FINISHES} srText="negro mate, blanco crema, cromado, verde oliva, rojo Kappa o el color que necesites" />
-              </p>
-              <p className="color-label">Agregar en otro acabado:</p>
-              <div className="bkf-color-swatches">
-                {COLORS.map((c) => (
-                  <button key={c.name} title={c.name} aria-label={`Agregar en ${c.name}`} onClick={() => handleAdd(c.name)}
-                    className="bkf-color-swatch" style={{ background: c.swatch }} />
-                ))}
-              </div>
             </div>
           </div>
         </div>

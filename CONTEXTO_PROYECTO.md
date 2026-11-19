@@ -497,6 +497,25 @@ miniatura "3D" de la galería de cada ficha (`/sillon-bkf/`, `/catalogo/banco-bk
 - **Medición:** `view_3d` con `location` (`ficha_galeria`, `ficha_showroom`, `home_showroom`); los botones
   llevan `data-cta` (`sillon-bkf_3d`, `ficha_3d_galeria`, `ficha_3d_showroom`, `home_3d`).
 
+## 5m. Fotos sin recorte, botón del hero visible y un solo selector (19/11/2026)
+
+Medido en producción con el navegador (porcentaje visible de cada foto y posición del botón):
+
+- **Hero de la home:**
+  - La caja de la foto es cuadrada como la foto, así que la foto se ve entera (antes, entre el 80 % y el 82 %).
+  - En celular, los botones van justo después del título y la bajada, con CSS `order`; el HTML no cambia. Con la
+    foto entera habían quedado entre 82 y 165 px abajo de la primera pantalla.
+  - En pantallas bajas (`max-height: 820px`) el título se achica: en 1366 x 768 el botón quedaba 21 px abajo.
+  - Si se toca el hero, medir que el botón siga a la vista en 360 x 780.
+- **Tarjetas de "Lo que fabricamos":** son cuadradas, como las fotos del sillón y el banco; en 4:5 se cortaban las
+  puntas. La base (foto vertical) queda justa: entra entera, con poco margen arriba y abajo.
+- **Fotos verticales en la galería de una ficha:** van en una caja 3:4 (clase `is-portrait`).
+- **Un solo selector de opciones por ficha** (`Product3DOptions`, en la columna de datos):
+  - "Agregar al presupuesto" agrega exactamente lo elegido; antes agregaba siempre "Negro Mate".
+  - Elegir una opción pasa la galería al 3D.
+  - El panel del visor solo tiene la ayuda y las cotas.
+  - En `/sillon-bkf/` se sacaron las muestras que agregaban al presupuesto con un toque.
+
 ## 5l. Showroom 3D con scroll (home y fichas, 19/11/2026)
 
 Sección oscura con el producto en 3D fijo (sticky), que cambia con el scroll en 4 capítulos:
