@@ -54,9 +54,10 @@ export function Product3DViewer({ slug, values, measures }) {
   }, []);
 
   useEffect(() => {
+    if (status !== 'ready') return;
     for (const [key, item] of Object.entries(selectedItems(cfg, values))) viewerRef.current?.setOption(key, item);
-  }, [cfg, values]);
-  useEffect(() => { viewerRef.current?.setMeasures(measures); }, [measures]);
+  }, [cfg, status, values]);
+  useEffect(() => { viewerRef.current?.setMeasures(measures); }, [measures, status]);
 
   return (
     <div className="bkf3d-stage" ref={hostRef}>

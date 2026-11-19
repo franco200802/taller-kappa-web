@@ -6,7 +6,7 @@ import { OptionGroup } from './Product3D';
 import { useCart } from '../context/CartContext';
 import { getProductBySlug, priceQuestion, productPath } from '../data/products';
 import { whatsappUrlFor } from '../data/contact';
-import { PRODUCT_3D, initialValues, selectedItems } from '../data/product3d';
+import { PRODUCT_3D, canQuote, initialValues, selectedItems } from '../data/product3d';
 import { trackEvent } from '../lib/analytics';
 import { loadProduct3d } from '../lib/loadProduct3d';
 
@@ -41,6 +41,7 @@ export default function Showroom3D({ slug, location, cta, fadeTo }) {
   const [active, setActive] = useState(0);
   const [status, setStatus] = useState('idle'); // idle → loading → ready | fallback
   const [values, setValues] = useState(() => initialValues(cfg));
+  const quoteReady = canQuote(cfg, values);
 
   // Scroll → progreso de la sección (0 a 1). Un solo listener pasivo, a lo sumo una cuenta por cuadro.
   useEffect(() => {
@@ -143,8 +144,9 @@ export default function Showroom3D({ slug, location, cta, fadeTo }) {
   }, []);
 
   useEffect(() => {
+    if (status !== 'ready') return;
     for (const [key, item] of Object.entries(selectedItems(cfg, values))) stageRef.current?.setOption(key, item);
-  }, [cfg, values]);
+  }, [cfg, status, values]);
 
   const last = steps - 1;
   const cardClass = (i) => `bkf-stage-card${active === i ? ' is-active' : ''}`;
@@ -193,8 +195,8 @@ export default function Showroom3D({ slug, location, cta, fadeTo }) {
                     <OptionGroup key={o.key} option={o} value={values[o.key]} onChange={(name) => setValues((v) => ({ ...v, [o.key]: name }))} />
                   ))}
                   <div className="bkf-stage-actions" data-cta={cta} data-item={product.name}>
-                    <button type="button" className="btn-main" onClick={() => addToCart(product, cfg.describe(values))}>
-                      <Icon name="plus" /> Agregar al presupuesto
+                    <button type="button" className="btn-main" disabled={!quoteReady} onClick={() => addToCart(product, cfg.describe(values))}>
+                      <Icon name="plus" /> {quoteReady ? 'Agregar al presupuesto' : 'Elegí la altura y el diámetro'}
                     </button>
                     {showroom.link ? (
                       <Link to={showroom.link.to} className="btn-outline">{showroom.link.label}</Link>

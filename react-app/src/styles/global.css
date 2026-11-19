@@ -166,6 +166,7 @@ p a:hover, li a:hover { color: var(--kappa); }
 }
 .btn-main { background: var(--hierro); color: var(--blanco); }
 .btn-main:hover { background: var(--grafito); border-color: var(--grafito); }
+.btn-main:disabled { opacity: .65; cursor: not-allowed; }
 .btn-main:active, .btn-outline:active, .btn-add-cart:active, .btn-card-wa:active,
 .filter-btn:active, .qty-btn:active, .btn-whatsapp-checkout:active { transform: translateY(1px); }
 .btn-outline { background: transparent; color: var(--hierro); }
@@ -578,11 +579,20 @@ html:has(dialog[open]) { overflow: hidden; }
 .btn-whatsapp-checkout:hover { background: var(--wa-osc); }
 .btn-print-budget { background: none; border: 1.5px solid var(--linea); }
 .btn-print-budget:hover { border-color: var(--hierro); }
+.cart-secondary-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cart-secondary-actions > button { flex: 1 0 max-content; padding-inline: 10px; font-size: var(--t-sm); }
+.cart-manual-copy { margin-block: 12px; }
 .cart-hint { font-size: var(--t-sm); color: var(--grafito); text-align: center; margin: 0 auto; }
 .cart-contact { display: grid; gap: 4px; }
 .cart-contact label { font-size: var(--t-sm); font-weight: 600; margin-top: 6px; }
 .cart-contact input { min-height: 44px; padding: 0 12px; border: 1.5px solid var(--linea); border-radius: var(--r); background: var(--blanco); }
 .cart-contact input:focus-visible { outline: 2px solid var(--kappa); outline-offset: 2px; border-color: var(--hierro); }
+
+@media (max-height: 720px) {
+    .cart-sidebar { overflow-y: auto; scroll-padding-top: 76px; }
+    .cart-header { position: sticky; top: 0; z-index: 1; background: var(--blanco); }
+    .cart-items { flex: 1 0 auto; overflow: visible; }
+}
 
 /* ---------- 11. Toast y WhatsApp flotante ---------- */
 /* El toast es un popover (Toast.jsx) para mostrarse encima de los modales:
@@ -875,6 +885,7 @@ footer a:hover { color: var(--blanco); }
 .form-group input:focus-visible, .form-group select:focus-visible, .form-group textarea:focus-visible, .admin-form input:focus-visible {
     outline: 2px solid var(--kappa); outline-offset: 2px; border-color: var(--hierro);
 }
+.form-submit { display: grid; gap: 8px; }
 .form-submit .btn-main { width: 100%; background: var(--wa); border-color: var(--wa); color: var(--blanco); }
 .form-submit .btn-main:hover { background: var(--wa-osc); border-color: var(--wa-osc); }
 .admin-form { display: grid; gap: 12px; margin-top: 20px; }
