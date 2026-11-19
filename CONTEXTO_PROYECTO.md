@@ -507,6 +507,12 @@ Medido en producción con el navegador (porcentaje visible de cada foto y posici
     foto entera habían quedado entre 82 y 165 px abajo de la primera pantalla.
   - En pantallas bajas (`max-height: 820px`) el título se achica: en 1366 x 768 el botón quedaba 21 px abajo.
   - Si se toca el hero, medir que el botón siga a la vista en 360 x 780.
+  - En escritorio el título tiene un tope de 5,5rem y la foto va centrada en vertical. Con el título de 100 px
+    quedaba un hueco de 120 a 160 px debajo de la foto (1440 a 1536 px); ahora lo que sobra se reparte parejo,
+    unos 58 px arriba y abajo en 1440 x 900.
+- **Showroom oscuro:** entra y sale con un degradé (`.bkf-stage-fade--in` y `--out`), puesto afuera de la sección
+  para no cambiar la cuenta del scroll. `fadeTo` es el fondo de lo que sigue (en la home, `var(--blanco)`). El brillo
+  rojo de abajo termina antes del borde, para que el degradé no lo corte.
 - **Tarjetas de "Lo que fabricamos":** son cuadradas, como las fotos del sillón y el banco; en 4:5 se cortaban las
   puntas. La base (foto vertical) queda justa: entra entera, con poco margen arriba y abajo.
 - **Fotos verticales en la galería de una ficha:** van en una caja 3:4 (clase `is-portrait`).

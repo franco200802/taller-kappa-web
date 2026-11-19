@@ -21,9 +21,10 @@ import { loadProduct3d } from '../lib/loadProduct3d';
  *   Con "ahorro de datos" o sin WebGL se muestra una foto en su lugar.
  * - El progreso del scroll se escribe en una variable CSS y en la escena, sin re-renderizar React en cada cuadro.
  *
- * @param {{ slug: string, location: string, cta: string }} props  location y cta: para GA4 (view_3d y data-cta).
+ * @param {{ slug: string, location: string, cta: string, fadeTo?: string }} props  location y cta: para GA4 (view_3d y
+ *   data-cta). fadeTo: fondo de la sección que sigue, para el degradé de salida (por defecto, el de la página).
  */
-export default function Showroom3D({ slug, location, cta }) {
+export default function Showroom3D({ slug, location, cta, fadeTo }) {
   const cfg = PRODUCT_3D[slug];
   const product = getProductBySlug(slug);
   const { showroom } = cfg;
@@ -150,6 +151,8 @@ export default function Showroom3D({ slug, location, cta }) {
   const setCard = (i) => (el) => { cardRefs.current[i] = el; };
 
   return (
+    <>
+    <div className="bkf-stage-fade bkf-stage-fade--in" aria-hidden="true" />
     <section ref={sectionRef} className="bkf-stage" aria-labelledby={showroom.id} data-status={status}>
       <div ref={stickyRef} className="bkf-stage-sticky">
         <div className="bkf-stage-word" aria-hidden="true">{[showroom.word, showroom.word, showroom.word].join(' · ')}</div>
@@ -208,5 +211,7 @@ export default function Showroom3D({ slug, location, cta }) {
         ))}
       </div>
     </section>
+    <div className="bkf-stage-fade bkf-stage-fade--out" aria-hidden="true" style={fadeTo ? { '--fade-to': fadeTo } : undefined} />
+    </>
   );
 }
