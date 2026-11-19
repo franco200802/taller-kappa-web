@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
-import { Product3DPanel, Product3DViewer } from '../components/Product3D';
+import { Product3DOptions, Product3DPanel, Product3DViewer } from '../components/Product3D';
 import Showroom3D from '../components/Showroom3D';
 import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, ofName, priceQuestion, productHref, relatedProducts, socialImage, theName } from '../data/products';
 import { PRODUCT_3D, initialValues } from '../data/product3d';
@@ -16,26 +16,16 @@ import { loadProduct3d } from '../lib/loadProduct3d';
 import { faqNode, productId, productNode } from '../lib/schema';
 
 /**
- * Foto del producto y, si tiene modelo 3D (data/product3d.js), la miniatura "3D" con el visor y sus opciones.
- * Arranca siempre en la foto, igual que el HTML prerenderizado. Va con `key={slug}`: al pasar a otro producto se
- * vuelve a la foto y a las opciones iniciales.
+ * Foto del producto y, si tiene modelo 3D (data/product3d.js), la miniatura "3D" con el visor. Arranca en la foto,
+ * igual que el HTML prerenderizado. El estado lo maneja FichaMain (las opciones se eligen en la columna de datos).
  */
-function FichaGallery({ product, path, onAdd }) {
-  const cfg = PRODUCT_3D[product.slug];
-  const [is3d, setIs3d] = useState(false);
-  const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
-  const [measures, setMeasures] = useState(true);
+function FichaGallery({ product, cfg, is3d, values, measures, onView, onMeasures }) {
   // Las fotos verticales (la base de mesa es 2:3) van en una caja 3:4 para que no se vean recortadas (ver global.css).
   const photo = (
     <Picture src={product.image} alt={product.alt} width={product.imageWidth} height={product.imageHeight} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px"
       className={product.imageHeight > product.imageWidth ? 'is-portrait' : undefined} />
   );
   if (!cfg) return photo;
-
-  const open3d = () => {
-    if (!is3d) trackEvent('view_3d', { item_name: product.name, location: 'ficha_galeria', page_path: `${path}/` });
-    setIs3d(true);
-  };
   return (
     <>
       <figure className="bkf-gallery-main">
@@ -43,19 +33,76 @@ function FichaGallery({ product, path, onAdd }) {
         {is3d && <figcaption>{cfg.caption(values)}</figcaption>}
       </figure>
       <div className="bkf-gallery-thumbs" role="group" aria-label="Foto y modelo 3D">
-        <button type="button" className={`bkf-gallery-thumb${is3d ? '' : ' active'}`} aria-label="Foto del producto" aria-pressed={!is3d} onClick={() => setIs3d(false)}>
+        <button type="button" className={`bkf-gallery-thumb${is3d ? '' : ' active'}`} aria-label="Foto del producto" aria-pressed={!is3d} onClick={() => onView(false)}>
           <Picture src={product.image} alt="" width={product.imageWidth} height={product.imageHeight} loading="lazy" sizes="88px" />
         </button>
         <button type="button" className={`bkf-gallery-thumb bkf-gallery-thumb-3d${is3d ? ' active' : ''}`} aria-label="Ver en 3D" aria-pressed={is3d}
-          onClick={open3d} onPointerEnter={loadProduct3d} onFocus={loadProduct3d}>
+          onClick={() => onView(true)} onPointerEnter={loadProduct3d} onFocus={loadProduct3d}>
           <Icon name="cube" /> <span>3D</span>
         </button>
       </div>
-      {is3d && (
-        <Product3DPanel slug={product.slug} values={values} onChange={setValues} measures={measures} onMeasures={setMeasures}
-          onAdd={() => onAdd(cfg.describe(values))} cta="ficha_3d_galeria" />
-      )}
+      {is3d && <Product3DPanel measures={measures} onMeasures={onMeasures} />}
     </>
+  );
+}
+
+/**
+ * Parte de arriba de la ficha: galería + datos. Si el producto tiene 3D, sus opciones (acabado, cuero, altura…) son
+ * un solo selector, junto a "Agregar al presupuesto": cambian el 3D (con la foto a la vista, pasa al 3D) y el botón
+ * agrega exactamente lo elegido. Antes el botón agregaba siempre "Negro Mate". Va con `key={slug}`: al pasar a otro
+ * producto vuelve a la foto y a las opciones iniciales.
+ */
+function FichaMain({ product, path }) {
+  const { addToCart } = useCart();
+  const cfg = PRODUCT_3D[product.slug];
+  const [is3d, setIs3d] = useState(false);
+  const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
+  const [measures, setMeasures] = useState(true);
+  const onView = (to3d) => {
+    if (to3d && !is3d) trackEvent('view_3d', { item_name: product.name, location: 'ficha_galeria', page_path: `${path}/` });
+    setIs3d(to3d);
+  };
+  const pickOption = (update) => {
+    setValues(update);
+    onView(true);
+  };
+  return (
+    <section className="bkf-product-section section-padding section-fade">
+      <div className="bkf-product-grid">
+        <div className="bkf-img-col">
+          <FichaGallery product={product} cfg={cfg} is3d={is3d} values={values} measures={measures} onView={onView} onMeasures={setMeasures} />
+          {product.badge && (
+            <div className="bkf-badges">
+              <span className="bkf-badge"><Icon name="check" /> {product.badge}</span>
+            </div>
+          )}
+        </div>
+        <div className="bkf-info-col">
+          <h2>{product.name}</h2>
+          <p className="bkf-tagline">{product.desc}</p>
+          <div className="bkf-price-box">
+            <span className="bkf-price">{formatPrice(product) ?? 'Precio a consultar'}</span>
+            <span className="bkf-price-note">{product.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
+          </div>
+          {product.specs?.length > 0 && (
+            <ul className="bkf-specs">
+              {product.specs.map((s) => (
+                <li key={s}><Icon name="check" /> {s}</li>
+              ))}
+            </ul>
+          )}
+          {cfg && <Product3DOptions slug={product.slug} values={values} onChange={pickOption} />}
+          <div className="bkf-actions" data-cta="ficha_actions">
+            <button className="btn-main" onClick={() => addToCart(product, cfg ? cfg.describe(values) : 'Negro Mate')}>
+              <Icon name="plus" /> Agregar al presupuesto
+            </button>
+            <a href={whatsappUrlFor(priceQuestion(product), path)} target="_blank" rel="noopener noreferrer" className="btn-outline">
+              <Icon name="whatsapp" /> Consultar precio
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -66,7 +113,6 @@ function FichaGallery({ product, path, onAdd }) {
  */
 export default function Producto() {
   const { slug } = useParams();
-  const { addToCart } = useCart();
   const product = getProductBySlug(slug);
 
   // Un producto con URL propia (el Sillón BKF vive en su landing) no tiene ficha acá.
@@ -123,41 +169,7 @@ export default function Producto() {
       />
 
       <article aria-label={`Ficha de ${product.name}`}>
-      <section className="bkf-product-section section-padding section-fade">
-        <div className="bkf-product-grid">
-          <div className="bkf-img-col">
-            <FichaGallery key={product.slug} product={product} path={path} onAdd={(color) => addToCart(product, color)} />
-            {product.badge && (
-              <div className="bkf-badges">
-                <span className="bkf-badge"><Icon name="check" /> {product.badge}</span>
-              </div>
-            )}
-          </div>
-          <div className="bkf-info-col">
-            <h2>{product.name}</h2>
-            <p className="bkf-tagline">{product.desc}</p>
-            <div className="bkf-price-box">
-              <span className="bkf-price">{formatPrice(product) ?? 'Precio a consultar'}</span>
-              <span className="bkf-price-note">{product.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
-            </div>
-            {product.specs?.length > 0 && (
-              <ul className="bkf-specs">
-                {product.specs.map((s) => (
-                  <li key={s}><Icon name="check" /> {s}</li>
-                ))}
-              </ul>
-            )}
-            <div className="bkf-actions" data-cta="ficha_actions">
-              <button className="btn-main" onClick={() => addToCart(product, 'Negro Mate')}>
-                <Icon name="plus" /> Agregar al presupuesto
-              </button>
-              <a href={waPrice} target="_blank" rel="noopener noreferrer" className="btn-outline">
-                <Icon name="whatsapp" /> Consultar precio
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FichaMain key={product.slug} product={product} path={path} />
 
       {/* El producto en 3D que cambia con el scroll (three.js se descarga recién al acercarse a esta sección). */}
       {PRODUCT_3D[product.slug] && <Showroom3D key={product.slug} slug={product.slug} location="ficha_showroom" cta="ficha_3d_showroom" />}

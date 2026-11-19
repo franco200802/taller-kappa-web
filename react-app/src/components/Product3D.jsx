@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import Icon from './Icon';
 import { getProductBySlug } from '../data/products';
 import { PRODUCT_3D, selectedItems } from '../data/product3d';
 import { loadProduct3d } from '../lib/loadProduct3d';
@@ -113,23 +112,29 @@ export function OptionGroup({ option, value, onChange }) {
 }
 
 /**
- * Controles de la galería 3D: opciones del producto, cotas y "agregar al presupuesto".
- * `onChange` es el setter del estado de las opciones: recibe una función, así dos cambios seguidos no se pisan.
+ * Opciones de un producto (acabado, cuero, altura…). Es el único selector de la ficha: va junto al botón
+ * "Agregar al presupuesto" y cambia el 3D. `onChange` es el setter del estado de las opciones: recibe una función,
+ * así dos cambios seguidos no se pisan.
  */
-export function Product3DPanel({ slug, values, onChange, measures, onMeasures, onAdd, cta }) {
+export function Product3DOptions({ slug, values, onChange }) {
   const cfg = PRODUCT_3D[slug];
   return (
-    <div className="bkf3d-panel" data-cta={cta}>
-      <p className="bkf3d-hint">Arrastrá para girarlo; con la rueda o pellizcando lo acercás.</p>
+    <div className="bkf3d-options">
       {cfg.options.map((o) => (
         <OptionGroup key={o.key} option={o} value={values[o.key]} onChange={(name) => onChange((v) => ({ ...v, [o.key]: name }))} />
       ))}
+    </div>
+  );
+}
+
+/** Debajo del visor 3D de la galería: cómo se usa y las cotas. Las opciones están en la columna de la ficha. */
+export function Product3DPanel({ measures, onMeasures }) {
+  return (
+    <div className="bkf3d-panel">
+      <p className="bkf3d-hint">Arrastrá para girarlo; con la rueda o pellizcando lo acercás.</p>
       <label className="bkf3d-check">
         <input type="checkbox" checked={measures} onChange={(e) => onMeasures(e.target.checked)} /> Mostrar medidas
       </label>
-      <button type="button" className="btn-main" onClick={onAdd}>
-        <Icon name="plus" /> Agregar al presupuesto
-      </button>
     </div>
   );
 }
