@@ -131,7 +131,7 @@ export default function Home() {
       </section>
 
       {/* El sillón en 3D que se mueve con el scroll (three.js se descarga recién al acercarse a esta sección). */}
-      <Showroom3D slug="sillon-bkf-premium" location="home_showroom" cta="home_3d" />
+      <Showroom3D slug="sillon-bkf-premium" location="home_showroom" cta="home_3d" fadeTo="var(--blanco)" />
 
       <section className="home-feature" aria-labelledby="bkf-en-casa">
         <figure className="home-feature-media">
