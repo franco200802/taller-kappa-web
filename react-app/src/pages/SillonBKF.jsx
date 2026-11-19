@@ -8,11 +8,12 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
-import { Bkf3DPanel, Bkf3DViewer } from '../components/Bkf3D';
-import { loadBkf3d } from '../lib/loadBkf3d';
+import { Product3DPanel, Product3DViewer } from '../components/Product3D';
+import { loadProduct3d } from '../lib/loadProduct3d';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrlFor } from '../data/contact';
-import { FINISH_COLORS as COLORS, LEATHER_COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
+import { PRODUCT_3D, initialValues } from '../data/product3d';
+import { FINISH_COLORS as COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
 import { BUSINESS } from '../data/business';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
@@ -48,6 +49,8 @@ const MADE_OF = [
 ];
 
 const PRODUCT = getProductBySlug('sillon-bkf-premium');
+// Opciones, cotas y pie de foto del modelo 3D de la galería (data/product3d.js).
+const CONFIG_3D = PRODUCT_3D[PRODUCT.slug];
 
 // Fotos de la galería. La primera es la del producto (la que usan el og:image y el JSON-LD) y es la
 // que sale en el HTML prerenderizado; la segunda es una foto sin editar del sillón en una casa.
@@ -63,10 +66,8 @@ export default function SillonBKF() {
   const [shot, setShot] = useState(0);
   const is3d = shot === '3d';
   const current = is3d ? SHOTS[0] : SHOTS[shot];
-  const [finish, setFinish] = useState('Negro Mate');
-  const [leather, setLeather] = useState(LEATHER_COLORS[0].name);
+  const [values3d, setValues3d] = useState(() => initialValues(CONFIG_3D));
   const [measures, setMeasures] = useState(true);
-  const { width, depth, height } = PRODUCT.dimensions;
 
   const handleAdd = (color) => {
     // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
@@ -74,7 +75,7 @@ export default function SillonBKF() {
   };
 
   const open3d = () => {
-    if (!is3d) trackEvent('view_3d', { item_name: PRODUCT.name, page_path: '/sillon-bkf/' });
+    if (!is3d) trackEvent('view_3d', { item_name: PRODUCT.name, location: 'ficha_galeria', page_path: '/sillon-bkf/' });
     setShot('3d');
   };
 
@@ -119,11 +120,11 @@ export default function SillonBKF() {
           <div className="bkf-img-col">
             <figure className="bkf-gallery-main">
               {is3d ? (
-                <Bkf3DViewer dimensions={PRODUCT.dimensions} finish={finish} leather={leather} measures={measures} />
+                <Product3DViewer slug={PRODUCT.slug} values={values3d} measures={measures} />
               ) : (
                 <Picture src={current.src} alt={current.alt} width={current.width} height={current.height} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" style={current.position ? { objectPosition: current.position } : undefined} />
               )}
-              <figcaption>{is3d ? `Modelo 3D a escala: ${width} x ${depth} x ${height} cm` : current.caption}</figcaption>
+              <figcaption>{is3d ? CONFIG_3D.caption(values3d) : current.caption}</figcaption>
             </figure>
             <div className="bkf-gallery-thumbs" role="group" aria-label="Fotos del sillón BKF">
               {SHOTS.map((s, i) => (
@@ -132,15 +133,15 @@ export default function SillonBKF() {
                 </button>
               ))}
               <button type="button" className={`bkf-gallery-thumb bkf-gallery-thumb-3d${is3d ? ' active' : ''}`} aria-label="Ver el sillón en 3D" aria-pressed={is3d}
-                onClick={open3d} onPointerEnter={loadBkf3d} onFocus={loadBkf3d}>
+                onClick={open3d} onPointerEnter={loadProduct3d} onFocus={loadProduct3d}>
                 <Icon name="cube" /> <span>3D</span>
               </button>
             </div>
             {is3d && (
-              <Bkf3DPanel
-                finish={finish} leather={leather} measures={measures}
-                onFinish={setFinish} onLeather={setLeather} onMeasures={setMeasures}
-                onAdd={() => handleAdd(`${finish}, cuero ${leather.toLowerCase()}`)}
+              <Product3DPanel
+                slug={PRODUCT.slug} values={values3d} onChange={setValues3d}
+                measures={measures} onMeasures={setMeasures}
+                onAdd={() => handleAdd(CONFIG_3D.describe(values3d))} cta="sillon-bkf_3d"
               />
             )}
             <div className="bkf-badges">

@@ -1,13 +1,61 @@
+import { useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
 import PageHero from '../components/PageHero';
 import Picture from '../components/Picture';
+import { Product3DPanel, Product3DViewer } from '../components/Product3D';
+import Showroom3D from '../components/Showroom3D';
 import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, ofName, priceQuestion, productHref, relatedProducts, socialImage, theName } from '../data/products';
+import { PRODUCT_3D, initialValues } from '../data/product3d';
 import { whatsappUrlFor } from '../data/contact';
 import { assetUrl } from '../lib/site';
+import { trackEvent } from '../lib/analytics';
+import { loadProduct3d } from '../lib/loadProduct3d';
 import { faqNode, productId, productNode } from '../lib/schema';
+
+/**
+ * Foto del producto y, si tiene modelo 3D (data/product3d.js), la miniatura "3D" con el visor y sus opciones.
+ * Arranca siempre en la foto, igual que el HTML prerenderizado. Va con `key={slug}`: al pasar a otro producto se
+ * vuelve a la foto y a las opciones iniciales.
+ */
+function FichaGallery({ product, path, onAdd }) {
+  const cfg = PRODUCT_3D[product.slug];
+  const [is3d, setIs3d] = useState(false);
+  const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
+  const [measures, setMeasures] = useState(true);
+  const photo = (
+    <Picture src={product.image} alt={product.alt} width={product.imageWidth} height={product.imageHeight} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" />
+  );
+  if (!cfg) return photo;
+
+  const open3d = () => {
+    if (!is3d) trackEvent('view_3d', { item_name: product.name, location: 'ficha_galeria', page_path: `${path}/` });
+    setIs3d(true);
+  };
+  return (
+    <>
+      <figure className="bkf-gallery-main">
+        {is3d ? <Product3DViewer slug={product.slug} values={values} measures={measures} /> : photo}
+        {is3d && <figcaption>{cfg.caption(values)}</figcaption>}
+      </figure>
+      <div className="bkf-gallery-thumbs" role="group" aria-label="Foto y modelo 3D">
+        <button type="button" className={`bkf-gallery-thumb${is3d ? '' : ' active'}`} aria-label="Foto del producto" aria-pressed={!is3d} onClick={() => setIs3d(false)}>
+          <Picture src={product.image} alt="" width={product.imageWidth} height={product.imageHeight} loading="lazy" sizes="88px" />
+        </button>
+        <button type="button" className={`bkf-gallery-thumb bkf-gallery-thumb-3d${is3d ? ' active' : ''}`} aria-label="Ver en 3D" aria-pressed={is3d}
+          onClick={open3d} onPointerEnter={loadProduct3d} onFocus={loadProduct3d}>
+          <Icon name="cube" /> <span>3D</span>
+        </button>
+      </div>
+      {is3d && (
+        <Product3DPanel slug={product.slug} values={values} onChange={setValues} measures={measures} onMeasures={setMeasures}
+          onAdd={() => onAdd(cfg.describe(values))} cta="ficha_3d_galeria" />
+      )}
+    </>
+  );
+}
 
 /**
  * Página individual de producto — URL propia, indexable y prerenderizada
@@ -76,15 +124,7 @@ export default function Producto() {
       <section className="bkf-product-section section-padding section-fade">
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
-            <Picture
-              src={product.image}
-              alt={product.alt}
-              width={product.imageWidth}
-              height={product.imageHeight}
-              loading="eager"
-              fetchPriority="high"
-              sizes="(max-width: 860px) calc(100vw - 32px), 640px"
-            />
+            <FichaGallery key={product.slug} product={product} path={path} onAdd={(color) => addToCart(product, color)} />
             {product.badge && (
               <div className="bkf-badges">
                 <span className="bkf-badge"><Icon name="check" /> {product.badge}</span>
@@ -116,6 +156,9 @@ export default function Producto() {
           </div>
         </div>
       </section>
+
+      {/* El producto en 3D que cambia con el scroll (three.js se descarga recién al acercarse a esta sección). */}
+      {PRODUCT_3D[product.slug] && <Showroom3D key={product.slug} slug={product.slug} location="ficha_showroom" cta="ficha_3d_showroom" />}
 
       <section className="bkf-comparison section-fade">
         <div className="bkf-about-inner">

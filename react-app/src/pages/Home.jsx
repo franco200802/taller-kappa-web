@@ -5,7 +5,7 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
-import BkfShowroom from '../components/BkfShowroom';
+import Showroom3D from '../components/Showroom3D';
 import { PRODUCTS, factOf, productHref } from '../data/products';
 import { whatsappUrlFor } from '../data/contact';
 import { BUSINESS, addressLine } from '../data/business';
@@ -131,7 +131,7 @@ export default function Home() {
       </section>
 
       {/* El sillón en 3D que se mueve con el scroll (three.js se descarga recién al acercarse a esta sección). */}
-      <BkfShowroom />
+      <Showroom3D slug="sillon-bkf-premium" location="home_showroom" cta="home_3d" />
 
       <section className="home-feature" aria-labelledby="bkf-en-casa">
         <figure className="home-feature-media">
