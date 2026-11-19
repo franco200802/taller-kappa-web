@@ -6,9 +6,13 @@ import Seo from '../components/Seo';
 import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
+import { OptionGroup, Product3DViewer } from '../components/Product3D';
 import { CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
+import { PRODUCT_3D, initialValues } from '../data/product3d';
 import { whatsappUrl, whatsappUrlFor } from '../data/contact';
 import { itemListNode } from '../lib/schema';
+import { trackEvent } from '../lib/analytics';
+import { loadProduct3d } from '../lib/loadProduct3d';
 
 const MATERIALS = [
   { color: '#1a1a1a', title: 'Hierro macizo', desc: 'Varilla redonda de 12 mm, sin costuras ni rellenos. Indeformable ante el uso intensivo.' },
@@ -16,6 +20,93 @@ const MATERIALS = [
   { color: '#b71c1c', title: 'Pintura epoxi', desc: 'Tratamiento anticorrosivo de doble capa. Resiste humedad, rayones y rayos UV.' },
   { color: 'linear-gradient(135deg,#ccc,#fff,#aaa)', title: 'Cromado', desc: 'Acabado espejado de nivel industrial. Resistente a la corrosión y fácil de limpiar.' },
 ];
+
+const track3d = (p) => trackEvent('view_3d', { item_name: p.name, location: 'catalogo_modal', page_path: '/catalogo/' });
+
+/** Foto o modelo 3D de la vista rápida, con el selector arriba. El visor solo existe con el modal abierto. */
+function QuickViewMedia({ product, view3d, onView, values, measures, open }) {
+  return (
+    <div className={`modal-img modal-media${view3d ? ' is-3d' : ''}`}>
+      {view3d && open ? (
+        <Product3DViewer slug={product.slug} values={values} measures={measures} />
+      ) : (
+        <Picture src={product.image} alt={product.alt ?? product.name} loading="lazy" width={product.imageWidth} height={product.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
+      )}
+      <div className="seg-group modal-media-switch" role="radiogroup" aria-label="Foto o modelo 3D">
+        <button type="button" role="radio" aria-checked={!view3d} className={`seg-option${view3d ? '' : ' active'}`} onClick={() => onView(false)}>Foto</button>
+        <button type="button" role="radio" aria-checked={view3d} className={`seg-option${view3d ? ' active' : ''}`} onClick={() => onView(true)}><Icon name="cube" /> 3D</button>
+      </div>
+    </div>
+  );
+}
+
+/** Selector de acabado de los productos que no tienen 3D (hoy todos lo tienen; queda por si se suma uno). */
+function FinishSelector({ value, onChange }) {
+  return (
+    <div className="color-selector">
+      <p className="color-label">Acabado: <strong>{value}</strong></p>
+      <div className="color-options">
+        {COLORS.map((c) => (
+          <button key={c.name} className={`color-swatch ${value === c.name ? 'active' : ''}`}
+            style={{ background: c.swatch }} aria-label={c.name} aria-pressed={value === c.name} title={c.name}
+            onClick={() => onChange(c.name)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Vista rápida de un producto (modal del catálogo). Si el producto tiene 3D (data/product3d.js) arranca en 3D y sus
+ * opciones (acabado, cuero, altura…) cambian el modelo en el momento, como en la ficha. Va con una `key` nueva en cada
+ * apertura: siempre empieza en las opciones iniciales.
+ */
+function QuickView({ product, open, onClose, onAdd }) {
+  const cfg = PRODUCT_3D[product.slug];
+  const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
+  const [color, setColor] = useState('Negro Mate');
+  const [view3d, setView3d] = useState(Boolean(cfg));
+  const [measures, setMeasures] = useState(true);
+  const onView = (to3d) => {
+    if (to3d && !view3d) track3d(product);
+    setView3d(to3d);
+  };
+  return (
+    <div className="modal-content">
+      <button className="close-modal" onClick={onClose} aria-label="Cerrar modal">×</button>
+      {cfg ? (
+        <QuickViewMedia product={product} view3d={view3d} onView={onView} values={values} measures={measures} open={open} />
+      ) : (
+        <div className="modal-img">
+          <Picture src={product.image} alt={product.alt ?? product.name} loading="lazy" width={product.imageWidth} height={product.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
+        </div>
+      )}
+      <div className="modal-info">
+        <div className="modal-badge-row">
+          {product.badge && <span className="modal-badge">{product.badge}</span>}
+        </div>
+        <h2>{product.name}</h2>
+        <div className="modal-stock"><span className="stock-dot" /> Consultar disponibilidad por WhatsApp</div>
+        <p>{product.desc}</p>
+        <ul className="modal-specs">
+          {product.specs?.map((s) => <li key={s}><Icon name="check" /> {s}</li>)}
+        </ul>
+        {cfg ? cfg.options.map((o) => (
+          <OptionGroup key={o.key} option={o} value={values[o.key]} onChange={(name) => setValues((v) => ({ ...v, [o.key]: name }))} />
+        )) : <FinishSelector value={color} onChange={setColor} />}
+        {cfg && view3d && (
+          <label className="bkf3d-check">
+            <input type="checkbox" checked={measures} onChange={(e) => setMeasures(e.target.checked)} /> Mostrar medidas
+          </label>
+        )}
+        <button className="btn-main" onClick={() => onAdd(cfg ? cfg.describe(values) : color)}>
+          <Icon name="plus" /> Agregar al presupuesto
+        </button>
+        <p className="modal-hint"><Icon name="whatsapp" /> Te pasamos el precio por WhatsApp</p>
+      </div>
+    </div>
+  );
+}
 
 function ProductCard({ p, onOpen }) {
   const { addToCart } = useCart();
@@ -31,6 +122,8 @@ function ProductCard({ p, onOpen }) {
       </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Vista rápida: ${p.name}`}
         onClick={() => onOpen(p)}
+        // La vista rápida abre en 3D: con el mouse encima ya se empieza a descargar three.js.
+        onPointerEnter={PRODUCT_3D[p.slug] ? loadProduct3d : undefined}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
         {/* El rótulo va dentro de la foto: suelto en la tarjeta quedaba encima de "Consultar disponibilidad". */}
         {p.badge && <span className="product-badge" aria-hidden="true">{p.badge}</span>}
@@ -64,12 +157,14 @@ export default function Catalogo() {
   // desaparece mientras corre la animación de salida.
   const [modalProduct, setModalProduct] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalColor, setModalColor] = useState('Negro Mate');
+  // Cambia en cada apertura: la vista rápida vuelve a sus opciones iniciales aunque sea el mismo producto.
+  const [modalKey, setModalKey] = useState(0);
 
   const openModal = (p) => {
-    setModalColor('Negro Mate');
     setModalProduct(p);
+    setModalKey((k) => k + 1);
     setModalOpen(true);
+    if (PRODUCT_3D[p.slug]) track3d(p);
   };
   const closeModal = () => setModalOpen(false);
 
@@ -158,37 +253,8 @@ export default function Catalogo() {
 
       <Modal className="modal" label={modalProduct ? modalProduct.name : 'Detalle del producto'} open={modalOpen} onClose={closeModal}>
         {modalProduct && (
-          <div className="modal-content">
-            <button className="close-modal" onClick={closeModal} aria-label="Cerrar modal">×</button>
-            <div className="modal-img">
-              <Picture src={modalProduct.image} alt={modalProduct.alt ?? modalProduct.name} loading="lazy" width={modalProduct.imageWidth} height={modalProduct.imageHeight} sizes="(max-width: 760px) 100vw, 480px" />
-            </div>
-            <div className="modal-info">
-              <div className="modal-badge-row">
-                {modalProduct.badge && <span className="modal-badge">{modalProduct.badge}</span>}
-              </div>
-              <h2>{modalProduct.name}</h2>
-              <div className="modal-stock"><span className="stock-dot" /> Consultar disponibilidad por WhatsApp</div>
-              <p>{modalProduct.desc}</p>
-              <ul className="modal-specs">
-                {modalProduct.specs?.map((s) => <li key={s}><Icon name="check" /> {s}</li>)}
-              </ul>
-              <div className="color-selector">
-                <p className="color-label">Acabado: <strong>{modalColor}</strong></p>
-                <div className="color-options">
-                  {COLORS.map((c) => (
-                    <button key={c.name} className={`color-swatch ${modalColor === c.name ? 'active' : ''}`}
-                      style={{ background: c.swatch }} aria-label={c.name} aria-pressed={modalColor === c.name} title={c.name}
-                      onClick={() => setModalColor(c.name)} />
-                  ))}
-                </div>
-              </div>
-              <button className="btn-main" onClick={() => { addToCart(modalProduct, modalColor); closeModal(); }}>
-                <Icon name="plus" /> Agregar al presupuesto
-              </button>
-              <p className="modal-hint"><Icon name="whatsapp" /> Te pasamos el precio por WhatsApp</p>
-            </div>
-          </div>
+          <QuickView key={modalKey} product={modalProduct} open={modalOpen} onClose={closeModal}
+            onAdd={(color) => { addToCart(modalProduct, color); closeModal(); }} />
         )}
       </Modal>
     </>

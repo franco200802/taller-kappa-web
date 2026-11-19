@@ -475,7 +475,11 @@ miniatura "3D" de la galería de cada ficha (`/sillon-bkf/`, `/catalogo/banco-bk
   - sillón: acabado (`FINISH_COLORS`) y cuero (`LEATHER_COLORS`, los que nombra la FAQ);
   - banco: acabado (la FAQ de asientos los publica para "sillones y bancos") y cuero negro, marrón o
     natural (confirmado por el dueño el 19/11/2026; publicado en la fila "Tapizado" de su ficha);
-  - base: altura y columna.
+  - base: acabado (los mismos 5, a pedido del dueño el 19/11/2026; publicados en la fila "Colores" de su
+    ficha), altura y columna.
+- **Vista rápida del catálogo (`/catalogo/`):** al tocar la foto de un producto se abre el modal en 3D (con
+  selector Foto / 3D) y las opciones de `PRODUCT_3D` cambian el modelo en el momento; el visor solo existe con el
+  modal abierto (al cerrarlo se libera WebGL). `view_3d` con `location: 'catalogo_modal'`.
 - **Cómo llega al presupuesto:** `addToCart(producto, describe(valores))`, por ejemplo `"Negro Mate, cuero marrón"`
   o `"Barra (105 cm), columna de 101 mm"`. En inglés, el del cuero se traduce con una regla de
   `translate.js` (`COLOR_WITH_LEATHER`) y los de la base, con entradas de `en.js`.
