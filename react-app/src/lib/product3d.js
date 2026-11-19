@@ -332,8 +332,8 @@ function createSeatModel({ rods, slingPoint, roundR, defaultLeather, dimensions,
 }
 
 /**
- * Base de Mesa Flat: disco de chapa, columna y soporte de la tapa. Opciones: 'height' (cm) y 'column' (mm), que se
- * animan hacia el valor elegido. `setExplode(e)` levanta la columna para dejar ver la chapa.
+ * Base de Mesa Flat: disco de chapa, columna y soporte de la tapa. Opciones: 'finish' (acabado), 'height' (cm) y
+ * 'column' (mm), que se animan hacia el valor elegido. `setExplode(e)` levanta la columna para dejar ver la chapa.
  */
 function createTableBaseModel({ dimensions, values, guideColor }) {
   const DISC_R = 0.18; // diámetro estimado desde la foto (con la columna de 77 mm como regla): no se publica ni se rotula
@@ -341,7 +341,22 @@ function createTableBaseModel({ dimensions, values, guideColor }) {
   const HUB_H = 0.03;
   const TOP_T = 0.006;
   const plate = dimensions.plateMm / 1000;
-  const mat = new MeshStandardMaterial({ color: '#141414', metalness: 0.45, roughness: 0.28 });
+  const mat = new MeshStandardMaterial();
+  // Acabado: los mismos de la estructura de los asientos (FINISH_LOOK), con transición suave al cambiar.
+  const paintTarget = { color: new Color(), metal: 0, rough: 0 };
+  const setFinish = (name) => {
+    const look = FINISH_LOOK[name] ?? FINISH_LOOK['Negro Mate'];
+    paintTarget.color.set(look.color);
+    paintTarget.metal = look.metalness;
+    paintTarget.rough = look.roughness;
+  };
+  const paint = (k) => {
+    mat.color.lerp(paintTarget.color, k);
+    mat.metalness += (paintTarget.metal - mat.metalness) * k;
+    mat.roughness += (paintTarget.rough - mat.roughness) * k;
+  };
+  setFinish(values.finish?.name ?? 'Negro Mate');
+  paint(1);
 
   const group = new Group();
   const disc = new Mesh(new CylinderGeometry(DISC_R * 0.99, DISC_R, plate, 96), mat);
@@ -383,6 +398,7 @@ function createTableBaseModel({ dimensions, values, guideColor }) {
     guides: { object: guideObject, parts: { height: heightLine, column: null, plate: null }, anchors },
     size: () => ({ W: Math.max(TOP, DISC_R * 2), D: Math.max(TOP, DISC_R * 2), H: cur.h }),
     setOption(key, item) {
+      if (key === 'finish') setFinish(item.name);
       if (key === 'height') target.h = item.value / 100;
       if (key === 'column') target.r = item.value / 2000;
     },
@@ -390,6 +406,7 @@ function createTableBaseModel({ dimensions, values, guideColor }) {
       const k = 1 - Math.exp(-dt * 5);
       cur.h += (target.h - cur.h) * k;
       cur.r += (target.r - cur.r) * k;
+      paint(1 - Math.exp(-dt * 6));
       apply();
     },
     setLayer() {},
@@ -545,28 +562,59 @@ export function createViewer(host, opts) {
   let measures = false;
   applyGuides(model.guides, {});
 
-  const camera = new PerspectiveCamera(30, 1, 0.02, 20);
-  camera.position.set(1.75 * s, 1.2 * s, 2.55 * s);
+  const camera = new PerspectiveCamera(30, 1, 0.02, 20 * s);
+  // En formatos apaisados (mobile 5:4) falta alto: se abre el ángulo para que entren el producto y las cotas.
+  const ro = observeSize(host, renderer, camera, { fov: (aspect) => (aspect > 1.1 ? 37 : 30) });
+
+  // Distancia para que el producto entero (con un margen para las cotas) entre en el cuadro, según la proporción del
+  // visor: en la galería es cuadrado, en la vista rápida del catálogo es alto y angosto. Antes la cámara estaba fija
+  // para un cuadro cuadrado y en el catálogo el producto quedaba cortado.
+  // La esfera se mide desde el punto que mira la cámara (a un 36 % del alto, no al medio): con el centro del producto,
+  // la parte de arriba de la base de barra quedaba afuera.
+  const fitDistance = () => {
+    const sz = model.size();
+    const ty = sz.H * 0.36;
+    const radius = Math.hypot(sz.W * 0.55, Math.max(ty, sz.H - ty), sz.D * 0.55);
+    const half = MathUtils.degToRad(camera.fov / 2);
+    const halfH = Math.atan(Math.tan(half) * camera.aspect);
+    return radius / Math.sin(Math.min(half, halfH));
+  };
+  const target = new Vector3(0, H * 0.36, 0);
+  camera.position.copy(new Vector3(1.75, 1.2, 2.55).normalize().multiplyScalar(fitDistance()).add(target));
   const controls = new OrbitControls(camera, renderer.domElement);
   // Mirar un poco por debajo del centro sube el producto en el cuadro: la cota de abajo no queda bajo el pie de foto.
-  controls.target.set(0, H * 0.36, 0);
+  controls.target.copy(target);
   controls.enableDamping = true;
   controls.enablePan = false;
-  controls.minDistance = 1.4 * s;
-  controls.maxDistance = 5 * s;
   controls.maxPolarAngle = MathUtils.degToRad(88);
   controls.autoRotate = !reducedMotion;
   controls.autoRotateSpeed = 1.2;
   controls.addEventListener('start', () => { controls.autoRotate = false; });
   controls.update();
 
-  // En formatos apaisados (mobile 5:4) falta alto: se abre el ángulo para que entren el producto y las cotas.
-  const ro = observeSize(host, renderer, camera, { fov: (aspect) => (aspect > 1.1 ? 37 : 30) });
+  // Si cambia el encuadre necesario (el visor cambia de proporción o la base de altura) la cámara se acomoda sola; el
+  // zoom que haga la persona entre medio se respeta.
+  let fitted = 0;
+  let refitting = false;
+  const dir = new Vector3();
 
   const loop = createLoop(host, (dt) => {
     model.update(dt);
     // La base de mesa cambia de altura: el punto que se mira la acompaña.
     controls.target.y = MathUtils.damp(controls.target.y, model.size().H * 0.36, 4, dt);
+    const fit = fitDistance();
+    if (Math.abs(fit - fitted) > fitted * 0.01) {
+      fitted = fit;
+      refitting = true;
+      controls.minDistance = fit * 0.45;
+      controls.maxDistance = fit * 2.2;
+    }
+    if (refitting) {
+      dir.copy(camera.position).sub(controls.target);
+      const dist = MathUtils.damp(dir.length(), fitted, 4, dt);
+      camera.position.copy(controls.target).addScaledVector(dir.normalize(), dist);
+      if (Math.abs(dist - fitted) < fitted * 0.002) refitting = false;
+    }
     controls.update();
     renderer.render(scene, camera);
     if (measures && onLabels) onLabels(labelPositions(model.guides.anchors, camera, host, root), allOn);
@@ -825,7 +873,7 @@ export function createStage(host, opts) {
     setOption: (k, item) => model.setOption(k, item),
     /** Celular: por capítulo, la fracción de pantalla libre arriba de la tarjeta (0 a 1). */
     setFreeSpace(fractions) {
-      if (fractions?.length === kfs.length) free = fractions.map((f) => MathUtils.clamp(f, 0.22, 0.62));
+      if (fractions?.length === kfs.length) free = fractions.map((f) => MathUtils.clamp(f, 0.18, 0.62));
     },
     dispose() {
       loop.dispose();

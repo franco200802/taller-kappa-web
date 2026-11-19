@@ -890,8 +890,10 @@ export default {
   "Medidas y acabados": "Dimensions and finishes",
   "77 x 87 x 102 cm, en el acabado que elijas": "77 x 87 x 102 cm, in the finish you choose",
   "Ancho, profundidad y alto de la versión estándar. También se fabrica a medida, sin costo adicional.": "Width, depth and height of the standard version. It is also made to measure at no extra cost.",
-  // Galería 3D de las fichas (pages/Producto.jsx)
+  // Galería 3D de las fichas (pages/Producto.jsx) y vista rápida del catálogo (pages/Catalogo.jsx)
   "Ver en 3D": "View in 3D",
+  "Foto": "Photo",
+  "Foto o modelo 3D": "Photo or 3D model",
   "Foto del producto": "Product photo",
   "Foto y modelo 3D": "Photo and 3D model",
   "Modelo 3D a escala: 38 x 38 x 45 cm": "3D scale model: 38 x 38 x 45 cm",

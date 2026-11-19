@@ -171,6 +171,8 @@ export const PRODUCTS = [
       ['Categoría', 'Mesas (bases de mesa)'],
       ['Estructura', 'Base de chapa torneada de 10 mm con columna central de 77 o 101 mm'],
       ['Medidas', 'Altura de mesa 73 cm; altura de barra 105 cm'],
+      // Los mismos acabados que el sillón (confirmado por el dueño el 19/11/2026); el 3D los deja elegir.
+      ['Colores', 'Negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)'],
       ['Uso', 'Gastronómico intenso; admite tapas grandes'],
       ['Garantía', GARANTIA_HIERRO],
       ['Precio', 'Cotización por WhatsApp'],

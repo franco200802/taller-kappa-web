@@ -72,7 +72,9 @@ export const PRODUCT_3D = {
   },
 
   'base-de-mesa-flat': {
+    // Acabado: los mismos que el sillón, a pedido del dueño (19/11/2026); la ficha los publica en "Colores".
     options: [
+      FINISH_OPTION,
       { key: 'height', type: 'segmented', label: 'Altura', ariaLabel: 'Altura de la base', items: HEIGHT_ITEMS, initial: HEIGHT_ITEMS[0].name },
       { key: 'column', type: 'segmented', label: 'Columna', ariaLabel: 'Diámetro de la columna', items: COLUMN_ITEMS, initial: COLUMN_ITEMS[0].name },
     ],
@@ -81,7 +83,8 @@ export const PRODUCT_3D = {
       { key: 'column', text: 'Columna', value: valueOf(COLUMN_ITEMS, v.column), unit: 'mm' },
       { key: 'plate', text: 'Chapa', value: BASE.dimensions.plateMm, unit: 'mm' },
     ],
-    describe: (v) => `${v.height}, columna de ${v.column}`,
+    // "Negro Mate, Mesa (73 cm), columna de 77 mm": en inglés lo traduce una regla de i18n/translate.js.
+    describe: (v) => `${v.finish}, ${v.height}, columna de ${v.column}`,
     // El diámetro del disco no se publica: el pie dice solo lo que es exacto.
     caption: (v) => ['Modelo 3D:', ' ', valueOf(HEIGHT_ITEMS, v.height), ' cm de alto, columna de ', valueOf(COLUMN_ITEMS, v.column), ' mm'],
     fallback: { src: BASE.image, width: BASE.imageWidth, height: BASE.imageHeight },

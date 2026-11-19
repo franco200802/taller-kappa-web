@@ -14,19 +14,25 @@ const ATTRS = ['alt', 'aria-label', 'title', 'placeholder'];
 const META_SELECTOR = 'meta[name="description"], meta[property="og:title"], meta[property="og:description"], meta[name="twitter:title"], meta[name="twitter:description"]';
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE']);
 
-// El modelo 3D de /sillon-bkf/ agrega el sillón con acabado + cuero ("Negro Mate, cuero marrón"): 15 combinaciones
-// que no vale la pena listar en el diccionario.
+// Los modelos 3D agregan al presupuesto el producto con sus opciones, separadas por coma: "Negro Mate, cuero marrón"
+// (sillón y banco) o "Negro Mate, Mesa (73 cm), columna de 77 mm" (base). Son decenas de combinaciones: cada parte se
+// traduce por separado (las fijas, como "Negro Mate" o "Mesa (73 cm)", están en en.js).
 const LEATHER_EN = { 'marrón': 'brown', natural: 'natural', negro: 'black' };
-const COLOR_WITH_LEATHER = /^(.+), cuero (marrón|natural|negro)$/;
-const trColor = (tr, c) => {
-  const m = c.match(COLOR_WITH_LEATHER);
-  return m ? `${tr(m[1])}, ${LEATHER_EN[m[2]]} leather` : tr(c);
+const trColorPart = (tr, part) => {
+  const leather = part.match(/^cuero (marrón|natural|negro)$/);
+  if (leather) return `${LEATHER_EN[leather[1]]} leather`;
+  const column = part.match(/^columna de (\d+) mm$/);
+  if (column) return `${column[1]} mm column`;
+  return tr(part);
 };
+const trColor = (tr, c) => c.split(', ').map((part) => trColorPart(tr, part)).join(', ');
+// El color solo (como sale en el presupuesto): acabado + cuero, o acabado + altura + columna.
+const COLOR_WITH_OPTIONS = /^([^,]+, (?:cuero (?:marrón|natural|negro)|(?:Mesa|Barra) \(\d+ cm\), columna de \d+ mm))$/;
 
 /** Reglas para textos con datos variables (nombre de producto, color…) que no pueden ir en el diccionario. */
 const RULES = [
   [/^"(.+)" \((.+)\) agregado al presupuesto$/, (tr, n, c) => `"${tr(n)}" (${trColor(tr, c)}) added to your quote`],
-  [COLOR_WITH_LEATHER, (tr, f, l) => `${tr(f)}, ${LEATHER_EN[l]} leather`],
+  [COLOR_WITH_OPTIONS, (tr, text) => trColor(tr, text)],
   [/^Quitar una unidad de (.+)$/, (tr, n) => `Remove one unit of ${tr(n)}`],
   [/^Agregar una unidad de (.+)$/, (tr, n) => `Add one unit of ${tr(n)}`],
   [/^Eliminar (.+)$/, (tr, n) => `Remove ${tr(n)}`],
