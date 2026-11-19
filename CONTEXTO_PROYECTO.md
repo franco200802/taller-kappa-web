@@ -440,9 +440,36 @@ Diagnóstico, matriz priorizada, mediciones antes/después y pendientes en
   galería, idioma y `/admin`. Ojo: las capturas de página completa de páginas muy
   altas salen con el layout de mobile mezclado; es un artefacto de la captura, medir
   con `getComputedStyle` antes de creer que hay un bug.
-- **Medidas del sillón: sin resolver.** El dueño dejó una imagen con 77 × 102 × 87 cm
-  y el sitio publica 78 × 70 × 90 cm. No se publicó la imagen. No cambiar las medidas
-  hasta que el dueño confirme cuáles son.
+- **Medidas del sillón: resuelto el 19/11/2026.** Se confirmaron las de `FOTOCONMEDIDAS.png`:
+  **77 x 87 x 102 cm (ancho x profundidad x alto)**. Reemplazaron a 78 x 70 x 90 cm en las 20
+  apariciones (ficha, FAQ, categorías, guía, diccionario en inglés; de ahí salen `llms.txt` y el
+  JSON-LD). La fuente única es `dimensions` del sillón en `data/products.js` (la usa el 3D, §5k);
+  los textos que las repiten se buscan con `grep -rn "77 x 87 x 102\|77x87x102"`. La imagen en sí
+  sigue sin publicarse.
+
+## 5k. Sillón BKF en 3D (19/11/2026)
+
+Tercera miniatura "3D" en la galería de `/sillon-bkf/`: el sillón modelado por código, a escala real,
+con los acabados de `FINISH_COLORS`, los colores de cuero de `LEATHER_COLORS` (los que nombra la FAQ:
+negro, marrón, natural), cotas de ancho/profundidad/alto y "Agregar este sillón al presupuesto"
+(el color viaja como `"Negro Mate, cuero marrón"`).
+
+- **Archivos:** `lib/bkf3d.js` (three.js puro: geometría, materiales, cámara, cotas) y
+  `components/Bkf3D.jsx` (visor + panel). Estilos en la sección 23 de `global.css`.
+- **Peso cero en la carga:** three.js (~144 kB gzip) es la única dependencia nueva y vive en su propio
+  chunk (`bkf3d-*.js`); se descarga con `import()` al tocar la miniatura (se adelanta al pasar el
+  mouse o enfocarla). Verificado: 0 descargas del chunk antes del clic. `chunkSizeWarningLimit` está en
+  600 kB solo por ese chunk. No importarlo de forma estática en ningún lado.
+- **Hidratación:** el estado inicial de la galería es la foto 0, igual que el HTML prerenderizado; el
+  visor existe solo después de un clic. No hacer que arranque en 3D.
+- **Medidas exactas:** la silla se construye con proporciones de la foto y después se escala para que
+  su caja mida exactamente `dimensions`. Si cambian las medidas, se cambian ahí y en los textos.
+- **Sin React Three Fiber** a propósito (el sitio usa React 18 y evita librerías extra). El bucle de
+  render se pausa fuera de pantalla y con la pestaña oculta; `prefers-reduced-motion` apaga el giro solo.
+- **Idioma:** los textos nuevos están en `en.js`; el color con cuero se traduce con una regla en
+  `translate.js` (`COLOR_WITH_LEATHER`), no con 15 entradas en el diccionario.
+- **Medición:** abrir el visor envía `view_3d` a GA4; el botón del panel dispara `add_to_cart` (como el
+  resto) y su contenedor lleva `data-cta="sillon-bkf_3d"`.
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 

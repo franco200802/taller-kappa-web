@@ -14,9 +14,19 @@ const ATTRS = ['alt', 'aria-label', 'title', 'placeholder'];
 const META_SELECTOR = 'meta[name="description"], meta[property="og:title"], meta[property="og:description"], meta[name="twitter:title"], meta[name="twitter:description"]';
 const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE']);
 
+// El modelo 3D de /sillon-bkf/ agrega el sillón con acabado + cuero ("Negro Mate, cuero marrón"): 15 combinaciones
+// que no vale la pena listar en el diccionario.
+const LEATHER_EN = { 'marrón': 'brown', natural: 'natural', negro: 'black' };
+const COLOR_WITH_LEATHER = /^(.+), cuero (marrón|natural|negro)$/;
+const trColor = (tr, c) => {
+  const m = c.match(COLOR_WITH_LEATHER);
+  return m ? `${tr(m[1])}, ${LEATHER_EN[m[2]]} leather` : tr(c);
+};
+
 /** Reglas para textos con datos variables (nombre de producto, color…) que no pueden ir en el diccionario. */
 const RULES = [
-  [/^"(.+)" \((.+)\) agregado al presupuesto$/, (tr, n, c) => `"${tr(n)}" (${tr(c)}) added to your quote`],
+  [/^"(.+)" \((.+)\) agregado al presupuesto$/, (tr, n, c) => `"${tr(n)}" (${trColor(tr, c)}) added to your quote`],
+  [COLOR_WITH_LEATHER, (tr, f, l) => `${tr(f)}, ${LEATHER_EN[l]} leather`],
   [/^Quitar una unidad de (.+)$/, (tr, n) => `Remove one unit of ${tr(n)}`],
   [/^Agregar una unidad de (.+)$/, (tr, n) => `Add one unit of ${tr(n)}`],
   [/^Eliminar (.+)$/, (tr, n) => `Remove ${tr(n)}`],

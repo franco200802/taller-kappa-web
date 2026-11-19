@@ -49,7 +49,7 @@ export const CATEGORIES = [
       { q: '¿Para qué espacios sirven los sillones y bancos BKF de Taller Kappa?', a: 'Para interiores residenciales y para locales gastronómicos con uso intensivo. El banco BKF, además, se usa como pie de cama o asiento auxiliar.' },
       { q: '¿Los sillones y bancos BKF se pueden pedir en otros colores o medidas?', a: 'Sí. Se fabrican con colores y medidas a pedido, sin costo adicional. Los acabados habituales de la estructura son negro mate, blanco crema y cromado.' },
     ],
-    difference: 'Comparten diseño y materiales y se diferencian por tamaño y uso: el Sillón BKF Premium mide 78 x 70 x 90 cm y el Banco BKF, 38 x 38 x 45 cm, y se usa como pie de cama o asiento auxiliar.',
+    difference: 'Comparten diseño y materiales y se diferencian por tamaño y uso: el Sillón BKF Premium mide 77 x 87 x 102 cm y el Banco BKF, 38 x 38 x 45 cm, y se usa como pie de cama o asiento auxiliar.',
   },
   {
     key: 'mesas',
@@ -79,7 +79,7 @@ export const PRODUCTS = [
     name: 'Sillón BKF Premium',
     alternateName: ['Sillón BKF', 'Sillón BKF de cuero', 'Silla BKF', 'Silla paleta', 'Butterfly chair'],
     seoTitle: 'Sillón BKF Premium de Hierro y Cuero | Taller Kappa',
-    seoDescription: 'Sillón BKF Premium: hierro macizo de 12 mm y cuero vacuno curtido al vegetal, 78 x 70 x 90 cm. Fabricado por Taller Kappa en San Martín, Buenos Aires.',
+    seoDescription: 'Sillón BKF Premium: hierro macizo de 12 mm y cuero vacuno curtido al vegetal, 77 x 87 x 102 cm. Fabricado por Taller Kappa en San Martín, Buenos Aires.',
     image: '/images/sillon-bkf-hierro-cuero.jpg',
     imageWidth: 1600,
     imageHeight: 1600,
@@ -89,20 +89,23 @@ export const PRODUCTS = [
     desc: 'Icono del diseño argentino. Estructura maciza indeformable de 12mm. Incluye funda de cuero vacuno seleccionado.',
     definition: 'El Sillón BKF Premium es un sillón de estructura de hierro redondo macizo de 12 mm y funda de cuero vacuno curtido al vegetal, que Taller Kappa fabrica en San Martín, Buenos Aires. Sigue el diseño BKF creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.',
     material: 'Hierro redondo macizo de 12 mm y cuero vacuno curtido al vegetal',
-    specs: ['Hierro redondo macizo 12mm', 'Cuero vacuno de 1ra', 'Pintura epoxi o cromado', 'Medidas: 78x70x90 cm'],
+    specs: ['Hierro redondo macizo 12mm', 'Cuero vacuno de 1ra', 'Pintura epoxi o cromado', 'Medidas: 77x87x102 cm'],
+    // Medidas estándar en cm: las de FOTOCONMEDIDAS.png, confirmadas el 19/11/2026 como las reales. Las usa el
+    // modelo 3D de /sillon-bkf/ para escalar la silla; si cambian, actualizar también los textos con "77 x 87 x 102".
+    dimensions: { width: 77, depth: 87, height: 102 },
     facts: [
       ['Categoría', 'Asientos (sillones BKF)'],
       ['Estructura', 'Hierro redondo macizo de 12 mm'],
       ['Tapizado', 'Cuero vacuno de primera selección, curtido al vegetal'],
       ['Terminación', 'Pintura epoxi anticorrosiva de doble capa o cromado'],
       ['Colores', 'Negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)'],
-      ['Medidas', '78 x 70 x 90 cm (estándar); a medida sin costo adicional'],
+      ['Medidas', '77 cm de ancho x 87 cm de profundidad x 102 cm de alto (estándar); a medida sin costo adicional'],
       ['Uso', 'Residencial e intensivo gastronómico'],
       ['Garantía', 'Estructura de por vida; pintura epoxi 2 años; cuero 1 año'],
       ['Precio', 'Cotización por WhatsApp'],
     ],
     faq: [
-      { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
+      { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 77 cm de ancho, 87 cm de profundidad y 102 cm de alto en su versión estándar. También se fabrica a medida, sin costo adicional.' },
       { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
     ],
   },
@@ -186,6 +189,16 @@ export const FINISH_COLORS = [
   { name: 'Cromado', swatch: 'linear-gradient(135deg,#ccc,#fff,#aaa)' },
   { name: 'Verde Oliva', swatch: '#556b2f' },
   { name: 'Rojo Kappa', swatch: '#b71c1c' },
+];
+
+/**
+ * Colores del cuero que publica la FAQ de /sillon-bkf/ ("negro, marrón, o cuero natural"). Los usa el modelo
+ * 3D; `name` viaja en el mensaje del presupuesto junto con el acabado de la estructura.
+ */
+export const LEATHER_COLORS = [
+  { name: 'Marrón', swatch: '#6e3a1f' },
+  { name: 'Natural', swatch: '#b8783e' },
+  { name: 'Negro', swatch: '#1e1c1b' },
 ];
 
 /**

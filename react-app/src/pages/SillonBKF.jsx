@@ -8,8 +8,10 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
+import { Bkf3DPanel, Bkf3DViewer, preloadBkf3D } from '../components/Bkf3D';
+import { trackEvent } from '../lib/analytics';
 import { whatsappUrlFor } from '../data/contact';
-import { FINISH_COLORS as COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
+import { FINISH_COLORS as COLORS, LEATHER_COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
 import { BUSINESS } from '../data/business';
 import { faqNode, productId, productNode } from '../lib/schema';
 import { assetUrl, pageId } from '../lib/site';
@@ -21,7 +23,7 @@ const FAQ_ITEMS = [
   { q: '¿Cuánto cuesta el sillón BKF?', a: 'El sillón BKF Premium de Taller Kappa se cotiza según acabado, cantidad y destino de entrega, y el sitio no publica un precio de lista. Los precios que figuraron en versiones anteriores de este sitio pueden no estar vigentes. Escribinos por WhatsApp al ' + BUSINESS.phoneDisplay + ' con el color, la cantidad y la zona de entrega y te enviamos el presupuesto actualizado.' },
   { q: '¿Se puede pagar el sillón BKF en cuotas?', a: 'No. Por ahora Taller Kappa no ofrece pago en cuotas. El medio de pago se acuerda directamente con el taller al confirmar el presupuesto por WhatsApp.' },
   { q: '¿Qué diferencia hay entre un sillón BKF de hierro macizo y uno de tubo?', a: 'El hierro macizo es una varilla sólida y el tubo es hueco. A igual diámetro, la varilla maciza resiste más la flexión y pesa más que un tubo de pared fina. El diseño original usa varilla maciza de alrededor de 12 mm. El sillón de Taller Kappa es de hierro redondo macizo de 12 mm, sin tubos ni rellenos.' },
-  { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 78 x 70 x 90 cm en su versión estándar. También se fabrica a medida, sin costo adicional.' },
+  { q: '¿Qué medidas tiene el Sillón BKF Premium?', a: 'Mide 77 cm de ancho, 87 cm de profundidad y 102 cm de alto en su versión estándar. También se fabrica a medida, sin costo adicional.' },
   { q: '¿De qué está hecho el Sillón BKF Premium?', a: 'Tiene estructura de hierro redondo macizo de 12 mm, funda de cuero vacuno de primera selección curtido al vegetal y pintura epoxi anticorrosiva de doble capa, o cromado.' },
   { q: '¿El sillón BKF de Taller Kappa sigue el diseño original?', a: 'Sí. Fabricamos artesanalmente en Argentina con hierro macizo de 12mm y cuero vacuno de primera selección, siguiendo el diseño creado en 1938 por Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
   { q: '¿Cuánto tarda en fabricarse y entregarse un sillón BKF?', a: 'El plazo de entrega depende de la disponibilidad de stock. Consultanos por WhatsApp con el color, la cantidad y la zona de entrega.' },
@@ -41,7 +43,7 @@ const MADE_OF = [
   { title: 'Hierro macizo de 12 mm', text: 'Estructura de hierro redondo macizo, sin tubos ni rellenos. Tiene garantía de por vida contra deformaciones.' },
   { title: 'Cuero vacuno curtido al vegetal', text: 'Cuero de primera selección que toma color con el uso. Garantía de 1 año contra defectos de fabricación.' },
   { title: 'Epoxi anticorrosiva o cromado', text: 'Pintura epoxi de doble capa, con 2 años de garantía, o terminación cromada. Negro mate, blanco crema o el color que necesites.' },
-  { title: 'A medida, sin costo adicional', text: '78 x 70 x 90 cm en la versión estándar. Las medidas, los colores y los acabados se adaptan a tu espacio.' },
+  { title: 'A medida, sin costo adicional', text: '77 x 87 x 102 cm en la versión estándar. Las medidas, los colores y los acabados se adaptan a tu espacio.' },
 ];
 
 const PRODUCT = getProductBySlug('sillon-bkf-premium');
@@ -56,12 +58,23 @@ const SHOTS = [
 export default function SillonBKF() {
   const { addToCart } = useCart();
   const related = relatedProducts(PRODUCT);
+  // `shot` es el índice de la foto, o '3d' para el modelo (que solo existe en el cliente: arranca siempre en la foto 0).
   const [shot, setShot] = useState(0);
-  const current = SHOTS[shot];
+  const is3d = shot === '3d';
+  const current = is3d ? SHOTS[0] : SHOTS[shot];
+  const [finish, setFinish] = useState('Negro Mate');
+  const [leather, setLeather] = useState(LEATHER_COLORS[0].name);
+  const [measures, setMeasures] = useState(true);
+  const { width, depth, height } = PRODUCT.dimensions;
 
   const handleAdd = (color) => {
     // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
     addToCart(PRODUCT, color);
+  };
+
+  const open3d = () => {
+    if (!is3d) trackEvent('view_3d', { item_name: PRODUCT.name, page_path: '/sillon-bkf/' });
+    setShot('3d');
   };
 
   return (
@@ -104,8 +117,12 @@ export default function SillonBKF() {
         <div className="bkf-product-grid">
           <div className="bkf-img-col">
             <figure className="bkf-gallery-main">
-              <Picture src={current.src} alt={current.alt} width={current.width} height={current.height} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" style={current.position ? { objectPosition: current.position } : undefined} />
-              <figcaption>{current.caption}</figcaption>
+              {is3d ? (
+                <Bkf3DViewer dimensions={PRODUCT.dimensions} finish={finish} leather={leather} measures={measures} />
+              ) : (
+                <Picture src={current.src} alt={current.alt} width={current.width} height={current.height} loading="eager" fetchPriority="high" sizes="(max-width: 860px) calc(100vw - 32px), 640px" style={current.position ? { objectPosition: current.position } : undefined} />
+              )}
+              <figcaption>{is3d ? `Modelo 3D a escala: ${width} x ${depth} x ${height} cm` : current.caption}</figcaption>
             </figure>
             <div className="bkf-gallery-thumbs" role="group" aria-label="Fotos del sillón BKF">
               {SHOTS.map((s, i) => (
@@ -113,7 +130,18 @@ export default function SillonBKF() {
                   <Picture src={s.src} alt="" width={s.width} height={s.height} loading="lazy" sizes="88px" />
                 </button>
               ))}
+              <button type="button" className={`bkf-gallery-thumb bkf-gallery-thumb-3d${is3d ? ' active' : ''}`} aria-label="Ver el sillón en 3D" aria-pressed={is3d}
+                onClick={open3d} onPointerEnter={preloadBkf3D} onFocus={preloadBkf3D}>
+                <Icon name="cube" /> <span>3D</span>
+              </button>
             </div>
+            {is3d && (
+              <Bkf3DPanel
+                finish={finish} leather={leather} measures={measures}
+                onFinish={setFinish} onLeather={setLeather} onMeasures={setMeasures}
+                onAdd={() => handleAdd(`${finish}, cuero ${leather.toLowerCase()}`)}
+              />
+            )}
             <div className="bkf-badges">
               <span className="bkf-badge"><Icon name="star" /> Diseño icónico</span>
               <span className="bkf-badge"><Icon name="industry" /> Fábrica propia</span>
@@ -132,7 +160,7 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Tapizado:</strong> Cuero vacuno de primera selección curtido al vegetal</li>
               <li><Icon name="check" /> <strong>Pintura:</strong> Epoxi anticorrosiva doble capa</li>
               <li><Icon name="check" /> <strong>Colores:</strong> Negro mate, blanco crema, cromado y colores a pedido (como verde oliva o rojo Kappa)</li>
-              <li><Icon name="check" /> <strong>Medidas:</strong> 78 x 70 x 90 cm (estándar) o a medida sin cargo adicional</li>
+              <li><Icon name="check" /> <strong>Medidas:</strong> 77 x 87 x 102 cm (estándar) o a medida sin cargo adicional</li>
               <li><Icon name="check" /> <strong>Uso:</strong> Residencial e intensivo gastronómico</li>
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
               <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>

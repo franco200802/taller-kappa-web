@@ -120,6 +120,8 @@ escritura de `contactos`, reglas). WhatsApp se verificó hasta el enlace
    ficha, FAQ, categorías, diccionario en inglés; de ahí salen `llms.txt` y el
    JSON-LD). No se publicó la imagen: hay que confirmar
    cuáles son las medidas reales y corregir el lado que esté mal.
+   **Resuelto el 19/11/2026:** se confirmaron las de la foto (77 x 87 x 102 cm,
+   ancho x profundidad x alto) y se corrigieron las 20 apariciones.
 2. **La foto real** (`FOTOLINDABKF.jpeg`): confirmar que es un sillón de Taller
    Kappa y que se puede publicar la foto de esa casa. El sitio la presenta como
    "Foto sin editar, en una casa".
