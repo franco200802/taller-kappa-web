@@ -1,26 +1,47 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from './Icon';
 import { useCart } from '../context/CartContext';
-import { QUOTE_KINDS, WHATSAPP_DISPLAY } from '../data/contact';
+import { QUOTE_KINDS, WHATSAPP_DISPLAY, whatsappUrl } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import Picture from './Picture';
 import Modal from './Modal';
 import { trackEvent } from '../lib/analytics';
 import { isFirebaseConfigured } from '../lib/firebaseConfig';
+import { quoteItemOption } from '../lib/leads';
 import { useLang } from '../i18n/LangContext';
 
 // Los nombres pueden venir de Firestore: se escapan antes de interpolarlos
 // en el HTML de la ventana de impresión.
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+function selectQuoteMessage(field) {
+  if (!field) return;
+  field.focus({ preventScroll: true });
+  field.select();
+  field.scrollIntoView({ block: 'center' });
+}
+
 export default function CartDrawer() {
-  const { cart, isOpen, setIsOpen, changeQty, removeItem, whatsappLink, showToast, quote, setQuote, saveQuote } = useCart();
+  const { cart, isOpen, setIsOpen, changeQty, removeItem, quoteMessage, showToast, quote, setQuote, saveQuote } = useCart();
   const { lang, t } = useLang();
+  const [manualCopy, setManualCopy] = useState(false);
+
+  const copyBudget = async () => {
+    try {
+      await navigator.clipboard.writeText(quoteMessage);
+      setManualCopy(false);
+      showToast(t('Mensaje copiado.'));
+    } catch {
+      setManualCopy(true);
+      selectQuoteMessage(document.getElementById('quote-message'));
+    }
+  };
 
   const printBudget = () => {
     if (cart.length === 0) { showToast(t('Tu presupuesto está vacío.')); return; }
     const lines = cart.map(({ product, color, qty }) =>
-      `<tr><td>${esc(product.name)}</td><td>${esc(color)}</td><td style="text-align:center">${qty}</td><td style="color:#888;font-style:italic">${t('A cotizar')}</td></tr>`
+      `<tr><td>${esc(product.name)}</td><td>${esc(t(quoteItemOption(product, color)))}</td><td style="text-align:center">${qty}</td><td style="color:#888;font-style:italic">${t('A cotizar')}</td></tr>`
     ).join('');
     const win = window.open('', '_blank');
     if (!win) { showToast(t('El navegador bloqueó la ventana emergente.')); return; }
@@ -36,7 +57,7 @@ export default function CartDrawer() {
       <h1>Taller Kappa S.R.L.</h1>
       <p style="color:#888;font-size:.9rem;margin-bottom:20px">${BUSINESS.address.street} · ${BUSINESS.address.locality} · CP ${BUSINESS.address.postalCode} · ${WHATSAPP_DISPLAY} · tallerkappa.com.ar</p>
       <p class="note">⚠️ ${t('Presupuesto orientativo. Precios finales se confirman por WhatsApp.')}</p>
-      <table><thead><tr><th>${t('Producto')}</th><th>${t('Acabado')}</th><th>${t('Cant.')}</th><th>${t('Precio')}</th></tr></thead>
+      <table><thead><tr><th>${t('Producto')}</th><th>${t('Acabado o variante')}</th><th>${t('Cant.')}</th><th>${t('Precio')}</th></tr></thead>
       <tbody>${lines}</tbody></table>
       <div class="footer"><strong>${t('Fecha:')}</strong> ${new Date().toLocaleDateString(lang === 'en' ? 'en-US' : 'es-AR', { day: '2-digit', month: 'long', year: 'numeric' })}<br>
       ${t('Para el presupuesto final escribinos por WhatsApp al')} <strong>${WHATSAPP_DISPLAY}</strong></div>
@@ -63,7 +84,7 @@ export default function CartDrawer() {
                 <Picture src={product.image} alt={product.name} width={product.imageWidth} height={product.imageHeight} loading="lazy" sizes="64px" />
                 <div>
                   <b>{product.name}</b>
-                  <small className="cart-item-color"><Icon name="palette" /> {color}</small>
+                  <small className="cart-item-color"><Icon name="palette" /> {quoteItemOption(product, color)}</small>
                 </div>
               </div>
               <div className="cart-item-qty">
@@ -74,6 +95,16 @@ export default function CartDrawer() {
               </div>
             </div>
           ))}
+          {manualCopy && cart.length > 0 && (
+            <div className="form-group cart-manual-copy">
+              <p className="form-hint">Copiá el texto y pegalo en el chat de Taller Kappa.</p>
+              <label htmlFor="quote-message">Mensaje del presupuesto</label>
+              <textarea id="quote-message" ref={selectQuoteMessage} value={quoteMessage} readOnly />
+              <a className="btn-outline" href={whatsappUrl()} target="_blank" rel="noopener noreferrer" data-cta="presupuesto_chat">
+                Abrir el chat de Taller Kappa
+              </a>
+            </div>
+          )}
         </div>
 
         <div id="cart-footer">
@@ -101,7 +132,7 @@ export default function CartDrawer() {
                 <input id="quote-zone" autoComplete="address-level2" maxLength={80} placeholder="Barrio o localidad" value={quote.zone} onChange={(e) => setQuote({ ...quote, zone: e.target.value })} />
               </div>
               <a
-                href={whatsappLink}
+                href={whatsappUrl(quoteMessage)}
                 className="btn-whatsapp-checkout"
                 target="_blank" rel="noopener noreferrer"
                 // whatsapp_click lo envía trackClicks (con estos data-*); whatsapp_checkout suma el detalle del presupuesto.
@@ -110,14 +141,16 @@ export default function CartDrawer() {
               >
                 <Icon name="whatsapp" /> Pedir presupuesto por WhatsApp
               </a>
-              <button className="btn-print-budget" onClick={printBudget}>
-                <Icon name="file-pdf" /> Descargar presupuesto
-              </button>
+              <div className="cart-secondary-actions">
+                <button type="button" className="btn-print-budget" onClick={copyBudget}>Copiar mensaje</button>
+                <button type="button" className="btn-print-budget" onClick={printBudget}>
+                  <Icon name="file-pdf" /> Descargar presupuesto
+                </button>
+              </div>
+              <p className="cart-hint">Enviá el mensaje desde WhatsApp para pedir el presupuesto.</p>
             </>
           )}
-          <p className="cart-hint">En el sitio no se paga nada: te respondemos con el presupuesto por WhatsApp.</p>
-          {/* Solo se muestra si de verdad se guarda (constante de compilación: igual en el prerender y en el cliente). */}
-          {isFirebaseConfigured && cart.length > 0 && <p className="cart-hint">Al enviarlo guardamos una copia del pedido para poder responderte.</p>}
+          {isFirebaseConfigured && cart.length > 0 && <p className="cart-hint">Al abrir WhatsApp se intenta guardar una copia del pedido.</p>}
         </div>
       </div>
     </Modal>

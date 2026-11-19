@@ -7,6 +7,8 @@
  * escriben documentos armados con estas funciones para detectar el desfase).
  */
 
+import { BASE_FLAT_COLUMNS, BASE_FLAT_HEIGHTS, BASE_FLAT_SLUG, FINISH_COLORS, describeBaseFlat } from '../data/products.js';
+
 /** Colecciones de Firestore que usa el sitio. */
 export const COLLECTIONS = { contactos: 'contactos', presupuestos: 'presupuestos' };
 
@@ -35,10 +37,24 @@ export function contactoDoc({ name, interest, zone, message }) {
   };
 }
 
+const baseFlatVariants = new Set([undefined, ...FINISH_COLORS.map(({ name }) => name)].flatMap((finish) =>
+  BASE_FLAT_HEIGHTS.flatMap(({ name: height }) =>
+    BASE_FLAT_COLUMNS.map(({ name: column }) => describeBaseFlat({ finish, height, column })))));
+
+/** Una base agregada por el flujo anterior conserva su acabado y deja explícitas las medidas pendientes. */
+export function quoteItemOption(product, color) {
+  if (product.slug === BASE_FLAT_SLUG && !baseFlatVariants.has(color)) {
+    return `${color} · Altura y diámetro de columna a definir`;
+  }
+  return color;
+}
+
 /** Renglones del presupuesto, igual que en el mensaje de WhatsApp. */
 export function quoteLines(cart) {
-  return cart.map(({ product, color, qty }, i) =>
-    `${i + 1}. ${product.name} - ${qty} ${qty === 1 ? 'unidad' : 'unidades'} - Acabado: ${color}`).join('\n');
+  return cart.map(({ product, color, qty }, i) => {
+    const optionLabel = product.slug === BASE_FLAT_SLUG ? 'Variante' : 'Acabado';
+    return `${i + 1}. ${product.name} - ${qty} ${qty === 1 ? 'unidad' : 'unidades'} - ${optionLabel}: ${quoteItemOption(product, color)}`;
+  }).join('\n');
 }
 
 /** Documento de `presupuestos` a partir del carrito y los datos opcionales. */

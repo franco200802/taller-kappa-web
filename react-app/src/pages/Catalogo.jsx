@@ -7,8 +7,8 @@ import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
 import { OptionGroup, Product3DViewer } from '../components/Product3D';
-import { CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
-import { PRODUCT_3D, initialValues } from '../data/product3d';
+import { BASE_FLAT_SLUG, CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
+import { PRODUCT_3D, canQuote, initialValues } from '../data/product3d';
 import { whatsappUrl, whatsappUrlFor } from '../data/contact';
 import { itemListNode } from '../lib/schema';
 import { trackEvent } from '../lib/analytics';
@@ -67,6 +67,7 @@ function QuickView({ product, open, onClose, onAdd }) {
   const [color, setColor] = useState('Negro Mate');
   const [view3d, setView3d] = useState(Boolean(cfg));
   const [measures, setMeasures] = useState(true);
+  const quoteReady = !cfg || canQuote(cfg, values);
   const onView = (to3d) => {
     if (to3d && !view3d) track3d(product);
     setView3d(to3d);
@@ -99,8 +100,8 @@ function QuickView({ product, open, onClose, onAdd }) {
             <input type="checkbox" checked={measures} onChange={(e) => setMeasures(e.target.checked)} /> Mostrar medidas
           </label>
         )}
-        <button className="btn-main" onClick={() => onAdd(cfg ? cfg.describe(values) : color)}>
-          <Icon name="plus" /> Agregar al presupuesto
+        <button type="button" className="btn-main" disabled={!quoteReady} onClick={() => onAdd(cfg ? cfg.describe(values) : color)}>
+          <Icon name="plus" /> {quoteReady ? 'Agregar al presupuesto' : 'Elegí la altura y el diámetro'}
         </button>
         <p className="modal-hint"><Icon name="whatsapp" /> Te pasamos el precio por WhatsApp</p>
       </div>
@@ -139,7 +140,13 @@ function ProductCard({ p, onOpen }) {
         </a>
         <div className="card-actions">
           {detailHref && <Link to={detailHref} className="btn-detail" aria-label={`Ver ficha de ${p.name}`}>Ver ficha</Link>}
-          <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><Icon name="plus" /> Agregar al presupuesto</button>
+          {p.slug === BASE_FLAT_SLUG ? (
+            <button type="button" className="btn-add-cart" aria-haspopup="dialog" onClick={() => onOpen(p)}>
+              <Icon name="plus" /> Elegir medidas
+            </button>
+          ) : (
+            <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><Icon name="plus" /> Agregar al presupuesto</button>
+          )}
         </div>
       </div>
     </article>
@@ -167,6 +174,10 @@ export default function Catalogo() {
     if (PRODUCT_3D[p.slug]) track3d(p);
   };
   const closeModal = () => setModalOpen(false);
+  const addModalProduct = (variant) => {
+    addToCart(modalProduct, variant);
+    closeModal();
+  };
 
   const filtered = filter === 'all' ? products : products.filter((p) => p.category === filter);
   const FILTERS = [
@@ -253,8 +264,7 @@ export default function Catalogo() {
 
       <Modal className="modal" label={modalProduct ? modalProduct.name : 'Detalle del producto'} open={modalOpen} onClose={closeModal}>
         {modalProduct && (
-          <QuickView key={modalKey} product={modalProduct} open={modalOpen} onClose={closeModal}
-            onAdd={(color) => { addToCart(modalProduct, color); closeModal(); }} />
+          <QuickView key={modalKey} product={modalProduct} open={modalOpen} onClose={closeModal} onAdd={addModalProduct} />
         )}
       </Modal>
     </>

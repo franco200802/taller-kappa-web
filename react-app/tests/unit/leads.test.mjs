@@ -2,6 +2,7 @@
 // Correr: npm run test:unit
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { BASE_FLAT_COLUMNS, BASE_FLAT_HEIGHTS, BASE_FLAT_SLUG, describeBaseFlat, getProductBySlug } from '../../src/data/products.js';
 import {
   ESTADO_KEYS, LIMITS, contactoDoc, countByEstado, estadoOf, filterLeads, normalize,
   presupuestoDoc, presupuestoKey, quoteLines, toCsv,
@@ -26,6 +27,31 @@ test('contactoDoc tolera campos ausentes', () => {
 
 test('quoteLines arma un renglón por producto, con singular y plural', () => {
   assert.equal(quoteLines(cart), '1. Sillón BKF Premium - 2 unidades - Acabado: Negro Mate\n2. Banco BKF - 1 unidad - Acabado: Cromado');
+});
+
+test('Base Flat usa altura y diámetro publicados y conserva las variantes por renglón', () => {
+  const product = getProductBySlug(BASE_FLAT_SLUG);
+  assert.deepEqual(BASE_FLAT_HEIGHTS.map(({ value }) => value), [73, 105]);
+  assert.deepEqual(BASE_FLAT_COLUMNS.map(({ value }) => value), [77, 101]);
+  const lines = [
+    { product, color: describeBaseFlat({ height: BASE_FLAT_HEIGHTS[0].name, column: BASE_FLAT_COLUMNS[0].name }), qty: 2 },
+    { product, color: describeBaseFlat({ height: BASE_FLAT_HEIGHTS[1].name, column: BASE_FLAT_COLUMNS[1].name }), qty: 1 },
+  ];
+  assert.equal(quoteLines(lines), '1. Base de Mesa Flat - 2 unidades - Variante: Mesa (73 cm), columna de 77 mm\n2. Base de Mesa Flat - 1 unidad - Variante: Barra (105 cm), columna de 101 mm');
+  assert.equal(presupuestoDoc(lines).detalle, quoteLines(lines));
+});
+
+test('una Base Flat anterior conserva el acabado sin asignarle medidas', () => {
+  const product = getProductBySlug(BASE_FLAT_SLUG);
+  assert.equal(quoteLines([{ product, color: 'Negro Mate', qty: 1 }]),
+    '1. Base de Mesa Flat - 1 unidad - Variante: Negro Mate · Altura y diámetro de columna a definir');
+});
+
+test('una Base Flat con acabado y medidas conserva su variante completa', () => {
+  const product = getProductBySlug(BASE_FLAT_SLUG);
+  const color = describeBaseFlat({ finish: 'Cromado', height: BASE_FLAT_HEIGHTS[1].name, column: BASE_FLAT_COLUMNS[1].name });
+  assert.equal(quoteLines([{ product, color, qty: 1 }]),
+    '1. Base de Mesa Flat - 1 unidad - Variante: Cromado, Barra (105 cm), columna de 101 mm');
 });
 
 test('presupuestoDoc suma las unidades y normaliza los datos opcionales', () => {

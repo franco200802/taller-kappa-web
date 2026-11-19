@@ -15,6 +15,7 @@
     "test:rules": "npx --yes firebase-tools@15.36.0 emulators:exec --project demo-taller-kappa --config ../firebase.json --only firestore \"node --test tests/rules/firestore.rules.test.mjs\"",
     "test:e2e": "npx --yes firebase-tools@15.36.0 emulators:exec --project demo-taller-kappa --config ../firebase.json --only auth,firestore \"node tests/e2e/admin.e2e.mjs\"",
     "test:e2e:mock": "node tests/e2e/admin.e2e.mjs --mock",
+    "test:e2e:conversion": "node --test tests/e2e/conversion.test.mjs",
     "test:all": "npm run test:unit && npm run test:rules && npm run test:e2e"
   },
   "dependencies": {
