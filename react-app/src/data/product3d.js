@@ -13,6 +13,10 @@ const BASE = getProductBySlug('base-de-mesa-flat');
 
 // Acabados de la estructura: la FAQ de asientos los publica para sillones y bancos.
 const FINISH_OPTION = { key: 'finish', type: 'swatch', label: 'Estructura', ariaLabel: 'Acabado de la estructura', items: FINISH_COLORS, initial: 'Negro Mate' };
+// Cuero negro, marrón o natural: lo publica la FAQ del sillón; para el banco, confirmado por el dueño el 19/11/2026.
+const leatherOption = (initial) => ({ key: 'leather', type: 'swatch', label: 'Cuero', ariaLabel: 'Color del cuero', items: LEATHER_COLORS, initial });
+// "Negro Mate, cuero marrón": en inglés lo traduce la regla COLOR_WITH_LEATHER de i18n/translate.js.
+const finishWithLeather = (v) => `${v.finish}, cuero ${v.leather.toLowerCase()}`;
 
 const boxLabels = ({ width, depth, height }) => [
   { key: 'width', text: 'Ancho', value: width, unit: 'cm' },
@@ -28,9 +32,9 @@ const valueOf = (items, name) => items.find((i) => i.name === name)?.value;
 
 export const PRODUCT_3D = {
   'sillon-bkf-premium': {
-    options: [FINISH_OPTION, { key: 'leather', type: 'swatch', label: 'Cuero', ariaLabel: 'Color del cuero', items: LEATHER_COLORS, initial: 'Marrón' }],
+    options: [FINISH_OPTION, leatherOption('Marrón')],
     labels: () => boxLabels(SILLON.dimensions),
-    describe: (v) => `${v.finish}, cuero ${v.leather.toLowerCase()}`,
+    describe: finishWithLeather,
     caption: () => [`Modelo 3D a escala: ${boxSize(SILLON.dimensions)}`],
     fallback: { src: '/images/sillon-bkf-cuero-en-casa.jpg', width: 960, height: 1200 },
     showroom: {
@@ -48,9 +52,10 @@ export const PRODUCT_3D = {
   },
 
   'banco-bkf': {
-    options: [FINISH_OPTION],
+    // Arranca en cuero natural, el de la foto del banco.
+    options: [FINISH_OPTION, leatherOption('Natural')],
     labels: () => boxLabels(BANCO.dimensions),
-    describe: (v) => v.finish,
+    describe: finishWithLeather,
     caption: () => [`Modelo 3D a escala: ${boxSize(BANCO.dimensions)}`],
     fallback: { src: BANCO.image, width: BANCO.imageWidth, height: BANCO.imageHeight },
     showroom: {
@@ -60,7 +65,7 @@ export const PRODUCT_3D = {
       chapters: [
         { title: 'El banco BKF, pieza por pieza', text: 'Sigue la línea del sillón BKF en formato compacto. Se usa como pie de cama o como asiento auxiliar.' },
         { eyebrow: 'Estructura', title: 'Hierro macizo de 12 mm', text: 'La misma varilla maciza del sillón, en un formato más chico. La estructura de hierro tiene garantía de por vida.' },
-        { eyebrow: 'Tapizado', title: 'Asiento de cuero', text: 'El asiento cuelga de las cuatro puntas, como el cuero del sillón. Tiene garantía de 1 año.' },
+        { eyebrow: 'Tapizado', title: 'Asiento de cuero', text: 'El asiento cuelga de las cuatro puntas, como el cuero del sillón. Se pide en negro, marrón o natural, con garantía de 1 año.' },
         { eyebrow: 'Medidas y acabados', title: `${boxSize(BANCO.dimensions)}, en el acabado que elijas`, text: 'Ancho, profundidad y alto. Se fabrica en otros colores y medidas a pedido, sin costo adicional.' },
       ],
     },

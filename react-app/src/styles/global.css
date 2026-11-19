@@ -255,7 +255,13 @@ p a:hover, li a:hover { color: var(--kappa); }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .home-hero-b2b { font-size: var(--t-sm); color: var(--grafito); }
 @media (max-width: 560px) { .home-hero-actions > *, .bkf-actions > *, .cta-btns > * { flex: 1 1 100%; } }
-.home-hero-media { position: relative; overflow: hidden; background: var(--blanco); }
+/* La foto del hero es cuadrada y el sillón ocupa casi todo el ancho. En una caja más alta que ancha, `cover` le
+   cortaba las puntas, el ala y las patas (se veía "con zoom": 82 % del ancho a 1440 px). La caja es cuadrada como la
+   foto, va arriba y pegada a la derecha, y nunca es más alta que la pantalla. */
+.home-hero-media {
+    position: relative; overflow: hidden; background: var(--blanco);
+    align-self: start; justify-self: end; width: min(100%, calc(100svh - var(--nav-h))); aspect-ratio: 1;
+}
 .home-hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
 .home-hero-caption {
     position: absolute; left: 0; bottom: 0;
@@ -276,7 +282,8 @@ p a:hover, li a:hover { color: var(--kappa); }
 
 @media (max-width: 860px) {
     .home-hero { grid-template-columns: 1fr; min-height: 0; }
-    .home-hero-media { order: -1; aspect-ratio: 5 / 4; max-height: 60svh; }
+    /* Cuadrada como la foto (con 5:4 se perdía el 20 % de abajo: las patas). */
+    .home-hero-media { order: -1; justify-self: stretch; width: 100%; aspect-ratio: 1; max-height: 60svh; }
     .home-hero-media img { object-position: 50% 40%; }
     .home-hero-text { padding: 32px var(--gutter) 48px; }
 }
@@ -1290,3 +1297,7 @@ details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margi
 .bkf-stage .seg-option { color: var(--grafito-claro); }
 .bkf-stage .seg-option:hover { color: var(--blanco); }
 .bkf-stage .seg-option.active { background: var(--blanco); color: var(--hierro); }
+
+/* Fotos verticales en la galería de una ficha (la Base de Mesa Flat es 2:3): en la caja cuadrada se veía el 67 % del
+   alto, como con zoom. En 3:4 se ve el 89 % y la base entra entera. Producto.jsx les pone la clase según la foto. */
+.bkf-img-col .bkf-gallery-main img.is-portrait, .bkf-img-col img.is-portrait { aspect-ratio: 3 / 4; }
