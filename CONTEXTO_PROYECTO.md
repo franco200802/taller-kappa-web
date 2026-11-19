@@ -471,6 +471,29 @@ negro, marrón, natural), cotas de ancho/profundidad/alto y "Agregar este silló
 - **Medición:** abrir el visor envía `view_3d` a GA4; el botón del panel dispara `add_to_cart` (como el
   resto) y su contenedor lleva `data-cta="sillon-bkf_3d"`.
 
+## 5l. Showroom 3D de la home (19/11/2026)
+
+Sección oscura después de "Lo que fabricamos" (`components/BkfShowroom.jsx`, estilos en la sección 24 de
+`global.css`): el sillón en 3D queda fijo (sticky) y cambia con el scroll en 4 capítulos (diseño de 1938,
+estructura con el cuero que se disuelve, cuero, medidas con cotas + acabados y "Agregar al presupuesto").
+Es la única animación ligada al scroll del sitio y se agregó a pedido (el rediseño de sept. 2026 no tenía).
+
+- **Mismo modelo que la galería:** `createBkfStage` en `lib/bkf3d.js` usa `buildChair` (la silla a escala
+  exacta de `dimensions`). Los capítulos de la cámara están en `STAGE_KF`.
+- **Los textos no dependen de JS:** las tarjetas son HTML prerenderizado que pasa por encima de la escena; nada
+  arranca oculto. No convertirlas en textos que aparecen/desaparecen con JS.
+- **three.js se descarga al acercarse** (una pantalla antes de la sección), nunca en la carga de la home: no cambia
+  LCP ni TBT. Con "ahorro de datos" o sin WebGL queda una foto. `prefers-reduced-motion`: la silla salta de un
+  capítulo al otro sin recorrido y no hay polvo ni balanceo.
+- **Rendimiento en pantalla:** el bucle de render se pausa fuera de la sección; la resolución tiene tope (`maxDpr`).
+  El progreso del scroll se escribe en `--p` (CSS) y en la escena, sin re-render de React por cuadro.
+- **Celular:** la tarjeta tapa la parte de abajo. El componente mide cuánto espacio deja libre cada tarjeta
+  (`ResizeObserver`, cambia con la fuente y el idioma) y la escena encuadra la silla entera en esa franja
+  (`setFreeSpace`). Si se agrega texto a una tarjeta, la silla se achica sola.
+- **Color fiel a las muestras:** los dos visores usan `NeutralToneMapping` (Khronos PBR Neutral, pensado para
+  productos). Con ACES y luz cálida el cuero marrón se veía naranja.
+- **Medición:** `view_3d` con `location: 'home_showroom'` cuando carga la escena; `data-cta="home_3d"` en los botones.
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder

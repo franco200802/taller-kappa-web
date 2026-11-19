@@ -1,26 +1,32 @@
 /**
- * Visor 3D del Sillón BKF (three.js puro, sin React Three Fiber: el sitio usa React 18 y evita librerías extra).
+ * Sillón BKF en 3D (three.js puro, sin React Three Fiber: el sitio usa React 18 y evita librerías extra).
  *
- * Este módulo pesa lo que pesa three.js, así que NUNCA se importa de forma estática: `Bkf3D.jsx` lo pide con
- * `import()` recién cuando alguien toca "Ver en 3D". No corre en el prerender (no toca `window` al importarse).
+ * Dos usos, mismo modelo:
+ *  - `createBkfViewer`: el visor de la galería de /sillon-bkf/ (se gira y se acerca, muestra las cotas).
+ *  - `createBkfStage`: la escena del showroom de la home, manejada por el scroll (capítulos).
+ *
+ * Este módulo pesa lo que pesa three.js, así que NUNCA se importa de forma estática: los componentes lo piden con
+ * `import()` recién cuando hace falta. No corre en el prerender (no toca `window` al importarse).
  *
  * La silla se modela por código siguiendo la estructura real: dos varillas cerradas de hierro de 12 mm que se
- * cruzan en X adelante y atrás (como en la foto del esqueleto), con el cuero colgado de las cuatro puntas.
- * Después se escala para que su caja mida EXACTAMENTE las medidas de `product.dimensions` (77 x 87 x 102 cm).
+ * cruzan en X adelante y atrás, con el cuero colgado de las cuatro puntas. Después se escala para que su caja mida
+ * EXACTAMENTE las medidas de `product.dimensions` (77 x 87 x 102 cm).
  */
 import {
-  ACESFilmicToneMapping, BufferGeometry, CanvasTexture, CatmullRomCurve3, Color, CurvePath, DoubleSide, Float32BufferAttribute,
-  Group, LineBasicMaterial, LineCurve3, LineSegments, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
-  PerspectiveCamera, PlaneGeometry, PMREMGenerator, QuadraticBezierCurve3, RepeatWrapping, Scene, SRGBColorSpace, TubeGeometry,
-  Vector3, WebGLRenderer, Box3, MathUtils,
+  Box3, BufferGeometry, CanvasTexture, CatmullRomCurve3, Color, CurvePath, DirectionalLight, DoubleSide,
+  Float32BufferAttribute, Group, LineBasicMaterial, LineCurve3, LineSegments, MathUtils, Mesh, MeshBasicMaterial,
+  MeshPhysicalMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PMREMGenerator, Points, PointsMaterial,
+  NeutralToneMapping, QuadraticBezierCurve3, RepeatWrapping, RingGeometry, Scene, SRGBColorSpace, TubeGeometry, Vector3, WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
+/* ---------- Geometría de la silla ---------- */
+
 const V = (x, y, z) => new Vector3(x, y, z);
 const ROD = 0.006; // radio de la varilla: 12 mm de diámetro, en metros
 
-// Puntos de la estructura en metros (proporciones tomadas de FOTOCONMEDIDAS.png). La escala final la fija `fitTo`.
+// Puntos de la estructura en metros (proporciones tomadas de FOTOCONMEDIDAS.png). La escala final la fija buildChair.
 const P = {
   BL: V(-0.33, 1.0, -0.42), BR: V(0.33, 1.0, -0.42), // puntas de atrás (las más altas)
   FL: V(-0.38, 0.44, 0.42), FR: V(0.38, 0.44, 0.42), // puntas de adelante (alas del asiento)
@@ -109,7 +115,9 @@ function buildHem(seg = 40) {
   return new TubeGeometry(new CatmullRomCurve3(pts, true, 'centripetal'), 320, 0.005, 8, true);
 }
 
-/** Textura de ruido para el poro del cuero (se genera en el navegador, no se descarga). */
+/* ---------- Texturas generadas (no se descarga nada) ---------- */
+
+/** Ruido para el poro del cuero. */
 function grainTexture() {
   const c = document.createElement('canvas');
   c.width = c.height = 256;
@@ -122,26 +130,37 @@ function grainTexture() {
   }
   ctx.putImageData(img, 0, 0);
   const t = new CanvasTexture(c);
-  t.wrapS = t.wrapT = RepeatWrapping;
+  t.wrapS = RepeatWrapping;
+  t.wrapT = RepeatWrapping;
   t.repeat.set(6, 6);
   return t;
 }
 
-/** Sombra suave bajo la silla: un degradé radial en un plano (más barato que sombras en tiempo real). */
-function shadowPlane(w, d) {
+/** Degradé radial: sombra bajo la silla y partículas de polvo. */
+function radialTexture(inner, outer, size = 128) {
   const c = document.createElement('canvas');
-  c.width = c.height = 128;
+  c.width = c.height = size;
   const ctx = c.getContext('2d');
-  const g = ctx.createRadialGradient(64, 64, 4, 64, 64, 64);
-  g.addColorStop(0, 'rgba(0,0,0,0.38)');
-  g.addColorStop(1, 'rgba(0,0,0,0)');
+  const g = ctx.createRadialGradient(size / 2, size / 2, size * 0.03, size / 2, size / 2, size / 2);
+  g.addColorStop(0, inner);
+  g.addColorStop(1, outer);
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 128, 128);
-  const mesh = new Mesh(new PlaneGeometry(w * 1.5, d * 1.5), new MeshBasicMaterial({ map: new CanvasTexture(c), transparent: true, depthWrite: false }));
+  ctx.fillRect(0, 0, size, size);
+  return new CanvasTexture(c);
+}
+
+/** Sombra suave bajo la silla (más barata que sombras en tiempo real). */
+function shadowPlane(w, d, strength) {
+  const mesh = new Mesh(
+    new PlaneGeometry(w * 1.5, d * 1.5),
+    new MeshBasicMaterial({ map: radialTexture(`rgba(0,0,0,${strength})`, 'rgba(0,0,0,0)'), transparent: true, depthWrite: false }),
+  );
   mesh.rotation.x = -Math.PI / 2;
   mesh.position.y = 0.001;
   return mesh;
 }
+
+/* ---------- Silla completa, a escala exacta ---------- */
 
 // Cómo se ve cada acabado de FINISH_COLORS (data/products.js). Las claves son los `name` de esa lista.
 const FINISH_LOOK = {
@@ -152,8 +171,81 @@ const FINISH_LOOK = {
   'Rojo Kappa': { color: '#b71c1c', metalness: 0.3, roughness: 0.45 },
 };
 
-/** Líneas de cota (ancho, profundidad, alto) con sus topes, en el sistema de la silla ya escalada. */
-function dimensionLines(w, d, h) {
+/**
+ * Arma la silla y la escala para que su caja (estructura + cuero) mida exactamente `dimensions` y apoye en el piso.
+ * Devuelve el grupo, el subgrupo del cuero (para hacerlo desaparecer) y `paint`, que cambia los colores con transición.
+ */
+function buildChair({ dimensions, finish, leather }) {
+  const W = dimensions.width / 100;
+  const D = dimensions.depth / 100;
+  const H = dimensions.height / 100;
+  const grain = grainTexture();
+  // Cuero con brillo bajo y sin sheen claro: con más, el marrón se veía rosado y no coincidía con la muestra.
+  const mats = {
+    frame: new MeshStandardMaterial(),
+    leather: new MeshPhysicalMaterial({
+      side: DoubleSide, roughness: 0.55, sheen: 0.2, sheenRoughness: 0.6, sheenColor: new Color('#7a4a2c'),
+      clearcoat: 0.2, clearcoatRoughness: 0.45, bumpMap: grain, bumpScale: 0.3, envMapIntensity: 0.7,
+    }),
+    hem: new MeshStandardMaterial({ roughness: 0.5 }),
+  };
+
+  const group = new Group();
+  for (const pts of RODS) group.add(new Mesh(new TubeGeometry(roundedLoop(pts, 0.07), 360, ROD, 12, true), mats.frame));
+  const leatherGroup = new Group();
+  leatherGroup.add(new Mesh(buildSling(), mats.leather), new Mesh(buildHem(), mats.hem));
+  group.add(leatherGroup);
+
+  const size = new Box3().setFromObject(group).getSize(new Vector3());
+  group.scale.set(W / size.x, H / size.y, D / size.z);
+  const box = new Box3().setFromObject(group);
+  const center = box.getCenter(new Vector3());
+  group.position.set(-center.x, -box.min.y, -center.z);
+
+  const target = { frame: new Color(), leather: new Color(), metal: 0, rough: 0 };
+  const paint = {
+    setFinish(name) {
+      const look = FINISH_LOOK[name] ?? FINISH_LOOK['Negro Mate'];
+      target.frame.set(look.color);
+      target.metal = look.metalness;
+      target.rough = look.roughness;
+    },
+    setLeather(hex) {
+      target.leather.set(hex);
+    },
+    /** k = cuánto acercarse al color pedido en este cuadro (1 = de golpe). */
+    update(k) {
+      mats.frame.color.lerp(target.frame, k);
+      mats.frame.metalness += (target.metal - mats.frame.metalness) * k;
+      mats.frame.roughness += (target.rough - mats.frame.roughness) * k;
+      mats.leather.color.lerp(target.leather, k);
+      mats.hem.color.copy(mats.leather.color).multiplyScalar(0.55);
+    },
+  };
+  paint.setFinish(finish);
+  paint.setLeather(leather);
+  paint.update(1);
+  return { group, leatherGroup, mats, paint, textures: [grain], W, D, H };
+}
+
+/** Cuero visible (1) o disuelto (0): se desvanece y "flota" hacia arriba, y queda la estructura. */
+function setLeatherAmount(chair, a) {
+  const e = a * a * (3 - 2 * a);
+  chair.leatherGroup.visible = a > 0.02;
+  chair.leatherGroup.position.y = (1 - e) * 0.15;
+  for (const m of [chair.mats.leather, chair.mats.hem]) {
+    m.opacity = e;
+    const transparent = e < 0.999;
+    if (m.transparent !== transparent) {
+      m.transparent = transparent;
+      m.needsUpdate = true;
+    }
+  }
+  chair.mats.leather.depthWrite = e > 0.5;
+}
+
+/** Líneas de cota (ancho, profundidad, alto) con sus topes, y el punto donde va cada etiqueta. */
+function dimensionLines(w, d, h, color) {
   const off = 0.07;
   const tick = 0.025;
   const x = w / 2;
@@ -174,77 +266,142 @@ function dimensionLines(w, d, h) {
   line([x + off - tick, h, -z - off], [x + off + tick, h, -z - off]);
   const g = new BufferGeometry();
   g.setAttribute('position', new Float32BufferAttribute(seg, 3));
-  const lines = new LineSegments(g, new LineBasicMaterial({ color: '#b71c1c', depthTest: false, transparent: true }));
+  const lines = new LineSegments(g, new LineBasicMaterial({ color, depthTest: false, transparent: true }));
   lines.renderOrder = 2;
-  // Dónde va cada etiqueta (el componente las ubica en pantalla).
-  const anchors = {
-    width: V(0, 0, z + off),
-    depth: V(x + off, 0, 0),
-    height: V(x + off, h / 2, -z - off),
-  };
+  const anchors = { width: V(0, 0, z + off), depth: V(x + off, 0, 0), height: V(x + off, h / 2, -z - off) };
   return { lines, anchors };
 }
 
-/**
- * Monta el visor en `host` (un <div>). Devuelve los controles del visor.
- * @param {HTMLElement} host
- * @param {{ dimensions: {width:number, depth:number, height:number}, finish: string, leather: string,
- *           reducedMotion?: boolean, onLabels?: (pos: Record<string, {x:number, y:number, visible:boolean}>) => void }} opts
- */
-export function createBkfViewer(host, opts) {
-  const { dimensions, reducedMotion, onLabels } = opts;
-  const W = dimensions.width / 100;
-  const D = dimensions.depth / 100;
-  const H = dimensions.height / 100;
+/** Posición en pantalla (px dentro de `host`) de cada etiqueta de cota. */
+function labelPositions(anchors, camera, host, root) {
+  const out = {};
+  const v = new Vector3();
+  const w = host.clientWidth;
+  const h = host.clientHeight;
+  for (const [key, p] of Object.entries(anchors)) {
+    v.copy(p);
+    root?.localToWorld(v);
+    v.project(camera);
+    out[key] = { x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h, visible: v.z < 1 };
+  }
+  return out;
+}
 
+/* ---------- Infraestructura compartida ---------- */
+
+function makeRenderer(host, { exposure, maxDpr }) {
   const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
   renderer.outputColorSpace = SRGBColorSpace;
-  renderer.toneMapping = ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.95;
+  // Tone mapping "neutral" (Khronos PBR Neutral): pensado para productos, respeta el color de cada muestra.
+  renderer.toneMapping = NeutralToneMapping;
+  renderer.toneMappingExposure = exposure;
   host.appendChild(renderer.domElement);
-
   const scene = new Scene();
   const pmrem = new PMREMGenerator(renderer);
-  const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
+  const room = new RoomEnvironment();
+  const envRT = pmrem.fromScene(room, 0.04);
+  room.dispose?.();
   scene.environment = envRT.texture;
+  return { renderer, scene, pmrem, envRT };
+}
 
-  // Materiales
-  const grain = grainTexture();
-  const frameMat = new MeshStandardMaterial();
-  // Brillo bajo y sin sheen claro: con más, el marrón se veía rosado y no coincidía con la muestra de color.
-  const leatherMat = new MeshPhysicalMaterial({
-    side: DoubleSide, roughness: 0.55, sheen: 0.2, sheenRoughness: 0.6, sheenColor: new Color('#7a4a2c'),
-    clearcoat: 0.2, clearcoatRoughness: 0.45, bumpMap: grain, bumpScale: 0.3, envMapIntensity: 0.7,
+/**
+ * Sigue el tamaño del contenedor. `fov(aspect)` (opcional) elige el ángulo de la cámara según la proporción;
+ * `onResize(w, h)` (opcional) avisa el tamaño nuevo para lo que no es la cámara.
+ */
+function observeSize(host, renderer, camera, { fov, onResize } = {}) {
+  const fit = () => {
+    const w = host.clientWidth;
+    const h = host.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    if (fov) camera.fov = fov(w / h);
+    camera.updateProjectionMatrix();
+    onResize?.(w, h);
+  };
+  const ro = new ResizeObserver(fit);
+  ro.observe(host);
+  fit();
+  return ro;
+}
+
+/** Bucle de render que corre solo mientras `host` está en pantalla y la pestaña está visible. */
+function createLoop(host, frame) {
+  let raf = 0;
+  let visible = true;
+  let last = 0;
+  const tick = (now) => {
+    raf = requestAnimationFrame(tick);
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+    frame(dt, now / 1000);
+  };
+  const start = () => {
+    if (!raf && visible && !document.hidden) {
+      last = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+  };
+  const stop = () => {
+    cancelAnimationFrame(raf);
+    raf = 0;
+  };
+  const io = new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible) start();
+    else stop();
   });
-  const hemMat = new MeshStandardMaterial({ roughness: 0.5 });
+  io.observe(host);
+  const onVis = () => (document.hidden ? stop() : start());
+  document.addEventListener('visibilitychange', onVis);
+  start();
+  return {
+    dispose() {
+      stop();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
+    },
+  };
+}
 
-  // Silla
-  const chair = new Group();
-  for (const pts of RODS) chair.add(new Mesh(new TubeGeometry(roundedLoop(pts, 0.07), 360, ROD, 12, true), frameMat));
-  chair.add(new Mesh(buildSling(), leatherMat));
-  chair.add(new Mesh(buildHem(), hemMat));
+function disposeAll(scene, renderer, pmrem, envRT, textures) {
+  scene.traverse((o) => {
+    o.geometry?.dispose();
+    if (o.material) {
+      o.material.map?.dispose();
+      o.material.dispose();
+    }
+  });
+  textures.forEach((t) => t.dispose());
+  envRT.dispose();
+  pmrem.dispose();
+  renderer.dispose();
+  renderer.domElement.remove();
+}
 
-  // Escala exacta: la caja de la silla (estructura + cuero) pasa a medir W x H x D y apoya en el piso.
-  const box = new Box3().setFromObject(chair);
-  const size = box.getSize(new Vector3());
-  chair.scale.set(W / size.x, H / size.y, D / size.z);
-  const scaled = new Box3().setFromObject(chair);
-  const center = scaled.getCenter(new Vector3());
-  chair.position.set(-center.x, -scaled.min.y, -center.z);
+/* ---------- Visor de la galería (/sillon-bkf/) ---------- */
+
+/**
+ * @param {HTMLElement} host
+ * @param {{ dimensions: {width:number, depth:number, height:number}, finish: string, leather: string,
+ *           reducedMotion?: boolean, onLabels?: (pos: Record<string, {x:number, y:number, visible:boolean}> | null) => void }} opts
+ */
+export function createBkfViewer(host, opts) {
+  const { reducedMotion, onLabels } = opts;
+  const { renderer, scene, pmrem, envRT } = makeRenderer(host, { exposure: 1, maxDpr: 2 });
+  const chair = buildChair(opts);
+  const { W, D, H } = chair;
 
   const root = new Group();
-  root.add(chair);
-  root.add(shadowPlane(W, D));
-  const dims = dimensionLines(W, D, H);
+  const dims = dimensionLines(W, D, H, '#b71c1c');
   dims.lines.visible = false;
-  root.add(dims.lines);
+  root.add(chair.group, shadowPlane(W, D, 0.38), dims.lines);
   scene.add(root);
 
-  // Luces de apoyo (el ambiente lo da RoomEnvironment).
   const camera = new PerspectiveCamera(30, 1, 0.05, 20);
   camera.position.set(1.75, 1.2, 2.55);
-
   const controls = new OrbitControls(camera, renderer.domElement);
   // Mirar un poco por debajo del centro sube la silla en el cuadro: la cota del ancho no queda bajo el pie de foto.
   controls.target.set(0, H * 0.36, 0);
@@ -258,112 +415,244 @@ export function createBkfViewer(host, opts) {
   controls.addEventListener('start', () => { controls.autoRotate = false; });
   controls.update();
 
-  // Colores: transición suave al cambiar de acabado.
-  const target = { frame: new Color(), leather: new Color(), metal: 0, rough: 0 };
-  function setFinish(name) {
-    const look = FINISH_LOOK[name] ?? FINISH_LOOK['Negro Mate'];
-    target.frame.set(look.color);
-    target.metal = look.metalness;
-    target.rough = look.roughness;
-  }
-  function setLeather(hex) {
-    target.leather.set(hex);
-  }
-  setFinish(opts.finish);
-  setLeather(opts.leather);
-  frameMat.color.copy(target.frame);
-  frameMat.metalness = target.metal;
-  frameMat.roughness = target.rough;
-  leatherMat.color.copy(target.leather);
-  hemMat.color.copy(target.leather).multiplyScalar(0.55);
+  // En formatos apaisados (mobile 5:4) falta alto: se abre el ángulo para que entren la silla y las cotas.
+  const ro = observeSize(host, renderer, camera, { fov: (aspect) => (aspect > 1.1 ? 37 : 30) });
 
-  // Tamaño: sigue al contenedor.
-  function resize() {
-    const { clientWidth: w, clientHeight: h } = host;
-    if (!w || !h) return;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    // En formatos apaisados (mobile 5:4) falta alto: se abre el ángulo para que entren la silla y las cotas.
-    camera.fov = w / h > 1.1 ? 37 : 30;
-    camera.updateProjectionMatrix();
-  }
-  const ro = new ResizeObserver(resize);
-  ro.observe(host);
-  resize();
-
-  // Bucle: corre solo mientras el visor está en pantalla y la pestaña visible.
-  let raf = 0;
-  let visible = true;
-  let last = performance.now();
-  const tmp = new Vector3();
-  function frame(now) {
-    raf = requestAnimationFrame(frame);
-    const dt = Math.min((now - last) / 1000, 0.05);
-    last = now;
-    const k = 1 - Math.exp(-dt * 6);
-    frameMat.color.lerp(target.frame, k);
-    frameMat.metalness += (target.metal - frameMat.metalness) * k;
-    frameMat.roughness += (target.rough - frameMat.roughness) * k;
-    leatherMat.color.lerp(target.leather, k);
-    hemMat.color.copy(leatherMat.color).multiplyScalar(0.55);
+  const loop = createLoop(host, (dt) => {
+    chair.paint.update(1 - Math.exp(-dt * 6));
     controls.update();
     renderer.render(scene, camera);
-
-    if (dims.lines.visible && onLabels) {
-      const out = {};
-      const { clientWidth: w, clientHeight: h } = host;
-      for (const [key, p] of Object.entries(dims.anchors)) {
-        tmp.copy(p).project(camera);
-        out[key] = { x: (tmp.x * 0.5 + 0.5) * w, y: (-tmp.y * 0.5 + 0.5) * h, visible: tmp.z < 1 };
-      }
-      onLabels(out);
-    }
-  }
-  function start() {
-    if (!raf && visible && !document.hidden) {
-      last = performance.now();
-      raf = requestAnimationFrame(frame);
-    }
-  }
-  function stop() {
-    cancelAnimationFrame(raf);
-    raf = 0;
-  }
-  const io = new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
-    if (visible) start();
-    else stop();
+    if (dims.lines.visible && onLabels) onLabels(labelPositions(dims.anchors, camera, host));
   });
-  io.observe(host);
-  const onVis = () => (document.hidden ? stop() : start());
-  document.addEventListener('visibilitychange', onVis);
-  start();
 
   return {
-    setFinish,
-    setLeather,
+    setFinish: chair.paint.setFinish,
+    setLeather: chair.paint.setLeather,
     setMeasures(on) {
       dims.lines.visible = on;
       if (!on) onLabels?.(null);
     },
     dispose() {
-      stop();
-      io.disconnect();
+      loop.dispose();
       ro.disconnect();
-      document.removeEventListener('visibilitychange', onVis);
       controls.dispose();
-      scene.traverse((o) => {
-        o.geometry?.dispose();
-        if (o.material) {
-          o.material.map?.dispose();
-          o.material.dispose();
-        }
-      });
-      grain.dispose();
-      envRT.dispose();
-      pmrem.dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
+      disposeAll(scene, renderer, pmrem, envRT, chair.textures);
+    },
+  };
+}
+
+/* ---------- Showroom de la home: la silla que se mueve con el scroll ---------- */
+
+// Un keyframe por capítulo. p = progreso 0→1 de la sección; los capítulos están en 0, 1/3, 2/3 y 1.
+//   off: cámara relativa al punto que mira · gx: corrimiento lateral (la silla va del lado opuesto al texto)
+//   rot: giro · leather: cuero visible · dims: cotas visibles
+const STAGE_KF = [
+  { p: 0, off: [0, 0.25, 3.3], gx: 0.5, rot: -0.55, leather: 1, dims: 0 }, // diseño de 1938
+  { p: 1 / 3, off: [0.3, 0.05, 2.6], gx: -0.45, rot: 0.85, leather: 0, dims: 0 }, // estructura: el cuero se disuelve
+  { p: 2 / 3, off: [0, 0.75, 3], gx: 0.45, rot: 2.55, leather: 1, dims: 0 }, // cuero
+  { p: 1, off: [0.2, 0.35, 3.4], gx: -0.5, rot: Math.PI * 2 - 0.75, leather: 1, dims: 1 }, // medidas y acabados
+];
+
+const smooth = (t) => t * t * (3 - 2 * t);
+function sampleStage(p) {
+  p = MathUtils.clamp(p, 0, 1);
+  let i = 0;
+  while (i < STAGE_KF.length - 2 && p > STAGE_KF[i + 1].p) i++;
+  const a = STAGE_KF[i];
+  const b = STAGE_KF[i + 1];
+  // Cada capítulo se queda quieto un rato y la transición ocurre en el medio del tramo.
+  const t = smooth(MathUtils.clamp(((p - a.p) / (b.p - a.p) - 0.2) / 0.6, 0, 1));
+  const L = MathUtils.lerp;
+  return {
+    i,
+    t,
+    off: [L(a.off[0], b.off[0], t), L(a.off[1], b.off[1], t), L(a.off[2], b.off[2], t)],
+    gx: L(a.gx, b.gx, t),
+    rot: L(a.rot, b.rot, t),
+    leather: L(a.leather, b.leather, t),
+    dims: L(a.dims, b.dims, t),
+  };
+}
+
+/** Polvo flotando en la luz. */
+function makeDust(count = 70) {
+  const pos = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    pos[i * 3] = (Math.random() - 0.5) * 3.4;
+    pos[i * 3 + 1] = Math.random() * 1.9;
+    pos[i * 3 + 2] = (Math.random() - 0.5) * 2.2 - 0.3;
+  }
+  const g = new BufferGeometry();
+  g.setAttribute('position', new Float32BufferAttribute(pos, 3));
+  const map = radialTexture('rgba(255,236,214,1)', 'rgba(255,236,214,0)', 64);
+  return new Points(g, new PointsMaterial({ map, size: 0.03, transparent: true, opacity: 0.55, depthWrite: false }));
+}
+
+/**
+ * @param {HTMLElement} host  contenedor del canvas (dentro de la parte fija de la sección)
+ * @param {{ dimensions: object, finish: string, leather: string, reducedMotion?: boolean,
+ *           onLabels?: (pos: object | null, amount: number) => void }} opts
+ */
+export function createBkfStage(host, opts) {
+  const { reducedMotion, onLabels } = opts;
+  // La escena ocupa toda la pantalla: con más de 1.5 de densidad, una notebook con gráficos integrados ya lo sufre.
+  const { renderer, scene, pmrem, envRT } = makeRenderer(host, { exposure: 0.9, maxDpr: 1.5 });
+  // Luz principal neutra y suave (con más, el marrón se veía naranja y no coincidía con la muestra) y un contraluz
+  // rojo que despega la estructura negra del fondo oscuro.
+  scene.environmentIntensity = 0.75;
+  const key = new DirectionalLight('#fffaf4', 1.2);
+  key.position.set(2.5, 4, 2.5);
+  const rim = new DirectionalLight('#ff5a45', 1.6);
+  rim.position.set(-3, 1.5, -2.5);
+  scene.add(key, rim);
+
+  const chair = buildChair(opts);
+  const { W, D, H } = chair;
+  const root = new Group();
+  const dims = dimensionLines(W, D, H, '#e2574f');
+  dims.lines.visible = false;
+  // Pedestal: un arco rojo que respira y un aro fino.
+  const ring = new Mesh(
+    new RingGeometry(0.62, 0.632, 128, 1, 0, Math.PI * 1.6),
+    new MeshBasicMaterial({ color: '#e0302b', transparent: true, opacity: 0.5, toneMapped: false, side: DoubleSide }),
+  );
+  const halo = new Mesh(new RingGeometry(0.7, 0.703, 128), new MeshBasicMaterial({ color: '#fafaf8', transparent: true, opacity: 0.12, side: DoubleSide }));
+  for (const m of [ring, halo]) {
+    m.rotation.x = -Math.PI / 2;
+    m.position.y = 0.002;
+  }
+  root.add(chair.group, shadowPlane(W, D, 0.6), ring, halo, dims.lines);
+  scene.add(root);
+  const dust = reducedMotion ? null : makeDust();
+  if (dust) scene.add(dust);
+
+  const camera = new PerspectiveCamera(30, 1, 0.05, 30);
+  const TAN_HALF_FOV = Math.tan(MathUtils.degToRad(15));
+  const look = new Vector3();
+  const camTarget = new Vector3();
+  let narrow = false;
+  let aspect = 1;
+  // Celular: fracción de la pantalla (desde arriba) que deja libre la tarjeta de cada capítulo. La mide el
+  // componente con `setFreeSpace`; estos valores son solo el arranque.
+  let free = [0.55, 0.55, 0.55, 0.38];
+  const ro = observeSize(host, renderer, camera, {
+    onResize: (w, h) => {
+      narrow = w < 820;
+      aspect = w / h;
+    },
+  });
+
+  // Mouse: inclinación leve con el puntero y arrastre para girar (en touch el scroll queda libre).
+  const pointer = { x: 0, y: 0 };
+  const drag = { active: false, x: 0, offset: 0, vel: 0 };
+  const onMove = (e) => {
+    if (e.pointerType !== 'mouse') return;
+    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
+    if (drag.active) {
+      drag.vel = (e.clientX - drag.x) * 0.008;
+      drag.offset += drag.vel;
+      drag.x = e.clientX;
+    }
+  };
+  const onDown = (e) => {
+    if (e.pointerType !== 'mouse') return;
+    drag.active = true;
+    drag.x = e.clientX;
+  };
+  const onUp = () => { drag.active = false; };
+  window.addEventListener('pointermove', onMove, { passive: true });
+  renderer.domElement.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointerup', onUp);
+
+  let progress = 0;
+  let first = true;
+  let labelsShown = false;
+  const s = { gx: 0, rot: 0, tilt: 0, leather: 1, dims: 0 };
+
+  const loop = createLoop(host, (dt, t) => {
+    const k = sampleStage(progress);
+    // Con "reducir movimiento" (y en el primer cuadro) todo va directo a su lugar, sin recorrido.
+    const snap = reducedMotion || first;
+    const damp = (cur, to, lambda) => (snap ? to : MathUtils.damp(cur, to, lambda, dt));
+    if (!drag.active) {
+      drag.offset += drag.vel;
+      drag.vel *= 0.92;
+    }
+    const sway = reducedMotion ? 0 : Math.sin(t * 0.3) * 0.3;
+    s.gx = damp(s.gx, narrow ? 0 : k.gx, 3.5);
+    s.rot = damp(s.rot, k.rot + sway + drag.offset + (reducedMotion ? 0 : pointer.x * 0.25), 4);
+    s.tilt = damp(s.tilt, reducedMotion ? 0 : -pointer.y * 0.04, 4);
+    s.leather = damp(s.leather, k.leather, 5);
+    s.dims = damp(s.dims, k.dims, 5);
+    first = false;
+
+    root.position.x = s.gx;
+    root.rotation.set(s.tilt, s.rot, 0);
+    setLeatherAmount(chair, s.leather);
+    dims.lines.visible = s.dims > 0.02;
+    dims.lines.material.opacity = s.dims;
+
+    camTarget.set(k.off[0], k.off[1], k.off[2]);
+    if (narrow) {
+      // Celular: la tarjeta ocupa la parte de abajo, así que la silla tiene que entrar entera en la franja libre de
+      // arriba (`free`, medida por capítulo). Se calcula la distancia de la cámara y el punto que mira para que la
+      // silla, de 0 a H, quede justo en esa franja.
+      const f = MathUtils.lerp(free[k.i], free[k.i + 1], k.t);
+      const top = H + 0.08;
+      const bottom = -0.05;
+      const hh = Math.max((top - bottom) / (2 * f - 0.08), 0.62 / aspect);
+      look.set(0, bottom + (2 * f - 1) * hh, 0);
+      camTarget.normalize().multiplyScalar(hh / TAN_HALF_FOV).add(look);
+    } else {
+      look.set(0, H * 0.43, 0);
+      camTarget.add(look);
+    }
+    if (snap) camera.position.copy(camTarget);
+    else {
+      camera.position.x = MathUtils.damp(camera.position.x, camTarget.x, 3, dt);
+      camera.position.y = MathUtils.damp(camera.position.y, camTarget.y, 3, dt);
+      camera.position.z = MathUtils.damp(camera.position.z, camTarget.z, 3, dt);
+    }
+    camera.lookAt(look);
+
+    if (!reducedMotion) {
+      ring.material.opacity = 0.4 + Math.sin(t * 1.6) * 0.15;
+      ring.rotation.z = t * 0.2;
+    }
+    if (dust) {
+      dust.rotation.y = t * 0.02;
+      dust.position.y = Math.sin(t * 0.4) * 0.03;
+    }
+    chair.paint.update(1 - Math.exp(-dt * 5));
+    renderer.render(scene, camera);
+
+    if (onLabels) {
+      if (dims.lines.visible) {
+        onLabels(labelPositions(dims.anchors, camera, host, root), s.dims);
+        labelsShown = true;
+      } else if (labelsShown) {
+        onLabels(null, 0);
+        labelsShown = false;
+      }
+    }
+  });
+
+  return {
+    setProgress(p) { progress = p; },
+    /** Celular: por capítulo, la fracción de pantalla libre arriba de la tarjeta (0 a 1). */
+    setFreeSpace(fractions) {
+      if (fractions?.length === STAGE_KF.length) free = fractions.map((f) => MathUtils.clamp(f, 0.22, 0.62));
+    },
+    setFinish: chair.paint.setFinish,
+    setLeather: chair.paint.setLeather,
+    dispose() {
+      loop.dispose();
+      ro.disconnect();
+      window.removeEventListener('pointermove', onMove);
+      renderer.domElement.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointerup', onUp);
+      disposeAll(scene, renderer, pmrem, envRT, chair.textures);
     },
   };
 }

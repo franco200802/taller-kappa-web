@@ -8,7 +8,8 @@ import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
-import { Bkf3DPanel, Bkf3DViewer, preloadBkf3D } from '../components/Bkf3D';
+import { Bkf3DPanel, Bkf3DViewer } from '../components/Bkf3D';
+import { loadBkf3d } from '../lib/loadBkf3d';
 import { trackEvent } from '../lib/analytics';
 import { whatsappUrlFor } from '../data/contact';
 import { FINISH_COLORS as COLORS, LEATHER_COLORS, SOCIAL_IMAGE_SIZE, formatPrice, getProductBySlug, priceQuestion, productHref, relatedProducts, socialImage } from '../data/products';
@@ -131,7 +132,7 @@ export default function SillonBKF() {
                 </button>
               ))}
               <button type="button" className={`bkf-gallery-thumb bkf-gallery-thumb-3d${is3d ? ' active' : ''}`} aria-label="Ver el sillón en 3D" aria-pressed={is3d}
-                onClick={open3d} onPointerEnter={preloadBkf3D} onFocus={preloadBkf3D}>
+                onClick={open3d} onPointerEnter={loadBkf3d} onFocus={loadBkf3d}>
                 <Icon name="cube" /> <span>3D</span>
               </button>
             </div>
