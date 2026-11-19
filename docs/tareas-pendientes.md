@@ -27,9 +27,9 @@
 
 Detalle en `docs/mejora-integral-2026-11.md`.
 
-1. **Medidas del sillón.** La imagen `FOTOCONMEDIDAS.png` dice 77 cm de ancho,
-   102 cm de alto y 87 cm; el sitio publica 78 × 70 × 90 cm. ¿Cuáles son las
-   reales? Hasta saberlo, la imagen no se publica y el sitio no se toca.
+1. ~~**Medidas del sillón.**~~ **Resuelto el 19/11/2026:** son las de
+   `FOTOCONMEDIDAS.png`, 77 x 87 x 102 cm (ancho x profundidad x alto). El sitio
+   ya las publica en todas las páginas (ver `CONTEXTO_PROYECTO.md` §5j).
 2. **Foto del sillón en una casa** (`FOTOLINDABKF.jpeg`): confirmar que es un
    sillón de Taller Kappa y que el dueño de la casa está de acuerdo con que se
    publique. Ya está en la rama, en la home y en `/sillon-bkf/`.

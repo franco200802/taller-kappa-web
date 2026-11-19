@@ -26,6 +26,9 @@ export default defineConfig(({ isSsrBuild }) => ({
     target: 'es2018',
     sourcemap: false,
     cssCodeSplit: true,
+    // El chunk de three.js (lib/bkf3d.js, ~580 kB / 144 kB gzip) supera el aviso por defecto de 500 kB. No afecta la
+    // carga de ninguna página: se descarga solo cuando alguien toca "Ver en 3D" en /sillon-bkf/.
+    chunkSizeWarningLimit: 600,
     rollupOptions: isSsrBuild
       ? {}
       : {

@@ -31,7 +31,7 @@ const FAQ = [
   { q: '¿Quién creó el sillón BKF y cuándo?', a: 'Lo crearon a fines de 1938, en Buenos Aires, los arquitectos Antonio Bonet, Juan Kurchan y Jorge Ferrari Hardoy.' },
   { q: '¿El sillón BKF es lo mismo que la silla mariposa o la butterfly chair?', a: 'Sí, son nombres del mismo diseño. En inglés se lo conoce como butterfly chair ("silla mariposa") y también se lo llamó "silla Hardoy".' },
   { q: '¿De qué materiales está hecho un sillón BKF?', a: 'El diseño clásico combina una estructura de hierro macizo redondo con un asiento de cuero suspendido; algunas versiones usan lona o textil. El Sillón BKF Premium de Taller Kappa tiene estructura de hierro macizo de 12 mm y cuero vacuno curtido al vegetal.' },
-  { q: '¿Qué medidas tiene un sillón BKF?', a: 'Las medidas cambian según el fabricante. El Sillón BKF Premium de Taller Kappa mide 78 x 70 x 90 cm en su versión estándar y también se fabrica a medida, sin costo adicional.' },
+  { q: '¿Qué medidas tiene un sillón BKF?', a: 'Las medidas cambian según el fabricante. El Sillón BKF Premium de Taller Kappa mide 77 x 87 x 102 cm en su versión estándar y también se fabrica a medida, sin costo adicional.' },
   { q: '¿Cuál es el sillón BKF original?', a: 'El diseño original es el de 1938 de Bonet, Kurchan y Ferrari Hardoy. Como no pudieron patentarlo, desde los años 40 circulan versiones oficiales y no oficiales, y hoy lo fabrican muchos talleres. Al comparar conviene preguntar por la estructura, el cuero y la terminación. Taller Kappa fabrica su propia versión de ese diseño.' },
   { q: '¿Cómo se cuida un sillón BKF de cuero?', a: 'Limpiá el cuero con un paño seco o apenas húmedo, aplicá crema hidratante para cuero cada 6 meses y evitá el sol directo prolongado, el alcohol y los solventes. El cuero se oscurece naturalmente con el uso. La estructura pintada se limpia con un paño húmedo y detergente neutro.' },
   { q: '¿Dónde comprar un sillón BKF en Buenos Aires y en Argentina?', a: 'Taller Kappa fabrica el Sillón BKF Premium en su taller de Villa Chacabuco, San Martín (Buenos Aires) y lo envía a todo el país. No se compra por la web: se cotiza por WhatsApp.' },
@@ -177,7 +177,7 @@ export default function GuiaBKF() {
             </ul>
             <p>
               Así lo fabrica Taller Kappa: estructura de hierro redondo macizo de 12 mm, cuero vacuno de primera selección curtido al vegetal,
-              pintura epoxi anticorrosiva o cromado, 78 x 70 x 90 cm en la versión estándar (o a medida, sin costo adicional) y garantía de por vida
+              pintura epoxi anticorrosiva o cromado, 77 x 87 x 102 cm en la versión estándar (o a medida, sin costo adicional) y garantía de por vida
               en la estructura. Está todo en la <Link to="/sillon-bkf/">ficha técnica del Sillón BKF Premium</Link>.
             </p>
 

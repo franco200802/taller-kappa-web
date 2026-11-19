@@ -1168,3 +1168,111 @@ details.bkf-faq-item:last-of-type { border-bottom: 1px solid var(--linea); margi
     .admin-dialog-actions > * { flex: 1 1 100%; }
 }
 .admin-products { display: grid; gap: 16px; padding-top: 20px; }
+
+/* ---------- 23. Sillón BKF en 3D (galería de /sillon-bkf/, noviembre 2026) ---------- */
+/* El visor ocupa el mismo lugar y proporción que la foto (1:1, 5:4 en mobile): cambiar de foto a 3D no mueve nada. */
+.bkf3d-stage {
+    position: relative; aspect-ratio: 1; overflow: hidden;
+    background: radial-gradient(circle at 50% 42%, var(--blanco) 0%, var(--cal) 100%);
+    cursor: grab; touch-action: none;
+}
+.bkf3d-stage:active { cursor: grabbing; }
+.bkf3d-stage canvas { display: block; width: 100%; height: 100%; }
+.bkf3d-status { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--grafito); font-size: var(--t-sm); }
+/* Etiquetas de las cotas: las posiciona bkf3d.js sobre el punto medio de cada línea. */
+.bkf3d-label {
+    position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
+    padding: 2px 9px; border: 1px solid var(--kappa); border-radius: 999px;
+    background: var(--blanco); color: var(--kappa);
+    font-size: 0.78rem; font-weight: 650; font-variant-numeric: tabular-nums;
+}
+.bkf-gallery-thumb-3d {
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    aspect-ratio: 1; min-height: 44px; border-color: var(--linea); background: var(--blanco); color: var(--hierro);
+    font-weight: 700; font-stretch: 85%; opacity: 1;
+}
+.bkf-gallery-thumb-3d .icon { font-size: 1.5rem; }
+.bkf-gallery-thumb-3d:hover { border-color: var(--hierro); }
+.bkf-color-swatch.active { box-shadow: 0 0 0 2px var(--hierro); }
+.bkf3d-panel { display: grid; gap: 16px; margin-top: 16px; padding: 20px; border: 1px solid var(--linea); border-radius: var(--r); background: var(--blanco); }
+.bkf3d-hint { margin: 0; color: var(--grafito); font-size: var(--t-sm); }
+.bkf3d-check { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: var(--t-sm); font-weight: 600; cursor: pointer; justify-self: start; }
+.bkf3d-check input { width: 20px; height: 20px; accent-color: var(--hierro); }
+.bkf3d-panel .btn-main { justify-self: start; }
+@media (max-width: 860px) {
+    .bkf3d-stage { aspect-ratio: 5 / 4; }
+    .bkf3d-panel .btn-main { justify-self: stretch; }
+}
+
+/* ---------- 24. Showroom 3D de la home: el sillón que se mueve con el scroll (noviembre 2026) ---------- */
+/* Escena fija (sticky) + 4 tarjetas que pasan por encima. Los textos son HTML normal: sin JS se leen igual.
+   --p (0 a 1) lo escribe BkfShowroom.jsx con el progreso del scroll. */
+.bkf-stage { --stage-h: calc(100svh - var(--nav-h)); position: relative; background: var(--hierro); color: var(--blanco); }
+.bkf-stage-sticky {
+    position: sticky; top: var(--nav-h); height: var(--stage-h); overflow: hidden;
+    background: var(--hierro);
+    background:
+        radial-gradient(55% 60% at 50% 58%, color-mix(in srgb, var(--ocre) 24%, transparent), transparent 70%),
+        radial-gradient(40% 45% at 12% 95%, color-mix(in srgb, var(--kappa) 22%, transparent), transparent 70%),
+        var(--hierro);
+}
+.bkf-stage-canvas { position: absolute; inset: 0; }
+.bkf-stage-canvas canvas { display: block; width: 100%; height: 100%; }
+.bkf-stage-word {
+    position: absolute; top: 50%; left: 0; white-space: nowrap; pointer-events: none; user-select: none;
+    font-weight: 900; font-stretch: 62%; font-size: 46vh; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--blanco) 9%, transparent);
+    transform: translate(calc(6% - var(--p, 0) * 40%), -50%);
+}
+.bkf-stage-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .45; }
+.bkf-stage-status { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; color: var(--grafito-claro); font-size: var(--t-sm); }
+.bkf-stage .bkf3d-label { background: var(--hierro); color: var(--blanco); border-color: color-mix(in srgb, var(--kappa) 70%, var(--blanco)); }
+/* Arriba a la derecha: abajo lo tapaba el botón flotante de WhatsApp. */
+.bkf-stage-progress { position: absolute; right: 20px; top: 20px; display: flex; align-items: flex-start; gap: 10px; }
+.bkf-stage-count { font-weight: 800; font-stretch: 75%; font-size: 1.5rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.bkf-stage-count small { font-size: .8rem; color: var(--grafito-claro); }
+.bkf-stage-track { width: 2px; height: 72px; background: var(--hierro-2); overflow: hidden; }
+.bkf-stage-fill { display: block; width: 100%; height: 100%; background: var(--kappa); transform: scaleY(var(--p, 0)); transform-origin: top; }
+
+/* Las tarjetas pasan por encima de la escena; el espacio libre deja arrastrar la silla con el mouse. */
+.bkf-stage-steps { position: relative; z-index: 1; margin-top: calc(-1 * var(--stage-h)); pointer-events: none; }
+.bkf-stage-step { min-height: var(--stage-h); display: flex; align-items: center; padding: 48px var(--pad-x); }
+.bkf-stage-step[data-side="right"] { justify-content: flex-end; }
+.bkf-stage-card {
+    pointer-events: auto; width: min(30rem, 42vw); padding: 28px;
+    border: 1px solid var(--hierro-2); border-left: 3px solid var(--hierro-2); border-radius: var(--r);
+    background: color-mix(in srgb, var(--hierro) 74%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    transition: border-color .4s var(--ease);
+}
+.bkf-stage-card.is-active { border-left-color: var(--kappa); }
+.bkf-stage-card h2, .bkf-stage-card h3 { margin: 0 0 12px; color: var(--blanco); font-size: var(--t-xl); font-stretch: 80%; line-height: 1.05; }
+.bkf-stage-card p { color: color-mix(in srgb, var(--blanco) 82%, var(--hierro)); }
+.bkf-stage-card .color-label { color: var(--grafito-claro); }
+.bkf-stage-card .color-label strong { color: var(--blanco); }
+.bkf-stage-card .bkf3d-row { margin-top: 16px; }
+.bkf-stage-eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-size: var(--t-sm); font-weight: 650; }
+.bkf-stage-card .bkf-stage-eyebrow { color: var(--grafito-claro); }
+.bkf-stage-num { color: color-mix(in srgb, var(--kappa) 55%, var(--blanco)); font-weight: 800; font-variant-numeric: tabular-nums; }
+.bkf-stage-card .bkf-stage-hint { margin-top: 16px; color: var(--grafito-claro); font-size: var(--t-sm); }
+.bkf-stage-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.bkf-stage .btn-main { background: var(--blanco); color: var(--hierro); border-color: var(--blanco); }
+.bkf-stage .btn-main:hover { background: var(--cal); border-color: var(--cal); }
+.bkf-stage .btn-outline { color: var(--blanco); border-color: var(--grafito-claro); }
+.bkf-stage .btn-outline:hover { background: var(--blanco); border-color: var(--blanco); color: var(--hierro); }
+.bkf-stage .bkf-color-swatch { border-color: var(--hierro); box-shadow: 0 0 0 1px var(--hierro-2); }
+.bkf-stage .bkf-color-swatch:hover { box-shadow: 0 0 0 2px var(--grafito-claro); }
+.bkf-stage .bkf-color-swatch.active { box-shadow: 0 0 0 2px var(--blanco); }
+
+@media (max-width: 860px) {
+    /* En el celular la silla va arriba y la tarjeta abajo, a todo el ancho. */
+    .bkf-stage-step, .bkf-stage-step[data-side="right"] { align-items: flex-end; justify-content: stretch; padding: 16px 16px 20px; }
+    .bkf-stage-card { width: 100%; padding: 20px; }
+    .bkf-stage-card h2, .bkf-stage-card h3 { font-size: clamp(1.6rem, 7vw, 2rem); }
+    .bkf-stage-word { top: 30%; font-size: 30vh; }
+    .bkf-stage-progress { top: 16px; right: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .bkf-stage-word { transform: translate(0, -50%); }
+    .bkf-stage-card { transition: none; }
+}
