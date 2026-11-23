@@ -55,6 +55,7 @@ export default function Home() {
 
       <section className="home-hero">
         <div className="home-hero-text">
+          <p className="eyebrow">Fábrica de muebles de hierro y cuero en San Martín</p>
           <h1>Sillones BKF y muebles de hierro en Buenos Aires</h1>
           <p className="home-hero-typed">
             Fabricamos{' '}
@@ -83,7 +84,7 @@ export default function Home() {
             ¿Es para un local o una empresa? <Link to="/mobiliario-comercial/">Cotizá mobiliario comercial a medida</Link>
           </p>
         </div>
-        <div className="home-hero-media">
+        <figure className="home-hero-media">
           <Picture
             src="/images/sillon-bkf-hierro-cuero.jpg"
             alt={PRODUCTS[0].alt}
@@ -93,8 +94,8 @@ export default function Home() {
             fetchPriority="high"
             sizes="(max-width: 860px) 100vw, 52vw"
           />
-          <span className="home-hero-caption">Sillón BKF Premium, cuero suela</span>
-        </div>
+          <figcaption className="home-hero-caption">Sillón BKF Premium, cuero suela</figcaption>
+        </figure>
       </section>
 
       <section className="clients-strip" aria-label="Empresas que equipamos">
@@ -108,21 +109,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-padding">
+      <section className="section-padding" aria-labelledby="lo-que-fabricamos">
         <div className="section-head">
-          <h2 className="section-title">Lo que fabricamos</h2>
+          <div>
+            <p className="eyebrow">Catálogo</p>
+            <h2 className="section-title" id="lo-que-fabricamos">Lo que fabricamos</h2>
+          </div>
           <Link to="/catalogo/" className="btn-outline">Ver catálogo completo</Link>
         </div>
+        {/* Cada tarjeta dice para qué sirve el producto (fila "Uso" de su ficha): así se elige sin abrir las tres. */}
         <ul className="home-products">
           {PRODUCTS.map((p) => (
             <li className="home-product" key={p.slug}>
               <Link to={productHref(p)}>
                 <div className="home-product-img">
-                  {p.badge && <span className="product-badge">{p.badge}</span>}
-                  <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 384px" />
+                  <Picture src={p.image} alt={p.alt} width={p.imageWidth} height={p.imageHeight} loading="lazy" sizes="(max-width: 760px) 78vw, (max-width: 1240px) 32vw, 400px" />
                 </div>
+                {p.badge && <span className="home-product-tag">{p.badge}</span>}
                 <h3>{p.name}</h3>
                 <p>{p.specs[0]}</p>
+                <p className="home-product-use">{factOf(p, 'Uso')}</p>
                 <span className="home-product-more" aria-hidden="true">Ver ficha <Icon name="chevron-right" /></span>
               </Link>
             </li>
@@ -139,6 +145,7 @@ export default function Home() {
           <figcaption>Foto sin editar, en una casa</figcaption>
         </figure>
         <div className="home-feature-text">
+          <p className="eyebrow">Sillón BKF Premium</p>
           <h2 className="section-title" id="bkf-en-casa">El sillón BKF, puesto en una casa</h2>
           <p>
             Hierro redondo macizo de 12 mm y cuero vacuno curtido al vegetal, que toma color con el uso. Lo fabricamos en nuestro taller de San Martín y lo enviamos a todo el país.
@@ -162,6 +169,7 @@ export default function Home() {
 
       <section className="section-padding how-section section-fade" aria-labelledby="como-comprar-home">
         <div className="how-head">
+          <p className="eyebrow">Cómo se compra</p>
           <h2 className="section-title" id="como-comprar-home">Comprar en Taller Kappa: cómo funciona</h2>
           <p>
             Comprás directo a la fábrica, sin pagar nada en el sitio. Elegís lo que necesitás, pedís el presupuesto y el pedido se acuerda con el taller.
@@ -185,12 +193,14 @@ export default function Home() {
       </section>
 
       <section className="why-section">
+        <p className="eyebrow">Directo de fábrica</p>
         <h2 className="section-title">Por qué pedirle el presupuesto a la fábrica</h2>
         <ScrollText items={REASONS.map((r) => ({ title: r.title, text: r.text }))} />
       </section>
 
       <section className="section-padding about-facts" aria-labelledby="que-es-kappa">
         <div>
+          <p className="eyebrow">La empresa</p>
           <h2 className="section-title" id="que-es-kappa">Qué es Taller Kappa</h2>
           <p>{BUSINESS.summary}</p>
           <p>
@@ -217,6 +227,7 @@ export default function Home() {
       </section>
 
       <section className="section-padding home-links">
+        <p className="eyebrow">Antes de pedir</p>
         <h2 className="section-title">Para elegir y pedir</h2>
         <div className="home-links-grid">
           <p>
@@ -239,6 +250,7 @@ export default function Home() {
 
       <section className="cta-section">
         <div className="cta-box">
+          <p className="eyebrow">Sin pagar nada en el sitio</p>
           <h2>¿Armamos tu presupuesto?</h2>
           <p>Contanos qué necesitás, la cantidad y la zona de entrega, y te respondemos por WhatsApp con el precio y el plazo.</p>
           <div className="cta-btns" data-cta="home_cta_final">
