@@ -13,6 +13,12 @@ import { ORG_ID } from '../lib/schema';
 export default function Contacto() {
   const { showToast } = useCart();
   const [form, setForm] = useState({ name: '', interest: '', zone: '', message: '' });
+  const [retryLink, setRetryLink] = useState('');
+
+  const updateField = (field, value) => {
+    setForm((previous) => ({ ...previous, [field]: value }));
+    setRetryLink('');
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,8 +33,11 @@ export default function Contacto() {
     trackEvent('whatsapp_click', { location: 'contacto_form', interest: form.interest || '(sin especificar)' });
     const interestLine = form.interest ? `\nMe interesa: ${form.interest}` : '';
     const zoneLine = form.zone.trim() ? `\nZona de entrega: ${form.zone.trim()}` : '';
-    window.open(whatsappUrl(`Hola, soy ${form.name.trim()}.${interestLine}${zoneLine}\n\n${form.message.trim()}`), '_blank', 'noopener');
+    const link = whatsappUrl(`Hola, soy ${form.name.trim()}.${interestLine}${zoneLine}\n\n${form.message.trim()}`);
+    setRetryLink(link);
+    window.open(link, '_blank', 'noopener,noreferrer');
 
+    // Se registra el intento. El envío del mensaje se hace dentro de WhatsApp.
     // El guardado del lead corre en segundo plano y nunca bloquea al usuario.
     // Si falla lo registramos para saber cuántos leads no se persisten;
     // `reason` distingue "Firebase sin configurar" de un error real.
@@ -38,9 +47,6 @@ export default function Contacto() {
         location: 'contacto_form',
         reason: err?.message === 'firebase_sin_configurar' ? 'firebase_sin_configurar' : 'error',
       }));
-
-    setForm({ name: '', interest: '', zone: '', message: '' });
-    showToast('¡Mensaje listo! Se abrió WhatsApp.');
   };
 
   return (
@@ -63,11 +69,11 @@ export default function Contacto() {
         <form onSubmit={handleSubmit} className="contact-form" id="contact-form">
           <div className="form-group">
             <label htmlFor="contact-name">Tu nombre</label>
-            <input id="contact-name" name="name" autoComplete="name" maxLength={100} required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ej: Juan García" />
+            <input id="contact-name" name="name" autoComplete="name" maxLength={100} required value={form.name} onChange={(e) => updateField('name', e.target.value)} placeholder="Ej: Juan García" />
           </div>
           <div className="form-group">
             <label htmlFor="contact-interest">¿Qué te interesa?</label>
-            <select id="contact-interest" value={form.interest} onChange={(e) => setForm({ ...form, interest: e.target.value })}>
+            <select id="contact-interest" value={form.interest} onChange={(e) => updateField('interest', e.target.value)}>
               <option value="">Seleccioná una opción…</option>
               <option value="Sillón BKF">Sillón BKF</option>
               <option value="Banco BKF">Banco BKF</option>
@@ -79,16 +85,22 @@ export default function Contacto() {
           </div>
           <div className="form-group">
             <label htmlFor="contact-zone">Zona de entrega (opcional)</label>
-            <input id="contact-zone" name="zone" autoComplete="address-level2" maxLength={100} value={form.zone} onChange={(e) => setForm({ ...form, zone: e.target.value })} placeholder="Barrio o localidad" />
+            <input id="contact-zone" name="zone" autoComplete="address-level2" maxLength={100} value={form.zone} onChange={(e) => updateField('zone', e.target.value)} placeholder="Barrio o localidad" />
             <small className="form-hint">Con la zona podemos incluir el envío en el presupuesto.</small>
           </div>
           <div className="form-group">
             <label htmlFor="contact-message">Tu mensaje</label>
-            <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} placeholder="Contanos qué necesitás: producto, cantidad y color." />
+            <textarea id="contact-message" name="message" maxLength={2000} required value={form.message} onChange={(e) => updateField('message', e.target.value)} placeholder="Contanos qué necesitás: producto, cantidad y color." />
           </div>
           <div className="form-submit">
-            <button type="submit" className="btn-main"><Icon name="whatsapp" /> Enviar por WhatsApp</button>
-            {isFirebaseConfigured && <small className="form-hint">Al enviarlo guardamos una copia del mensaje para poder responderte.</small>}
+            <button type="submit" className="btn-main" aria-describedby="contact-whatsapp-next"><Icon name="whatsapp" /> Abrir WhatsApp</button>
+            {retryLink && (
+              <a className="btn-outline" href={retryLink} target="_blank" rel="noopener noreferrer" data-cta="contacto_form_enlace">
+                Usar el enlace directo de WhatsApp
+              </a>
+            )}
+            <p className="form-hint" id="contact-whatsapp-next">Revisá el texto y tocá Enviar en WhatsApp para hacer la consulta.</p>
+            {isFirebaseConfigured && <small className="form-hint">Al tocar Abrir WhatsApp se intenta guardar una copia del mensaje.</small>}
           </div>
         </form>
         <aside className="contact-aside" aria-label="Datos de contacto">

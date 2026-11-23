@@ -5,17 +5,17 @@
  *
  * Opciones: `items` con `name` (lo que se ve y viaja en el presupuesto) y, según el tipo, `swatch` (color) o `value`.
  */
-import { FINISH_COLORS, LEATHER_COLORS, getProductBySlug } from './products';
+import { BASE_FLAT_COLUMNS as COLUMN_ITEMS, BASE_FLAT_HEIGHTS as HEIGHT_ITEMS, BASE_FLAT_SLUG, FINISH_COLORS, LEATHER_COLORS, describeBaseFlat, getProductBySlug } from './products';
 
 const SILLON = getProductBySlug('sillon-bkf-premium');
 const BANCO = getProductBySlug('banco-bkf');
-const BASE = getProductBySlug('base-de-mesa-flat');
+const BASE = getProductBySlug(BASE_FLAT_SLUG);
 
 // Acabados de la estructura: la FAQ de asientos los publica para sillones y bancos.
 const FINISH_OPTION = { key: 'finish', type: 'swatch', label: 'Estructura', ariaLabel: 'Acabado de la estructura', items: FINISH_COLORS, initial: 'Negro Mate' };
 // Cuero negro, marrón o natural: lo publica la FAQ del sillón; para el banco, confirmado por el dueño el 19/11/2026.
 const leatherOption = (initial) => ({ key: 'leather', type: 'swatch', label: 'Cuero', ariaLabel: 'Color del cuero', items: LEATHER_COLORS, initial });
-// "Negro Mate, cuero marrón": en inglés lo traduce la regla COLOR_WITH_LEATHER de i18n/translate.js.
+// "Negro Mate, cuero marrón": en inglés lo traduce la regla COLOR_WITH_OPTIONS de i18n/translate.js.
 const finishWithLeather = (v) => `${v.finish}, cuero ${v.leather.toLowerCase()}`;
 
 const boxLabels = ({ width, depth, height }) => [
@@ -26,9 +26,7 @@ const boxLabels = ({ width, depth, height }) => [
 const boxSize = ({ width, depth, height }) => `${width} x ${depth} x ${height} cm`;
 
 const [MESA, BARRA] = BASE.dimensions.heights;
-const HEIGHT_ITEMS = [{ name: `Mesa (${MESA} cm)`, value: MESA }, { name: `Barra (${BARRA} cm)`, value: BARRA }];
-const COLUMN_ITEMS = BASE.dimensions.columnsMm.map((mm) => ({ name: `${mm} mm`, value: mm }));
-const valueOf = (items, name) => items.find((i) => i.name === name)?.value;
+const dimensionValue = (items, name) => items.find((item) => item.name === name)?.value ?? items[0].value;
 
 export const PRODUCT_3D = {
   'sillon-bkf-premium': {
@@ -71,22 +69,22 @@ export const PRODUCT_3D = {
     },
   },
 
-  'base-de-mesa-flat': {
+  [BASE_FLAT_SLUG]: {
     // Acabado: los mismos que el sillón, a pedido del dueño (19/11/2026); la ficha los publica en "Colores".
     options: [
       FINISH_OPTION,
-      { key: 'height', type: 'segmented', label: 'Altura', ariaLabel: 'Altura de la base', items: HEIGHT_ITEMS, initial: HEIGHT_ITEMS[0].name },
-      { key: 'column', type: 'segmented', label: 'Columna', ariaLabel: 'Diámetro de la columna', items: COLUMN_ITEMS, initial: COLUMN_ITEMS[0].name },
+      { key: 'height', type: 'segmented', label: 'Altura', ariaLabel: 'Altura de la base', items: HEIGHT_ITEMS, initial: HEIGHT_ITEMS[0].name, requiredForQuote: true },
+      { key: 'column', type: 'segmented', label: 'Columna', ariaLabel: 'Diámetro de la columna', items: COLUMN_ITEMS, initial: COLUMN_ITEMS[0].name, requiredForQuote: true },
     ],
     labels: (v) => [
-      { key: 'height', text: 'Alto', value: valueOf(HEIGHT_ITEMS, v.height), unit: 'cm' },
-      { key: 'column', text: 'Columna', value: valueOf(COLUMN_ITEMS, v.column), unit: 'mm' },
+      { key: 'height', text: 'Alto', value: dimensionValue(HEIGHT_ITEMS, v.height), unit: 'cm' },
+      { key: 'column', text: 'Columna', value: dimensionValue(COLUMN_ITEMS, v.column), unit: 'mm' },
       { key: 'plate', text: 'Chapa', value: BASE.dimensions.plateMm, unit: 'mm' },
     ],
     // "Negro Mate, Mesa (73 cm), columna de 77 mm": en inglés lo traduce una regla de i18n/translate.js.
-    describe: (v) => `${v.finish}, ${v.height}, columna de ${v.column}`,
+    describe: describeBaseFlat,
     // El diámetro del disco no se publica: el pie dice solo lo que es exacto.
-    caption: (v) => ['Modelo 3D:', ' ', valueOf(HEIGHT_ITEMS, v.height), ' cm de alto, columna de ', valueOf(COLUMN_ITEMS, v.column), ' mm'],
+    caption: (v) => ['Modelo 3D:', ' ', dimensionValue(HEIGHT_ITEMS, v.height), ' cm de alto, columna de ', dimensionValue(COLUMN_ITEMS, v.column), ' mm'],
     fallback: { src: BASE.image, width: BASE.imageWidth, height: BASE.imageHeight },
     showroom: {
       id: 'base-3d',
@@ -102,9 +100,12 @@ export const PRODUCT_3D = {
   },
 };
 
-/** Estado inicial de las opciones: { finish: 'Negro Mate', … }. */
-export const initialValues = (cfg) => Object.fromEntries(cfg.options.map((o) => [o.key, o.initial]));
+/** Las opciones obligatorias arrancan sin selección. El 3D conserva sus valores iniciales. */
+export const initialValues = (cfg) => Object.fromEntries(cfg.options.filter((o) => !o.requiredForQuote).map((o) => [o.key, o.initial]));
+
+export const canQuote = (cfg, values) => cfg.options.every((o) =>
+  !o.requiredForQuote || o.items.some((item) => item.name === values[o.key]));
 
 /** De nombres elegidos a los ítems completos que necesita el 3D: { finish: { name, swatch }, … }. */
 export const selectedItems = (cfg, values) =>
-  Object.fromEntries(cfg.options.map((o) => [o.key, o.items.find((i) => i.name === values[o.key])]));
+  Object.fromEntries(cfg.options.map((o) => [o.key, o.items.find((i) => i.name === (values[o.key] ?? o.initial))]));

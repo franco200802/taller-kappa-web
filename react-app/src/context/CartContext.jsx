@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { QUOTE_KINDS, whatsappUrl } from '../data/contact';
+import { QUOTE_KINDS } from '../data/contact';
 import { trackEvent } from '../lib/analytics';
 import { isFirebaseConfigured, loadFireDB } from '../lib/firebaseConfig';
 import { presupuestoDoc, presupuestoKey, quoteLines } from '../lib/leads';
@@ -79,8 +79,8 @@ export function CartProvider({ children }) {
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  const whatsappLink = useMemo(() => {
-    if (cart.length === 0) return '#';
+  const quoteMessage = useMemo(() => {
+    if (cart.length === 0) return '';
     // Pedido de presupuesto, no de compra: no se cobra nada en el sitio. El texto va
     // ordenado para que el taller pueda responder con precio y plazo sin repreguntar.
     const lines = quoteLines(cart);
@@ -88,8 +88,7 @@ export function CartProvider({ children }) {
     const zone = quote.zone.trim();
     const kind = QUOTE_KINDS[quote.kind];
     const details = [name && `Nombre: ${name}`, kind && `Es para: ${kind}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
-    return whatsappUrl(
-      `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${lines}\n\nTotal: ${totalItems} ${totalItems === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`);
+    return `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${lines}\n\nTotal: ${totalItems} ${totalItems === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`;
   }, [cart, quote, totalItems]);
 
   // Copia del presupuesto en Firestore, para verlo en /admin. Corre en segundo plano al tocar el
@@ -113,8 +112,8 @@ export function CartProvider({ children }) {
   const value = useMemo(() => ({
     cart, totalItems, isOpen, toast,
     quote, setQuote,
-    setIsOpen, addToCart, changeQty, removeItem, showToast, whatsappLink, saveQuote,
-  }), [cart, totalItems, isOpen, toast, quote, addToCart, changeQty, removeItem, showToast, whatsappLink, saveQuote]);
+    setIsOpen, addToCart, changeQty, removeItem, showToast, quoteMessage, saveQuote,
+  }), [cart, totalItems, isOpen, toast, quote, addToCart, changeQty, removeItem, showToast, quoteMessage, saveQuote]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

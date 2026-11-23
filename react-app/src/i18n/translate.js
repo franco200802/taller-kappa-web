@@ -33,6 +33,7 @@ const COLOR_WITH_OPTIONS = /^([^,]+, (?:cuero (?:marrón|natural|negro)|(?:Mesa|
 const RULES = [
   [/^"(.+)" \((.+)\) agregado al presupuesto$/, (tr, n, c) => `"${tr(n)}" (${trColor(tr, c)}) added to your quote`],
   [COLOR_WITH_OPTIONS, (tr, text) => trColor(tr, text)],
+  [/^(.+) · Altura y diámetro de columna a definir$/, (tr, finish) => `${tr(finish)} · Height and column diameter to be confirmed`],
   [/^Quitar una unidad de (.+)$/, (tr, n) => `Remove one unit of ${tr(n)}`],
   [/^Agregar una unidad de (.+)$/, (tr, n) => `Add one unit of ${tr(n)}`],
   [/^Eliminar (.+)$/, (tr, n) => `Remove ${tr(n)}`],

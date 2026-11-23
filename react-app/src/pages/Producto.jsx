@@ -8,7 +8,7 @@ import Picture from '../components/Picture';
 import { Product3DOptions, Product3DPanel, Product3DViewer } from '../components/Product3D';
 import Showroom3D from '../components/Showroom3D';
 import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, ofName, priceQuestion, productHref, relatedProducts, socialImage, theName } from '../data/products';
-import { PRODUCT_3D, initialValues } from '../data/product3d';
+import { PRODUCT_3D, canQuote, initialValues } from '../data/product3d';
 import { whatsappUrlFor } from '../data/contact';
 import { assetUrl } from '../lib/site';
 import { trackEvent } from '../lib/analytics';
@@ -58,6 +58,7 @@ function FichaMain({ product, path }) {
   const [is3d, setIs3d] = useState(false);
   const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
   const [measures, setMeasures] = useState(true);
+  const quoteReady = !cfg || canQuote(cfg, values);
   const onView = (to3d) => {
     if (to3d && !is3d) trackEvent('view_3d', { item_name: product.name, location: 'ficha_galeria', page_path: `${path}/` });
     setIs3d(to3d);
@@ -93,8 +94,8 @@ function FichaMain({ product, path }) {
           )}
           {cfg && <Product3DOptions slug={product.slug} values={values} onChange={pickOption} />}
           <div className="bkf-actions" data-cta="ficha_actions">
-            <button className="btn-main" onClick={() => addToCart(product, cfg ? cfg.describe(values) : 'Negro Mate')}>
-              <Icon name="plus" /> Agregar al presupuesto
+            <button type="button" className="btn-main" disabled={!quoteReady} onClick={() => addToCart(product, cfg ? cfg.describe(values) : 'Negro Mate')}>
+              <Icon name="plus" /> {quoteReady ? 'Agregar al presupuesto' : 'Elegí la altura y el diámetro'}
             </button>
             <a href={whatsappUrlFor(priceQuestion(product), path)} target="_blank" rel="noopener noreferrer" className="btn-outline">
               <Icon name="whatsapp" /> Consultar precio

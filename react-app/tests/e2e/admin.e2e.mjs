@@ -145,7 +145,7 @@ try {
     const docs = await until(async () => { const d = await docsOf('contactos'); return d.length ? d : null; }, 'la consulta en Firestore');
     check('contacto: se guarda una sola consulta con los campos esperados',
       docs.length === 1 && docs[0].name === 'Ana Prueba' && docs[0].zone === 'Palermo' && docs[0].estado === 'nueva' && docs[0].message.includes('dos sillones'), JSON.stringify(docs));
-    check('contacto: avisa que se guarda una copia', (await text(page)).includes('guardamos una copia del mensaje'));
+    check('contacto: avisa del intento de guardar una copia', (await text(page)).includes('se intenta guardar una copia del mensaje'));
     await page.close();
   }
 

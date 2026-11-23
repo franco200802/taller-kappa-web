@@ -184,6 +184,15 @@ export const PRODUCTS = [
   },
 ];
 
+export const BASE_FLAT_SLUG = 'base-de-mesa-flat';
+const { heights, columnsMm } = getProductBySlug(BASE_FLAT_SLUG).dimensions;
+export const BASE_FLAT_HEIGHTS = [
+  { name: `Mesa (${heights[0]} cm)`, value: heights[0] },
+  { name: `Barra (${heights[1]} cm)`, value: heights[1] },
+];
+export const BASE_FLAT_COLUMNS = columnsMm.map((value) => ({ name: `${value} mm`, value }));
+export const describeBaseFlat = ({ finish, height, column }) => [finish, height, `columna de ${column}`].filter(Boolean).join(', ');
+
 /**
  * Acabados de la estructura que se pueden elegir al agregar al presupuesto (los mismos que
  * lista la ficha: negro mate, blanco crema, cromado y, a pedido, verde oliva o rojo Kappa).
