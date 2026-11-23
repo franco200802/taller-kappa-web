@@ -23,6 +23,20 @@
 
 ---
 
+## Nuevo (22/11/2026): revisar el rediseño premium
+
+Detalle, capturas medidas y comparativa en `docs/mejora-premium-2026-11.md`.
+Rama `mejora/experiencia-premium` (sin push: se sube cuando lo autorices).
+
+1. **Mirar el sitio con el diseño nuevo** en tu computadora o celular (pasos en
+   el documento, sección "Cómo probarlo") y decidir si se publica. Incluye el
+   PR #32, que sigue abierto: conviene mergear primero #32 y después esta rama.
+2. **Probar un presupuesto real de punta a punta**: agregar un producto, completar
+   "Comentarios o medidas a medida" y enviar el WhatsApp a tu propio número para
+   ver cómo llega el mensaje. El navegador no puede probar el envío.
+3. **Fotos reales** (punto 2 de esta lista): con el diseño nuevo las fotos son
+   todavía más protagonistas. Es lo que más va a subir la percepción de marca.
+
 ## Nuevo (15/11/2026): tres confirmaciones de la mejora integral
 
 Detalle en `docs/mejora-integral-2026-11.md`.
