@@ -35,7 +35,7 @@ const SITE_GRAPH = JSON.stringify({ '@context': 'https://schema.org', '@graph': 
  * cuando la página lazy ya montó. El estado arranca en false igual en el
  * prerender y en el cliente, así que la hidratación no cambia.
  */
-const WA_HIDE_TARGETS = '.home-hero-actions, .bkf-actions, .cta-btns, .form-submit, footer';
+const WA_HIDE_TARGETS = '.home-hero-actions, .page-hero-actions, .bkf-actions, .cta-btns, .form-submit, footer';
 function FloatWaSentinel({ onChange }) {
   const { pathname } = useLocation();
   const { markReady } = useLang();

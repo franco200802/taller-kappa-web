@@ -64,7 +64,16 @@ export default function Contacto() {
         title="Contacto"
         lead="Para cotizar o consultar por un producto, escribí a Taller Kappa por WhatsApp o con el formulario: te respondemos con el presupuesto."
         current="Contacto"
-      />
+      >
+        {/* Atajos arriba: en el celular el formulario terminaba abajo de la primera pantalla y los datos de contacto,
+            después del formulario. */}
+        <div className="page-hero-actions" data-cta="contacto_hero">
+          <a href={whatsappUrl('Hola, quiero hacer una consulta.')} target="_blank" rel="noopener noreferrer" className="btn-main btn-wa">
+            <Icon name="whatsapp" /> Escribir por WhatsApp
+          </a>
+          <a href={`tel:${BUSINESS.phone}`} className="btn-outline">Llamar al {WHATSAPP_DISPLAY}</a>
+        </div>
+      </PageHero>
       <section className="section-padding contact-layout">
         <form onSubmit={handleSubmit} className="contact-form" id="contact-form">
           <div className="form-group">
