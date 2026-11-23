@@ -31,22 +31,15 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Instrument Serif (Instrument, SIL OFL 1.1), subconjunto latin: solo títulos. 21 kB la regular (se
-   precarga: el h1 de la home la usa) y 22 kB la itálica (no se precarga; solo citas y detalles). */
+/* Instrument Serif (Instrument, SIL OFL 1.1), subconjunto latin, solo la regular (21 kB, se precarga): títulos,
+   marca, numerales y citas. Sin itálica a propósito: una fuente que llega después del primer maquetado obliga a
+   rehacerlo entero (medido en /sillon-bkf/ con la CPU 4x más lenta). */
 @font-face {
     font-family: 'Instrument Serif';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
     src: url('/fonts/instrument-serif-latin.woff2') format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-    font-family: 'Instrument Serif';
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-    src: url('/fonts/instrument-serif-italic-latin.woff2') format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 /* Respaldo de la serif con sus métricas (ancho medio de un texto en español, alto y descendente) calculadas
@@ -112,7 +105,7 @@
     /* Padding lateral que alinea el contenido de toda sección de ancho
        completo a la misma columna de --max (o al gutter en pantallas chicas). */
     --pad-x:  max(var(--gutter), calc((100vw - var(--max)) / 2));
-    --sec:    clamp(64px, 9vw, 128px);
+    --sec:    clamp(56px, 9vw, 128px);
     --nav-h:  72px;
     --r:      4px;      /* tarjetas, campos, paneles */
     --r-img:  2px;      /* fotos: casi rectas, como una lámina */
@@ -140,8 +133,6 @@ body {
     color: var(--hierro);
     background: var(--cal);
     -webkit-font-smoothing: antialiased;
-    font-kerning: normal;
-    font-feature-settings: 'kern', 'calt';
     overflow-x: hidden;
 }
 ::selection { background: rgba(183, 28, 28, 0.16); color: var(--hierro); }
@@ -231,7 +222,7 @@ p a:hover, li a:hover, dd a:hover { color: var(--kappa); text-decoration-color: 
 .btn-main { background: var(--hierro); color: var(--blanco); }
 .btn-main:hover { background: #000; box-shadow: 0 10px 24px -14px rgba(25, 24, 23, 0.8); }
 .btn-main:disabled { background: var(--grafito); border-color: var(--grafito); box-shadow: none; opacity: .75; cursor: not-allowed; }
-.btn-main:active, .btn-outline:active, .btn-add-cart:active, .btn-card-wa:active,
+.btn-main:active, .btn-outline:active, .btn-add-cart:active,
 .filter-btn:active, .qty-btn:active, .btn-whatsapp-checkout:active { transform: translateY(1px); }
 .btn-outline { background: transparent; color: var(--hierro); border-color: var(--borde); }
 .btn-outline:hover { border-color: var(--hierro); background: var(--hierro); color: var(--blanco); }
@@ -340,6 +331,16 @@ p a:hover, li a:hover, dd a:hover { color: var(--kappa); text-decoration-color: 
     .nav-link.active-page { color: var(--kappa); }
 }
 @keyframes menu-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+/* Celulares de 320 a 380 px: la marca en la serif es más ancha que la de antes y el botón del menú quedaba 16 px
+   afuera de la pantalla a 320 px. Se achican la marca y los márgenes entre botones (siguen de 44 px). */
+@media (max-width: 380px) {
+    #main-nav { gap: 8px; }
+    .logo { font-size: 1.45rem; }
+    .nav-actions { gap: 0; }
+    .lang-toggle { padding: 0 6px; }
+    .cart-icon-container, .hamburger { width: 44px; }
+    .hamburger { padding: 0 11px; }
+}
 /* Con el menú abierto (ocupa toda la pantalla) la página de atrás no se desplaza. */
 html.menu-open { overflow: hidden; }
 
@@ -472,7 +473,7 @@ html.menu-open { overflow: hidden; }
 .why-section { padding: var(--sec) var(--pad-x); background: var(--blanco); }
 .why-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 32px; }
 .why-card { border-top: 1px solid var(--hierro); padding-top: 20px; }
-.why-card > i, .why-icon { display: none; }
+.why-card > i { display: none; }
 .why-card h3 { margin-bottom: 8px; }
 .why-card p { color: var(--grafito); }
 @media (max-width: 960px) { .why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -531,11 +532,7 @@ html.menu-open { overflow: hidden; }
     opacity: 0; transform: translateY(6px); transition: opacity .25s, transform .35s var(--ease-out);
 }
 .card-img-wrapper:hover .card-overlay, .card-img-wrapper:focus-visible .card-overlay { opacity: 1; transform: none; }
-/* Rótulo del producto ("Diseño icónico"): texto chico arriba del nombre, no una placa sobre la foto. Queda la
-   clase para el rótulo de la home y la vista rápida. */
-.product-badge { font-size: var(--t-xs); font-weight: 500; letter-spacing: 0.02em; color: var(--grafito); }
-.stock-dot-small, .stock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wa); display: inline-block; }
-.no-stock .stock-dot-small { background: var(--ocre); }
+.stock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wa); display: inline-block; }
 /* El zoom de las fotos solo con puntero: en pantallas táctiles el :hover
    queda "pegado" después de un tap. Y como ahí no hay hover, el rótulo
    "Vista rápida" se muestra siempre. */
@@ -556,7 +553,10 @@ html.menu-open { overflow: hidden; }
     color: var(--wa-osc); font-size: var(--t-sm); font-weight: 600; text-decoration: none; min-height: 44px; /* --wa-osc: --wa sobre el fondo claro no llega a 4,5:1 */
 }
 .card-consult:hover { text-decoration: underline; }
-.card-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: auto; padding-top: 12px; }
+/* Los dos botones van en una fila si entran y, si no (tarjetas de menos de ~310 px), "Ver ficha" baja a otra. */
+.card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 12px; }
+.card-actions .btn-add-cart { flex: 1 1 auto; }
+.card-actions .btn-detail { flex: 1 0 auto; }
 .btn-detail, .btn-add-cart {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     min-height: 46px; padding: 0 18px; border-radius: var(--r-pill);
@@ -568,7 +568,6 @@ html.menu-open { overflow: hidden; }
 .btn-detail:hover { border-color: var(--hierro); background: var(--hierro); color: var(--blanco); }
 .btn-add-cart { background: var(--hierro); color: var(--blanco); border: 1px solid var(--hierro); }
 .btn-add-cart:hover { background: #000; }
-.card-actions > :only-child { grid-column: 1 / -1; }
 /* Debajo de la grilla: el texto de presentación del catálogo y las categorías (con sus enlaces). */
 .catalog-intro { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px clamp(32px, 6vw, 96px); margin-top: clamp(48px, 7vw, 88px); padding-top: 32px; border-top: 1px solid var(--linea); }
 .catalog-intro p { color: var(--grafito); }
@@ -764,12 +763,12 @@ a.cart-item-name:hover { text-decoration: underline; text-decoration-color: var(
     width: max-content; max-width: calc(100vw - 32px);
     display: flex; align-items: center; gap: 16px;
     background: var(--hierro); color: var(--blanco);
-    padding: 10px 10px 10px 20px; border-radius: var(--r-pill); font-weight: 500; font-size: var(--t-sm);
+    padding: 12px 20px; border-radius: var(--r-pill); font-weight: 500; font-size: var(--t-sm);
     box-shadow: var(--sombra-2);
     transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
     transition: opacity .25s, transform .35s var(--ease-out);
 }
-#toast:not(:has(.toast-action)) { padding-right: 20px; }
+#toast.has-action { padding: 8px 8px 8px 20px; }
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
 .toast-action {
     flex-shrink: 0; min-height: 40px; padding: 0 16px; border-radius: var(--r-pill);
@@ -790,8 +789,9 @@ a.cart-item-name:hover { text-decoration: underline; text-decoration-color: var(
 .float-wa:hover { background: var(--wa-osc); transform: translateY(-2px); }
 /* Se esconde mientras hay un botón de acción en pantalla (Layout.jsx):
    así no tapa "Cotizar para empresas", el envío del formulario ni el footer.
-   Con la barra de compra de una ficha a la vista también: la barra ya tiene su WhatsApp. */
-.float-wa.is-hidden, body:has(.buy-bar.is-visible) .float-wa { opacity: 0; transform: scale(.8); pointer-events: none; }
+   Con la barra de compra de una ficha a la vista también: la barra ya tiene su WhatsApp (BuyBar pone la clase
+   en <html>; con :has() el navegador recalculaba estilos de más). */
+.float-wa.is-hidden, .buy-bar-visible .float-wa { opacity: 0; transform: scale(.8); pointer-events: none; }
 @media (max-width: 560px) {
     .float-wa { width: 52px; height: 52px; font-size: 1.5rem; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
     #toast { inset: auto auto calc(80px + env(safe-area-inset-bottom, 0px)) 50%; }
@@ -854,9 +854,9 @@ footer a:hover { color: var(--blanco); }
 .pdp-head .bkf-tagline { margin-top: 14px; }
 .bkf-img-col img { width: 100%; border-radius: var(--r-img); aspect-ratio: 1; object-fit: cover; background: var(--arena); }
 /* Confianza bajo los botones: lo que ya publican /garantia/, /envios/ y la ficha. */
-.bkf-badges, .pdp-trust { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 4px; padding-top: 18px; border-top: 1px solid var(--linea); list-style: none; }
-.bkf-badge, .pdp-trust li { font-size: var(--t-sm); color: var(--grafito); display: flex; align-items: baseline; gap: 10px; line-height: 1.35; }
-.bkf-badge i, .pdp-trust .icon { color: var(--hierro); flex-shrink: 0; }
+.pdp-trust { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 4px; padding-top: 18px; border-top: 1px solid var(--linea); list-style: none; }
+.pdp-trust li { font-size: var(--t-sm); color: var(--grafito); display: flex; align-items: baseline; gap: 10px; line-height: 1.35; }
+.pdp-trust .icon { color: var(--hierro); flex-shrink: 0; }
 .bkf-info-col { display: flex; flex-direction: column; gap: 20px; }
 .bkf-info-col h2 { font-size: clamp(2rem, 4vw, 3rem); }
 .bkf-tagline { font-size: var(--t-md); line-height: 1.5; color: var(--grafito); }
@@ -874,7 +874,7 @@ footer a:hover { color: var(--blanco); }
     .pdp-grid { grid-template-areas: "head" "media" "buy" "details"; grid-template-rows: none; }
     .bkf-img-col img { aspect-ratio: 5 / 4; object-position: 50% 60%; }
 }
-@media (max-width: 420px) { .bkf-badges, .pdp-trust { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .pdp-trust { grid-template-columns: 1fr; } }
 /* Notebooks de pantalla baja (1366 x 768): título más chico para que el botón entre en la primera pantalla. */
 @media (min-width: 861px) and (max-height: 820px) {
     .pdp-head h1 { font-size: clamp(2.2rem, 3.4vw, 3rem); }
@@ -984,8 +984,8 @@ footer a:hover { color: var(--blanco); }
 .testimonials-review { margin-top: 32px; color: var(--grafito); font-size: var(--t-md); }
 .testimonials-review a { font-weight: 600; }
 .testimonial-card { border-top: 1px solid var(--hierro); padding-top: 18px; display: flex; flex-direction: column; gap: 12px; }
-/* La cita va en la itálica de la serif, como en una revista. */
-.testimonial-card > p:first-of-type { font-family: var(--serif); font-style: italic; font-size: clamp(1.5rem, 2.2vw, 1.875rem); line-height: 1.2; letter-spacing: -0.005em; }
+/* La cita va en la serif de los títulos, como en una revista. */
+.testimonial-card > p:first-of-type { font-family: var(--serif); font-size: clamp(1.5rem, 2.2vw, 1.875rem); line-height: 1.2; letter-spacing: -0.005em; }
 .stars { color: var(--hierro); font-size: 0.8rem; letter-spacing: 2px; }
 .testimonial-author { color: var(--grafito); font-size: var(--t-sm); }
 
@@ -1046,9 +1046,7 @@ footer a:hover { color: var(--blanco); }
 .shipping-card { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--hierro); padding-top: 16px; }
 .shipping-card.featured { border-top-width: 4px; padding-top: 14px; }
 .shipping-icon { display: none; }
-.shipping-time { font-weight: 600; }
-.shipping-time i { color: var(--grafito); margin-right: 4px; }
-.shipping-card > p:not(.shipping-time) { color: var(--grafito); font-size: var(--t-sm); }
+.shipping-card > p { color: var(--grafito); font-size: var(--t-sm); }
 .shipping-badge { align-self: flex-start; margin-top: auto; font-size: var(--t-sm); color: var(--grafito); }
 .shipping-badge.free { color: var(--wa-osc); font-weight: 600; }
 
@@ -1063,7 +1061,6 @@ footer a:hover { color: var(--blanco); }
 /* ---------- 17. Garantía ---------- */
 .warranty-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
 .warranty-card { border-top: 1px solid var(--hierro); padding-top: 16px; }
-.warranty-icon { display: none; }
 .warranty-card h3 { margin-bottom: 8px; }
 .warranty-card p { color: var(--grafito); }
 
@@ -1200,8 +1197,9 @@ address { font-style: normal; }
 .home-hero-typed { font-size: var(--t-lg); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; min-height: 1.3em; color: var(--hierro); }
 .page-typed { display: block; margin-top: 12px; font-size: var(--t-lg); font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; min-height: 1.3em; color: var(--hierro); }
 .bkf-typed { font-size: var(--t-md); font-weight: 500; line-height: 1.25; min-height: 1.4em; }
-/* La frase que se escribe va en la itálica de la serif: el único lugar donde el título "habla". */
-.home-hero-typed .typewriter-text, .page-typed .typewriter-text, .bkf-typed .typewriter-text { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 1.22em; letter-spacing: 0; }
+/* La frase que se escribe va en la serif de los títulos. En regular y no en itálica: la itálica no se precarga y,
+   usada en la primera pantalla, llegaba después del primer maquetado y obligaba a rehacer el de todos los títulos. */
+.home-hero-typed .typewriter-text, .page-typed .typewriter-text, .bkf-typed .typewriter-text { font-family: var(--serif); font-weight: 400; font-size: 1.22em; letter-spacing: 0; }
 .typewriter { display: inline-block; white-space: nowrap; }
 .typewriter-cursor { display: inline-block; width: 1.5px; height: 1.05em; margin-left: 3px; vertical-align: -0.14em; background: var(--kappa); animation: tw-blink 1.1s steps(1) infinite; }
 @keyframes tw-blink { 50% { opacity: 0; } }

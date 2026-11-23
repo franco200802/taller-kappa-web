@@ -25,11 +25,13 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
 
-    <!-- Fuentes autoalojadas (ver @font-face en global.css): se precargan la serif de los
-         títulos (el h1, que puede ser el LCP, se pinta con ella; 21 kB) y Archivo (texto e
-         interfaz; 34 kB). La itálica no se precarga. crossorigin es obligatorio para fuentes
-         aunque sean del mismo origen. Los íconos son SVG en línea (components/Icon.jsx): no hay
-         CSS ni fuentes de terceros que bloqueen el render. -->
+    <!-- Fuentes autoalojadas (ver @font-face en global.css): se precargan las dos que usa la
+         primera pantalla, la serif de los títulos (21 kB) y Archivo (texto, 34 kB). Medido con la
+         CPU 4x más lenta: si una llega después del primer maquetado, el navegador rehace el de toda
+         la página (sin la precarga de Archivo, /sillon-bkf/ pasaba de 254 a 579 ms de layout). Por
+         lo mismo la itálica (22 kB, no precargada) no se usa en ninguna primera pantalla.
+         crossorigin es obligatorio para fuentes aunque sean del mismo origen. Los íconos son SVG
+         en línea (components/Icon.jsx): no hay CSS ni fuentes de terceros que bloqueen el render. -->
     <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/archivo-latin-v2.woff2" as="font" type="font/woff2" crossorigin>
 </head>

@@ -23,7 +23,7 @@ export default function Toast() {
   // El texto va en su propio nodo (la traducción al inglés lo reconoce entero) y la acción, si hay, es un
   // botón aparte: "Ver presupuesto" abre el presupuesto sin buscar el ícono de la barra.
   return (
-    <div id="toast" ref={ref} popover="manual" role="status" aria-live="polite" className={toast ? 'show' : ''}>
+    <div id="toast" ref={ref} popover="manual" role="status" aria-live="polite" className={`${toast ? 'show' : ''}${toast?.action ? ' has-action' : ''}`}>
       {toast && <span>{toast.msg}</span>}
       {toast?.action && (
         <button type="button" className="toast-action" onClick={toast.action.onClick}>{toast.action.label}</button>

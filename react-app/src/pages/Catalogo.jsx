@@ -125,7 +125,7 @@ function cardVariant(p) {
   return cfg.describe(initialValues(cfg));
 }
 
-function ProductCard({ p, onOpen }) {
+function ProductCard({ p, onOpen, priority = false }) {
   const { addToCart } = useCart();
   // Los productos de Firebase (cargados vía FireDB.getProducts en el admin)
   // no tienen garantizado un `slug` propio como los de data/products.js.
@@ -142,7 +142,8 @@ function ProductCard({ p, onOpen }) {
         // La vista rápida abre en 3D: con el mouse encima ya se empieza a descargar three.js.
         onPointerEnter={has3d ? loadProduct3d : undefined}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
-        <Picture src={p.image} alt={p.alt ?? p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 400px" />
+        {/* La primera foto está en la primera pantalla y es el LCP: va sin diferir y con prioridad alta. */}
+        <Picture src={p.image} alt={p.alt ?? p.name} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 400px" />
         <div className="card-overlay" aria-hidden="true">{has3d && <Icon name="cube" />}{has3d ? 'Vista rápida en 3D' : 'Vista rápida'}</div>
       </div>
       <div className="card-info">
@@ -236,7 +237,7 @@ export default function Catalogo() {
         </header>
 
         <div className="products-grid" aria-live="polite">
-          {filtered.map((p) => <ProductCard key={p.id} p={p} onOpen={openModal} />)}
+          {filtered.map((p, i) => <ProductCard key={p.id} p={p} onOpen={openModal} priority={i === 0} />)}
         </div>
 
         <div className="catalog-intro">

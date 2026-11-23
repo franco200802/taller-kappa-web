@@ -58,6 +58,12 @@ export function BuyBar({ targetRef, name, detail, ready, onAdd, onChoose, waHref
     return () => io.disconnect();
   }, [targetRef]);
 
+  // Mientras la barra se ve, el WhatsApp flotante se esconde (la barra ya tiene el suyo): clase en <html>.
+  useEffect(() => {
+    document.documentElement.classList.toggle('buy-bar-visible', visible);
+    return () => document.documentElement.classList.remove('buy-bar-visible');
+  }, [visible]);
+
   return (
     <div className={`buy-bar${visible ? ' is-visible' : ''}`} inert={visible ? undefined : ''} data-cta="ficha_barra" data-item={name}>
       <div className="buy-bar-text">
