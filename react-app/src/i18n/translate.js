@@ -41,6 +41,8 @@ const RULES = [
   [/^Vista rápida: (.+)$/, (tr, n) => `Quick view: ${tr(n)}`],
   [/^Ver ficha de (.+)$/, (tr, n) => `See data sheet for ${tr(n)}`],
   [/^Agregar en (.+)$/, (tr, n) => `Add in ${tr(n)}`],
+  // Contador del presupuesto ("3 unidades").
+  [/^(\d+) unidad(es)?$/, (tr, n) => `${n} ${n === '1' ? 'unit' : 'units'}`],
 ];
 
 /** Traduce `text` (puede traer espacios de más) o devuelve null si no hay traducción. */

@@ -79,7 +79,16 @@ export default function MobiliarioComercial() {
           </>
         )}
         current="Mobiliario comercial"
-      />
+      >
+        {/* Antes el primer botón de la página estaba al final (y = 4.272 px en escritorio, 5.483 px en el celular):
+            quien llega a cotizar para un local tiene la salida arriba. El mensaje deja escritos los datos para cotizar. */}
+        <div className="page-hero-actions" data-cta="mc_hero">
+          <a href={whatsappUrl(B2B_QUOTE_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn-main btn-wa">
+            <Icon name="whatsapp" /> Pedir cotización por WhatsApp
+          </a>
+          <Link to="/proyectos/" className="btn-outline">Ver proyectos y clientes</Link>
+        </div>
+      </PageHero>
 
       <section className="section-padding about-facts section-fade" aria-labelledby="que-es-mc">
         <div>

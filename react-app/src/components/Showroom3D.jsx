@@ -91,7 +91,11 @@ export default function Showroom3D({ slug, location, cta, fadeTo }) {
 
   // Cargar la escena cuando la sección está cerca. Se monta una sola vez; las opciones van por el efecto de abajo.
   useEffect(() => {
-    if (navigator.connection?.saveData) {
+    // Con "ahorro de datos" o en equipos de poca memoria o pocos núcleos (Android de gama baja), una escena 3D a
+    // pantalla completa traba el scroll: queda la foto. deviceMemory y hardwareConcurrency no existen en todos los
+    // navegadores; sin el dato, se carga la escena como siempre.
+    const lowPower = navigator.deviceMemory <= 2 || navigator.hardwareConcurrency <= 2;
+    if (navigator.connection?.saveData || lowPower) {
       setStatus('fallback');
       return undefined;
     }
@@ -124,6 +128,13 @@ export default function Showroom3D({ slug, location, cta, fadeTo }) {
           });
           stageRef.current.setProgress(progressRef.current);
           stageRef.current.setFreeSpace(freeRef.current);
+          // Si el sistema le quita el contexto WebGL a la página (pasa en celulares con poca memoria o al volver de
+          // otra app), el lienzo queda en negro: se libera la escena y queda la foto.
+          hostRef.current.querySelector('canvas')?.addEventListener('webglcontextlost', () => {
+            try { stageRef.current?.dispose(); } catch { /* el contexto ya no existe */ }
+            stageRef.current = null;
+            if (!cancelled) setStatus('fallback');
+          }, { once: true });
           setStatus('ready');
           trackEvent('view_3d', { item_name: product.name, location, page_path: window.location.pathname });
         })

@@ -8,6 +8,7 @@
  */
 
 import { BASE_FLAT_COLUMNS, BASE_FLAT_HEIGHTS, BASE_FLAT_SLUG, FINISH_COLORS, describeBaseFlat } from '../data/products.js';
+import { QUOTE_KINDS } from '../data/contact.js';
 
 /** Colecciones de Firestore que usa el sitio. */
 export const COLLECTIONS = { contactos: 'contactos', presupuestos: 'presupuestos' };
@@ -22,7 +23,9 @@ export const ESTADOS = [
 export const ESTADO_KEYS = ESTADOS.map((e) => e.key);
 export const estadoLabel = (key) => ESTADOS.find((e) => e.key === key)?.label ?? 'Nueva';
 
-export const LIMITS = { name: 100, interest: 100, zone: 100, message: 2000, detalle: 2000, nota: 1000, totalQty: 9999 };
+// `comment`: el campo opcional "Comentarios o medidas a medida" del presupuesto. No es un campo propio en
+// Firestore: viaja dentro de `detalle` (ver presupuestoDoc), así las reglas publicadas no cambian.
+export const LIMITS = { name: 100, interest: 100, zone: 100, message: 2000, detalle: 2000, nota: 1000, totalQty: 9999, comment: 400 };
 export const KINDS = ['', 'particular', 'empresa'];
 
 const clip = (value, max) => String(value ?? '').trim().slice(0, max);
@@ -57,11 +60,34 @@ export function quoteLines(cart) {
   }).join('\n');
 }
 
+/** Renglón de comentarios del presupuesto ("Comentarios o medidas: …"), o '' si no hay. */
+export function commentLine(quote = {}) {
+  const comment = clip(quote.comment, LIMITS.comment).replace(/\s*\n\s*/g, ' ');
+  return comment ? `Comentarios o medidas: ${comment}` : '';
+}
+
+/**
+ * Mensaje de WhatsApp del presupuesto: el mismo texto que copia "Copiar mensaje". Va ordenado para que el
+ * taller pueda responder con precio y plazo sin repreguntar: productos con su variante, total, datos
+ * opcionales (nombre, para quién es, zona) y comentarios o medidas a medida. No se cobra nada en el sitio.
+ */
+export function quoteMessage(cart, quote = {}) {
+  if (!cart.length) return '';
+  const total = cart.reduce((sum, item) => sum + item.qty, 0);
+  const name = String(quote.name ?? '').trim();
+  const zone = String(quote.zone ?? '').trim();
+  const kind = QUOTE_KINDS[quote.kind];
+  const details = [name && `Nombre: ${name}`, kind && `Es para: ${kind}`, zone && `Zona de entrega: ${zone}`, commentLine(quote)]
+    .filter(Boolean).join('\n');
+  return `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${quoteLines(cart)}\n\nTotal: ${total} ${total === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`;
+}
+
 /** Documento de `presupuestos` a partir del carrito y los datos opcionales. */
 export function presupuestoDoc(cart, quote = {}) {
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  const comment = commentLine(quote);
   return {
-    detalle: clip(quoteLines(cart), LIMITS.detalle),
+    detalle: clip(comment ? `${quoteLines(cart)}\n${comment}` : quoteLines(cart), LIMITS.detalle),
     totalQty: Math.max(1, Math.min(LIMITS.totalQty, totalQty)),
     name: clip(quote.name, LIMITS.name),
     zone: clip(quote.zone, LIMITS.zone),

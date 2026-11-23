@@ -171,5 +171,55 @@ test('contacto y presupuesto en el build de producción', async (t) => {
       .some((line) => line.color === 'Negro Mate, Barra (105 cm), columna de 77 mm'));
   });
 
+  await t.test('la tarjeta del catálogo agrega el sillón con acabado y cuero, y el aviso abre el presupuesto', async () => {
+    await page.evaluate(() => sessionStorage.clear());
+    await go('/catalogo/');
+    await page.click('.product-card[data-item="Sillón BKF Premium"] .btn-add-cart');
+    await page.waitForFunction(() => JSON.parse(sessionStorage.getItem('kappa-cart') || '[]')
+      .some((line) => line.color === 'Negro Mate, cuero marrón'));
+    const action = '#toast.show .toast-action';
+    await page.waitForSelector(action, { visible: true });
+    await page.click(action);
+    await page.waitForSelector(drawer, { visible: true });
+    await page.type('#quote-comment', 'Necesito 2, uno de 80 cm de ancho');
+    const message = messageIn(await page.$eval(`${drawer} .btn-whatsapp-checkout`, (link) => link.href));
+    assert.match(message, /1\. Sillón BKF Premium - 1 unidad - Acabado: Negro Mate, cuero marrón/);
+    assert.match(message, /Comentarios o medidas: Necesito 2, uno de 80 cm de ancho/);
+    await page.click(`${drawer} .cart-secondary-actions button:last-child`);
+    const pdf = await page.evaluate(() => window.printedQuote);
+    assert.match(pdf, /Negro Mate, cuero marrón/);
+    assert.match(pdf, /Necesito 2, uno de 80 cm de ancho/);
+    await page.keyboard.press('Escape');
+    await page.waitForSelector(drawer, { hidden: true });
+  });
+
+  await t.test('en la ficha el botón está a mano: barra fija en el celular y caja de compra en escritorio', async () => {
+    await page.evaluate(() => sessionStorage.clear());
+    await go('/sillon-bkf/');
+    const bar = '.buy-bar.is-visible';
+    await page.waitForSelector(bar, { visible: true });
+    assert.ok(await page.$eval(bar, (el) => el.getBoundingClientRect().bottom <= innerHeight));
+    await choose(ficha, 'Color del cuero', '[aria-label="Negro"]');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForSelector(bar, { visible: true });
+    await page.click(`${bar} .btn-main`);
+    await page.waitForFunction(() => JSON.parse(sessionStorage.getItem('kappa-cart') || '[]')
+      .some((line) => line.color === 'Negro Mate, cuero negro'));
+
+    await page.setViewport({ width: 1440, height: 900 });
+    await go('/sillon-bkf/');
+    const bottom = await page.$eval(`${ficha} .bkf-actions .btn-main`, (button) => button.getBoundingClientRect().bottom);
+    assert.ok(bottom <= 900, `"Agregar al presupuesto" termina en y = ${bottom}, fuera de la primera pantalla`);
+    await page.setViewport({ width: 360, height: 740, isMobile: true, hasTouch: true });
+  });
+
+  await t.test('mobiliario comercial ofrece la cotización arriba, con los datos para cotizar escritos', async () => {
+    await go('/mobiliario-comercial/');
+    const cta = '[data-cta="mc_hero"] a[href^="https://wa.me/"]';
+    const top = await page.$eval(cta, (link) => link.getBoundingClientRect().top);
+    assert.ok(top < 740, `el botón empieza en y = ${top}`);
+    assert.match(messageIn(await page.$eval(cta, (link) => link.href)), /Rubro del local: \nProductos y cantidades: /);
+  });
+
   assert.deepEqual(pageErrors, []);
 });

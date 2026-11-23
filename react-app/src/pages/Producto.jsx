@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
-import PageHero from '../components/PageHero';
+import { Breadcrumb } from '../components/PageHero';
 import Picture from '../components/Picture';
+import { BuyBar, TrustList, focusMissingOption } from '../components/ProductBuy';
 import { Product3DOptions, Product3DPanel, Product3DViewer } from '../components/Product3D';
 import Showroom3D from '../components/Showroom3D';
 import { SOCIAL_IMAGE_SIZE, formatPrice, getCategory, getProductBySlug, ofName, priceQuestion, productHref, relatedProducts, socialImage, theName } from '../data/products';
@@ -47,18 +48,27 @@ function FichaGallery({ product, cfg, is3d, values, measures, onView, onMeasures
 }
 
 /**
- * Parte de arriba de la ficha: galería + datos. Si el producto tiene 3D, sus opciones (acabado, cuero, altura…) son
- * un solo selector, junto a "Agregar al presupuesto": cambian el 3D (con la foto a la vista, pasa al 3D) y el botón
- * agrega exactamente lo elegido. Antes el botón agregaba siempre "Negro Mate". Va con `key={slug}`: al pasar a otro
- * producto vuelve a la foto y a las opciones iniciales.
+ * Parte de arriba de la ficha: la caja de compra. Galería a la izquierda (fija en escritorio) y, a la derecha, el
+ * título, el precio, las opciones y "Agregar al presupuesto", todo en la primera pantalla (antes el h1 y la
+ * definición empujaban el botón a y = 1.258 px en 1440 x 900). La definición del producto (la frase citable) y las
+ * especificaciones siguen en el HTML, debajo de los botones.
+ *
+ * Si el producto tiene 3D, sus opciones (acabado, cuero, altura…) son un solo selector, junto a "Agregar al
+ * presupuesto": cambian el 3D (con la foto a la vista, pasa al 3D) y el botón agrega exactamente lo elegido. Va con
+ * `key={slug}`: al pasar a otro producto vuelve a la foto y a las opciones iniciales.
  */
-function FichaMain({ product, path }) {
+function FichaMain({ product, path, category }) {
   const { addToCart } = useCart();
   const cfg = PRODUCT_3D[product.slug];
+  const sectionRef = useRef(null);
+  const actionsRef = useRef(null);
   const [is3d, setIs3d] = useState(false);
   const [values, setValues] = useState(() => (cfg ? initialValues(cfg) : {}));
   const [measures, setMeasures] = useState(true);
   const quoteReady = !cfg || canQuote(cfg, values);
+  const variant = cfg ? cfg.describe(values) : 'Negro Mate';
+  const add = () => addToCart(product, variant);
+  const waPrice = whatsappUrlFor(priceQuestion(product), path);
   const onView = (to3d) => {
     if (to3d && !is3d) trackEvent('view_3d', { item_name: product.name, location: 'ficha_galeria', page_path: `${path}/` });
     setIs3d(to3d);
@@ -68,23 +78,36 @@ function FichaMain({ product, path }) {
     onView(true);
   };
   return (
-    <section className="bkf-product-section section-padding section-fade">
-      <div className="bkf-product-grid">
-        <div className="bkf-img-col">
-          <FichaGallery product={product} cfg={cfg} is3d={is3d} values={values} measures={measures} onView={onView} onMeasures={setMeasures} />
-          {product.badge && (
-            <div className="bkf-badges">
-              <span className="bkf-badge"><Icon name="check" /> {product.badge}</span>
-            </div>
-          )}
-        </div>
-        <div className="bkf-info-col">
-          <h2>{product.name}</h2>
+    <section ref={sectionRef} className="bkf-product-section section-padding pdp" aria-labelledby="pdp-title">
+      <Breadcrumb current={product.name} trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: `/catalogo/${category.slug}/`, label: category.name }]} />
+      <div className="bkf-product-grid pdp-grid">
+        <header className="pdp-head">
+          <p className="eyebrow">{category.name}{product.badge && <> · {product.badge}</>}</p>
+          <h1 id="pdp-title">{product.heading ?? product.name}</h1>
           <p className="bkf-tagline">{product.desc}</p>
+        </header>
+        <div className="bkf-img-col pdp-media">
+          <FichaGallery product={product} cfg={cfg} is3d={is3d} values={values} measures={measures} onView={onView} onMeasures={setMeasures} />
+        </div>
+        <div className="bkf-info-col pdp-buy">
           <div className="bkf-price-box">
+            <span className="bkf-price-name">{product.name}</span>
             <span className="bkf-price">{formatPrice(product) ?? 'Precio a consultar'}</span>
             <span className="bkf-price-note">{product.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
           </div>
+          {cfg && <Product3DOptions slug={product.slug} values={values} onChange={pickOption} />}
+          <div className="bkf-actions" data-cta="ficha_actions" ref={actionsRef}>
+            <button type="button" className="btn-main" disabled={!quoteReady} onClick={add}>
+              <Icon name="plus" /> {quoteReady ? 'Agregar al presupuesto' : 'Elegí la altura y el diámetro'}
+            </button>
+            <a href={waPrice} target="_blank" rel="noopener noreferrer" className="btn-outline">
+              <Icon name="whatsapp" /> Consultar precio
+            </a>
+          </div>
+          <TrustList />
+        </div>
+        <div className="pdp-details">
+          <p>{product.definition}</p>
           {product.specs?.length > 0 && (
             <ul className="bkf-specs">
               {product.specs.map((s) => (
@@ -92,17 +115,10 @@ function FichaMain({ product, path }) {
               ))}
             </ul>
           )}
-          {cfg && <Product3DOptions slug={product.slug} values={values} onChange={pickOption} />}
-          <div className="bkf-actions" data-cta="ficha_actions">
-            <button type="button" className="btn-main" disabled={!quoteReady} onClick={() => addToCart(product, cfg ? cfg.describe(values) : 'Negro Mate')}>
-              <Icon name="plus" /> {quoteReady ? 'Agregar al presupuesto' : 'Elegí la altura y el diámetro'}
-            </button>
-            <a href={whatsappUrlFor(priceQuestion(product), path)} target="_blank" rel="noopener noreferrer" className="btn-outline">
-              <Icon name="whatsapp" /> Consultar precio
-            </a>
-          </div>
         </div>
       </div>
+      <BuyBar targetRef={actionsRef} name={product.name} detail={quoteReady ? variant : 'Elegí la altura y la columna'} ready={quoteReady}
+        onAdd={add} onChoose={() => focusMissingOption(sectionRef.current)} waHref={waPrice} />
     </section>
   );
 }
@@ -162,15 +178,8 @@ export default function Producto() {
         ]}
         jsonLd={[productNode(product), ...(product.faq?.length ? [faq] : [])]}
       />
-      <PageHero
-        title={product.heading ?? product.name}
-        lead={product.definition}
-        current={product.name}
-        trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: `/catalogo/${category.slug}/`, label: category.name }]}
-      />
-
       <article aria-label={`Ficha de ${product.name}`}>
-      <FichaMain key={product.slug} product={product} path={path} />
+      <FichaMain key={product.slug} product={product} path={path} category={category} />
 
       {/* El producto en 3D que cambia con el scroll (three.js se descarga recién al acercarse a esta sección). */}
       {PRODUCT_3D[product.slug] && <Showroom3D key={product.slug} slug={product.slug} location="ficha_showroom" cta="ficha_3d_showroom" />}

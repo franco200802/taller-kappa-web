@@ -7,7 +7,7 @@ import Picture from '../components/Picture';
 import Modal from '../components/Modal';
 import ProductTable from '../components/ProductTable';
 import { OptionGroup, Product3DViewer } from '../components/Product3D';
-import { BASE_FLAT_SLUG, CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, priceQuestion, productHref, productPath } from '../data/products';
+import { CATEGORIES, FINISH_COLORS as COLORS, PRODUCTS, getCategory, priceQuestion, productHref, productPath } from '../data/products';
 import { PRODUCT_3D, canQuote, initialValues } from '../data/product3d';
 import { whatsappUrl, whatsappUrlFor } from '../data/contact';
 import { itemListNode } from '../lib/schema';
@@ -104,50 +104,67 @@ function QuickView({ product, open, onClose, onAdd }) {
           <Icon name="plus" /> {quoteReady ? 'Agregar al presupuesto' : 'Elegí la altura y el diámetro'}
         </button>
         <p className="modal-hint"><Icon name="whatsapp" /> Te pasamos el precio por WhatsApp</p>
+        {product.slug && (
+          <Link to={productHref(product)} className="link-arrow">Ver ficha completa <Icon name="chevron-right" /></Link>
+        )}
       </div>
     </div>
   );
 }
 
-function ProductCard({ p, onOpen }) {
+/**
+ * Variante con la que se agrega un producto desde su tarjeta, sin abrir la vista rápida: las opciones iniciales
+ * del 3D, las mismas con las que arrancan la ficha y la vista rápida ("Negro Mate, cuero marrón"). Antes la
+ * tarjeta agregaba solo "Negro Mate" y el sillón y el banco llegaban al presupuesto sin el color del cuero.
+ * Si el producto tiene opciones obligatorias (altura y columna de la base) devuelve null: hay que elegirlas.
+ */
+function cardVariant(p) {
+  const cfg = PRODUCT_3D[p.slug];
+  if (!cfg) return 'Negro Mate';
+  if (cfg.options.some((o) => o.requiredForQuote)) return null;
+  return cfg.describe(initialValues(cfg));
+}
+
+function ProductCard({ p, onOpen, priority = false }) {
   const { addToCart } = useCart();
   // Los productos de Firebase (cargados vía FireDB.getProducts en el admin)
   // no tienen garantizado un `slug` propio como los de data/products.js.
   // Sin esta guarda, un producto sin slug generaría un link roto real
   // a /catalogo/undefined en vez de simplemente no enlazar a un detalle.
   const detailHref = p.slug ? productHref(p) : null;
+  const has3d = Boolean(PRODUCT_3D[p.slug]);
+  const variant = cardVariant(p);
+  const category = getCategory(p.category)?.name;
   return (
     <article className="product-card" data-category={p.category} data-cta="catalogo_card" data-item={p.name}>
-      <div className={`stock-indicator ${p.stock ? 'in-stock' : 'no-stock'}`}>
-        <span className="stock-dot-small" /> Consultar disponibilidad
-      </div>
       <div className="card-img-wrapper" role="button" tabIndex={0} aria-label={`Vista rápida: ${p.name}`}
         onClick={() => onOpen(p)}
         // La vista rápida abre en 3D: con el mouse encima ya se empieza a descargar three.js.
-        onPointerEnter={PRODUCT_3D[p.slug] ? loadProduct3d : undefined}
+        onPointerEnter={has3d ? loadProduct3d : undefined}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(p); } }}>
-        {/* El rótulo va dentro de la foto: suelto en la tarjeta quedaba encima de "Consultar disponibilidad". */}
-        {p.badge && <span className="product-badge" aria-hidden="true">{p.badge}</span>}
-        <Picture src={p.image} alt={p.alt ?? p.name} loading="lazy" width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 384px" />
-        <div className="card-overlay" aria-hidden="true">Vista rápida</div>
+        {/* La primera foto está en la primera pantalla y es el LCP: va sin diferir y con prioridad alta. */}
+        <Picture src={p.image} alt={p.alt ?? p.name} loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} width={p.imageWidth} height={p.imageHeight} sizes="(max-width: 700px) calc(100vw - 32px), (max-width: 1100px) 50vw, 400px" />
+        <div className="card-overlay" aria-hidden="true">{has3d && <Icon name="cube" />}{has3d ? 'Vista rápida en 3D' : 'Vista rápida'}</div>
       </div>
       <div className="card-info">
+        {/* Rótulo: categoría y distintivo, en nodos de texto separados (el modo en inglés traduce cada uno). */}
+        <p className="card-eyebrow">{category}{p.badge && <> · {p.badge}</>}</p>
         <h2 className="card-title">{detailHref ? <Link to={detailHref}>{p.name}</Link> : p.name}</h2>
         <p className="card-specs-preview">{p.specs?.[0] || ''}</p>
+        <div className="card-actions">
+          {variant ? (
+            <button type="button" className="btn-add-cart" onClick={() => addToCart(p, variant)}><Icon name="plus" /> Agregar al presupuesto</button>
+          ) : (
+            <button type="button" className="btn-add-cart" aria-haspopup="dialog" onClick={() => onOpen(p)}>
+              <Icon name="plus" /> Elegir medidas
+            </button>
+          )}
+          {detailHref && <Link to={detailHref} className="btn-detail" aria-label={`Ver ficha de ${p.name}`}>Ver ficha</Link>}
+        </div>
         <a className="card-consult" target="_blank" rel="noopener noreferrer"
           href={p.slug ? whatsappUrlFor(priceQuestion(p), productPath(p)) : whatsappUrl(priceQuestion(p))}>
           <Icon name="whatsapp" /> Consultar precio
         </a>
-        <div className="card-actions">
-          {detailHref && <Link to={detailHref} className="btn-detail" aria-label={`Ver ficha de ${p.name}`}>Ver ficha</Link>}
-          {p.slug === BASE_FLAT_SLUG ? (
-            <button type="button" className="btn-add-cart" aria-haspopup="dialog" onClick={() => onOpen(p)}>
-              <Icon name="plus" /> Elegir medidas
-            </button>
-          ) : (
-            <button className="btn-add-cart" onClick={() => addToCart(p, 'Negro Mate')}><Icon name="plus" /> Agregar al presupuesto</button>
-          )}
-        </div>
       </div>
     </article>
   );
@@ -200,31 +217,40 @@ export default function Catalogo() {
         jsonLd={itemList}
       />
       <section id="catalogo" className="section-padding">
-        <h1 className="section-title">Muebles de hierro y cuero en Buenos Aires: sillones, bancos y bases de mesa</h1>
-        <p className="section-subtitle">
-          Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
-          Conocé en detalle nuestro producto insignia, el <Link to="/sillon-bkf/">sillón BKF</Link>, o leé <Link to="/bkf/">qué es el sillón BKF</Link>.
-        </p>
-        <p className="quote-note">
-          En Taller Kappa no se compra online: agregá los productos al presupuesto y te lo respondemos por WhatsApp, con precio y plazo de entrega.
-        </p>
-        <p className="catalog-categories">
-          Categorías:{' '}
-          {CATEGORIES.map((c, i) => (
-            <span key={c.key}>{i > 0 && ' · '}<Link to={`/catalogo/${c.slug}/`}>{c.heading}</Link></span>
-          ))}
-        </p>
-
-        <div className="filters" role="group" aria-label="Filtrar productos">
-          {FILTERS.map((f) => (
-            <button key={f.key} className={`filter-btn ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
-              <Icon name={f.icon} /> {f.label}
-            </button>
-          ))}
-        </div>
+        {/* Encabezado compacto: los productos entran en la primera pantalla. La presentación y las categorías
+            (con sus enlaces) siguen en el HTML, debajo de la grilla. */}
+        <header className="catalog-head">
+          <div>
+            <p className="eyebrow">Catálogo</p>
+            <h1>Muebles de hierro y cuero en Buenos Aires: sillones, bancos y bases de mesa</h1>
+          </div>
+          <div className="filters" role="group" aria-label="Filtrar productos">
+            {FILTERS.map((f) => (
+              <button key={f.key} type="button" aria-pressed={filter === f.key} className={`filter-btn ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
+                <Icon name={f.icon} /> {f.label}
+              </button>
+            ))}
+          </div>
+          <p className="quote-note catalog-lead">
+            En Taller Kappa no se compra online: agregá los productos al presupuesto y te lo respondemos por WhatsApp, con precio y plazo de entrega.
+          </p>
+        </header>
 
         <div className="products-grid" aria-live="polite">
-          {filtered.map((p) => <ProductCard key={p.id} p={p} onOpen={openModal} />)}
+          {filtered.map((p, i) => <ProductCard key={p.id} p={p} onOpen={openModal} priority={i === 0} />)}
+        </div>
+
+        <div className="catalog-intro">
+          <p>
+            Catálogo de sillones BKF, bancos y bases de mesa fabricados en hierro macizo y cuero vacuno.
+            Conocé en detalle nuestro producto insignia, el <Link to="/sillon-bkf/">sillón BKF</Link>, o leé <Link to="/bkf/">qué es el sillón BKF</Link>.
+          </p>
+          <p className="catalog-categories">
+            Categorías:{' '}
+            {CATEGORIES.map((c, i) => (
+              <span key={c.key}>{i > 0 && ' · '}<Link to={`/catalogo/${c.slug}/`}>{c.heading}</Link></span>
+            ))}
+          </p>
         </div>
       </section>
 

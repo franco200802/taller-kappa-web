@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { useCart } from '../context/CartContext';
 import Seo from '../components/Seo';
-import PageHero from '../components/PageHero';
+import { Breadcrumb } from '../components/PageHero';
+import { BuyBar, TrustList } from '../components/ProductBuy';
 import Picture from '../components/Picture';
 import ScrollText from '../components/ScrollText';
 import ShimmerText from '../components/ShimmerText';
@@ -68,11 +69,12 @@ export default function SillonBKF() {
   const current = is3d ? SHOTS[0] : SHOTS[shot];
   const [values3d, setValues3d] = useState(() => initialValues(CONFIG_3D));
   const [measures, setMeasures] = useState(true);
+  const actionsRef = useRef(null);
+  const variant = CONFIG_3D.describe(values3d);
+  const waPrice = whatsappUrlFor(priceQuestion(PRODUCT), '/sillon-bkf');
 
-  const handleAdd = (color) => {
-    // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
-    addToCart(PRODUCT, color);
-  };
+  // Mismo objeto (y mismo id) que usa el catálogo: si no, el sillón aparecía en dos líneas del presupuesto.
+  const handleAdd = () => addToCart(PRODUCT, variant);
 
   const open3d = () => {
     if (!is3d) trackEvent('view_3d', { item_name: PRODUCT.name, location: 'ficha_galeria', page_path: '/sillon-bkf/' });
@@ -109,20 +111,17 @@ export default function SillonBKF() {
           faqNode(FAQ_ITEMS, '/sillon-bkf'),
         ]}
       />
-      <PageHero
-        title="Sillón BKF de hierro y cuero, fabricado en Buenos Aires"
-        lead={(
-          <>
-            Taller Kappa fabrica y vende el sillón BKF, la clásica silla mariposa argentina, en hierro macizo de 12 mm y cuero vacuno, en su taller de San Martín, Buenos Aires.{' '}
-            <ShimmerText>Consultá la disponibilidad y pedí el presupuesto por WhatsApp</ShimmerText>, coordiná una visita al showroom (con turno) o retirá en el taller con coordinación previa; también enviamos a Capital Federal, GBA y todo el país.
-          </>
-        )}
-        current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]}
-      />
-
-      <section className="bkf-product-section section-padding section-fade">
-        <div className="bkf-product-grid">
-          <div className="bkf-img-col">
+      {/* Caja de compra: galería a la izquierda y, a la derecha, título, precio, opciones y botón, todo en la primera
+          pantalla (antes la foto empezaba en y = 655 px y "Agregar al presupuesto" quedaba en y = 1.477 px en 1440 x 900). */}
+      <section className="bkf-product-section section-padding pdp" aria-labelledby="pdp-title">
+        <Breadcrumb current="Sillón BKF" trail={[{ to: '/catalogo/', label: 'Catálogo' }, { to: '/catalogo/asientos/', label: 'Asientos' }]} />
+        <div className="bkf-product-grid pdp-grid">
+          <header className="pdp-head">
+            <p className="eyebrow">Asientos · Diseño icónico</p>
+            <h1 id="pdp-title">Sillón BKF de hierro y cuero, fabricado en Buenos Aires</h1>
+            <p className="bkf-tagline">Diseño argentino de 1938, fabricado con hierro macizo de 12 mm y cuero vacuno curtido al vegetal.</p>
+          </header>
+          <div className="bkf-img-col pdp-media">
             <figure className="bkf-gallery-main">
               {is3d ? (
                 <Product3DViewer slug={PRODUCT.slug} values={values3d} measures={measures} />
@@ -143,19 +142,37 @@ export default function SillonBKF() {
               </button>
             </div>
             {is3d && <Product3DPanel measures={measures} onMeasures={setMeasures} />}
-            <div className="bkf-badges">
-              <span className="bkf-badge"><Icon name="star" /> Diseño icónico</span>
-              <span className="bkf-badge"><Icon name="industry" /> Fábrica propia</span>
-              <span className="bkf-badge"><Icon name="truck" /> Envío a todo el país</span>
-            </div>
           </div>
-          <div className="bkf-info-col">
-            <h2>Sillón BKF Premium</h2>
-            <p className="bkf-tagline">Diseño argentino de 1938, fabricado con hierro macizo de 12 mm y cuero vacuno curtido al vegetal.</p>
+          <div className="bkf-info-col pdp-buy">
             <div className="bkf-price-box">
+              <span className="bkf-price-name">Sillón BKF Premium</span>
               <span className="bkf-price">{formatPrice(PRODUCT) ?? 'Precio a consultar'}</span>
               <span className="bkf-price-note">{PRODUCT.price?.note ?? 'Te lo pasamos por WhatsApp en el día, según acabado, cantidad y zona de entrega'}</span>
             </div>
+            {/* Un solo selector (antes había otro en el panel 3D y estas muestras agregaban al presupuesto con un
+                toque): las opciones cambian el 3D y el botón agrega exactamente lo elegido. */}
+            <div className="bkf-choose">
+              <p className="bkf-typed">
+                Se pide en{' '}
+                <TypeWriter sequences={FINISHES} srText="negro mate, blanco crema, cromado, verde oliva, rojo Kappa o el color que necesites" />
+              </p>
+              <Product3DOptions slug={PRODUCT.slug} values={values3d} onChange={pickOption} />
+            </div>
+            <div className="bkf-actions" data-cta="sillon-bkf_actions" ref={actionsRef}>
+              <button type="button" className="btn-main" onClick={handleAdd}>
+                <Icon name="plus" /> Agregar al presupuesto
+              </button>
+              <a href={waPrice} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                <Icon name="whatsapp" /> Consultar precio
+              </a>
+            </div>
+            <TrustList />
+          </div>
+          <div className="pdp-details">
+            <p>
+              Taller Kappa fabrica y vende el sillón BKF, la clásica silla mariposa argentina, en hierro macizo de 12 mm y cuero vacuno, en su taller de San Martín, Buenos Aires.{' '}
+              <ShimmerText>Consultá la disponibilidad y pedí el presupuesto por WhatsApp</ShimmerText>, coordiná una visita al showroom (con turno) o retirá en el taller con coordinación previa; también enviamos a Capital Federal, GBA y todo el país.
+            </p>
             <ul className="bkf-specs">
               <li><Icon name="check" /> <strong>Estructura:</strong> Hierro macizo redondo 12mm</li>
               <li><Icon name="check" /> <strong>Tapizado:</strong> Cuero vacuno de primera selección curtido al vegetal</li>
@@ -166,26 +183,9 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
               <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
             </ul>
-            {/* Un solo selector (antes había otro en el panel 3D y estas muestras agregaban al presupuesto con un
-                toque): las opciones cambian el 3D y el botón agrega exactamente lo elegido. */}
-            <div className="bkf-choose">
-              <p className="bkf-typed">
-                Se pide en{' '}
-                <TypeWriter sequences={FINISHES} srText="negro mate, blanco crema, cromado, verde oliva, rojo Kappa o el color que necesites" />
-              </p>
-              <Product3DOptions slug={PRODUCT.slug} values={values3d} onChange={pickOption} />
-            </div>
-            <div className="bkf-actions" data-cta="sillon-bkf_actions">
-              <button className="btn-main" onClick={() => handleAdd(CONFIG_3D.describe(values3d))}>
-                <Icon name="plus" /> Agregar al presupuesto
-              </button>
-              <a href={whatsappUrlFor(priceQuestion(PRODUCT), '/sillon-bkf')}
-                target="_blank" rel="noopener noreferrer" className="btn-outline">
-                <Icon name="whatsapp" /> Consultar precio
-              </a>
-            </div>
           </div>
         </div>
+        <BuyBar targetRef={actionsRef} name="Sillón BKF Premium" detail={variant} ready onAdd={handleAdd} waHref={waPrice} />
       </section>
 
       <section className="section-padding about-facts section-fade" aria-labelledby="como-comprar">

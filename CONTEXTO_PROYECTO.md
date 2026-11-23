@@ -37,11 +37,13 @@ termina en un link de WhatsApp con el detalle del pedido.
     credenciales sean placeholders el SDK ni siquiera se descarga (ver
     `loadFireDB()` en `lib/firebaseConfig.js`).
 - **Sin librería de animación**: anime.js se quitó en el rediseño de
-  sept. 2026. El único movimiento no pedido del sitio es la entrada de la
-  foto del hero de la home, en CSS puro (`@keyframes hero-reveal`).
-- **Tipografía**: Archivo (Omnibus-Type, Buenos Aires) desde Google Fonts,
-  una sola familia variable (ejes de ancho y peso). Íconos: Font Awesome 6
-  por CDN.
+  sept. 2026. Todo el movimiento es CSS (entrada del hero, menú del celular,
+  hover, contador del presupuesto) y se apaga con `prefers-reduced-motion`; el
+  único ligado al scroll es el showroom 3D (§5l).
+- **Tipografía** (desde el rediseño de nov. 2026, ver §5n): Instrument Serif
+  para h1, h2 y la marca, y Archivo a ancho normal para texto e interfaz. Las
+  dos autoalojadas en `public/fonts/` (licencias OFL al lado). Íconos: SVG en
+  línea (`Icon.jsx`).
 - **Google Analytics 4** — integración custom hecha a mano en
   `src/lib/analytics.js` (no es el snippet de gtag.js pegado directo, ni
   Google Tag Manager). Measurement ID real: `G-2FDMN51XDY`.
@@ -100,7 +102,7 @@ taller-kappa-web/                  (raíz del repo)
 │   │   │   ├── firebase.js        (init del SDK; solo lo carga firedb.js o Admin)
 │   │   │   └── firedb.js          (capa de acceso a Firestore)
 │   │   └── styles/
-│   │       └── global.css         (TODO el CSS del sitio, ~1.100 líneas, secciones numeradas)
+│   │       └── global.css         (TODO el CSS del sitio, ~1.600 líneas, secciones numeradas)
 │   └── scripts/
 │       └── prerender.js           (genera el HTML estático, ver sección 2)
 ```
@@ -135,11 +137,14 @@ tablas y al JSON-LD. Para una categoría nueva se agrega a `CATEGORIES`.
   (reescrito desde cero en el rediseño de sept. 2026). Está organizado en
   secciones numeradas (`/* ---------- 10. Carrito / presupuesto ---------- */`).
   Antes de crear estilos nuevos, buscá si ya existe una sección relacionada.
-- **Tokens de diseño** en `:root` (sección 1): colores `--cal` (fondo),
-  `--blanco`, `--hierro` (texto y botón principal), `--grafito`, `--linea`,
-  `--kappa` (rojo de marca: logo, estado activo, foco) y `--wa` (verde
-  WhatsApp oscurecido para contraste AA). Escala tipográfica `--t-*`.
-  Usá los tokens; no agregues hex sueltos.
+- **Tokens de diseño** en `:root` (sección 1): superficies `--cal` (papel,
+  fondo), `--arena` (lino, secciones alternas y fondo de fotos) y `--blanco`
+  (hueso, tarjetas); `--hierro` (texto y botón principal), `--grafito`
+  (secundario), `--linea` (divisores), `--borde` (controles, 3:1), `--kappa`
+  (rojo de marca: logo, estado activo, foco), `--cuero` (numerales) y `--wa`
+  (verde WhatsApp oscurecido para contraste AA). Fuentes `--font` y `--serif`,
+  escala `--t-*`, radios `--r`, `--r-img`, `--r-pill`. Usá los tokens; no
+  agregues hex sueltos.
 - **Alineación a la columna**: toda sección de ancho completo usa
   `padding-inline: var(--pad-x)`, que alinea su contenido a la columna de
   `--max` (1200px). **No** uses `max-width + margin: auto` en los hijos de
@@ -554,6 +559,47 @@ pedido (el rediseño de sept. 2026 no tenía).
   productos). Con ACES y luz cálida el cuero marrón se veía naranja.
 - **Celular, ancho:** además del alto, el encuadre deja entrar el producto girado con sus cotas y etiquetas
   (en el banco, la etiqueta "Alto" quedaba cortada).
+
+## 5n. Rediseño premium y conversión (22/11/2026)
+
+Diagnóstico con mediciones, cambios, comparativa y pendientes en
+`docs/mejora-premium-2026-11.md`. Lo que hay que saber al tocar el código:
+
+- **Sistema de diseño** (cabecera y sección 1 de `global.css`): títulos h1/h2 en
+  `--serif` (un solo peso: la jerarquía es el tamaño), h3 y texto en Archivo.
+  Rótulos editoriales con `.eyebrow` (mayúscula inicial, nunca mayúsculas
+  forzadas). Botones en píldora (`.btn-main`, `.btn-outline`, `.btn-wa` para lo
+  que abre WhatsApp). Fotos casi sin redondeo (`--r-img`) sobre `--arena`. Los
+  pies de foto son placas de papel, no rótulos negros.
+- **Archivo ya no tiene eje de ancho**: el archivo es `archivo-latin-v2.woff2`,
+  instancia a 100 %. `font-stretch` no hace nada: no volver a usarlo.
+- **Fichas de producto = caja de compra** (`.pdp`, sección 13): breadcrumb, y en
+  la grilla `head` (rótulo + h1 + bajada), `media` (galería, fija en escritorio),
+  `buy` (precio, opciones, botones, `TrustList`) y `details` (la definición
+  citable y las especificaciones). El h1 de la ficha vive ahí, no en `PageHero`.
+  La medida de control: en 1440 x 900 "Agregar al presupuesto" tiene que quedar
+  en la primera pantalla (lo prueba `tests/e2e/conversion.test.mjs`).
+- **Barra de compra** (`components/ProductBuy.jsx`, `BuyBar`): aparece cuando los
+  botones de la ficha no se ven y agrega la variante elegida. Se esconde cerca de
+  `.bkf-stage-actions`, `.cta-section` y el pie; mientras se ve, el WhatsApp
+  flotante se oculta (CSS con `:has`). Oculta es `inert`.
+- **Variante desde la tarjeta del catálogo**: `cardVariant()` agrega las opciones
+  iniciales del 3D (las mismas de la ficha); si hay opciones obligatorias (la
+  base) abre la vista rápida.
+- **Mensaje de WhatsApp del presupuesto**: lo arma `quoteMessage()` en
+  `lib/leads.js` (con pruebas). El campo opcional "Comentarios o medidas a
+  medida" (`quote.comment`, 400 caracteres) va en el mensaje, en el PDF y, en
+  Firestore, dentro de `detalle`: no hay campo nuevo para las reglas.
+- **Aviso con acción**: `showToast(msg, { label, onClick })`. Al agregar un
+  producto ofrece "Ver presupuesto" y el contador de la barra late una vez.
+- **CTA arriba** en `/mobiliario-comercial/` y `/contacto/` (`PageHero` recibe los
+  botones como `children`, clase `.page-hero-actions`).
+- **3D**: con contexto WebGL perdido, el showroom pasa a la foto y el visor avisa;
+  con `deviceMemory` o `hardwareConcurrency` de 2 o menos, el showroom no carga
+  la escena (igual que con ahorro de datos).
+- **Inglés**: los textos nuevos están en `en.js` y el contador "N unidades" tiene
+  regla en `translate.js`. Un rótulo armado con variables va en nodos de texto
+  separados (ver `.card-eyebrow`), así se traduce cada parte.
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 

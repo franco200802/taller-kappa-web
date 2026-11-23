@@ -41,6 +41,13 @@ export function Product3DViewer({ slug, values, measures }) {
           },
         });
         viewerRef.current.setMeasures(measures);
+        // Contexto WebGL perdido (poca memoria, volver de otra app): se libera el visor y se avisa, con la salida a las
+        // fotos y a WhatsApp, en vez de dejar un recuadro en blanco.
+        hostRef.current.querySelector('canvas')?.addEventListener('webglcontextlost', () => {
+          try { viewerRef.current?.dispose(); } catch { /* el contexto ya no existe */ }
+          viewerRef.current = null;
+          if (!cancelled) setStatus('error');
+        }, { once: true });
         setStatus('ready');
       })
       .catch(() => !cancelled && setStatus('error'));
