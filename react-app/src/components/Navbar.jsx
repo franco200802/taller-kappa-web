@@ -1,6 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import Icon from './Icon';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useLang } from '../i18n/LangContext';
 
@@ -16,8 +16,38 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { totalItems, setIsOpen } = useCart();
+  const { totalItems, setIsOpen, addedCount } = useCart();
   const { isEn, toggle } = useLang();
+  const { pathname } = useLocation();
+  const burgerRef = useRef(null);
+  const [bumped, setBumped] = useState(false);
+
+  // Menú del celular: se cierra al cambiar de página y con Escape (el foco vuelve al botón), y mientras
+  // está abierto la página de atrás no se desplaza (ocupa toda la pantalla).
+  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      setOpen(false);
+      burgerRef.current?.focus();
+    };
+    document.addEventListener('keydown', onKey);
+    document.documentElement.classList.add('menu-open');
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.documentElement.classList.remove('menu-open');
+    };
+  }, [open]);
+
+  // Cada producto agregado hace "latir" una vez el contador del presupuesto (CSS, sin movimiento si se pidió
+  // reducirlo). addedCount arranca en 0 igual en el prerender y en el cliente.
+  useEffect(() => {
+    if (!addedCount) return undefined;
+    setBumped(true);
+    const timer = setTimeout(() => setBumped(false), 600);
+    return () => clearTimeout(timer);
+  }, [addedCount]);
 
   return (
     <nav id="main-nav">
@@ -25,7 +55,7 @@ export default function Navbar() {
         Taller <span>Kappa</span>
       </NavLink>
 
-      <ul className={`nav-menu ${open ? 'open' : ''}`} role="list">
+      <ul id="nav-menu" className={`nav-menu ${open ? 'open' : ''}`} role="list">
         {NAV_LINKS.map((l) => (
           <li key={l.to}>
             <NavLink
@@ -57,7 +87,7 @@ export default function Navbar() {
         </button>
         <button
           type="button"
-          className="cart-icon-container"
+          className={`cart-icon-container${bumped ? ' is-bumped' : ''}`}
           aria-label="Abrir presupuesto"
           onClick={() => setIsOpen(true)}
         >
@@ -67,9 +97,12 @@ export default function Navbar() {
           <span className="cart-badge" style={{ opacity: totalItems > 0 ? 1 : 0 }}>{totalItems}</span>
         </button>
         <button
+          ref={burgerRef}
+          type="button"
           className="hamburger"
           aria-label="Abrir menú"
           aria-expanded={open}
+          aria-controls="nav-menu"
           onClick={() => setOpen((o) => !o)}
         >
           <span /><span /><span />

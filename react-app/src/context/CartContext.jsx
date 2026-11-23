@@ -2,11 +2,12 @@ import { createContext, useContext, useEffect, useRef, useState, useCallback, us
 import { QUOTE_KINDS } from '../data/contact';
 import { trackEvent } from '../lib/analytics';
 import { isFirebaseConfigured, loadFireDB } from '../lib/firebaseConfig';
-import { presupuestoDoc, presupuestoKey, quoteLines } from '../lib/leads';
+import { LIMITS, presupuestoDoc, presupuestoKey, quoteMessage as buildQuoteMessage } from '../lib/leads';
 
 const CartContext = createContext(null);
 const STORAGE_KEY = 'kappa-cart';
 const QUOTE_KEY = 'kappa-quote-contact';
+const EMPTY_QUOTE = { name: '', zone: '', kind: '', comment: '' };
 
 export function CartProvider({ children }) {
   // El carrito guardado se lee DESPUÉS de montar, no en el estado inicial:
@@ -16,17 +17,28 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  // { msg, action?: { label, onClick } } o null. La acción ("Ver presupuesto") es opcional.
   const [toast, setToast] = useState(null);
+  // Cuenta los productos agregados: la barra la usa para que el contador "lata" una vez por cada uno.
+  const [addedCount, setAddedCount] = useState(0);
   // Datos opcionales que el taller necesita para cotizar (el destino cambia el costo de envío).
   // `kind` separa la consulta de un particular de la de un local o empresa (cambia cómo responde el taller).
-  const [quote, setQuote] = useState({ name: '', zone: '', kind: '' });
+  // `comment`: medidas a medida u otros detalles ("Comentarios o medidas" en el mensaje).
+  const [quote, setQuote] = useState(EMPTY_QUOTE);
 
   useEffect(() => {
     try {
       const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
       if (Array.isArray(saved) && saved.length) setCart(saved);
       const savedQuote = JSON.parse(sessionStorage.getItem(QUOTE_KEY) || 'null');
-      if (savedQuote && typeof savedQuote === 'object') setQuote({ name: String(savedQuote.name ?? ''), zone: String(savedQuote.zone ?? ''), kind: QUOTE_KINDS[savedQuote.kind] ? savedQuote.kind : '' });
+      if (savedQuote && typeof savedQuote === 'object') {
+        setQuote({
+          name: String(savedQuote.name ?? ''),
+          zone: String(savedQuote.zone ?? ''),
+          kind: QUOTE_KINDS[savedQuote.kind] ? savedQuote.kind : '',
+          comment: String(savedQuote.comment ?? '').slice(0, LIMITS.comment),
+        });
+      }
     } catch { /* storage bloqueado o JSON inválido: se arranca vacío */ }
     setLoaded(true);
   }, []);
@@ -43,14 +55,17 @@ export function CartProvider({ children }) {
   }, [cart, quote, loaded]);
 
   // Un solo timer: si se muestran dos toasts seguidos, el primero no debe
-  // cerrar prematuramente al segundo.
+  // cerrar prematuramente al segundo. Con una acción dura un poco más (hay que llegar a tocarla).
   const toastTimer = useRef(null);
   useEffect(() => () => clearTimeout(toastTimer.current), []);
-  const showToast = useCallback((msg) => {
+  const hideToast = useCallback(() => { clearTimeout(toastTimer.current); setToast(null); }, []);
+  const showToast = useCallback((msg, action = null) => {
     clearTimeout(toastTimer.current);
-    setToast(msg);
-    toastTimer.current = setTimeout(() => setToast(null), 3000);
+    setToast({ msg, action });
+    toastTimer.current = setTimeout(() => setToast(null), action ? 5000 : 3000);
   }, []);
+
+  const openQuote = useCallback(() => { hideToast(); setIsOpen(true); }, [hideToast]);
 
   const addToCart = useCallback((product, color = 'Negro Mate') => {
     const pid = product.id || product._id;
@@ -62,10 +77,12 @@ export function CartProvider({ children }) {
       }
       return [...prev, { key, product, color, qty: 1 }];
     });
-    showToast(`"${product.name}" (${color}) agregado al presupuesto`);
+    setAddedCount((n) => n + 1);
+    // El aviso trae el atajo al presupuesto: antes había que encontrar el ícono de la barra.
+    showToast(`"${product.name}" (${color}) agregado al presupuesto`, { label: 'Ver presupuesto', onClick: openQuote });
     // Se mide acá y no en cada botón: así cuentan igual la landing, la ficha, el catálogo y el modal.
     trackEvent('add_to_cart', { item_name: product.name, color, page_path: window.location.pathname });
-  }, [showToast]);
+  }, [showToast, openQuote]);
 
   const changeQty = useCallback((key, delta) => {
     setCart((prev) => prev
@@ -79,17 +96,8 @@ export function CartProvider({ children }) {
 
   const totalItems = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart]);
 
-  const quoteMessage = useMemo(() => {
-    if (cart.length === 0) return '';
-    // Pedido de presupuesto, no de compra: no se cobra nada en el sitio. El texto va
-    // ordenado para que el taller pueda responder con precio y plazo sin repreguntar.
-    const lines = quoteLines(cart);
-    const name = quote.name.trim();
-    const zone = quote.zone.trim();
-    const kind = QUOTE_KINDS[quote.kind];
-    const details = [name && `Nombre: ${name}`, kind && `Es para: ${kind}`, zone && `Zona de entrega: ${zone}`].filter(Boolean).join('\n');
-    return `Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n${lines}\n\nTotal: ${totalItems} ${totalItems === 1 ? 'unidad' : 'unidades'}${details ? `\n${details}` : ''}\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!`;
-  }, [cart, quote, totalItems]);
+  // Pedido de presupuesto, no de compra: no se cobra nada en el sitio (ver quoteMessage en lib/leads.js).
+  const quoteMessage = useMemo(() => buildQuoteMessage(cart, quote), [cart, quote]);
 
   // Copia del presupuesto en Firestore, para verlo en /admin. Corre en segundo plano al tocar el
   // botón de WhatsApp y nunca lo demora ni lo bloquea. Si el mismo pedido ya se guardó (la persona
@@ -110,10 +118,10 @@ export function CartProvider({ children }) {
   }, [cart, quote]);
 
   const value = useMemo(() => ({
-    cart, totalItems, isOpen, toast,
+    cart, totalItems, isOpen, toast, addedCount,
     quote, setQuote,
-    setIsOpen, addToCart, changeQty, removeItem, showToast, quoteMessage, saveQuote,
-  }), [cart, totalItems, isOpen, toast, quote, addToCart, changeQty, removeItem, showToast, quoteMessage, saveQuote]);
+    setIsOpen, addToCart, changeQty, removeItem, showToast, hideToast, quoteMessage, saveQuote,
+  }), [cart, totalItems, isOpen, toast, addedCount, quote, addToCart, changeQty, removeItem, showToast, hideToast, quoteMessage, saveQuote]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

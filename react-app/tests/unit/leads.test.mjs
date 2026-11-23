@@ -4,8 +4,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { BASE_FLAT_COLUMNS, BASE_FLAT_HEIGHTS, BASE_FLAT_SLUG, describeBaseFlat, getProductBySlug } from '../../src/data/products.js';
 import {
-  ESTADO_KEYS, LIMITS, contactoDoc, countByEstado, estadoOf, filterLeads, normalize,
-  presupuestoDoc, presupuestoKey, quoteLines, toCsv,
+  ESTADO_KEYS, LIMITS, commentLine, contactoDoc, countByEstado, estadoOf, filterLeads, normalize,
+  presupuestoDoc, presupuestoKey, quoteLines, quoteMessage, toCsv,
 } from '../../src/lib/leads.js';
 
 const cart = [
@@ -67,6 +67,32 @@ test('presupuestoDoc descarta un tipo de cliente desconocido y acota cantidades 
   assert.equal(doc.kind, '');
   assert.equal(doc.totalQty, LIMITS.totalQty);
   assert.equal(doc.name, '');
+});
+
+test('quoteMessage sin datos opcionales es el mensaje de siempre', () => {
+  assert.equal(quoteMessage(cart, {}),
+    'Hola Taller Kappa! Quisiera pedir un presupuesto:\n\n'
+    + '1. Sillón BKF Premium - 2 unidades - Acabado: Negro Mate\n2. Banco BKF - 1 unidad - Acabado: Cromado\n\n'
+    + 'Total: 3 unidades\n\nPor favor, indicarme el precio final y el plazo de entrega. Gracias!');
+  assert.equal(quoteMessage([], { name: 'Ana' }), '');
+});
+
+test('quoteMessage suma nombre, tipo de cliente, zona y comentarios en ese orden', () => {
+  const msg = quoteMessage(cart.slice(1), { name: ' Ana ', kind: 'empresa', zone: 'Palermo', comment: '  Para un local,\n en blanco crema ' });
+  assert.match(msg, /Total: 1 unidad\nNombre: Ana\nEs para: Local o empresa\nZona de entrega: Palermo\nComentarios o medidas: Para un local, en blanco crema\n\nPor favor/);
+});
+
+test('commentLine recorta, junta los renglones y respeta el límite', () => {
+  assert.equal(commentLine({ comment: '   ' }), '');
+  assert.equal(commentLine({}), '');
+  assert.equal(commentLine({ comment: 'x'.repeat(1000) }).length, 'Comentarios o medidas: '.length + LIMITS.comment);
+});
+
+test('presupuestoDoc lleva los comentarios dentro del detalle (sin campos nuevos para las reglas)', () => {
+  const doc = presupuestoDoc(cart, { comment: 'Medidas: 80 cm de ancho' });
+  assert.equal(doc.detalle, `${quoteLines(cart)}\nComentarios o medidas: Medidas: 80 cm de ancho`);
+  assert.deepEqual(Object.keys(doc).sort(), ['detalle', 'kind', 'name', 'totalQty', 'zone']);
+  assert.notEqual(presupuestoKey(doc), presupuestoKey(presupuestoDoc(cart)));
 });
 
 test('presupuestoKey cambia cuando cambia el pedido y se repite cuando es el mismo', () => {
