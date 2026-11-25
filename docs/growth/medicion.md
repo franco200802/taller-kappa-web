@@ -32,8 +32,9 @@ y en el presupuesto ese enlace incluye nombre, zona y comentario (verificado el
 25/11/2026). Corregido el 25/11/2026 ocultando el parámetro `text` en GA4
 ([`ga4-configuracion.md`](ga4-configuracion.md) §3 A); verificado: llega `text=(redacted)`.
 
-Páginas vistas: hasta aplicar el cambio B de ese documento (el día del deploy),
-cada navegación interna cuenta dos `page_view`. Las consultas (`whatsapp_click`) no se duplican.
+Páginas vistas: hasta el 25/11/2026 a las 19:30 (deploy del PR #34 y cambio B de ese
+documento) cada navegación interna contaba dos `page_view`; desde entonces, una. Al comparar
+períodos, la serie tiene un corte en esa fecha. Las consultas (`whatsapp_click`) nunca se duplicaron.
 
 ## 2. Lo que pasa en WhatsApp: el registro de consultas
 
@@ -66,7 +67,7 @@ de presupuesto y de cierre por segmento, y ticket promedio B2B frente a B2C.
 
 ## 3. Configuración de GA4
 
-Aplicada el 25/11/2026 salvo el cambio B, que va el día del deploy. Detalle en
+Aplicada completa el 25/11/2026 (el cambio B, minutos después del deploy). Detalle en
 [`ga4-configuracion.md`](ga4-configuracion.md): ocultar el mensaje de WhatsApp en
 los clics de salida, un solo `page_view` por página y las dimensiones `Boton o
 zona` (`location`), `Producto` (`item_name`), `Tipo de cliente`, `Presupuesto con

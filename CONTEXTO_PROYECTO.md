@@ -642,8 +642,8 @@ al tocar el código:
 - **`page_view` manual, uno por página**: lo manda `FloatWaSentinel` (`Layout.jsx`) un
   cuadro después de que la página nueva montó, con `page_title`. En GA4 tiene que estar
   **apagado** "Cambios de página basados en eventos del historial del navegador" (medición
-  mejorada); con eso prendido, cada navegación interna cuenta dos. **Al 25/11/2026 sigue
-  prendido:** se apaga el día del deploy de la rama growth. No volver a llamar a
+  mejorada); con eso prendido, cada navegación interna cuenta dos. **Apagado el 25/11/2026**,
+  minutos después del deploy del PR #34; no volver a prenderlo. No volver a llamar a
   `trackPageview` desde `Layout`: el título todavía es el de la página anterior.
 - **Datos personales en GA4**: el `click` automático de "Clics de salida" manda el enlace
   completo, y el de WhatsApp del presupuesto lleva nombre, zona y comentario. Se tapa con
