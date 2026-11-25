@@ -1,9 +1,11 @@
 # Perfil de Empresa de Google: corrección propuesta (25/11/2026)
 
 > Perfil "Taller Kappa", **verificado**, administrado con la cuenta del dueño.
-> Todo lo de la columna "Hoy" se leyó el 25/11/2026 en el editor del perfil, sin
-> guardar nada. **No se modificó nada.** Cada fila dice si el cambio está listo
-> para aplicar con tu autorización o si antes necesita un dato tuyo.
+> Todo lo de la columna "Hoy" se leyó el 25/11/2026 en el editor del perfil.
+> **Aplicado ese mismo día, con autorización del dueño:** enlace con UTM,
+> Instagram y servicios (ver §2). Los cambios quedan "en revisión" de Google
+> (hasta 10 minutos los datos de contacto y hasta 1 día los servicios). El logo
+> no se pudo subir (ver §2). Teléfono y horario no se tocaron.
 > Rendimiento de junio a noviembre: 234 interacciones (211 pedidos de cómo
 > llegar, 20 clics al sitio, 3 llamadas).
 
@@ -32,6 +34,15 @@ conviene borrarla desde esa cuenta antes de que Google la quite. No se tocó.
 
 ## 2. Cambios listos para aplicar (requieren tu autorización)
 
+**Estado al 25/11/2026:** 1 (enlace con UTM), 2 (Instagram) y 4-5 (servicios) **aplicados**.
+En los servicios personalizados, el de bases de mesa se cargó **sin** nombrar a YPF Full
+hasta que confirmes que se puede nombrar al cliente en más lugares. **El 3 (logo) no se
+pudo hacer:** el cargador de fotos del perfil está dentro de un marco de Google que no deja
+a la extensión elegir el archivo. Subilo vos desde el perfil → Fotos → Logotipo:
+`react-app/public/images/logo-taller-kappa.jpg` (1024 x 1024, 52 KB). El 6 (atributos) queda
+para cuando confirmes entregas y retiro en el formulario de Google.
+El panel del perfil dice que **605 personas lo vieron el mes pasado**.
+
 | # | Campo | Propuesta | Por qué |
 |---|---|---|---|
 | 1 | Sitio web | `https://tallerkappa.com.ar/?utm_source=google&utm_medium=organic&utm_campaign=perfil-empresa` | Separar en GA4 las visitas que vienen del perfil, sin sacarlas del canal orgánico. La canonical del sitio no cambia |
@@ -47,7 +58,8 @@ Solo datos que el sitio ya publica (descripciones de hasta 300 caracteres):
 
 - **Bases de mesa para bares y restaurantes:** Base de Mesa Flat de chapa de
   10 mm con columna de 77 o 101 mm, en altura de mesa (73 cm) o de barra (105 cm).
-  Se cotiza por cantidad, con factura A o B. Las entregamos para las tiendas YPF Full.
+  Se cotiza por cantidad, con factura A o B. *(Cargado sin la frase "Las entregamos
+  para las tiendas YPF Full" hasta que confirmes que se puede nombrar al cliente.)*
 - **Estructuras de hierro por encargo:** Hacemos la parte de hierro de sillas,
   sillones, bancos y mesas con las medidas y el acabado del proyecto, para
   mueblerías, fabricantes de muebles y estudios de arquitectura. Se puede pedir

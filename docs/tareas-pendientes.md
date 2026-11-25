@@ -35,13 +35,14 @@ Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
    fabricantes y estudios con plano, boceto o foto, y el resto de la lista de
    `docs/growth/pull-request.md` §1. ~~Que se puede vender solo la estructura~~:
    **confirmado el 25/11/2026.**
-3. **Autorizar (o hacer) los cambios de cuenta:**
-   - GA4 (`docs/growth/ga4-configuracion.md`): ocultar el parámetro `text` en los
-     clics de salida (**hoy llega a Google el nombre que el cliente escribe en el
-     presupuesto**), apagar los cambios de página por historial (cada navegación
-     interna cuenta dos páginas vistas) y crear 7 dimensiones (+1 opcional).
-   - Perfil de Empresa (`docs/growth/perfil-google.md`): enlace con UTM, Instagram,
-     logo y servicios. Teléfono y horario **no** se tocan hasta que los confirmes.
+3. **Cambios de cuenta (autorizados el 25/11/2026):**
+   - GA4: ~~ocultar `text`~~ y ~~8 dimensiones~~ **hechos el 25/11**. Falta **apagar
+     "Cambios de página basados en eventos del historial del navegador" el día del
+     merge** (`docs/growth/ga4-configuracion.md` §3 B).
+   - Perfil de Empresa: ~~enlace con UTM, Instagram y servicios~~ **hechos el 25/11**
+     (en revisión de Google). **Te toca subir el logo** desde el perfil → Fotos →
+     Logotipo: `react-app/public/images/logo-taller-kappa.jpg` (la extensión no puede
+     elegir archivos en ese cargador). Teléfono y horario siguen sin tocar.
    - Borrar desde tu cuenta la reseña que figura escrita por la misma cuenta que
      administra el perfil (Google no permite que el negocio opine sobre sí mismo).
 4. **Datos:** qué teléfono va en Google (hoy figura el 011 4753-0099: 3 llamadas en

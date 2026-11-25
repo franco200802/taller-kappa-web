@@ -170,13 +170,13 @@ Solo lo que requiere información o autorización tuya. El detalle y el orden
 están en [`docs/tareas-pendientes.md`](../tareas-pendientes.md), sección del 25/11.
 
 1. **Revisar y publicar la rama** (merge a `main`; el deploy es automático).
-2. **Autorizar (o hacer) los cambios de cuenta:** en GA4, ocultar el mensaje de
-   WhatsApp en los clics de salida (hoy llega el nombre del cliente), un solo
-   `page_view` por página y 7 dimensiones (+1 opcional), en
-   [`ga4-configuracion.md`](ga4-configuracion.md); en el Perfil de Empresa, enlace
-   con UTM, Instagram, logo y servicios, en [`perfil-google.md`](perfil-google.md).
-   Teléfono y horario no se tocan hasta que los confirmes. Además, borrar la
-   reseña escrita desde la cuenta que administra el perfil.
+2. **Cambios de cuenta:** autorizados y aplicados el 25/11/2026: en GA4, el
+   mensaje de WhatsApp oculto y 8 dimensiones; en el Perfil de Empresa, enlace con
+   UTM, Instagram y servicios ([`ga4-configuracion.md`](ga4-configuracion.md),
+   [`perfil-google.md`](perfil-google.md)). Falta: apagar el `page_view` duplicado
+   el día del merge, que subas el logo (la extensión no puede elegir el archivo en
+   ese cargador) y que borres la reseña escrita desde la cuenta que administra el
+   perfil. Teléfono y horario siguen sin tocar hasta que los confirmes.
 3. **Confirmar datos:** qué teléfono va en Google (11 6124-2498 o el
    011 4753-0099), horario real (¿8 o 9?) y una
    sola frase de plazo de entrega (el sitio dice "depende del stock"; la

@@ -635,13 +635,17 @@ al tocar el código:
 - **`page_view` manual, uno por página**: lo manda `FloatWaSentinel` (`Layout.jsx`) un
   cuadro después de que la página nueva montó, con `page_title`. En GA4 tiene que estar
   **apagado** "Cambios de página basados en eventos del historial del navegador" (medición
-  mejorada); con eso prendido, cada navegación interna cuenta dos. No volver a llamar a
+  mejorada); con eso prendido, cada navegación interna cuenta dos. **Al 25/11/2026 sigue
+  prendido:** se apaga el día del deploy de la rama growth. No volver a llamar a
   `trackPageview` desde `Layout`: el título todavía es el de la página anterior.
 - **Datos personales en GA4**: el `click` automático de "Clics de salida" manda el enlace
   completo, y el de WhatsApp del presupuesto lleva nombre, zona y comentario. Se tapa con
-  "Ocultar datos → parámetros de consulta de URL: `text`" en el flujo
-  (`docs/growth/ga4-configuracion.md`). Si se agrega otro enlace externo con datos de la
-  persona en la URL, sumar ese parámetro ahí.
+  "Ocultar datos → parámetros de consulta de URL: `text`" en el flujo (**activo desde el
+  25/11/2026**, verificado: llega `text=(redacted)`). Si se agrega otro enlace externo con datos
+  de la persona en la URL, sumar ese parámetro ahí. Dimensiones registradas el 25/11/2026:
+  `location`, `item_name`, `customer_type`, `has_zone`, `has_comment`, `ai_source`, `interest` y
+  `color` (`docs/growth/ga4-configuracion.md`). Si se agrega un parámetro nuevo que se quiera ver
+  en informes, hay que registrarlo ahí también.
 - **Proyectos**: botón arriba (`proyectos_hero`) y "Cotizar algo similar" en cada caso
   (`proyecto_<slug>`, `projectQuoteMessage()` en `data/contact.js`). Los mensajes de empresa
   (`B2B_QUOTE_MESSAGE`, estructuras, casos) usan `whatsappUrlFor`, que agrega la URL de la

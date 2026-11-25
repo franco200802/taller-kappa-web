@@ -1,9 +1,9 @@
 # GA4: configuración propuesta (25/11/2026)
 
 > Propiedad `Taller Kappa` (a387757710, p528575123), flujo web `TallerKappa`
-> (13914609544, `G-2FDMN51XDY`). **Nada de esto se aplicó**: son cambios de
-> cuenta y esperan tu autorización. Todo lo de "estado actual" se leyó hoy en
-> la cuenta, sin modificar nada.
+> (13914609544, `G-2FDMN51XDY`). **Aplicado el 25/11/2026 con autorización del
+> dueño: A (ocultar `text`) y C (8 dimensiones). B se aplica el día del deploy;
+> D y E no se hicieron.** El §1 describe la cuenta antes de los cambios.
 >
 > Objetivo: saber **qué producto, qué página y qué botón** generan las consultas
 > comerciales, sin datos personales y sin contar dos veces.
@@ -132,5 +132,12 @@ la página`, `Boton o zona` y `Producto`; valor `Número de eventos`; filtro
 | D. Borrar `link_url` | Borra ese parámetro del período (no los eventos) | **No** |
 | E. Exploración | Ninguno | Sí, se borra |
 
-Con tu OK, los aplico desde tu Chrome en este orden: C y A ya; B el día del
-deploy; D y E solo si los pedís.
+### Estado al 25/11/2026
+
+| Cambio | Estado | Verificación |
+|---|---|---|
+| A. Ocultar `text` | **Aplicado.** Ocultar datos: correo activo y 1 clave de parámetro de URL (`text`) | La prueba de la pantalla devuelve `https://wa.me/541161242498?text=(redacted)`. El recorrido con el gtag.js real (envíos abortados) mostró los tres `click` a WhatsApp con `text=(redacted)` y ningún dato personal |
+| B. Sin cambios de página por historial | **Pendiente: el día del deploy** de la rama, para que el `page_view` del sitio ya tenga el título correcto | Repetir el recorrido: un `page_view` por navegación |
+| C. Dimensiones | **Aplicado.** 8 dimensiones de alcance Evento: `Asistente IA` (`ai_source`), `Boton o zona` (`location`), `Interes del formulario` (`interest`), `Presupuesto con comentario` (`has_comment`), `Presupuesto con zona` (`has_zone`), `Producto` (`item_name`), `Tipo de cliente` (`customer_type`), `Variante` (`color`). GA4 aceptó `item_name` | Empiezan a mostrar datos en 24 a 48 h; no hay datos hacia atrás |
+| D. Borrar `link_url` histórico | No se hizo (irreversible y sin evidencia de que haya llegado un nombre) | — |
+| E. Exploración | No se hizo | Se puede crear cuando haya datos |

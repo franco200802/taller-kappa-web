@@ -14,9 +14,9 @@
 | ¿Quién usa el presupuesto? | `add_to_cart` (con `item_name`, `color`) | Funciona |
 | ¿Quién manda el presupuesto? | `whatsapp_checkout` (con `items`, `qty`, `customer_type`, `has_zone`, `has_comment`) | Funciona (0 en 28 días) |
 | ¿Quién inicia contacto? | `whatsapp_click` (**evento clave**), `phone_click`, `email_click`; el formulario manda `whatsapp_click` con `location: contacto_form` | Funciona |
-| ¿Desde qué botón? | `location` en cada clic (`ficha_actions`, `ficha_barra`, `ficha_empresas`, `mc_hero`, `mc_estructuras`, `footer`…) | Llega pero **no se ve**: falta registrar la dimensión (§3) |
-| ¿Qué producto consultan más? | `item_name` en `whatsapp_click`, `add_to_cart`, `select_item` | Llega pero **no se ve** (§3) |
-| ¿De dónde vienen? | Canal y fuente/medio de la sesión; `ai_referral` para asistentes de IA | Funciona; el Perfil de Empresa se mezcla con el orgánico hasta poner la UTM (§4) |
+| ¿Desde qué botón? | `location` en cada clic (`ficha_actions`, `ficha_barra`, `ficha_empresas`, `mc_hero`, `mc_estructuras`, `footer`…) | Funciona: dimensión `Boton o zona` registrada el 25/11/2026 (datos desde ese día) |
+| ¿Qué producto consultan más? | `item_name` en `whatsapp_click`, `add_to_cart`, `select_item` | Funciona: dimensión `Producto` registrada el 25/11/2026 (datos desde ese día) |
+| ¿De dónde vienen? | Canal y fuente/medio de la sesión; `ai_referral` para asistentes de IA | Funciona; las visitas del Perfil de Empresa llevan `utm_campaign=perfil-empresa` desde el 25/11/2026 (cuando Google apruebe el cambio) |
 | Campañas | UTM (GA4 las toma solas) | Funciona; convenciones en §4 |
 | ¿Fue una consulta real? ¿Se presupuestó? ¿Se vendió? | — | **No se puede medir en la web**: pasa en WhatsApp. Se anota en `registro-consultas.csv` (§2) |
 
@@ -29,11 +29,11 @@ Datos personales: los eventos del sitio no mandan nombre, teléfono, email ni
 zona escrita (del presupuesto solo va `has_zone: si/no`). **Pero el `click`
 automático de GA4 ("Clics de salida") sí:** manda el enlace de WhatsApp completo,
 y en el presupuesto ese enlace incluye nombre, zona y comentario (verificado el
-25/11/2026). Se corrige ocultando el parámetro `text` en GA4:
-[`ga4-configuracion.md`](ga4-configuracion.md) §3 A, pendiente de autorización.
+25/11/2026). Corregido el 25/11/2026 ocultando el parámetro `text` en GA4
+([`ga4-configuracion.md`](ga4-configuracion.md) §3 A); verificado: llega `text=(redacted)`.
 
-Páginas vistas: hasta aplicar el cambio B de ese documento, cada navegación
-interna cuenta dos `page_view`. Las consultas (`whatsapp_click`) no se duplican.
+Páginas vistas: hasta aplicar el cambio B de ese documento (el día del deploy),
+cada navegación interna cuenta dos `page_view`. Las consultas (`whatsapp_click`) no se duplican.
 
 ## 2. Lo que pasa en WhatsApp: el registro de consultas
 
@@ -64,9 +64,9 @@ y sin nombres ni teléfonos de clientes (no hacen falta para medir).
 Con 4 semanas de registro se puede calcular: consultas reales por canal, tasa
 de presupuesto y de cierre por segmento, y ticket promedio B2B frente a B2C.
 
-## 3. Configuración de GA4 (requiere autorización)
+## 3. Configuración de GA4
 
-La configuración propuesta y verificada está en
+Aplicada el 25/11/2026 salvo el cambio B, que va el día del deploy. Detalle en
 [`ga4-configuracion.md`](ga4-configuracion.md): ocultar el mensaje de WhatsApp en
 los clics de salida, un solo `page_view` por página y las dimensiones `Boton o
 zona` (`location`), `Producto` (`item_name`), `Tipo de cliente`, `Presupuesto con

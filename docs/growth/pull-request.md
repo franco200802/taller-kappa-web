@@ -1,10 +1,10 @@
 # Pull Request de `growth/operacion-ventas-nov-2026` (preparado, sin crear)
 
-> Estado al 25/11/2026: 7 commits sobre `origin/main` (`562d4c3`), al día con
-> `main` (no hay commits nuevos allá). Sin push ni merge: se crea cuando lo
-> autorices. Al mergear, GitHub Actions hace `npm ci` + `npm run build` (Node 20),
-> publica en Pages y avisa a IndexNow; **no corre las pruebas**, por eso van
-> abajo con su resultado.
+> Estado al 25/11/2026: 9 commits sobre `origin/main` (`562d4c3`), al día con
+> `main`. **Push y PR autorizados por el dueño el 25/11/2026, sin merge.** Al
+> mergear, GitHub Actions hace `npm ci` + `npm run build` (Node 20), publica en
+> Pages y avisa a IndexNow; **no corre las pruebas**, por eso van abajo con su
+> resultado.
 
 ## 1. Antes de crear el PR (lo que tenés que confirmar)
 
@@ -60,14 +60,28 @@ Datos de los últimos 28 días (Search Console, GA4 y Perfil de Empresa; detalle
 - 360 y 1440 px sin desborde; sin errores de consola; modo inglés traducido.
 - Recorrido con el gtag.js real y los envíos a Google abortados: un `whatsapp_click` por clic, con la página correcta.
 
+## Antes del merge
+
+Confirmar estas afirmaciones (detalle en `docs/growth/pull-request.md` §1); la de que se puede pedir solo la estructura ya está confirmada:
+- [ ] Encargos de mueblerías, fabricantes y estudios a partir de plano, boceto o foto.
+- [ ] Nombrar a YPF Full, McDonald's y Sandro también en la ficha de la base y en mobiliario comercial.
+- [ ] Envío bonificado en GBA para 3 o más unidades, con factura A o B, sigue vigente.
+
+## Ya aplicado en las cuentas (25/11/2026)
+
+- GA4: el parámetro `text` se oculta (los clics a WhatsApp llegan con `text=(redacted)`) y hay 8 dimensiones nuevas (`Boton o zona`, `Producto`, `Tipo de cliente`, `Presupuesto con zona`, `Presupuesto con comentario`, `Asistente IA`, `Interes del formulario`, `Variante`).
+- Perfil de Empresa: enlace al sitio con UTM, Instagram y servicios (en revisión de Google).
+
 ## Después del merge
 
-- [ ] GA4, el mismo día: apagar "Cambios de página basados en eventos del historial del navegador" y ocultar el parámetro `text` (`docs/growth/ga4-configuracion.md` §3 A y B).
+- [ ] GA4, el mismo día: apagar "Cambios de página basados en eventos del historial del navegador" (`docs/growth/ga4-configuracion.md` §3 B).
 - [ ] GA4 → Tiempo real: el nombre de host es solo `tallerkappa.com.ar`.
 - [ ] Mandar a un número propio los WhatsApp de la Base Flat ("Cotizar bases por cantidad"), de mobiliario comercial ("Cotizar estructuras") y de un caso de proyectos.
 - [ ] Search Console: inspeccionar `/catalogo/base-de-mesa-flat/` y `/proyectos/` y pedir indexación.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01P18ZFHe8kYC46jYMdSzAhV
 ```
 
 ## 3. Comandos (cuando lo autorices)
