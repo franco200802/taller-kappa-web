@@ -19,8 +19,9 @@ import { ORG_ID, faqNode, serviceNode } from '../lib/schema';
  * acá se explica qué se fabrica, cómo se pide y qué condiciones hay.
  *
  * Todo lo que dice sale de lo que ya publican Proyectos, Envíos, Garantía y
- * la FAQ: medidas y acabados a medida, factura A y B, pedidos mayoristas (3 o
- * más unidades), plazos y garantía. No se agregan promesas nuevas.
+ * la FAQ: medidas y acabados a medida, pedidos por cantidad, plazos y garantía.
+ * No se agregan promesas nuevas. Desde el 25/11/2026 no se publica el tipo de
+ * factura ni envío bonificado (pedido del dueño): el envío se cotiza por zona.
  */
 const PATH = '/mobiliario-comercial';
 
@@ -29,8 +30,7 @@ const FAQ = [
   { q: '¿Taller Kappa fabrica mobiliario comercial?', a: 'Sí. Fabrica en su taller de San Martín, Buenos Aires, mobiliario de hierro a medida para locales gastronómicos, estaciones de servicio y comercios: bases de mesa, bancos y sillones BKF, y mobiliario exhibidor.' },
   { q: '¿Se pueden pedir medidas, colores y acabados a medida?', a: 'Sí. Se adaptan medidas, colores y terminaciones al local, sin costo adicional.' },
   { q: '¿Fabrican estructuras de hierro para mueblerías o estudios de arquitectura?', a: "Sí. Además de los productos del catálogo, Taller Kappa fabrica por encargo estructuras de hierro para muebles, como las del mobiliario de salón de McDonald's, y bases de mesa, con las medidas y el acabado de cada proyecto. Se puede pedir solo la estructura." },
-  { q: '¿Emiten factura A?', a: 'Sí. Taller Kappa emite factura A y B, para empresas y particulares.' },
-  { q: '¿Hay condiciones para pedidos mayoristas?', a: 'En pedidos mayoristas (3 o más unidades) y en la primera compra, el envío dentro de GBA es bonificado. Las condiciones se consultan por WhatsApp.' },
+  { q: '¿Cómo se cotizan los pedidos por cantidad?', a: 'Por WhatsApp, según el producto, la cantidad, el acabado y la zona de entrega. El costo de envío depende de la zona.' },
   { q: '¿Cuánto tarda un pedido?', a: 'El plazo de entrega depende de la disponibilidad de stock. Consultanos por WhatsApp con el producto, la cantidad y la zona. Las zonas de entrega están en la página de envíos.' },
   { q: '¿Envían a negocios fuera de Buenos Aires?', a: 'Sí, a todas las provincias por expreso, con embalaje bonificado. El plazo depende de la disponibilidad de stock: consultanos por WhatsApp.' },
 ];
@@ -106,8 +106,7 @@ export default function MobiliarioComercial() {
         <dl className="facts">
           <div><dt>Fabricante</dt><dd>{BUSINESS.legalName}, Villa Chacabuco, San Martín</dd></div>
           <div><dt>A medida</dt><dd>Medidas, colores y acabados, sin costo adicional</dd></div>
-          <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
-          <div><dt>Pedidos mayoristas</dt><dd>3 o más unidades: envío bonificado dentro de GBA</dd></div>
+          <div><dt>Pedidos por cantidad</dt><dd>Se cotizan por WhatsApp; el envío, según la zona</dd></div>
           <div><dt>Garantía</dt><dd>Estructura de hierro de por vida; pintura epoxi 2 años</dd></div>
           <div><dt>Envíos</dt><dd>Capital Federal, GBA y todo el país</dd></div>
         </dl>

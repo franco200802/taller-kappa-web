@@ -6,7 +6,7 @@ import { whatsappUrl } from '../data/contact';
 import { BUSINESS, addressLine } from '../data/business';
 
 const ZONES = [
-  { icon: 'fa-motorcycle', title: 'San Martín y alrededores', desc: 'Entrega directa en Villa Chacabuco, San Martín, Tres de Febrero, Caseros, Santos Lugares, Hurlingham y Ciudadela.', badge: 'Envío bonificado', free: true },
+  { icon: 'fa-motorcycle', title: 'San Martín y alrededores', desc: 'Entrega directa en Villa Chacabuco, San Martín, Tres de Febrero, Caseros, Santos Lugares, Hurlingham y Ciudadela.', badge: 'Costo según zona' },
   { icon: 'fa-van-shuttle', title: 'Capital Federal (CABA)', desc: 'Entregamos en todos los barrios: Devoto, Belgrano, Palermo, Caballito, Villa Urquiza, Recoleta, San Telmo, Núñez, Colegiales y más.', badge: 'Costo según zona' },
   { icon: 'fa-truck', title: 'Zona Norte', desc: 'Vicente López, Olivos, San Isidro, Martínez, Tigre, San Fernando, Pilar, Escobar y Don Torcuato.', badge: 'Costo según zona' },
   { icon: 'fa-truck', title: 'Zona Oeste', desc: 'Morón, Ituzaingó, Merlo, Moreno, Paso del Rey, Haedo, Ramos Mejía y La Matanza.', badge: 'Costo según zona' },
@@ -18,7 +18,7 @@ const INFO = [
   { icon: 'fa-box-open', title: 'Embalaje profesional', desc: 'Cada pieza se embala con protección de espuma, cartón reforzado y film stretch para asegurar que llegue en perfectas condiciones.' },
   { icon: 'fa-store', title: 'Retiro en el taller', desc: `Retiro presencial sin cargo, con coordinación previa por WhatsApp o teléfono: ${addressLine()}. ${BUSINESS.hours.label.charAt(0).toUpperCase()}${BUSINESS.hours.label.slice(1)}.` },
   { icon: 'fa-clock', title: 'Plazo de entrega', desc: BUSINESS.deliveryNote },
-  { icon: 'fa-hand-holding-usd', title: 'Envío bonificado', desc: 'En pedidos mayoristas (3+ unidades) y primer compra, el envío dentro de GBA es bonificado. Consultanos las condiciones.' },
+  { icon: 'fa-hand-holding-usd', title: 'Costo de envío', desc: 'Se cotiza según la zona de entrega. Escribinos por WhatsApp con tu dirección y te pasamos el costo.' },
 ];
 
 export default function Envios() {

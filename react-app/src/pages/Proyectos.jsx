@@ -18,7 +18,7 @@ const PROJECTS = [
     slug: 'mcdonalds', related: { to: '/mobiliario-comercial/', label: 'Ver estructuras y mobiliario a medida' },
     brand: "McDonald's", where: 'Locales gastronómicos en Capital Federal y GBA',
     desc: 'Proveemos estructuras metálicas para mobiliario de salón. Sillas y mesas que soportan el alto tránsito diario de un salón gastronómico.',
-    specs: ['Hierro macizo 12mm', 'Entrega en plazos ajustados', 'Factura A'],
+    specs: ['Hierro macizo 12mm', 'Entrega en plazos ajustados', 'Uso gastronómico intensivo'],
   },
   {
     logo: '/images/burguerlogo.png', alt: 'Equipamiento Burger King - sillas de hierro', w: 215, h: 234,

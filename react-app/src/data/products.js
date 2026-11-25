@@ -67,8 +67,9 @@ export const CATEGORIES = [
       { q: '¿Existe una mesa BKF?', a: 'BKF es el nombre de un diseño de sillón, formado por las iniciales de Bonet, Kurchan y Ferrari Hardoy. Taller Kappa no vende una "mesa BKF": en mesas fabrica la Base de Mesa Flat, y del diseño BKF fabrica el sillón y el banco.' },
       { q: '¿La Base de Mesa Flat incluye la tapa de la mesa?', a: 'El catálogo del sitio ofrece la base, que admite tapas grandes. Para consultar por tapas u otras medidas de mesa, escribinos por WhatsApp.' },
       // 12 de las 17 consultas por WhatsApp del sitio salieron de páginas para locales (GA4, 28/10 al 24/11/2026).
-      // Prueba y condiciones ya publicadas: /proyectos/ (YPF Full), /envios/ y la FAQ (mayoristas y factura).
-      { q: '¿Venden bases de mesa por cantidad para locales gastronómicos?', a: 'Sí. Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full. Se cotizan por cantidad, con factura A o B, y en pedidos de 3 o más unidades el envío dentro de GBA es bonificado.' },
+      // Prueba ya publicada en /proyectos/ (YPF Full). Desde el 25/11/2026 el envío se cotiza siempre según la zona
+      // y no se publica el tipo de factura (pedido del dueño).
+      { q: '¿Venden bases de mesa por cantidad para locales gastronómicos?', a: 'Sí. Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full. Se cotizan por cantidad, y el costo de envío depende de la zona de entrega.' },
     ],
     difference: 'El catálogo incluye la base de mesa; el sitio no publica tapas. Para otros modelos o medidas de mesa, la consulta se hace por WhatsApp.',
   },
@@ -198,13 +199,13 @@ export const PRODUCTS = [
     ],
     /**
      * Bloque "para locales" de la ficha (Producto.jsx → ProductBusiness). La prueba es la de /proyectos/ (YPF Full,
-     * confirmada por el dueño el 1/10/2026) y las condiciones son las de /envios/ y la FAQ (mayoristas de 3 o más
-     * unidades con envío bonificado en GBA, factura A y B). Si cambian allá, cambiarlas acá.
+     * confirmada por el dueño el 1/10/2026). El envío se cotiza según la zona, como en /envios/; el tipo de factura
+     * no se publica (pedido del dueño, 25/11/2026). Si cambian allá, cambiarlas acá.
      */
     business: {
       heading: 'Bases de mesa por cantidad para bares, restaurantes y franquicias',
       proof: 'Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full, con acabado epoxi negro mate.',
-      terms: 'Para equipar un local se cotizan por cantidad, en la altura y el color que elijas, con factura A o B. En pedidos de 3 o más unidades, el envío dentro de GBA es bonificado.',
+      terms: 'Para equipar un local se cotizan por cantidad, en la altura y el color que elijas. El costo de envío depende de la zona de entrega.',
       cta: 'Cotizar bases por cantidad',
       message: [
         'Hola, quiero cotizar bases de mesa Flat para un local.',

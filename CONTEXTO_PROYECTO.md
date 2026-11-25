@@ -629,9 +629,16 @@ al tocar el código:
 - **Excepción a la regla de §5e** en la ficha de la base: el título es "Base de Mesa de
   Hierro para Bar y Restaurante | Buenos Aires" (sin "| Taller Kappa", para no pasar de
   70 caracteres; Google muestra el nombre del sitio aparte). El h1 no cambió.
-- **No se tocaron** `/bkf/`, `/sillon-bkf/` ni la home: la caída de las búsquedas del BKF
+- **Títulos sin tocar** en `/bkf/`, `/sillon-bkf/` y la home: la caída de las búsquedas del BKF
   en noviembre es de autoridad (3 enlaces externos), no on-page. Volver a medir 3-4
   semanas después del deploy antes de cambiar títulos.
+- **Sin tipo de factura ni envío bonificado** (pedido del dueño, 25/11/2026): el sitio no
+  publica "factura A y B" en ningún lado, y el envío dentro de GBA se cotiza siempre según
+  la zona (antes decía bonificado para 3 o más unidades y primera compra). El embalaje
+  bonificado para el interior sigue. No volver a agregarlos sin confirmación del dueño.
+- **Confirmado por el dueño el 25/11/2026**: encargos de mueblerías, fabricantes y estudios
+  a partir de plano, boceto o foto; nombrar a YPF Full, McDonald's y Sandro en la ficha de
+  la base y en mobiliario comercial.
 - **`page_view` manual, uno por página**: lo manda `FloatWaSentinel` (`Layout.jsx`) un
   cuadro después de que la página nueva montó, con `page_title`. En GA4 tiene que estar
   **apagado** "Cambios de página basados en eventos del historial del navegador" (medición

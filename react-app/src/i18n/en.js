@@ -1003,4 +1003,18 @@ export default {
   "Ver mobiliario comercial a medida": "See custom commercial furniture",
   "Ver mobiliario exhibidor a medida": "See custom display furniture",
   "Ver bases de mesa": "See table bases",
+  // 25/11/2026: sin tipo de factura y con envío cotizado por zona (pedido del dueño).
+  "Sí. Taller Kappa fabrica mobiliario de hierro para empresas y locales, y estructuras de hierro por encargo para mueblerías, fabricantes de muebles y estudios de arquitectura. Los pedidos por cantidad se cotizan por WhatsApp, y el costo de envío depende de la zona de entrega.": "Yes. Taller Kappa makes iron furniture for companies and venues, and custom iron frames for furniture stores, furniture makers and architecture studios. Quantity orders are quoted over WhatsApp, and the shipping cost depends on the delivery area.",
+  "Sí. Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full. Se cotizan por cantidad, y el costo de envío depende de la zona de entrega.": "Yes. Taller Kappa made and delivered Flat table bases for the YPF Full stores. They are quoted by quantity, and the shipping cost depends on the delivery area.",
+  "Para equipar un local se cotizan por cantidad, en la altura y el color que elijas. El costo de envío depende de la zona de entrega.": "To furnish a venue they are quoted by quantity, in the height and color you choose. The shipping cost depends on the delivery area.",
+  "Costo de envío": "Shipping cost",
+  "Se cotiza según la zona de entrega. Escribinos por WhatsApp con tu dirección y te pasamos el costo.": "It is quoted by delivery area. Message us on WhatsApp with your address and we will send you the cost.",
+  "Garantía de por vida": "Lifetime warranty",
+  "La estructura de hierro tiene garantía de por vida; la pintura, 2 años.": "The iron frame has a lifetime warranty; the paint, 2 years.",
+  "Entregamos en Capital Federal y GBA, y enviamos al interior por expreso con embalaje profesional.": "We deliver in Buenos Aires City and Greater Buenos Aires, and ship to the provinces by freight carrier with professional packaging.",
+  "¿Cómo se cotizan los pedidos por cantidad?": "How are quantity orders quoted?",
+  "Por WhatsApp, según el producto, la cantidad, el acabado y la zona de entrega. El costo de envío depende de la zona.": "Over WhatsApp, based on the product, quantity, finish and delivery area. The shipping cost depends on the area.",
+  "Pedidos por cantidad": "Quantity orders",
+  "Se cotizan por WhatsApp; el envío, según la zona": "Quoted over WhatsApp; shipping, by area",
+  "Uso gastronómico intensivo": "Heavy food-service use",
 };

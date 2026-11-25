@@ -15,7 +15,7 @@ const REASONS = [
   { title: 'Directo de fábrica', text: 'Sin intermediarios: comprás al productor, con cotización directa por WhatsApp.' },
   { title: 'Hecho para uso intensivo', text: 'Hierro macizo de 12 mm. Nuestras piezas soportan el uso gastronómico diario sin deformarse.' },
   { title: 'A medida, sin recargo', text: 'Adaptamos medidas, colores y acabados a lo que necesites, sin costo adicional.' },
-  { title: 'Factura A y B', text: 'Emitimos factura A y B para personas y empresas.' },
+  { title: 'Garantía de por vida', text: 'La estructura de hierro tiene garantía de por vida; la pintura, 2 años.' },
 ];
 
 // Lo que se escribe en el hero (la primera frase es la que ve quien no ejecuta JavaScript).

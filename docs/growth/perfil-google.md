@@ -58,7 +58,7 @@ Solo datos que el sitio ya publica (descripciones de hasta 300 caracteres):
 
 - **Bases de mesa para bares y restaurantes:** Base de Mesa Flat de chapa de
   10 mm con columna de 77 o 101 mm, en altura de mesa (73 cm) o de barra (105 cm).
-  Se cotiza por cantidad, con factura A o B. *(Cargado sin la frase "Las entregamos
+  Se cotiza por cantidad. *(Sin "con factura A o B" desde el 25/11/2026. Cargado sin la frase "Las entregamos
   para las tiendas YPF Full" hasta que confirmes que se puede nombrar al cliente.)*
 - **Estructuras de hierro por encargo:** Hacemos la parte de hierro de sillas,
   sillones, bancos y mesas con las medidas y el acabado del proyecto, para
@@ -66,7 +66,7 @@ Solo datos que el sitio ya publica (descripciones de hasta 300 caracteres):
   solo la estructura.
 - **Mobiliario comercial a medida:** Mobiliario de hierro y cuero para locales
   gastronómicos, estaciones de servicio, comercios y oficinas. Medidas y colores a
-  pedido sin costo adicional. Factura A y B.
+  pedido sin costo adicional. *(Sin "Factura A y B" desde el 25/11/2026.)*
 - **Sillón BKF de cuero:** Estructura de hierro macizo de 12 mm y cuero vacuno
   curtido al vegetal, 77 x 87 x 102 cm. Estructura con garantía de por vida.
   Showroom con turno en San Martín.

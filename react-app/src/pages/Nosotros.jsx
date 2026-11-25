@@ -14,7 +14,7 @@ const WHY = [
   { title: 'Directo de fábrica', desc: 'Sin intermediarios: comprás al productor, con cotización directa por WhatsApp.' },
   { title: 'Garantía de resistencia', desc: 'Hierro macizo de primera calidad. Nuestras piezas soportan el uso gastronómico intensivo sin deformarse.' },
   { title: 'Fabricación a medida', desc: 'Adaptamos cada pieza a tus necesidades. Medidas, colores y acabados personalizados sin costo adicional.' },
-  { title: 'Factura A y B', desc: 'Emitimos factura A y B para personas y empresas.' },
+  { title: 'Envíos a todo el país', desc: 'Entregamos en Capital Federal y GBA, y enviamos al interior por expreso con embalaje profesional.' },
 ];
 
 const NUMBERS = [
@@ -106,7 +106,6 @@ export default function Nosotros() {
             </dd>
           </div>
           <div><dt>Atiende a</dt><dd>Particulares, empresas, locales gastronómicos, estaciones de servicio, comercios, hoteles y oficinas</dd></div>
-          <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
           <div><dt>Showroom</dt><dd>{BUSINESS.showroom.short}</dd></div>
           <div><dt>Retiro en el taller</dt><dd>{BUSINESS.pickup.short}; {BUSINESS.hours.label}</dd></div>
           <div>

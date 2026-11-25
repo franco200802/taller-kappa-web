@@ -14,10 +14,10 @@ Afirmaciones comerciales que la rama publica y que conviene confirmar:
 | # | Afirmación | Dónde | Estado | Si no se confirma |
 |---|---|---|---|---|
 | 1 | **"Podés pedir solo la estructura"** / "Se puede pedir solo la estructura" | `/mobiliario-comercial/` (sección y FAQ) | **Confirmada por el dueño el 25/11/2026** | — |
-| 2 | Estructuras de hierro por encargo para sillas, sillones, bancos y mesas, para mueblerías, fabricantes y estudios, "con un plano, un boceto o una foto de referencia" | `/mobiliario-comercial/`, FAQ general y `llms.txt` | **Nueva** como oferta a esos segmentos | Ajustar el texto a lo que sí se hace |
-| 3 | "Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full, con acabado epoxi negro mate" | Ficha de la base, FAQ de la categoría mesas | Ya publicada en `/proyectos/` y confirmada el 1/10/2026; ahora se repite en dos páginas más | Confirmar que se puede seguir nombrando al cliente |
-| 4 | Estructuras para el mobiliario de salón de McDonald's y exhibidores cromados para Sandro | `/mobiliario-comercial/` | Ya publicada en `/proyectos/` (1/10/2026) | Ídem |
-| 5 | Por cantidad, en la altura y el color elegidos, con factura A o B; 3 o más unidades con envío bonificado en GBA | Ficha de la base, FAQ de la categoría | Ya publicada en `/envios/` y la FAQ | Confirmar que sigue vigente |
+| 2 | Estructuras de hierro por encargo para sillas, sillones, bancos y mesas, para mueblerías, fabricantes y estudios, "con un plano, un boceto o una foto de referencia" | `/mobiliario-comercial/`, FAQ general y `llms.txt` | **Confirmada por el dueño el 25/11/2026** | — |
+| 3 | "Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full, con acabado epoxi negro mate" | Ficha de la base, FAQ de la categoría mesas | **Confirmada por el dueño el 25/11/2026** | — |
+| 4 | Estructuras para el mobiliario de salón de McDonald's y exhibidores cromados para Sandro | `/mobiliario-comercial/` | **Confirmada por el dueño el 25/11/2026** | — |
+| 5 | Por cantidad, en la altura y el color elegidos, con factura A o B; 3 o más unidades con envío bonificado en GBA | Ficha de la base, FAQ de la categoría | **Ya no vale** (dueño, 25/11/2026): se sacó el tipo de factura de todo el sitio y el envío en GBA pasó a cotizarse según la zona, también en `/envios/`, la FAQ, la home, Nosotros, BKF y mobiliario comercial | — |
 | 6 | "Cotizar algo similar" en cada caso de `/proyectos/` | `/proyectos/` | Supone que se pueden hacer trabajos parecidos para otros clientes | — |
 
 Sin cambios de precio, plazo, stock, cuotas, descuentos ni garantía.
@@ -64,9 +64,9 @@ Datos de los últimos 28 días (Search Console, GA4 y Perfil de Empresa; detalle
 ## Antes del merge
 
 Confirmar estas afirmaciones (detalle en `docs/growth/pull-request.md` §1); la de que se puede pedir solo la estructura ya está confirmada:
-- [ ] Encargos de mueblerías, fabricantes y estudios a partir de plano, boceto o foto.
-- [ ] Nombrar a YPF Full, McDonald's y Sandro también en la ficha de la base y en mobiliario comercial.
-- [ ] Envío bonificado en GBA para 3 o más unidades, con factura A o B, sigue vigente.
+- [x] Encargos de mueblerías, fabricantes y estudios a partir de plano, boceto o foto (confirmado el 25/11/2026).
+- [x] Nombrar a YPF Full, McDonald's y Sandro también en la ficha de la base y en mobiliario comercial (confirmado el 25/11/2026).
+- [x] Envío bonificado y factura A o B: **ya no valen**. Se sacaron del sitio; el envío se cotiza según la zona (25/11/2026).
 
 ## Ya aplicado en las cuentas (25/11/2026)
 

@@ -23,8 +23,8 @@ BKF se trabaja con confianza (reseñas, fotos, precio "desde"), no con más pág
 
 | Segmento | Qué ofrecer | Prueba que ya existe | Mensaje central | Canal | [falta] |
 |---|---|---|---|---|---|
-| Bares, restaurantes, cafeterías y franquicias | Base de Mesa Flat (73 o 105 cm), Banco BKF, Sillón BKF para el salón | Bases Flat entregadas a las tiendas YPF Full; bases y sillas para Shell Select; mobiliario para McDonald's y Burger King | Bases pesadas que no se balancean, por cantidad, con factura A y garantía de por vida en el hierro | Búsqueda (bases), Perfil de Empresa, contacto directo a locales que abren o renuevan | Precio por cantidad (10, 20, 50 bases) y plazo para cada volumen |
-| Mueblerías y tiendas de decoración (reventa) | Sillón BKF y Banco BKF | Fábrica propia, factura A, garantía, diseño reconocido | Producto de diseño con fábrica detrás: reposición directa y a medida | Visita o WhatsApp del dueño, Instagram | Precio mayorista, mínimo de compra, si se deja en exhibición |
+| Bares, restaurantes, cafeterías y franquicias | Base de Mesa Flat (73 o 105 cm), Banco BKF, Sillón BKF para el salón | Bases Flat entregadas a las tiendas YPF Full; bases y sillas para Shell Select; mobiliario para McDonald's y Burger King | Bases pesadas que no se balancean, por cantidad, con garantía de por vida en el hierro | Búsqueda (bases), Perfil de Empresa, contacto directo a locales que abren o renuevan | Precio por cantidad (10, 20, 50 bases) y plazo para cada volumen |
+| Mueblerías y tiendas de decoración (reventa) | Sillón BKF y Banco BKF | Fábrica propia, garantía, diseño reconocido | Producto de diseño con fábrica detrás: reposición directa y a medida | Visita o WhatsApp del dueño, Instagram | Precio mayorista, mínimo de compra, si se deja en exhibición |
 | Fabricantes de muebles y carpinterías | Bases de mesa sueltas y estructuras de hierro por encargo | Estructuras para el mobiliario de McDonald's | La parte de hierro la hace el taller, con sus medidas; ellos ponen la madera o el tapizado | Búsqueda ("base de hierro para mesa de madera" es una sugerencia de Google), contacto directo | Plazos y mínimos (la estructura sola sí se vende: confirmado el 25/11/2026) |
 | Estudios de arquitectura e interioristas | BKF (diseño de 1938 de tres arquitectos) y mobiliario a medida para locales | Proyectos corporativos; 3D con medidas reales en el sitio | Especificar un BKF con fábrica y garantía, o hacer a medida la parte de hierro de un proyecto | Contacto directo, Instagram, ficha técnica en PDF (cuando haya fotos) | Fotos reales; si hay descuento para profesionales |
 | Comercios e indumentaria | Mobiliario exhibidor de hierro (percheros, mesas de exhibición) | Locales de Sandro (acabado cromado) | Exhibidores a medida del local | Contacto directo | Fotos de los exhibidores de Sandro, con permiso |
@@ -75,7 +75,7 @@ saber cuántos entran):
 Para un local gastronómico:
 
 ```
-Hola, ¿cómo estás? Soy [nombre], de Taller Kappa, una fábrica de muebles de hierro en San Martín. Vi que tienen [local] en [zona]. Fabricamos bases de mesa de hierro para bares y restaurantes (las hicimos para las tiendas YPF Full), en 73 o 105 cm, por cantidad y con factura A. Si en algún momento necesitan bases o renovar el salón, te paso el detalle: https://tallerkappa.com.ar/catalogo/base-de-mesa-flat/?utm_source=whatsapp&utm_medium=contacto-directo&utm_campaign=b2b-gastronomia
+Hola, ¿cómo estás? Soy [nombre], de Taller Kappa, una fábrica de muebles de hierro en San Martín. Vi que tienen [local] en [zona]. Fabricamos bases de mesa de hierro para bares y restaurantes (las hicimos para las tiendas YPF Full), en 73 o 105 cm, por cantidad. Si en algún momento necesitan bases o renovar el salón, te paso el detalle: https://tallerkappa.com.ar/catalogo/base-de-mesa-flat/?utm_source=whatsapp&utm_medium=contacto-directo&utm_campaign=b2b-gastronomia
 ```
 
 Para una mueblería:
@@ -118,7 +118,7 @@ la cuenta que administra el perfil.
 | Disponibilidad | **Pendiente:** el sitio no dice si hay stock |
 | Plazo de entrega | **Pendiente de unificar:** el sitio dice "depende del stock"; la documentación vieja, 5 a 10 días hábiles |
 | Medios de pago | **Pendiente:** la FAQ dice que no hay cuotas; falta decir qué se acepta (efectivo, transferencia, tarjeta) y si hay descuento |
-| Diferencia frente a otros | Publicado: garantía de por vida en la estructura, fábrica con showroom, a medida, factura A y B |
+| Diferencia frente a otros | Publicado: garantía de por vida en la estructura, fábrica con showroom, a medida (desde el 25/11/2026 no se menciona el tipo de factura) |
 
 ### 5.2 Posicionamiento
 
