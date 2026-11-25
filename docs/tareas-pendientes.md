@@ -41,15 +41,13 @@ Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
    - Perfil de Empresa: ~~enlace con UTM, Instagram y servicios~~ **hechos el 25/11**
      (en revisión de Google). **Te toca subir el logo** desde el perfil → Fotos →
      Logotipo: `react-app/public/images/logo-taller-kappa.jpg` (la extensión no puede
-     elegir archivos en ese cargador). Teléfono y horario siguen sin tocar.
-   - Borrar desde tu cuenta la reseña que figura escrita por la misma cuenta que
-     administra el perfil (Google no permite que el negocio opine sobre sí mismo).
-4. **Datos:** qué teléfono va en Google (hoy figura el 011 4753-0099: 3 llamadas en
-   6 meses), horario real (Google dice de 8 a 17; el sitio, de 9 a 18), si es
-   cierto el atributo "acepta tarjetas de débito", el código postal completo y una
-   sola frase de plazo de entrega.
-5. **Decisiones:** precio "desde" con vigencia (sillón, banco, base), medios de
-   pago que se pueden publicar, y condiciones para revendedores.
+     elegir archivos en ese cargador; se reintentó el 25/11 y tampoco). ~~Teléfono y horario~~:
+     **hechos el 25/11** (principal 11 6124-2498, adicional 011 4753-0099; lunes a viernes de 9 a 18).
+   - ~~Borrar la reseña escrita desde la cuenta que administra el perfil~~: **borrada el 25/11/2026**.
+4. **Datos:** ~~teléfono y horario~~ (resueltos el 25/11). Falta: si es cierto el atributo
+   "acepta tarjetas de débito", el código postal completo y una sola frase de plazo de entrega.
+5. **Decisiones:** ~~precio "desde"~~: **el dueño decidió no publicar precios** (25/11/2026).
+   Falta: medios de pago que se pueden publicar y condiciones para revendedores.
 6. **Rutina:** anotar cada consulta en `docs/growth/registro-consultas.csv` (la
    copia con datos, fuera del repo: es público), pedir reseña a cada cliente,
    seguir los chats de las últimas 4 semanas, escribir a los clientes de empresa

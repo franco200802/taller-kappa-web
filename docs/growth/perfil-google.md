@@ -5,7 +5,14 @@
 > **Aplicado ese mismo día, con autorización del dueño:** enlace con UTM,
 > Instagram y servicios (ver §2). Los cambios quedan "en revisión" de Google
 > (hasta 10 minutos los datos de contacto y hasta 1 día los servicios). El logo
-> no se pudo subir (ver §2). Teléfono y horario no se tocaron.
+> no se pudo subir (ver §2).
+>
+> **Más tarde, el 25/11/2026, también con autorización del dueño:** teléfono principal
+> 11 6124-2498 (Google lo muestra como 011 6124-2498) y el 011 4753-0099 como adicional;
+> horario de lunes a viernes de 9 a 18, sábado y domingo cerrado (igual que el sitio); y se
+> borró la reseña de 5 estrellas que el dueño había escrito desde su propia cuenta (queda la
+> de un cliente). Teléfono y horario quedaron "en revisión" de Google. El logo se volvió a
+> intentar (pegándolo y con el campo de archivo) y tampoco se pudo.
 > Rendimiento de junio a noviembre: 234 interacciones (211 pedidos de cómo
 > llegar, 20 clics al sitio, 3 llamadas).
 
