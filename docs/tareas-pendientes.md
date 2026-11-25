@@ -26,9 +26,10 @@
 ## Nuevo (25/11/2026): operación growth (más consultas y ventas)
 
 Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
-`growth/operacion-ventas-nov-2026`, sin push ni merge. En orden:
+`growth/operacion-ventas-nov-2026`, subida el 25/11/2026 en el
+[PR #34](https://github.com/franco200802/taller-kappa-web/pull/34), sin merge. En orden:
 
-1. **Revisar y publicar la rama.** GA4 deja de contar las pruebas locales (eran
+1. **Revisar el PR #34 y decidir el merge** (mergear publica en producción). GA4 deja de contar las pruebas locales (eran
    el 27 % de las páginas vistas) y la Base de Mesa Flat y mobiliario comercial
    tienen salida para pedir por cantidad y para mueblerías, fabricantes y estudios.
 2. **Confirmar antes de publicar:** que se toman encargos de mueblerías,

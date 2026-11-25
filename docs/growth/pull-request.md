@@ -1,12 +1,13 @@
-# Pull Request de `growth/operacion-ventas-nov-2026` (preparado, sin crear)
+# Pull Request #34 de `growth/operacion-ventas-nov-2026` (abierto, sin merge)
 
-> Estado al 25/11/2026: 9 commits sobre `origin/main` (`562d4c3`), al día con
-> `main`. **Push y PR autorizados por el dueño el 25/11/2026, sin merge.** Al
-> mergear, GitHub Actions hace `npm ci` + `npm run build` (Node 20), publica en
+> **Creado el 25/11/2026 con autorización del dueño:**
+> https://github.com/franco200802/taller-kappa-web/pull/34. **El merge todavía
+> no está autorizado.** A esa fecha, la rama está al día con `main` (`562d4c3`) y
+> GitHub no marca conflictos. Al mergear, GitHub Actions hace `npm ci` + `npm run build` (Node 20), publica en
 > Pages y avisa a IndexNow; **no corre las pruebas**, por eso van abajo con su
 > resultado.
 
-## 1. Antes de crear el PR (lo que tenés que confirmar)
+## 1. Antes del merge (lo que tenés que confirmar)
 
 Afirmaciones comerciales que la rama publica y que conviene confirmar:
 
@@ -21,7 +22,7 @@ Afirmaciones comerciales que la rama publica y que conviene confirmar:
 
 Sin cambios de precio, plazo, stock, cuotas, descuentos ni garantía.
 
-## 2. Texto del PR (para pegar)
+## 2. Texto del PR (el publicado en el #34)
 
 **Título:** `Growth B2B: medición limpia en GA4 y cotización por cantidad para empresas`
 
@@ -84,7 +85,7 @@ Confirmar estas afirmaciones (detalle en `docs/growth/pull-request.md` §1); la 
 https://claude.ai/code/session_01P18ZFHe8kYC46jYMdSzAhV
 ```
 
-## 3. Comandos (cuando lo autorices)
+## 3. Comandos usados el 25/11/2026
 
 ```bash
 git push -u origin growth/operacion-ventas-nov-2026
@@ -97,7 +98,7 @@ gh pr create --base main --head growth/operacion-ventas-nov-2026 \
 
 | Riesgo | Mitigación |
 |---|---|
-| Afirmaciones 1 y 2 no confirmadas | Confirmarlas o sacar la frase antes del merge |
+| Afirmaciones 2 a 5 de §1 sin confirmar (la 1 ya está confirmada) | Confirmarlas o sacar la frase antes del merge |
 | Corte en la serie de GA4 (menos usuarios y páginas vistas desde el deploy) | Esperado: se van las pruebas locales y, con el cambio B, el duplicado. Anotar la fecha |
 | Título nuevo de la Base Flat sin "Taller Kappa" | Si en 4 semanas pierde impresiones, se vuelve al anterior (un cambio en `products.js`) |
 | Algo se rompe en producción | `git revert` del merge y el deploy vuelve solo al estado anterior |
