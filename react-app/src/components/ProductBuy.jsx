@@ -3,14 +3,13 @@ import Icon from './Icon';
 
 /**
  * Lo que respalda la compra, bajo los botones de cada ficha. Son datos que el sitio ya publica: fábrica propia
- * (Nosotros), garantía de por vida en la estructura de hierro (/garantia/), zonas de entrega (/envios/) y
- * factura A y B (FAQ). Si alguno cambia, cambiarlo también en esas páginas.
+ * (Nosotros), garantía de por vida en la estructura de hierro (/garantia/) y zonas de entrega (/envios/).
+ * Si alguno cambia, cambiarlo también en esas páginas. El dueño pidió el 25/11/2026 no publicar el tipo de factura.
  */
 const TRUST = [
   { icon: 'industry', text: 'Fábrica propia en San Martín, Buenos Aires' },
   { icon: 'shield-alt', text: 'Estructura de hierro con garantía de por vida' },
   { icon: 'truck', text: 'Envíos a CABA, GBA y todo el país' },
-  { icon: 'check', text: 'Factura A y B' },
 ];
 
 export function TrustList() {
@@ -48,7 +47,8 @@ export function BuyBar({ targetRef, name, detail, ready, onAdd, onChoose, waHref
   useEffect(() => {
     const target = targetRef.current;
     if (!target || typeof IntersectionObserver === 'undefined') return undefined;
-    const watched = [target, ...document.querySelectorAll('.bkf-stage-actions, .cta-section, footer')];
+    // También se esconde junto a los botones "para locales" de la ficha (Producto.jsx → ProductBusiness).
+    const watched = [target, ...document.querySelectorAll('.bkf-stage-actions, .cta-section, [data-cta="ficha_empresas"], footer')];
     const onScreen = new Set();
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)));

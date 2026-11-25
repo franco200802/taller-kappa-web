@@ -12,13 +12,28 @@
  *     los cambios de ruta (no hay recarga de página), así que hay que
  *     enviar el evento 'page_view' manualmente en cada cambio de ruta
  *     (ver trackPageview, llamado desde Layout.jsx).
- *   - Solo se carga en producción (import.meta.env.PROD) para no ensuciar
- *     las métricas reales con visitas de `npm run dev`.
+ *   - Solo se carga en producción (import.meta.env.PROD) y en el dominio
+ *     publicado (isProductionHost), para no ensuciar las métricas reales con
+ *     visitas de `npm run dev`, `vite preview`, pruebas o Lighthouse en local.
  *   - Todo queda detrás de `typeof window !== 'undefined'` para no romper
  *     scripts/prerender.js, que renderiza con react-dom/server en Node
  *     (donde no existe `window`/`document`).
  */
+import { SITE } from './site.js';
+
 export const GA_MEASUREMENT_ID = 'G-2FDMN51XDY'; // Measurement ID real de la propiedad GA4 de Taller Kappa
+
+/**
+ * Solo el dominio publicado manda datos a GA4. `import.meta.env.PROD` no alcanza: `vite preview`
+ * sirve el build de producción en localhost, y ahí corren las pruebas de navegador, Lighthouse y
+ * las revisiones a mano. Entre el 28/10 y el 24/11/2026 eso fue el 27 % de las páginas vistas de
+ * la propiedad (234 de 880, con nombre de host `localhost` o `127.0.0.1`): inflaba usuarios y
+ * sesiones "directas" y bajaba la tasa de conversión de verdad.
+ */
+const PRODUCTION_HOSTS = new Set([new URL(SITE).hostname, `www.${new URL(SITE).hostname}`]);
+export function isProductionHost(hostname) {
+  return PRODUCTION_HOSTS.has(String(hostname || '').toLowerCase());
+}
 
 let gaLoaded = false;
 
@@ -52,6 +67,7 @@ function loadGtagLater() {
 export function initGA() {
   if (typeof window === 'undefined') return; // SSR/prerender: no-op
   if (!import.meta.env.PROD) return; // no trackear en desarrollo
+  if (!isProductionHost(window.location.hostname)) return; // ni en el build servido en local (pruebas, Lighthouse)
   if (GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') return; // placeholder sin configurar (ya no aplica, queda como guard defensivo)
   if (gaLoaded) return;
   gaLoaded = true;
@@ -102,11 +118,20 @@ export function trackAiReferral() {
   if (source) trackEvent('ai_referral', { ai_source: source, landing_page: window.location.pathname });
 }
 
+/**
+ * page_view manual, uno por cambio de ruta. Lo llama `FloatWaSentinel` (Layout.jsx) cuando la página nueva ya
+ * montó, un cuadro después, para que `document.title` sea el de la página nueva: antes salía con el título de la
+ * anterior (Helmet lo cambia después del render). En GA4 hay que tener APAGADO "Cambios de página basados en
+ * eventos del historial del navegador" (medición mejorada): si no, cada navegación interna cuenta dos page_view
+ * (verificado el 25/11/2026). Se mantiene el manual porque gtag.js se descarga tarde (loadGtagLater) y la primera
+ * navegación, si ocurre antes de que cargue, la medición automática no la ve; este queda en la cola.
+ */
 export function trackPageview(path) {
   if (typeof window === 'undefined' || !window.gtag) return;
   window.gtag('event', 'page_view', {
     page_path: path,
     page_location: `${window.location.origin}${path}`,
+    page_title: document.title,
   });
 }
 

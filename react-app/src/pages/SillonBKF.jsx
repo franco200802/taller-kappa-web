@@ -181,7 +181,6 @@ export default function SillonBKF() {
               <li><Icon name="check" /> <strong>Medidas:</strong> 77 x 87 x 102 cm (estándar) o a medida sin cargo adicional</li>
               <li><Icon name="check" /> <strong>Uso:</strong> Residencial e intensivo gastronómico</li>
               <li><Icon name="check" /> <strong>Garantía:</strong> Estructura de por vida · Pintura 2 años · Cuero 1 año</li>
-              <li><Icon name="check" /> <strong>Factura:</strong> A y B</li>
             </ul>
           </div>
         </div>
@@ -214,7 +213,6 @@ export default function SillonBKF() {
           <div><dt>Showroom</dt><dd>{BUSINESS.showroom.short}</dd></div>
           <div><dt>Retiro en el taller</dt><dd>{BUSINESS.pickup.short}; {BUSINESS.hours.label}</dd></div>
           <div><dt>Plazo de entrega</dt><dd>Depende de la disponibilidad de stock; consultá por WhatsApp</dd></div>
-          <div><dt>Facturación</dt><dd>Factura A y B</dd></div>
         </dl>
       </section>
 

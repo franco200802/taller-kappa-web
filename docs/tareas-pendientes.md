@@ -1,6 +1,6 @@
 # Tareas pendientes (las que tiene que hacer el dueño)
 
-> Actualizado: 17/10/2026. Esto es lo que **no se puede hacer desde el código
+> Actualizado: 25/11/2026 (secciones nuevas arriba; el resto, del 17/10/2026). Esto es lo que **no se puede hacer desde el código
 > ni automatizar**: hace falta estar en el taller, decidir algo o iniciar
 > sesión con una cuenta propia. Está ordenado por impacto. Cuando completes
 > algo, avisá y se hace la parte técnica que sigue (indicada en cada punto).
@@ -23,10 +23,45 @@
 
 ---
 
+## Nuevo (25/11/2026): operación growth (más consultas y ventas)
+
+Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
+`growth/operacion-ventas-nov-2026`, subida el 25/11/2026 en el
+[PR #34](https://github.com/franco200802/taller-kappa-web/pull/34), sin merge. En orden:
+
+1. **Revisar el PR #34 y decidir el merge** (mergear publica en producción). GA4 deja de contar las pruebas locales (eran
+   el 27 % de las páginas vistas) y la Base de Mesa Flat y mobiliario comercial
+   tienen salida para pedir por cantidad y para mueblerías, fabricantes y estudios.
+2. **Confirmar antes de publicar:** que se toman encargos de mueblerías,
+   fabricantes y estudios con plano, boceto o foto, y el resto de la lista de
+   `docs/growth/pull-request.md` §1. ~~Que se puede vender solo la estructura~~:
+   **confirmado el 25/11/2026.**
+3. **Cambios de cuenta (autorizados el 25/11/2026):**
+   - GA4: ~~ocultar `text`~~ y ~~8 dimensiones~~ **hechos el 25/11**. Falta **apagar
+     "Cambios de página basados en eventos del historial del navegador" el día del
+     merge** (`docs/growth/ga4-configuracion.md` §3 B).
+   - Perfil de Empresa: ~~enlace con UTM, Instagram y servicios~~ **hechos el 25/11**
+     (en revisión de Google). **Te toca subir el logo** desde el perfil → Fotos →
+     Logotipo: `react-app/public/images/logo-taller-kappa.jpg` (la extensión no puede
+     elegir archivos en ese cargador). Teléfono y horario siguen sin tocar.
+   - Borrar desde tu cuenta la reseña que figura escrita por la misma cuenta que
+     administra el perfil (Google no permite que el negocio opine sobre sí mismo).
+4. **Datos:** qué teléfono va en Google (hoy figura el 011 4753-0099: 3 llamadas en
+   6 meses), horario real (Google dice de 8 a 17; el sitio, de 9 a 18), si es
+   cierto el atributo "acepta tarjetas de débito", el código postal completo y una
+   sola frase de plazo de entrega.
+5. **Decisiones:** precio "desde" con vigencia (sillón, banco, base), medios de
+   pago que se pueden publicar, y condiciones para revendedores.
+6. **Rutina:** anotar cada consulta en `docs/growth/registro-consultas.csv` (la
+   copia con datos, fuera del repo: es público), pedir reseña a cada cliente,
+   seguir los chats de las últimas 4 semanas, escribir a los clientes de empresa
+   actuales y 10 contactos directos por semana a locales (plan de 14 días y
+   mensajes en `docs/growth/estrategia-comercial.md` §3 y §4).
+
 ## Nuevo (22/11/2026): revisar el rediseño premium
 
-Detalle, capturas medidas y comparativa en `docs/mejora-premium-2026-11.md`.
-Rama `mejora/experiencia-premium` (sin push: se sube cuando lo autorices).
+**Publicado el 23/11/2026 (PR #33).** Detalle, capturas medidas y comparativa en
+`docs/mejora-premium-2026-11.md`.
 
 1. **Mirar el sitio con el diseño nuevo** en tu computadora o celular (pasos en
    el documento, sección "Cómo probarlo") y decidir si se publica. Incluye el
@@ -53,15 +88,21 @@ Detalle en `docs/mejora-integral-2026-11.md`.
 
 ## 0. Mergear el PR #9 (2 minutos)
 
+**Hecho:** mergeado el 17/10/2026.
+
 <https://github.com/franco200802/taller-kappa-web/pull/9> → **Merge pull
 request**. Publica en el sitio la dirección "Vélez Sársfield 3779 (Calle 28)",
 igual a la del perfil de Google. El deploy corre solo (pestaña *Actions*,
 unos minutos). Conviene hacerlo antes de que Google revise el video del
 punto 1, así el sitio y el perfil ya coinciden.
 
-## 1. Verificar el Perfil de Empresa de Google (urgente)
+## 1. Verificar el Perfil de Empresa de Google
 
-Google solo ofrece verificación **por video**. Se hace desde el celular, en el
+**Hecho:** el 24/11/2026 el administrador de perfiles lo muestra "Verificado".
+Falta la parte de "Después de la verificación" (al final de este punto), que
+ahora está detallada campo por campo en `docs/growth/perfil-google.md`.
+
+Google solo ofrecía verificación **por video**. Se hace desde el celular, en el
 taller, con la cuenta `ingfranciscomarotta@gmail.com`:
 
 1. Entrá a <https://business.google.com/> con esa cuenta → "Taller Kappa" →

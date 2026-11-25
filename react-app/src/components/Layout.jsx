@@ -35,12 +35,20 @@ const SITE_GRAPH = JSON.stringify({ '@context': 'https://schema.org', '@graph': 
  * cuando la página lazy ya montó. El estado arranca en false igual en el
  * prerender y en el cliente, así que la hidratación no cambia.
  */
-const WA_HIDE_TARGETS = '.home-hero-actions, .page-hero-actions, .bkf-actions, .cta-btns, .form-submit, footer';
+const WA_HIDE_TARGETS = '.home-hero-actions, .page-hero-actions, .bkf-actions, .cta-btns, .project-actions, .form-submit, footer';
 function FloatWaSentinel({ onChange }) {
   const { pathname } = useLocation();
   const { markReady } = useLang();
   // Este efecto corre recién cuando la página lazy terminó de hidratar: desde acá se puede traducir el DOM.
   useEffect(() => { markReady(); }, [markReady]);
+  // GA4: el page_view sale cuando la página nueva ya montó (este componente está dentro del <Suspense>, después del
+  // <Outlet>) y un cuadro después, cuando Helmet ya puso su <title>. En la primera carga, ese cuadro también le da
+  // tiempo a Layout de correr initGA() (los efectos de los hijos corren antes que los del padre).
+  useEffect(() => {
+    let cancelled = false;
+    const frame = requestAnimationFrame(() => setTimeout(() => { if (!cancelled) trackPageview(pathname); }, 0));
+    return () => { cancelled = true; cancelAnimationFrame(frame); };
+  }, [pathname]);
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return undefined;
     const visible = new Set();
@@ -61,12 +69,10 @@ export default function Layout() {
   // Scroll al top en cada cambio de ruta (SPA no lo hace solo)
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
 
-  // GA4: se inicializa una sola vez (no-op si no hay Measurement ID real
-  // configurado en lib/analytics.js, o en desarrollo/SSR). El pageview se
-  // envía a mano en cada cambio de ruta porque gtag.js no detecta navegación
-  // de una SPA por sí solo (no hay recarga de documento).
+  // GA4: se inicializa una sola vez (no-op en desarrollo, en SSR y fuera del
+  // dominio publicado). El pageview de cada ruta lo manda FloatWaSentinel, cuando
+  // la página ya montó y tiene su título (ver trackPageview en lib/analytics.js).
   useEffect(() => { initGA(); trackAiReferral(); trackClicks(productNameForPath); }, []);
-  useEffect(() => { trackPageview(pathname); }, [pathname]);
 
   return (
     <div>

@@ -85,9 +85,9 @@ export const BUSINESS = {
   /** logo-taller-kappa.jpg mide 1024x1024 (verificado con `file`). */
   logo: { path: '/images/logo-taller-kappa.jpg', width: 1024, height: 1024 },
   /** Para quién fabrica, según Nosotros y Proyectos. */
-  audiences: ['particulares', 'empresas', 'locales gastronómicos', 'estaciones de servicio', 'comercios', 'hoteles', 'oficinas'],
+  audiences: ['particulares', 'empresas', 'locales gastronómicos', 'estaciones de servicio', 'comercios', 'hoteles', 'oficinas', 'mueblerías', 'fabricantes de muebles', 'estudios de arquitectura'],
   /** Temas de los que el sitio trata (schema `knowsAbout`). */
-  topics: ['Sillón BKF', 'Banco BKF', 'Base de mesa de hierro', 'Muebles de hierro y cuero', 'Mobiliario comercial y gastronómico'],
+  topics: ['Sillón BKF', 'Banco BKF', 'Base de mesa de hierro', 'Muebles de hierro y cuero', 'Mobiliario comercial y gastronómico', 'Estructuras de hierro para muebles por encargo'],
 };
 
 /** Ficha pública de Google Maps (estable: por CID, no depende del nombre ni de la URL corta). */

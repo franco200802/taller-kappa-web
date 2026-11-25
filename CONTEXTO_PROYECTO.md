@@ -601,6 +601,63 @@ Diagnóstico con mediciones, cambios, comparativa y pendientes en
   regla en `translate.js`. Un rótulo armado con variables va en nodos de texto
   separados (ver `.card-eyebrow`), así se traduce cada parte.
 
+## 5o. Operación growth (25/11/2026)
+
+Datos (Search Console, GA4, Perfil de Empresa, competencia), diagnóstico, plan de
+90 días y medición en `docs/growth/` (empezar por `README.md`). Lo que hay que saber
+al tocar el código:
+
+- **GA4 solo en el dominio publicado**: `initGA()` exige `isProductionHost()`
+  (`tallerkappa.com.ar` o `www.`). Antes `vite preview`, las pruebas y Lighthouse
+  mandaban datos reales (27 % de las páginas vistas del 28/10 al 24/11). Lo prueban
+  `tests/unit/analytics.test.mjs` y `tests/e2e/analytics.test.mjs`; la E2E mapea el
+  dominio al servidor local con `--host-resolver-rules`, desactiva HTTPS-First y le
+  pasa `allowedHosts` a `vite preview` (si no, responde 403). Consecuencia: Lighthouse
+  en local ya no incluye el costo de gtag.js y puede dar algo mejor que producción.
+- **Bloque "para locales" en las fichas**: un producto con `business` en
+  `data/products.js` (hoy solo la Base de Mesa Flat) muestra `ProductBusiness`
+  (`Producto.jsx`): prueba de cliente, condiciones y un WhatsApp propio
+  (`data-cta="ficha_empresas"`). La barra fija de compra se esconde mientras esos
+  botones se ven (`ProductBuy.jsx`). Las condiciones repiten las de `/envios/` y la
+  FAQ: si cambian allá, cambiarlas en `business`.
+- **`CATEGORIES[].quoteLabel`**: cómo se nombra la categoría en el WhatsApp de la
+  página de categoría ("bases de mesa", no "mesas").
+- **Mueblerías, fabricantes y estudios** en `/mobiliario-comercial/`: sección propia con
+  `STRUCTURES_QUOTE_MESSAGE` (`data/contact.js`, `data-cta="mc_estructuras"`). No va en
+  `SECTORS` a propósito: esos rubros los escribe el hero después de "Equipamos".
+  "Se puede pedir solo la estructura": confirmado por el dueño el 25/11/2026.
+- **Excepción a la regla de §5e** en la ficha de la base: el título es "Base de Mesa de
+  Hierro para Bar y Restaurante | Buenos Aires" (sin "| Taller Kappa", para no pasar de
+  70 caracteres; Google muestra el nombre del sitio aparte). El h1 no cambió.
+- **Títulos sin tocar** en `/bkf/`, `/sillon-bkf/` y la home: la caída de las búsquedas del BKF
+  en noviembre es de autoridad (3 enlaces externos), no on-page. Volver a medir 3-4
+  semanas después del deploy antes de cambiar títulos.
+- **Sin tipo de factura ni envío bonificado** (pedido del dueño, 25/11/2026): el sitio no
+  publica "factura A y B" en ningún lado, y el envío dentro de GBA se cotiza siempre según
+  la zona (antes decía bonificado para 3 o más unidades y primera compra). El embalaje
+  bonificado para el interior sigue. No volver a agregarlos sin confirmación del dueño.
+- **Confirmado por el dueño el 25/11/2026**: encargos de mueblerías, fabricantes y estudios
+  a partir de plano, boceto o foto; nombrar a YPF Full, McDonald's y Sandro en la ficha de
+  la base y en mobiliario comercial.
+- **`page_view` manual, uno por página**: lo manda `FloatWaSentinel` (`Layout.jsx`) un
+  cuadro después de que la página nueva montó, con `page_title`. En GA4 tiene que estar
+  **apagado** "Cambios de página basados en eventos del historial del navegador" (medición
+  mejorada); con eso prendido, cada navegación interna cuenta dos. **Al 25/11/2026 sigue
+  prendido:** se apaga el día del deploy de la rama growth. No volver a llamar a
+  `trackPageview` desde `Layout`: el título todavía es el de la página anterior.
+- **Datos personales en GA4**: el `click` automático de "Clics de salida" manda el enlace
+  completo, y el de WhatsApp del presupuesto lleva nombre, zona y comentario. Se tapa con
+  "Ocultar datos → parámetros de consulta de URL: `text`" en el flujo (**activo desde el
+  25/11/2026**, verificado: llega `text=(redacted)`). Si se agrega otro enlace externo con datos
+  de la persona en la URL, sumar ese parámetro ahí. Dimensiones registradas el 25/11/2026:
+  `location`, `item_name`, `customer_type`, `has_zone`, `has_comment`, `ai_source`, `interest` y
+  `color` (`docs/growth/ga4-configuracion.md`). Si se agrega un parámetro nuevo que se quiera ver
+  en informes, hay que registrarlo ahí también.
+- **Proyectos**: botón arriba (`proyectos_hero`) y "Cotizar algo similar" en cada caso
+  (`proyecto_<slug>`, `projectQuoteMessage()` en `data/contact.js`). Los mensajes de empresa
+  (`B2B_QUOTE_MESSAGE`, estructuras, casos) usan `whatsappUrlFor`, que agrega la URL de la
+  página: así el taller sabe de dónde vino cada conversación.
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
@@ -657,10 +714,11 @@ Sigue abierto: si se venden tapas de mesa (hoy el catálogo solo tiene la base y
 
 ### 🟡 Pendiente — Google Business Profile y medición
 Search Console está verificado (17/10/2026, propiedad de dominio) y tiene línea
-base y primera medición en `docs/seo/linea-base-search-console.md`; próxima
-revisión ~28/11/2026. El Perfil de Empresa está reclamado pero falta
-verificarlo (video) y conseguir reseñas. Lo que depende del dueño está en
-`docs/tareas-pendientes.md`.
+base y primera medición en `docs/seo/linea-base-search-console.md`; la medición
+del 24/11/2026 está en `docs/growth/investigacion-seo-y-competencia.md`. El Perfil
+de Empresa figura **verificado** el 24/11/2026, pero tiene el teléfono viejo, otro
+horario, 2 reseñas y el enlace al sitio sin UTM (`docs/growth/perfil-google.md`). GA4 no tiene dimensiones personalizadas registradas (`docs/growth/medicion.md`
+§3). Lo que depende del dueño está en `docs/tareas-pendientes.md`.
 
 ### 🟢 Ya resuelto recientemente (por si aparece en el historial de git)
 - Modales migrados a `<dialog>` nativo (`components/Modal.jsx`): carrito,
