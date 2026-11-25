@@ -51,6 +51,20 @@ export const STRUCTURES_QUOTE_MESSAGE = [
 ].join('\n');
 
 /**
+ * Primer mensaje desde un caso de /proyectos/: dice qué trabajo vio la persona (el taller sabe qué le interesa) y
+ * deja escritos los mismos datos que el mensaje de empresas.
+ */
+export function projectQuoteMessage(brand) {
+  return [
+    `Hola, vi en la web el trabajo para ${brand} y quiero cotizar algo similar para mi local.`,
+    '',
+    'Rubro del local: ',
+    'Qué necesito y cantidades: ',
+    'Zona de entrega: ',
+  ].join('\n');
+}
+
+/**
  * Link de WhatsApp cuyo mensaje termina con la URL de la página. El taller ve
  * qué producto o página estaba mirando la persona (WhatsApp muestra la vista
  * previa con la foto) y puede contar qué páginas traen consultas.

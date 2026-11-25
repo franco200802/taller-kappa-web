@@ -7,7 +7,7 @@ import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
 import ProductTable from '../components/ProductTable';
 import { PRODUCTS } from '../data/products';
-import { B2B_QUOTE_MESSAGE, STRUCTURES_QUOTE_MESSAGE, whatsappUrl, whatsappUrlFor } from '../data/contact';
+import { B2B_QUOTE_MESSAGE, STRUCTURES_QUOTE_MESSAGE, whatsappUrlFor } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import { ORG_ID, faqNode, serviceNode } from '../lib/schema';
 
@@ -84,7 +84,7 @@ export default function MobiliarioComercial() {
         {/* Antes el primer botón de la página estaba al final (y = 4.272 px en escritorio, 5.483 px en el celular):
             quien llega a cotizar para un local tiene la salida arriba. El mensaje deja escritos los datos para cotizar. */}
         <div className="page-hero-actions" data-cta="mc_hero">
-          <a href={whatsappUrl(B2B_QUOTE_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn-main btn-wa">
+          <a href={whatsappUrlFor(B2B_QUOTE_MESSAGE, PATH)} target="_blank" rel="noopener noreferrer" className="btn-main btn-wa">
             <Icon name="whatsapp" /> Pedir cotización por WhatsApp
           </a>
           <Link to="/proyectos/" className="btn-outline">Ver proyectos y clientes</Link>
@@ -161,7 +161,7 @@ export default function MobiliarioComercial() {
       <section className="section-padding section-fade">
         <h2 className="section-title">Cómo pedir mobiliario comercial</h2>
         <p>
-          Escribinos por <a href={whatsappUrl(B2B_QUOTE_MESSAGE)} target="_blank" rel="noopener noreferrer">WhatsApp</a> o
+          Escribinos por <a href={whatsappUrlFor(B2B_QUOTE_MESSAGE, PATH)} target="_blank" rel="noopener noreferrer">WhatsApp</a> o
           con el <Link to="/contacto/">formulario de contacto</Link> e indicá qué producto necesitás, la cantidad, las medidas o el color si son a medida, y la zona de
           entrega. Te respondemos con el presupuesto. Antes de pedir, mirá las <Link to="/envios/">zonas y tiempos de envío</Link> y las{' '}
           <Link to="/garantia/">condiciones de garantía</Link>.
@@ -182,7 +182,7 @@ export default function MobiliarioComercial() {
           <h2>¿Querés equipar tu local o empresa?</h2>
           <p>Pedí tu cotización por WhatsApp: trabajamos con franquicias, restaurantes, bares, hoteles y oficinas.</p>
           <div className="cta-btns" data-cta="mobiliario_cta_final">
-            <a href={whatsappUrl(B2B_QUOTE_MESSAGE)} target="_blank" rel="noopener noreferrer" className="btn-main">Cotizar mobiliario comercial</a>
+            <a href={whatsappUrlFor(B2B_QUOTE_MESSAGE, PATH)} target="_blank" rel="noopener noreferrer" className="btn-main">Cotizar mobiliario comercial</a>
             <Link to="/proyectos/" className="btn-outline">Ver proyectos y clientes</Link>
           </div>
         </div>

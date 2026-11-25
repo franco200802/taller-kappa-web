@@ -996,4 +996,11 @@ export default {
   "Cotizar estructuras": "Get a quote for frames",
   "¿Fabrican estructuras de hierro para mueblerías o estudios de arquitectura?": "Do you make iron frames for furniture stores or architecture studios?",
   "Sí. Además de los productos del catálogo, Taller Kappa fabrica por encargo estructuras de hierro para muebles, como las del mobiliario de salón de McDonald's, y bases de mesa, con las medidas y el acabado de cada proyecto. Se puede pedir solo la estructura.": "Yes. Besides the catalog products, Taller Kappa makes iron furniture frames to order, like those of McDonald's dining-room furniture, and table bases, in the sizes and finish of each project. You can order just the frame.",
+  // Proyectos: cotizar algo similar a cada caso.
+  "Cotizar algo similar": "Get a quote for something similar",
+  "Ver la Base de Mesa Flat": "See the Flat Table Base",
+  "Ver estructuras y mobiliario a medida": "See custom frames and furniture",
+  "Ver mobiliario comercial a medida": "See custom commercial furniture",
+  "Ver mobiliario exhibidor a medida": "See custom display furniture",
+  "Ver bases de mesa": "See table bases",
 };

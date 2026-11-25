@@ -219,6 +219,7 @@ test('contacto y presupuesto en el build de producción', async (t) => {
     const top = await page.$eval(cta, (link) => link.getBoundingClientRect().top);
     assert.ok(top < 740, `el botón empieza en y = ${top}`);
     assert.match(messageIn(await page.$eval(cta, (link) => link.href)), /Rubro del local: \nProductos y cantidades: /);
+    assert.match(messageIn(await page.$eval(cta, (link) => link.href)), /https:\/\/tallerkappa\.com\.ar\/mobiliario-comercial\/$/);
 
     // Mueblerías, fabricantes y estudios: su propio mensaje, con la URL de la página para saber de dónde vino.
     const structures = '[data-cta="mc_estructuras"] a[href^="https://wa.me/"]';
@@ -244,6 +245,19 @@ test('contacto y presupuesto en el build de producción', async (t) => {
     const categoryLink = await page.$$eval('a[href^="https://wa.me/"]', (links) => links.map((link) => link.href)
       .find((href) => href.includes('consultar%20precios')));
     assert.match(messageIn(categoryLink), /^Hola, quiero consultar precios de bases de mesa\./);
+  });
+
+  await t.test('proyectos ofrece cotizar arriba y en cada caso, con el cliente en el mensaje', async () => {
+    await go('/proyectos/');
+    const hero = '[data-cta="proyectos_hero"] a[href^="https://wa.me/"]';
+    const top = await page.$eval(hero, (link) => link.getBoundingClientRect().top);
+    assert.ok(top < 740, `el botón empieza en y = ${top}`);
+    assert.match(messageIn(await page.$eval(hero, (link) => link.href)), /Rubro del local: [\s\S]*https:\/\/tallerkappa\.com\.ar\/proyectos\/$/);
+    const ypf = messageIn(await page.$eval('[data-cta="proyecto_ypf-full"] a[href^="https://wa.me/"]', (link) => link.href));
+    assert.match(ypf, /^Hola, vi en la web el trabajo para YPF Full y quiero cotizar algo similar para mi local\./);
+    assert.match(ypf, /https:\/\/tallerkappa\.com\.ar\/proyectos\/$/);
+    assert.equal(await page.$eval('[data-cta="proyecto_ypf-full"] a[href^="/"]', (link) => link.getAttribute('href')), '/catalogo/base-de-mesa-flat/');
+    assert.equal((await page.$$('.project-actions a[href^="https://wa.me/"]')).length, 5);
   });
 
   assert.deepEqual(pageErrors, []);

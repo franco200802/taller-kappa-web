@@ -1035,6 +1035,9 @@ footer a:hover { color: var(--blanco); }
 .project-tag { color: var(--grafito); font-size: var(--t-sm); }
 .project-tag i { margin-right: 4px; }
 .project-specs { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); font-size: var(--t-sm); margin-top: 4px; }
+/* Cotizar algo similar y la página del producto relacionado, al pie de cada caso. */
+.project-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 8px; }
+.project-actions a:not(.btn-outline) { font-size: var(--t-sm); }
 @media (max-width: 640px) {
     .project-card { grid-template-columns: 1fr; gap: 16px; }
     .project-card-img { aspect-ratio: auto; justify-content: flex-start; background: none; padding: 0; }
