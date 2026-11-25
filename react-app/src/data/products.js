@@ -41,6 +41,8 @@ export const CATEGORIES = [
     key: 'asientos',
     slug: 'asientos',
     name: 'Asientos',
+    /** Cómo se nombra la categoría en el mensaje de WhatsApp ("quiero consultar precios de …"). */
+    quoteLabel: 'sillones y bancos BKF',
     heading: 'Sillones y bancos BKF de hierro y cuero',
     seoTitle: 'Sillones y Bancos BKF en Buenos Aires | Hierro y Cuero | Taller Kappa',
     seoDescription: 'Sillón BKF Premium y Banco BKF de Taller Kappa: hierro macizo de 12 mm y cuero. Medidas, materiales y cotización. Fábrica en San Martín, Buenos Aires.',
@@ -55,6 +57,8 @@ export const CATEGORIES = [
     key: 'mesas',
     slug: 'mesas',
     name: 'Mesas',
+    // Antes el mensaje decía "consultar precios de mesas", y el taller no vende mesas: vende la base.
+    quoteLabel: 'bases de mesa',
     heading: 'Bases de mesa de hierro para mesas y barras',
     seoTitle: 'Bases de Mesa de Hierro en Buenos Aires | Taller Kappa',
     seoDescription: 'Base de Mesa Flat de Taller Kappa: chapa torneada de 10 mm, en altura de mesa (73 cm) y de barra (105 cm). Uso gastronómico. San Martín, Buenos Aires.',
@@ -62,6 +66,9 @@ export const CATEGORIES = [
     faq: [
       { q: '¿Existe una mesa BKF?', a: 'BKF es el nombre de un diseño de sillón, formado por las iniciales de Bonet, Kurchan y Ferrari Hardoy. Taller Kappa no vende una "mesa BKF": en mesas fabrica la Base de Mesa Flat, y del diseño BKF fabrica el sillón y el banco.' },
       { q: '¿La Base de Mesa Flat incluye la tapa de la mesa?', a: 'El catálogo del sitio ofrece la base, que admite tapas grandes. Para consultar por tapas u otras medidas de mesa, escribinos por WhatsApp.' },
+      // 12 de las 17 consultas por WhatsApp del sitio salieron de páginas para locales (GA4, 28/10 al 24/11/2026).
+      // Prueba y condiciones ya publicadas: /proyectos/ (YPF Full), /envios/ y la FAQ (mayoristas y factura).
+      { q: '¿Venden bases de mesa por cantidad para locales gastronómicos?', a: 'Sí. Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full. Se cotizan por cantidad, con factura A o B, y en pedidos de 3 o más unidades el envío dentro de GBA es bonificado.' },
     ],
     difference: 'El catálogo incluye la base de mesa; el sitio no publica tapas. Para otros modelos o medidas de mesa, la consulta se hace por WhatsApp.',
   },
@@ -151,9 +158,15 @@ export const PRODUCTS = [
     name: 'Base de Mesa Flat',
     article: 'la',
     heading: 'Base de Mesa Flat de hierro, fabricada en Buenos Aires',
-    alternateName: ['Base de mesa de hierro', 'Base Flat'],
-    seoTitle: 'Base de Mesa Flat de Hierro en Buenos Aires | Taller Kappa',
-    seoDescription: 'Base de Mesa Flat: chapa de 10 mm, columna de 77/101 mm, altura de mesa (73 cm) o de barra (105 cm). Para uso gastronómico. Taller Kappa, San Martín.',
+    alternateName: ['Base de mesa de hierro', 'Base Flat', 'Base de mesa para bar'],
+    // Antes: "Base de Mesa Flat de Hierro en Buenos Aires", casi igual al de /catalogo/mesas/ y con el nombre del
+    // modelo (que nadie busca) adelante. 29 impresiones y 0 clics en 28 días (Search Console, 26/10 al 22/11/2026).
+    // Ahora dice el uso: "base de mesa de hierro" es la primera sugerencia de Google para "base de mesa" y "base para
+    // mesa bar alta" / "base de metal para mesa de bar" aparecen al buscar "base para mesa de bar". La categoría sigue
+    // apuntando a "bases de mesa de hierro" (y a "fábrica de bases", donde ya sale primera). Sin "| Taller Kappa" para
+    // no pasar de 70 caracteres: Google muestra el nombre del sitio aparte.
+    seoTitle: 'Base de Mesa de Hierro para Bar y Restaurante | Buenos Aires',
+    seoDescription: 'Base de mesa de hierro para bares, restaurantes y franquicias: chapa de 10 mm, columna de 77 o 101 mm, alto de mesa (73 cm) o de barra (105 cm). Hecha en San Martín.',
     image: '/images/base-mesa-flat-hierro.jpg',
     imageWidth: 1024,
     imageHeight: 1536,
@@ -180,7 +193,28 @@ export const PRODUCTS = [
     faq: [
       { q: '¿Qué alturas tiene la Base de Mesa Flat?', a: 'Se ofrece en dos alturas: 73 cm para mesa y 105 cm para barra.' },
       { q: '¿La Base de Mesa Flat sirve para uso gastronómico?', a: 'Sí, está pensada para eso: es una base de chapa torneada pesada de 10 mm que evita el balanceo y admite tapas grandes.' },
+      { q: '¿Sirve para una mesa alta o una barra?', a: 'Sí. La versión de barra mide 105 cm de alto; para una mesa común está la versión de 73 cm.' },
+      { q: '¿La base incluye la tapa?', a: 'No: se vende la base, que admite tapas grandes. Para consultar por tapas u otras medidas de mesa, escribinos por WhatsApp.' },
     ],
+    /**
+     * Bloque "para locales" de la ficha (Producto.jsx → ProductBusiness). La prueba es la de /proyectos/ (YPF Full,
+     * confirmada por el dueño el 1/10/2026) y las condiciones son las de /envios/ y la FAQ (mayoristas de 3 o más
+     * unidades con envío bonificado en GBA, factura A y B). Si cambian allá, cambiarlas acá.
+     */
+    business: {
+      heading: 'Bases de mesa por cantidad para bares, restaurantes y franquicias',
+      proof: 'Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full, con acabado epoxi negro mate.',
+      terms: 'Para equipar un local se cotizan por cantidad, en la altura y el color que elijas, con factura A o B. En pedidos de 3 o más unidades, el envío dentro de GBA es bonificado.',
+      cta: 'Cotizar bases por cantidad',
+      message: [
+        'Hola, quiero cotizar bases de mesa Flat para un local.',
+        '',
+        'Rubro del local: ',
+        'Cantidad y altura (mesa 73 cm o barra 105 cm): ',
+        'Color: ',
+        'Zona de entrega: ',
+      ].join('\n'),
+    },
   },
 ];
 

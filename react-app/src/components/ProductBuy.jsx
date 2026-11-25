@@ -48,7 +48,8 @@ export function BuyBar({ targetRef, name, detail, ready, onAdd, onChoose, waHref
   useEffect(() => {
     const target = targetRef.current;
     if (!target || typeof IntersectionObserver === 'undefined') return undefined;
-    const watched = [target, ...document.querySelectorAll('.bkf-stage-actions, .cta-section, footer')];
+    // También se esconde junto a los botones "para locales" de la ficha (Producto.jsx → ProductBusiness).
+    const watched = [target, ...document.querySelectorAll('.bkf-stage-actions, .cta-section, [data-cta="ficha_empresas"], footer')];
     const onScreen = new Set();
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => (e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)));

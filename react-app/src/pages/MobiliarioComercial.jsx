@@ -7,7 +7,7 @@ import ShimmerText from '../components/ShimmerText';
 import TypeWriter from '../components/TypeWriter';
 import ProductTable from '../components/ProductTable';
 import { PRODUCTS } from '../data/products';
-import { B2B_QUOTE_MESSAGE, whatsappUrl } from '../data/contact';
+import { B2B_QUOTE_MESSAGE, STRUCTURES_QUOTE_MESSAGE, whatsappUrl, whatsappUrlFor } from '../data/contact';
 import { BUSINESS } from '../data/business';
 import { ORG_ID, faqNode, serviceNode } from '../lib/schema';
 
@@ -28,6 +28,7 @@ const FAQ = [
   { q: '¿Qué es el mobiliario comercial?', a: 'Es el mobiliario de locales abiertos al público —gastronomía, estaciones de servicio, comercios, hoteles u oficinas— que tiene que resistir el uso diario intensivo.' },
   { q: '¿Taller Kappa fabrica mobiliario comercial?', a: 'Sí. Fabrica en su taller de San Martín, Buenos Aires, mobiliario de hierro a medida para locales gastronómicos, estaciones de servicio y comercios: bases de mesa, bancos y sillones BKF, y mobiliario exhibidor.' },
   { q: '¿Se pueden pedir medidas, colores y acabados a medida?', a: 'Sí. Se adaptan medidas, colores y terminaciones al local, sin costo adicional.' },
+  { q: '¿Fabrican estructuras de hierro para mueblerías o estudios de arquitectura?', a: "Sí. Además de los productos del catálogo, Taller Kappa fabrica por encargo estructuras de hierro para muebles, como las del mobiliario de salón de McDonald's, y bases de mesa, con las medidas y el acabado de cada proyecto. Se puede pedir solo la estructura." },
   { q: '¿Emiten factura A?', a: 'Sí. Taller Kappa emite factura A y B, para empresas y particulares.' },
   { q: '¿Hay condiciones para pedidos mayoristas?', a: 'En pedidos mayoristas (3 o más unidades) y en la primera compra, el envío dentro de GBA es bonificado. Las condiciones se consultan por WhatsApp.' },
   { q: '¿Cuánto tarda un pedido?', a: 'El plazo de entrega depende de la disponibilidad de stock. Consultanos por WhatsApp con el producto, la cantidad y la zona. Las zonas de entrega están en la página de envíos.' },
@@ -51,7 +52,7 @@ export default function MobiliarioComercial() {
     path: PATH,
     name: 'Fabricación de mobiliario comercial de hierro a medida',
     serviceType: 'Fabricación de mobiliario comercial y gastronómico',
-    description: 'Taller Kappa fabrica mobiliario de hierro y cuero a medida para locales gastronómicos, estaciones de servicio, comercios, hoteles y oficinas.',
+    description: 'Taller Kappa fabrica mobiliario de hierro y cuero a medida para locales gastronómicos, estaciones de servicio, comercios, hoteles y oficinas, y estructuras de hierro por encargo para mueblerías, fabricantes de muebles y estudios de arquitectura.',
     offers: PRODUCTS,
   });
 
@@ -131,6 +132,30 @@ export default function MobiliarioComercial() {
         <p>
           Estos son algunos de los clientes y trabajos que ya hicimos: <Link to="/proyectos/">proyectos de mobiliario de hierro para YPF, McDonald&apos;s, Burger King, Shell Select y Sandro</Link>.
         </p>
+      </section>
+
+      {/* Mueblerías, fabricantes y estudios: un público B2B que el sitio no nombraba, aunque el taller ya hace estructuras
+          metálicas para mobiliario (McDonald's, en /proyectos/) y el Perfil de Empresa lo presenta así. No va en SECTORS:
+          esos rubros los escribe el hero después de "Equipamos", y a una mueblería no se la equipa, se le provee. */}
+      <section className="section-padding section-fade" aria-labelledby="mc-estructuras">
+        <div className="bkf-about-inner">
+          <h2 id="mc-estructuras">Estructuras de hierro para mueblerías, fabricantes y estudios</h2>
+          <p>
+            Si fabricás o vendés muebles, o diseñás locales, Taller Kappa hace la parte de hierro por encargo: estructuras para sillas, sillones,
+            bancos y mesas, y bases de mesa, con las medidas y el acabado de tu proyecto. Podés pedir solo la estructura, para terminarla con
+            madera, tapizado o la tapa que elijas.
+          </p>
+          <p>
+            Ya fabricamos estructuras metálicas para el mobiliario de salón de McDonald&apos;s y mobiliario exhibidor cromado para los locales de
+            Sandro. Para cotizar, mandanos por WhatsApp un plano, un boceto o una foto de referencia con las medidas, la cantidad y la zona de
+            entrega.
+          </p>
+          <div className="cta-btns" data-cta="mc_estructuras">
+            <a href={whatsappUrlFor(STRUCTURES_QUOTE_MESSAGE, PATH)} target="_blank" rel="noopener noreferrer" className="btn-outline">
+              <Icon name="whatsapp" /> Cotizar estructuras
+            </a>
+          </div>
+        </div>
       </section>
 
       <section className="section-padding section-fade">

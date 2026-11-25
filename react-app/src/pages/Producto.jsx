@@ -124,6 +124,33 @@ function FichaMain({ product, path, category }) {
 }
 
 /**
+ * Para locales y empresas: la prueba de un cliente real, las condiciones por cantidad y un WhatsApp que deja
+ * escritos los datos para cotizar. Solo en los productos con `business` (data/products.js). Las consultas por
+ * WhatsApp del sitio salen sobre todo de las páginas para locales, y la ficha no lo decía. `data-cta` mide el botón
+ * (whatsapp_click con location 'ficha_empresas').
+ */
+function ProductBusiness({ product, path }) {
+  const { heading, proof, terms, cta, message } = product.business;
+  return (
+    <section className="section-padding section-fade" aria-labelledby="ficha-empresas">
+      <div className="bkf-about-inner">
+        <h2 id="ficha-empresas">{heading}</h2>
+        <p>{proof} {terms}</p>
+        <p>
+          Para equipar todo el local, mirá el <Link to="/mobiliario-comercial/">mobiliario comercial de hierro a medida</Link>.
+        </p>
+        <div className="cta-btns" data-cta="ficha_empresas">
+          <a href={whatsappUrlFor(message, path)} target="_blank" rel="noopener noreferrer" className="btn-main btn-wa">
+            <Icon name="whatsapp" /> {cta}
+          </a>
+          <Link to="/proyectos/" className="btn-outline">Ver proyectos y clientes</Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
  * Página individual de producto — URL propia, indexable y prerenderizada
  * en /catalogo/:slug. Reutiliza la misma fuente de datos que Catalogo.jsx
  * para no duplicar contenido.
@@ -203,6 +230,8 @@ export default function Producto() {
           </div>
         </div>
       </section>
+
+      {product.business && <ProductBusiness product={product} path={path} />}
 
       {product.faq?.length > 0 && (
         <section className="section-padding section-fade">
