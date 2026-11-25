@@ -632,6 +632,20 @@ al tocar el código:
 - **No se tocaron** `/bkf/`, `/sillon-bkf/` ni la home: la caída de las búsquedas del BKF
   en noviembre es de autoridad (3 enlaces externos), no on-page. Volver a medir 3-4
   semanas después del deploy antes de cambiar títulos.
+- **`page_view` manual, uno por página**: lo manda `FloatWaSentinel` (`Layout.jsx`) un
+  cuadro después de que la página nueva montó, con `page_title`. En GA4 tiene que estar
+  **apagado** "Cambios de página basados en eventos del historial del navegador" (medición
+  mejorada); con eso prendido, cada navegación interna cuenta dos. No volver a llamar a
+  `trackPageview` desde `Layout`: el título todavía es el de la página anterior.
+- **Datos personales en GA4**: el `click` automático de "Clics de salida" manda el enlace
+  completo, y el de WhatsApp del presupuesto lleva nombre, zona y comentario. Se tapa con
+  "Ocultar datos → parámetros de consulta de URL: `text`" en el flujo
+  (`docs/growth/ga4-configuracion.md`). Si se agrega otro enlace externo con datos de la
+  persona en la URL, sumar ese parámetro ahí.
+- **Proyectos**: botón arriba (`proyectos_hero`) y "Cotizar algo similar" en cada caso
+  (`proyecto_<slug>`, `projectQuoteMessage()` en `data/contact.js`). Los mensajes de empresa
+  (`B2B_QUOTE_MESSAGE`, estructuras, casos) usan `whatsappUrlFor`, que agrega la URL de la
+  página: así el taller sabe de dónde vino cada conversación.
 
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
@@ -692,8 +706,7 @@ Search Console está verificado (17/10/2026, propiedad de dominio) y tiene líne
 base y primera medición en `docs/seo/linea-base-search-console.md`; la medición
 del 24/11/2026 está en `docs/growth/investigacion-seo-y-competencia.md`. El Perfil
 de Empresa figura **verificado** el 24/11/2026, pero tiene el teléfono viejo, otro
-horario, 2 reseñas y el enlace al sitio sin UTM (`docs/growth/estrategia-comercial.md`
-§4). GA4 no tiene dimensiones personalizadas registradas (`docs/growth/medicion.md`
+horario, 2 reseñas y el enlace al sitio sin UTM (`docs/growth/perfil-google.md`). GA4 no tiene dimensiones personalizadas registradas (`docs/growth/medicion.md`
 §3). Lo que depende del dueño está en `docs/tareas-pendientes.md`.
 
 ### 🟢 Ya resuelto recientemente (por si aparece en el historial de git)

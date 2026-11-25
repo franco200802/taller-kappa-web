@@ -25,8 +25,15 @@ también `whatsapp_checkout` ni `add_to_cart` (contarían dos veces el mismo
 pedido). No agregar `trackEvent('whatsapp_click')` a mano en botones: lo hace
 `trackClicks()` con `data-cta` (`CONTEXTO_PROYECTO.md` §5).
 
-Datos personales: ningún evento manda nombre, teléfono, email ni zona escrita
-(del presupuesto solo va `has_zone: si/no`). Mantenerlo así.
+Datos personales: los eventos del sitio no mandan nombre, teléfono, email ni
+zona escrita (del presupuesto solo va `has_zone: si/no`). **Pero el `click`
+automático de GA4 ("Clics de salida") sí:** manda el enlace de WhatsApp completo,
+y en el presupuesto ese enlace incluye nombre, zona y comentario (verificado el
+25/11/2026). Se corrige ocultando el parámetro `text` en GA4:
+[`ga4-configuracion.md`](ga4-configuracion.md) §3 A, pendiente de autorización.
+
+Páginas vistas: hasta aplicar el cambio B de ese documento, cada navegación
+interna cuenta dos `page_view`. Las consultas (`whatsapp_click`) no se duplican.
 
 ## 2. Lo que pasa en WhatsApp: el registro de consultas
 
@@ -57,24 +64,14 @@ y sin nombres ni teléfonos de clientes (no hacen falta para medir).
 Con 4 semanas de registro se puede calcular: consultas reales por canal, tasa
 de presupuesto y de cierre por segmento, y ticket promedio B2B frente a B2C.
 
-## 3. Dimensiones a registrar en GA4 (requiere autorización)
+## 3. Configuración de GA4 (requiere autorización)
 
-Administrar → Definiciones personalizadas → Crear dimensión personalizada,
-alcance **Evento**. Sin esto, GA4 recibe los parámetros pero no los muestra en
-informes. Solo cuentan desde el día en que se crean (no hacia atrás).
-
-| Nombre de la dimensión | Parámetro | Para responder |
-|---|---|---|
-| Ubicación del botón | `location` | ¿Qué botón genera consultas? |
-| Producto | `item_name` | ¿Qué producto se consulta más? |
-| Tipo de cliente | `customer_type` | ¿Los presupuestos son de particulares o empresas? |
-| Presupuesto con zona | `has_zone` | ¿Llegan completos? |
-| Presupuesto con comentario | `has_comment` | ¿Usan el campo de medidas a medida? |
-| Asistente de IA | `ai_source` | ¿Qué asistente trae visitas? |
-| Interés (formulario) | `interest` | ¿Qué piden por el formulario de contacto? |
-
-Si GA4 rechaza `item_name` por ser un nombre reservado de comercio electrónico,
-avisar: se renombra el parámetro en el código (`product_name`) y se registra ese.
+La configuración propuesta y verificada está en
+[`ga4-configuracion.md`](ga4-configuracion.md): ocultar el mensaje de WhatsApp en
+los clics de salida, un solo `page_view` por página y las dimensiones `Boton o
+zona` (`location`), `Producto` (`item_name`), `Tipo de cliente`, `Presupuesto con
+zona`, `Presupuesto con comentario`, `Asistente IA`, `Interes del formulario` y,
+opcional, `Variante` (`color`).
 
 También conviene vincular Search Console con GA4 (Administrar → Vinculaciones
 de productos): muestra las búsquedas de Google junto a las páginas de destino.

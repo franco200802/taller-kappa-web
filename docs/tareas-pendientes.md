@@ -32,21 +32,29 @@ Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
    el 27 % de las páginas vistas) y la Base de Mesa Flat y mobiliario comercial
    tienen salida para pedir por cantidad y para mueblerías, fabricantes y estudios.
 2. **Confirmar antes de publicar:** que se puede vender **solo la estructura** de
-   hierro (el sitio nuevo lo dice, tomado de tu descripción del Perfil de Empresa).
-   Si no es así, avisá y se saca.
-3. **Autorizar o hacer dos cambios de cuenta:**
-   - GA4: registrar 7 dimensiones personalizadas (`docs/growth/medicion.md` §3).
-   - Perfil de Empresa: teléfono, horario, enlace con UTM, productos y servicios
-     (`docs/growth/estrategia-comercial.md` §4).
+   hierro y que se toman encargos de mueblerías, fabricantes y estudios con plano,
+   boceto o foto (el sitio nuevo lo dice, tomado de tu descripción del Perfil de
+   Empresa). Lista completa de afirmaciones en `docs/growth/pull-request.md` §1.
+3. **Autorizar (o hacer) los cambios de cuenta:**
+   - GA4 (`docs/growth/ga4-configuracion.md`): ocultar el parámetro `text` en los
+     clics de salida (**hoy llega a Google el nombre que el cliente escribe en el
+     presupuesto**), apagar los cambios de página por historial (cada navegación
+     interna cuenta dos páginas vistas) y crear 7 dimensiones (+1 opcional).
+   - Perfil de Empresa (`docs/growth/perfil-google.md`): enlace con UTM, Instagram,
+     logo y servicios. Teléfono y horario **no** se tocan hasta que los confirmes.
+   - Borrar desde tu cuenta la reseña que figura escrita por la misma cuenta que
+     administra el perfil (Google no permite que el negocio opine sobre sí mismo).
 4. **Datos:** qué teléfono va en Google (hoy figura el 011 4753-0099: 3 llamadas en
-   6 meses), horario real (Google dice que abre a las 8; el sitio, a las 9) y una
+   6 meses), horario real (Google dice de 8 a 17; el sitio, de 9 a 18), si es
+   cierto el atributo "acepta tarjetas de débito", el código postal completo y una
    sola frase de plazo de entrega.
 5. **Decisiones:** precio "desde" con vigencia (sillón, banco, base), medios de
    pago que se pueden publicar, y condiciones para revendedores.
 6. **Rutina:** anotar cada consulta en `docs/growth/registro-consultas.csv` (la
-   copia con datos, fuera del repo: es público), pedir reseña a cada cliente y 10
-   contactos directos por semana a locales (mensajes listos en
-   `estrategia-comercial.md` §3).
+   copia con datos, fuera del repo: es público), pedir reseña a cada cliente,
+   seguir los chats de las últimas 4 semanas, escribir a los clientes de empresa
+   actuales y 10 contactos directos por semana a locales (plan de 14 días y
+   mensajes en `docs/growth/estrategia-comercial.md` §3 y §4).
 
 ## Nuevo (22/11/2026): revisar el rediseño premium
 
@@ -90,7 +98,7 @@ punto 1, así el sitio y el perfil ya coinciden.
 
 **Hecho:** el 24/11/2026 el administrador de perfiles lo muestra "Verificado".
 Falta la parte de "Después de la verificación" (al final de este punto), que
-ahora está detallada campo por campo en `docs/growth/estrategia-comercial.md` §4.
+ahora está detallada campo por campo en `docs/growth/perfil-google.md`.
 
 Google solo ofrecía verificación **por video**. Se hace desde el celular, en el
 taller, con la cuenta `ingfranciscomarotta@gmail.com`:

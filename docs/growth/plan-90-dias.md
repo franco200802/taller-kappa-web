@@ -15,7 +15,7 @@
 | 4 | Empezar el registro de consultas | Medir conversaciones, presupuestos y ventas | Dueño | 2 min por consulta | Filas por semana en la planilla | — | — |
 | 5 | Pedir reseña a los clientes de los últimos 6 meses y a cada cliente nuevo | Más confianza en Maps y en la búsqueda | Dueño | Mensaje de WhatsApp con `/resena/` | Reseñas nuevas por mes (hoy 2) | — | — |
 | 6 | Sesión de fotos (2 h): frente, taller trabajando, cada producto, detalles | Reemplazar las fotos de fondo editado; perfil completo | Dueño | Celular, luz de día | Fotos en el perfil y en el sitio | — | Permiso si aparecen clientes o locales |
-| 7 | 10 contactos directos por semana, primero gastronomía | Consultas B2B sin depender de Google | Dueño | 1 h por semana; mensajes de `estrategia-comercial.md` §3 | Respuestas, presupuestos y ventas con canal `contacto-directo` | — | Precio por cantidad |
+| 7 | 10 contactos directos por semana, primero gastronomía | Consultas B2B sin depender de Google | Dueño | 1 h por semana; mensajes de `estrategia-comercial.md` §3 y §4 | Respuestas, presupuestos y ventas con canal `contacto-directo` | — | Precio por cantidad |
 | 8 | Decidir precio "desde" y medios de pago | Que quien compara el BKF vea un número | Dueño | Decisión | Si se publica: consultas desde `/sillon-bkf/` y CTR de búsquedas "comprar" | — | Precio, vigencia, descuentos |
 | 9 | Bing Places (importar desde Google), Bing Webmaster (importar desde Search Console) y Cylex | Más citas con los mismos datos; Bing alimenta a Copilot y ChatGPT | Dueño | 1 h; datos en `docs/seo/fichas-directorios.md` | Fichas publicadas | Paso 3 | Teléfono |
 

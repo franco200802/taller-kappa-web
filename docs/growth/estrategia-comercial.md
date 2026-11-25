@@ -33,7 +33,29 @@ En el sitio, cada segmento ya tiene su salida: la ficha de la base (cotizar por
 cantidad), `/mobiliario-comercial/` (cotización de locales y estructuras por
 encargo) y `/proyectos/`.
 
-## 3. Captación activa (la hace el dueño)
+## 3. Primeros clientes: 14 días
+
+Del contacto más cálido al más frío. Cada acción se anota en
+`registro-consultas.csv` y, si lleva enlace, usa las UTM de `medicion.md` §4.
+
+| Días | Acción | Con quién | Cómo se sabe si funcionó |
+|---|---|---|---|
+| 1-2 | Releer los chats de WhatsApp de las últimas 4 semanas (hubo 17 clics a WhatsApp de 15 personas) y responder o hacer seguimiento de los que no recibieron presupuesto | Quienes ya escribieron | Presupuestos enviados y respondidos |
+| 1-3 | Escribir a los clientes de empresa actuales: si abren o renuevan locales, y si conocen a alguien que esté equipando uno | YPF Full, Shell Select, franquiciados de McDonald's y Burger King, Sandro (los contactos los tiene el dueño) | Pedidos nuevos o recomendaciones |
+| 1 | Publicar la rama (ficha de la base por cantidad, proyectos con "Cotizar algo similar", estructuras por encargo) | — | `whatsapp_click` con `location` `ficha_empresas`, `proyecto_*`, `mc_estructuras` |
+| 1-2 | Perfil de Empresa: enlace con UTM, Instagram, logo y servicios (con tu OK) | Quienes buscan en Maps (211 pedidos de cómo llegar en 6 meses) | Clics al sitio con `utm_campaign=perfil-empresa`; llamadas |
+| 3-14 | 10 contactos directos por semana a locales gastronómicos de la zona (primero los recién abiertos) | Ver "Dónde encontrar a quién escribir" | Respuestas, presupuestos y ventas con canal `contacto-directo` |
+| 3-14 | 5 contactos por semana a carpinterías y fabricantes que necesiten bases o estructuras | Ídem | Ídem |
+| 7 | Publicar en Instagram un caso real (fotos de una entrega, con permiso) con el enlace a `/proyectos/` | Seguidores y clientes | Sesiones `utm_source=instagram` |
+| 14 | Revisar el registro: qué canal dio conversaciones reales y presupuestos | — | Decidir las semanas 3 y 4 |
+
+Mensaje para clientes actuales:
+
+```
+Hola [nombre], ¿cómo va? Soy [nombre] de Taller Kappa. Les hicimos [las bases de mesa / los bancos] para [local]. ¿Tienen alguna apertura o renovación prevista? Y si conocés a alguien que esté equipando un local, te agradezco si nos recomendás: https://tallerkappa.com.ar/proyectos/?utm_source=whatsapp&utm_medium=contacto-directo&utm_campaign=b2b-clientes
+```
+
+## 4. Captación activa (la hace el dueño)
 
 **Ritmo sugerido:** 10 contactos por semana, anotados en `registro-consultas.csv`
 con canal `contacto directo`. Sin envíos masivos ni listas compradas: cada
@@ -74,25 +96,16 @@ Hola, soy [nombre], de Taller Kappa (San Martín). Hacemos por encargo la parte 
 piden presupuesto, responder en el día con precio, plazo, forma de pago y
 enlace a la ficha.
 
-## 4. Perfil de Empresa de Google: cambios campo por campo
+## 5. Perfil de Empresa de Google
 
-Visto el 24 y 25/11/2026 con la cuenta que lo administra. Estado: **verificado**.
-Rendimiento de junio a noviembre: 234 interacciones (211 pedidos de cómo llegar,
-20 clics al sitio, 3 llamadas). Estos cambios son de cuenta: los hace el dueño, o
-Claude con su autorización.
+La revisión campo por campo (25/11/2026), los cambios listos para autorizar, los
+que necesitan un dato tuyo y las fotos que faltan están en
+[`perfil-google.md`](perfil-google.md). Resumen: verificado; teléfono viejo y otro
+horario (sin cambios hasta que confirmes); sin UTM, sin redes, sin logo, sin
+fotos propias, sin productos ni servicios; 2 reseñas, una de ellas escrita desde
+la cuenta que administra el perfil.
 
-| Campo | Hoy | Propuesto | Por qué | [falta] |
-|---|---|---|---|---|
-| Teléfono principal | 011 4753-0099 | 11 6124-2498 (el del sitio y el WhatsApp) | 3 llamadas en 6 meses; el sitio y el perfil tienen que coincidir | Si el 4753-0099 sigue siendo del taller (puede quedar como secundario) |
-| Horario | Abre a las 8 | El real; el sitio dice lunes a viernes de 9 a 18 | Si no coinciden, Google y el cliente desconfían | Horario real |
-| Sitio web | `https://tallerkappa.com.ar/` | `https://tallerkappa.com.ar/?utm_source=google&utm_medium=organic&utm_campaign=perfil-empresa` | Separar en GA4 las visitas del perfil sin sacarlas del canal orgánico | — |
-| Productos | Sin verificar | Sillón BKF, Banco BKF y Base de Mesa Flat, cada uno con foto real y enlace a su ficha (con la misma UTM) | Aparecen en el perfil y en Maps | Fotos reales |
-| Servicios | Sin verificar | Mobiliario comercial a medida; estructuras de hierro por encargo; bases de mesa para locales | Que el perfil diga lo que se vende a empresas | — |
-| Categorías | Principal: "Fábrica de muebles" | Mantener. Agregar solo las secundarias de la lista de Google que describan lo que se hace (por ejemplo, herrería o proveedor de muebles para restaurantes, si existen) | La categoría es la señal más fuerte del perfil | — |
-| Fotos | No se pudo verificar cuántas propias hay | Frente con el número, taller trabajando, cada producto, locales equipados (con permiso) | Las búsquedas desde el modo IA piden fotos; el perfil las muestra primero | Sacarlas |
-| Reseñas | 2 (5,0) | Pedir a todos los clientes al entregar (`https://tallerkappa.com.ar/resena/`) y responder todas | Es lo que más pesa en lo local | — |
-
-## 5. B2C: vender el sillón BKF
+## 6. B2C: vender el sillón BKF
 
 ### 5.1 Lo que el comprador necesita saber
 
@@ -126,7 +139,7 @@ sitio y el JSON-LD lo toman solos), junto a la garantía.
 5. **Instagram:** un video corto del proceso por semana (soldadura, costura del
    cuero, embalaje), con el enlace de la bio con UTM (`medicion.md` §4).
 
-## 6. Material descargable
+## 7. Material descargable
 
 Una ficha técnica en PDF por producto (foto, medidas, materiales, acabados,
 garantía, contacto) para estudios y mueblerías. El sitio ya genera un PDF del

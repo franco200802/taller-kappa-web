@@ -16,14 +16,32 @@ Documentos de esta carpeta:
 | [`estrategia-comercial.md`](estrategia-comercial.md) | D. Qué ofrecer a cada segmento B2B y cómo vender el sillón BKF |
 | [`plan-90-dias.md`](plan-90-dias.md) | E. Plan 30/60/90 con responsable, recursos, medición y dependencias |
 | [`medicion.md`](medicion.md) | Qué se puede medir hoy, qué falta, UTM y tablero semanal |
+| [`ga4-configuracion.md`](ga4-configuracion.md) | GA4: estado verificado, dimensiones a crear, datos personales y duplicados a corregir (requiere autorización) |
+| [`perfil-google.md`](perfil-google.md) | Perfil de Empresa: datos actuales, cambios listos, cambios que esperan un dato tuyo, fotos |
+| [`pull-request.md`](pull-request.md) | Texto del PR, verificaciones y afirmaciones a confirmar antes de publicar |
 | [`registro-consultas.csv`](registro-consultas.csv) | Planilla para anotar cada consulta de WhatsApp hasta la venta |
 
-Los cinco documentos que pedía revisar el encargo (`plan-comercial-claude-2026.md`,
-`plan-conversion-codex-2026.md`, `estrategia-whatsapp-ventas-2026.md`,
-`captacion-clientes-30-dias.md`, `primera-campana-b2b.md`) **no existen** en
-ninguna rama local ni remota ni en las copias del proyecto de la máquina
-(búsqueda con `git log --all` y en disco). Se trabajó con lo que sí hay:
-`CONTEXTO_PROYECTO.md`, `docs/` y `seo/`.
+### Los cinco documentos comerciales que no aparecen
+
+`plan-comercial-claude-2026.md`, `plan-conversion-codex-2026.md`,
+`estrategia-whatsapp-ventas-2026.md`, `captacion-clientes-30-dias.md` y
+`primera-campana-b2b.md`, ni los commits `d4158c1` (estrategia WhatsApp),
+`57de09f` (captación y campaña B2B) y `cad3462` (plan comercial). Se buscaron el
+25/11/2026 sin modificar ni borrar nada:
+
+| Dónde | Cómo | Resultado |
+|---|---|---|
+| Este clon | `git worktree list` (un solo worktree), `git cat-file`, `git log --all`, reflog y `git fsck --unreachable` | No existen esos SHA ni commits con esos temas |
+| Los 33 PR de GitHub | `git fetch` de `refs/pull/*/head` (solo agrega referencias remotas) | No están |
+| GitHub | API de commits por SHA | "No commit found" para los tres |
+| Clon de OneDrive y otros repos del usuario (incluidos dos clones temporales de sesiones anteriores) | `git cat-file` y commits sueltos | No están (los commits sueltos de OneDrive son stashes viejos) |
+| Todo el perfil de usuario | Búsqueda por nombre de archivo (10 niveles) | Ningún archivo con esos nombres |
+| Historial local de Codex | Búsqueda de los SHA y los nombres | Sin coincidencias; la única sesión de Codex que habla de Taller Kappa (18/11) trabajó en `Documents/venture-lab`, un proyecto de servicios propio que usa a Taller Kappa como caso de portfolio |
+
+Lo más probable es que se hayan creado en un entorno que no está en esta máquina
+ni en GitHub (por ejemplo, una tarea de Codex en la nube que no se publicó). Si
+los tenés en otro lado, subilos a una rama y se integran; mientras tanto no se
+pudo reutilizar esa investigación.
 
 ---
 
@@ -65,7 +83,10 @@ El embudo de los últimos 28 días, con fuentes separadas (no se mezclan unidade
    en orgánico hubo 9 clics a WhatsApp en 82 sesiones. Tampoco hay dimensiones
    personalizadas registradas: GA4 recibe `location` e `item_name` pero no los
    muestra. → Se corrigió el código (B1); registrar las dimensiones requiere tu
-   permiso (G).
+   permiso (G). Verificado después, el 25/11: el `click` automático de GA4 manda el
+   enlace de WhatsApp completo (con el nombre que el cliente escribe en el
+   presupuesto) y cada navegación interna cuenta dos `page_view`. Las dos cosas
+   se corrigen en la configuración de GA4 (`ga4-configuracion.md`).
 4. **El Perfil de Empresa está verificado pero incompleto, y es el canal local
    más usado.** Hubo 211 pedidos de "cómo llegar" desde el perfil, pero figura el
    teléfono viejo (011 4753-0099: 3 llamadas en 6 meses), el horario abre a las 8
@@ -91,6 +112,8 @@ El embudo de los últimos 28 días, con fuentes separadas (no se mezclan unidade
 | B2 | `235e28b` | **Categoría mesas:** pregunta sobre bases por cantidad para locales; su WhatsApp pedía precios de "mesas" (no se venden) y ahora dice "bases de mesa" | `src/data/products.js` (`quoteLabel`), `src/pages/Categoria.jsx` | Consultas más claras y respuesta para la búsqueda B2B donde ya salimos primeros |
 | B2 | `235e28b` | **Mobiliario comercial:** sección y pregunta para mueblerías, fabricantes y estudios de arquitectura (estructuras de hierro por encargo, se puede pedir solo la estructura), con WhatsApp propio (`location: mc_estructuras`) | `src/pages/MobiliarioComercial.jsx`, `src/data/contact.js`, `src/data/business.js` | Nombrar a tres segmentos B2B que el sitio no mencionaba, en la página que más convierte, sin crear una URL nueva |
 | B3 | `e289046` | FAQ general "¿Venden al por mayor?": menciona las estructuras por encargo | `src/data/faq.js` | Esa respuesta también va a `llms.txt`, que leen los asistentes de IA (26 sesiones y 3 de los 17 WhatsApp del período) |
+| B4 | `4016e6d` | El `page_view` sale cuando la página nueva ya montó y lleva su título (antes, el de la página anterior) | `src/components/Layout.jsx`, `src/lib/analytics.js`, `tests/e2e/analytics.test.mjs` | Que el informe de páginas sea correcto cuando se apague el `page_view` duplicado de GA4 (`ga4-configuracion.md` §3 B) |
+| B5 | `745c691` | **Proyectos:** botón de cotización arriba y "Cotizar algo similar" en cada caso, con el cliente en el mensaje y enlace al producto relacionado (`location` `proyectos_hero`, `proyecto_<caso>`). Los mensajes de empresa de mobiliario comercial y proyectos terminan con la URL de la página | `src/pages/Proyectos.jsx`, `src/pages/MobiliarioComercial.jsx`, `src/data/contact.js`, `src/styles/global.css` | Salida para cotizar en la tercera página B2B; cada conversación de WhatsApp dice de qué página vino |
 | — | — | Traducciones al inglés de todos los textos nuevos | `src/i18n/en.js` | El modo EN no muestra restos en español |
 | — | (docs) | Este informe, la planilla de consultas, `CONTEXTO_PROYECTO.md` §5o y `docs/tareas-pendientes.md` | `docs/` | — |
 
@@ -120,7 +143,7 @@ de bar" en 4-6 semanas. Ninguna está demostrada todavía.
 | `npm run build` | 15 rutas + 404.html, sitemap con 15 URLs, `llms.txt`, sin avisos de la validación SEO/GEO (canonical, un h1, títulos y descripciones únicos y de largo correcto, JSON-LD con todos sus `@id`, enlaces rotos, páginas huérfanas, imágenes) |
 | JSON-LD | `Product` (base), `FAQPage` (base 4 preguntas, categoría 3, mobiliario 8) y `Service` parsean y llevan los textos nuevos |
 | `npm run test:unit` | 22/22 (2 nuevas: `isProductionHost`) |
-| `npm run test:e2e:conversion` (Chrome 157) | 11/11. Nuevas: GA4 no se carga en `127.0.0.1` y sí en el dominio (mapeado a local, sin enviar nada a Google); mensajes de WhatsApp de la base por cantidad, de estructuras y de la categoría; la barra fija se esconde junto al bloque para locales |
+| `npm run test:e2e:conversion` (Chrome 157) | 13/13 al 25/11 (11/11 en la primera entrega). Nuevas del 25/11: un `page_view` por navegación con el título correcto; botón arriba y mensajes por caso en proyectos. Nuevas: GA4 no se carga en `127.0.0.1` y sí en el dominio (mapeado a local, sin enviar nada a Google); mensajes de WhatsApp de la base por cantidad, de estructuras y de la categoría; la barra fija se esconde junto al bloque para locales |
 | Las pruebas nuevas detectan el problema | Con el `analytics.js` de `main` falla la prueba de `127.0.0.1`; sin el cambio en `ProductBuy.jsx`, falla la de la barra fija |
 | React Doctor (`--scope changed`) | 96/100, sin problemas |
 | Lighthouse 12 móvil, local, mediana de 3 (`main` → rama, misma tanda) | Base Flat: rendimiento 97 → 96, accesibilidad 100 → 100, SEO 100 → 100, CLS 0 → 0. Mobiliario comercial: 97 → 97, 100 → 100, 100 → 100, CLS 0 → 0. Las corridas se superponen (TBT de 9 a 129 ms en ambas versiones): sin regresión medible |
@@ -147,10 +170,13 @@ Solo lo que requiere información o autorización tuya. El detalle y el orden
 están en [`docs/tareas-pendientes.md`](../tareas-pendientes.md), sección del 25/11.
 
 1. **Revisar y publicar la rama** (merge a `main`; el deploy es automático).
-2. **Autorizar (o hacer) dos configuraciones de cuenta:** registrar 7
-   dimensiones personalizadas en GA4 (lista en [`medicion.md`](medicion.md) §3) y
-   corregir el Perfil de Empresa (teléfono, horario, enlace con UTM, productos,
-   fotos; detalle en [`estrategia-comercial.md`](estrategia-comercial.md) §4).
+2. **Autorizar (o hacer) los cambios de cuenta:** en GA4, ocultar el mensaje de
+   WhatsApp en los clics de salida (hoy llega el nombre del cliente), un solo
+   `page_view` por página y 7 dimensiones (+1 opcional), en
+   [`ga4-configuracion.md`](ga4-configuracion.md); en el Perfil de Empresa, enlace
+   con UTM, Instagram, logo y servicios, en [`perfil-google.md`](perfil-google.md).
+   Teléfono y horario no se tocan hasta que los confirmes. Además, borrar la
+   reseña escrita desde la cuenta que administra el perfil.
 3. **Confirmar datos:** qué teléfono va en Google (11 6124-2498 o el
    011 4753-0099), horario real (¿8 o 9?), si se vende la estructura sola, y una
    sola frase de plazo de entrega (el sitio dice "depende del stock"; la
@@ -164,6 +190,8 @@ están en [`docs/tareas-pendientes.md`](../tareas-pendientes.md), sección del 2
    (`https://tallerkappa.com.ar/resena/`).
 8. **Condiciones para revendedores** (mueblerías): si hay precio por volumen o
    mínimo de compra.
+9. **Afirmaciones a confirmar antes de publicar la rama:** la lista completa,
+   con dónde está cada una, en [`pull-request.md`](pull-request.md) §1.
 
 ## Skills usadas
 
