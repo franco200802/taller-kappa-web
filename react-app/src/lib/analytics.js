@@ -118,11 +118,20 @@ export function trackAiReferral() {
   if (source) trackEvent('ai_referral', { ai_source: source, landing_page: window.location.pathname });
 }
 
+/**
+ * page_view manual, uno por cambio de ruta. Lo llama `FloatWaSentinel` (Layout.jsx) cuando la página nueva ya
+ * montó, un cuadro después, para que `document.title` sea el de la página nueva: antes salía con el título de la
+ * anterior (Helmet lo cambia después del render). En GA4 hay que tener APAGADO "Cambios de página basados en
+ * eventos del historial del navegador" (medición mejorada): si no, cada navegación interna cuenta dos page_view
+ * (verificado el 25/11/2026). Se mantiene el manual porque gtag.js se descarga tarde (loadGtagLater) y la primera
+ * navegación, si ocurre antes de que cargue, la medición automática no la ve; este queda en la cola.
+ */
 export function trackPageview(path) {
   if (typeof window === 'undefined' || !window.gtag) return;
   window.gtag('event', 'page_view', {
     page_path: path,
     page_location: `${window.location.origin}${path}`,
+    page_title: document.title,
   });
 }
 

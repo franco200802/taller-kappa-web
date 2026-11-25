@@ -65,4 +65,28 @@ test('GA4 solo se carga en el dominio publicado', async (t) => {
     assert.equal(asked.length, 1);
     assert.match(asked[0], /id=G-2FDMN51XDY/);
   });
+
+  // gtag.js está abortado, así que la cola (window.dataLayer) guarda todo lo que el sitio le pidió a GA4.
+  await t.test('un page_view por navegación interna, con el título de la página nueva', async () => {
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1280, height: 900 });
+    await page.setRequestInterception(true);
+    page.on('request', (request) => (request.url().startsWith('http://tallerkappa.com.ar/') ? request.continue() : request.abort()));
+    const pageviews = () => page.evaluate(() => (window.dataLayer || [])
+      .filter((call) => call[0] === 'event' && call[1] === 'page_view')
+      .map((call) => ({ path: call[2].page_path, title: call[2].page_title })));
+    await page.goto('http://tallerkappa.com.ar/', { waitUntil: 'load' });
+    await page.waitForFunction(() => (window.dataLayer || []).some((call) => call[0] === 'event' && call[1] === 'page_view'));
+    await page.click('a[href="/mobiliario-comercial/"]');
+    await page.waitForFunction(() => (window.dataLayer || []).filter((call) => call[0] === 'event' && call[1] === 'page_view').length >= 2);
+    await new Promise((resolve) => setTimeout(resolve, 500)); // por si llegara un tercero
+    const views = await pageviews();
+    const title = await page.title();
+    await page.close();
+    assert.equal(views.length, 2, JSON.stringify(views));
+    assert.equal(views[0].path, '/');
+    assert.equal(views[1].path, '/mobiliario-comercial/');
+    assert.match(title, /Mobiliario Comercial/);
+    assert.equal(views[1].title, title, 'el page_view lleva el título de la página nueva, no el de la anterior');
+  });
 });
