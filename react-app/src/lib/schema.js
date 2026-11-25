@@ -79,6 +79,8 @@ export function organizationNode() {
     brand: ref(BRAND_ID),
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
+    paymentAccepted: BUSINESS.paymentAccepted.join(', '),
+    currenciesAccepted: 'ARS',
     address: {
       '@type': 'PostalAddress',
       streetAddress: a.street,
