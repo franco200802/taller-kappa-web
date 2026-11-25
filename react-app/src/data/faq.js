@@ -33,7 +33,8 @@ export const FAQS = [
   { id: '13', question: '¿Los productos tienen garantía?', answer: 'Sí. La estructura de hierro tiene garantía de por vida, la pintura 2 años y el cuero 1 año. Podés ver el detalle completo en la sección de garantía.' },
   { id: '14', question: '¿Fabrican productos a medida?', answer: 'Sí, adaptamos medidas, colores y terminaciones según lo que necesite cada cliente, sin costo adicional.' },
   { id: '14b', question: '¿Venden al por mayor o para empresas?', answer: 'Sí. Taller Kappa fabrica mobiliario de hierro para empresas y locales, y estructuras de hierro por encargo para mueblerías, fabricantes de muebles y estudios de arquitectura. Los pedidos por cantidad se cotizan por WhatsApp, y el costo de envío depende de la zona de entrega.' },
-  // Confirmado por el dueño el 1/11/2026: no hay cuotas. Los medios de pago no están confirmados, por eso no se listan.
+  // Confirmado por el dueño: no hay cuotas (1/11/2026) y se aceptan todos los medios de pago (25/11/2026).
+  { id: '15', question: '¿Qué medios de pago aceptan?', answer: 'Todos: efectivo, transferencia bancaria, tarjetas de débito y de crédito, y Mercado Pago. El medio de pago se acuerda con el taller al confirmar el presupuesto por WhatsApp.' },
   { id: '15b', question: '¿Se puede pagar en cuotas?', answer: 'No. Por ahora Taller Kappa no ofrece pago en cuotas. El medio de pago se acuerda directamente con el taller al confirmar el presupuesto por WhatsApp.' },
   { id: '16', question: '¿Cómo los contacto?', answer: `Por WhatsApp o teléfono al ${BUSINESS.phoneDisplay}, por email a ${BUSINESS.email}, o mediante el formulario de la sección de contacto.` },
 ];

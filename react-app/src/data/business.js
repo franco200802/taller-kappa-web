@@ -34,7 +34,8 @@ export const BUSINESS = {
     neighborhood: 'Villa Chacabuco',
     locality: 'San Martín',
     region: 'Buenos Aires',
-    postalCode: '1650',
+    /** CPA oficial de Correo Argentino para Vélez Sarsfield 3779, Villa Chacabuco (consultado el 25/11/2026). */
+    postalCode: 'B1502IFU',
     regionFull: 'provincia de Buenos Aires',
     countryCode: 'AR',
     country: 'Argentina',
@@ -59,6 +60,8 @@ export const BUSINESS = {
    * WhatsApp, y su bio enlaza a tallerkappa.com.ar). Va en el footer y en schema `sameAs`.
    */
   instagram: { handle: '@tallerkappa', url: 'https://www.instagram.com/tallerkappa/' },
+  /** Medios de pago (el dueño confirmó "todos" el 25/11/2026). Sin cuotas (confirmado el 1/11/2026). */
+  paymentAccepted: ['Efectivo', 'Transferencia bancaria', 'Tarjeta de débito', 'Tarjeta de crédito', 'Mercado Pago'],
   /** Horario de atención del local (showroom y retiro, ambos con coordinación previa). */
   hours: { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '18:00', label: 'lunes a viernes de 9 a 18 hs' },
   /** Showroom en la misma dirección. Las visitas requieren turno (WhatsApp o teléfono). */
@@ -96,7 +99,7 @@ export const googleProfileUrl = () => `https://maps.google.com/?cid=${BUSINESS.g
 /** Formulario de reseña de Google de la ficha. Lo usa la página /resena/ (prerender). */
 export const googleReviewUrl = () => `https://search.google.com/local/writereview?placeid=${BUSINESS.googlePlaceId}`;
 
-/** "Vélez Sársfield 3779 (Calle 28), Villa Chacabuco, San Martín, Buenos Aires, Argentina, CP 1650" */
+/** "Vélez Sársfield 3779 (Calle 28), Villa Chacabuco, San Martín, Buenos Aires, Argentina, CP B1502IFU" */
 export function addressLine() {
   const a = BUSINESS.address;
   return `${a.street} (${a.streetAlias}), ${a.neighborhood}, ${a.locality}, ${a.region}, ${a.country}, CP ${a.postalCode}`;
