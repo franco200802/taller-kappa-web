@@ -137,7 +137,7 @@ la página`, `Boton o zona` y `Producto`; valor `Número de eventos`; filtro
 | Cambio | Estado | Verificación |
 |---|---|---|
 | A. Ocultar `text` | **Aplicado.** Ocultar datos: correo activo y 1 clave de parámetro de URL (`text`) | La prueba de la pantalla devuelve `https://wa.me/541161242498?text=(redacted)`. El recorrido con el gtag.js real (envíos abortados) mostró los tres `click` a WhatsApp con `text=(redacted)` y ningún dato personal |
-| B. Sin cambios de página por historial | **Pendiente: el día del deploy** de la rama, para que el `page_view` del sitio ya tenga el título correcto | Repetir el recorrido: un `page_view` por navegación |
+| B. Sin cambios de página por historial | **Aplicado el 25/11/2026**, minutos después del deploy del PR #34 (19:30, hora argentina). Medición mejorada → Vistas de página → configuración avanzada: queda marcada solo "Cargas de página" | Releído después de guardar: la casilla del historial quedó desmarcada. Desde ese momento, un `page_view` por navegación (el que manda el sitio, con el título correcto) |
 | C. Dimensiones | **Aplicado.** 8 dimensiones de alcance Evento: `Asistente IA` (`ai_source`), `Boton o zona` (`location`), `Interes del formulario` (`interest`), `Presupuesto con comentario` (`has_comment`), `Presupuesto con zona` (`has_zone`), `Producto` (`item_name`), `Tipo de cliente` (`customer_type`), `Variante` (`color`). GA4 aceptó `item_name` | Empiezan a mostrar datos en 24 a 48 h; no hay datos hacia atrás |
 | D. Borrar `link_url` histórico | No se hizo (irreversible y sin evidencia de que haya llegado un nombre) | — |
 | E. Exploración | No se hizo | Se puede crear cuando haya datos |

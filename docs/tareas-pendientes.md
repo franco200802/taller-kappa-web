@@ -26,20 +26,18 @@
 ## Nuevo (25/11/2026): operación growth (más consultas y ventas)
 
 Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
-`growth/operacion-ventas-nov-2026`, subida el 25/11/2026 en el
-[PR #34](https://github.com/franco200802/taller-kappa-web/pull/34), sin merge. En orden:
+`growth/operacion-ventas-nov-2026`, **publicada el 25/11/2026** con el
+[PR #34](https://github.com/franco200802/taller-kappa-web/pull/34). En orden:
 
-1. **Revisar el PR #34 y decidir el merge** (mergear publica en producción). GA4 deja de contar las pruebas locales (eran
+1. ~~Revisar el PR #34 y decidir el merge~~: **mergeado y publicado el 25/11/2026**. GA4 deja de contar las pruebas locales (eran
    el 27 % de las páginas vistas) y la Base de Mesa Flat y mobiliario comercial
    tienen salida para pedir por cantidad y para mueblerías, fabricantes y estudios.
-2. **Confirmar antes de publicar:** que se toman encargos de mueblerías,
-   fabricantes y estudios con plano, boceto o foto, y el resto de la lista de
-   `docs/growth/pull-request.md` §1. ~~Que se puede vender solo la estructura~~:
-   **confirmado el 25/11/2026.**
+2. ~~Confirmar antes de publicar~~: **todo confirmado el 25/11/2026** (encargos con plano,
+   boceto o foto; solo la estructura; nombrar a YPF Full, McDonald's y Sandro). El envío
+   bonificado en GBA y la factura A o B **ya no valen**: se sacaron del sitio y del Perfil.
 3. **Cambios de cuenta (autorizados el 25/11/2026):**
-   - GA4: ~~ocultar `text`~~ y ~~8 dimensiones~~ **hechos el 25/11**. Falta **apagar
-     "Cambios de página basados en eventos del historial del navegador" el día del
-     merge** (`docs/growth/ga4-configuracion.md` §3 B).
+   - GA4: ~~ocultar `text`~~ y ~~8 dimensiones~~ **hechos el 25/11**. ~~Apagar "Cambios de página basados en eventos del historial del
+     navegador"~~: **hecho el 25/11/2026**, minutos después del deploy (`docs/growth/ga4-configuracion.md` §3 B).
    - Perfil de Empresa: ~~enlace con UTM, Instagram y servicios~~ **hechos el 25/11**
      (en revisión de Google). **Te toca subir el logo** desde el perfil → Fotos →
      Logotipo: `react-app/public/images/logo-taller-kappa.jpg` (la extensión no puede

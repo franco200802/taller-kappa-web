@@ -1,8 +1,10 @@
-# Pull Request #34 de `growth/operacion-ventas-nov-2026` (abierto, sin merge)
+# Pull Request #34 de `growth/operacion-ventas-nov-2026` (mergeado y publicado)
 
 > **Creado el 25/11/2026 con autorización del dueño:**
-> https://github.com/franco200802/taller-kappa-web/pull/34. **El merge todavía
-> no está autorizado.** A esa fecha, la rama está al día con `main` (`562d4c3`) y
+> https://github.com/franco200802/taller-kappa-web/pull/34. **Mergeado el 25/11/2026
+> a las 19:28 (hora argentina) con su OK** (`7d5441f`); el deploy terminó bien a las 19:30
+> y el sitio publicado ya muestra los cambios. GA4 (cambio B) y el Perfil de Empresa (servicios
+> sin factura) se ajustaron ese mismo día. A esa fecha, la rama está al día con `main` (`562d4c3`) y
 > GitHub no marca conflictos. Al mergear, GitHub Actions hace `npm ci` + `npm run build` (Node 20), publica en
 > Pages y avisa a IndexNow; **no corre las pruebas**, por eso van abajo con su
 > resultado.
