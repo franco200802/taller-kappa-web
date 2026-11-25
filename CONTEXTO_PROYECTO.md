@@ -601,6 +601,38 @@ Diagnóstico con mediciones, cambios, comparativa y pendientes en
   regla en `translate.js`. Un rótulo armado con variables va en nodos de texto
   separados (ver `.card-eyebrow`), así se traduce cada parte.
 
+## 5o. Operación growth (25/11/2026)
+
+Datos (Search Console, GA4, Perfil de Empresa, competencia), diagnóstico, plan de
+90 días y medición en `docs/growth/` (empezar por `README.md`). Lo que hay que saber
+al tocar el código:
+
+- **GA4 solo en el dominio publicado**: `initGA()` exige `isProductionHost()`
+  (`tallerkappa.com.ar` o `www.`). Antes `vite preview`, las pruebas y Lighthouse
+  mandaban datos reales (27 % de las páginas vistas del 28/10 al 24/11). Lo prueban
+  `tests/unit/analytics.test.mjs` y `tests/e2e/analytics.test.mjs`; la E2E mapea el
+  dominio al servidor local con `--host-resolver-rules`, desactiva HTTPS-First y le
+  pasa `allowedHosts` a `vite preview` (si no, responde 403). Consecuencia: Lighthouse
+  en local ya no incluye el costo de gtag.js y puede dar algo mejor que producción.
+- **Bloque "para locales" en las fichas**: un producto con `business` en
+  `data/products.js` (hoy solo la Base de Mesa Flat) muestra `ProductBusiness`
+  (`Producto.jsx`): prueba de cliente, condiciones y un WhatsApp propio
+  (`data-cta="ficha_empresas"`). La barra fija de compra se esconde mientras esos
+  botones se ven (`ProductBuy.jsx`). Las condiciones repiten las de `/envios/` y la
+  FAQ: si cambian allá, cambiarlas en `business`.
+- **`CATEGORIES[].quoteLabel`**: cómo se nombra la categoría en el WhatsApp de la
+  página de categoría ("bases de mesa", no "mesas").
+- **Mueblerías, fabricantes y estudios** en `/mobiliario-comercial/`: sección propia con
+  `STRUCTURES_QUOTE_MESSAGE` (`data/contact.js`, `data-cta="mc_estructuras"`). No va en
+  `SECTORS` a propósito: esos rubros los escribe el hero después de "Equipamos".
+  La frase "se puede pedir solo la estructura" está pendiente de confirmación del dueño.
+- **Excepción a la regla de §5e** en la ficha de la base: el título es "Base de Mesa de
+  Hierro para Bar y Restaurante | Buenos Aires" (sin "| Taller Kappa", para no pasar de
+  70 caracteres; Google muestra el nombre del sitio aparte). El h1 no cambió.
+- **No se tocaron** `/bkf/`, `/sillon-bkf/` ni la home: la caída de las búsquedas del BKF
+  en noviembre es de autoridad (3 enlaces externos), no on-page. Volver a medir 3-4
+  semanas después del deploy antes de cambiar títulos.
+
 ## 6. Problemas conocidos / pendientes (a la fecha de este archivo)
 
 ### 🔴 Crítico — Firebase con credenciales placeholder
@@ -657,10 +689,12 @@ Sigue abierto: si se venden tapas de mesa (hoy el catálogo solo tiene la base y
 
 ### 🟡 Pendiente — Google Business Profile y medición
 Search Console está verificado (17/10/2026, propiedad de dominio) y tiene línea
-base y primera medición en `docs/seo/linea-base-search-console.md`; próxima
-revisión ~28/11/2026. El Perfil de Empresa está reclamado pero falta
-verificarlo (video) y conseguir reseñas. Lo que depende del dueño está en
-`docs/tareas-pendientes.md`.
+base y primera medición en `docs/seo/linea-base-search-console.md`; la medición
+del 24/11/2026 está en `docs/growth/investigacion-seo-y-competencia.md`. El Perfil
+de Empresa figura **verificado** el 24/11/2026, pero tiene el teléfono viejo, otro
+horario, 2 reseñas y el enlace al sitio sin UTM (`docs/growth/estrategia-comercial.md`
+§4). GA4 no tiene dimensiones personalizadas registradas (`docs/growth/medicion.md`
+§3). Lo que depende del dueño está en `docs/tareas-pendientes.md`.
 
 ### 🟢 Ya resuelto recientemente (por si aparece en el historial de git)
 - Modales migrados a `<dialog>` nativo (`components/Modal.jsx`): carrito,
