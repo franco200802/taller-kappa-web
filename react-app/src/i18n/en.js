@@ -419,7 +419,7 @@ export default {
   "¿Fabrican productos a medida?": "Do you make custom products?",
   "Sí, adaptamos medidas, colores y terminaciones según lo que necesite cada cliente, sin costo adicional.": "Yes, we adapt sizes, colors and finishes to what each customer needs, at no extra cost.",
   "¿Venden al por mayor o para empresas?": "Do you sell wholesale or to companies?",
-  "Sí. Taller Kappa fabrica mobiliario de hierro para empresas y locales. En pedidos mayoristas (3 o más unidades) y en la primera compra, el envío dentro de GBA es bonificado; las condiciones se consultan por WhatsApp.": "Yes. Taller Kappa makes iron furniture for companies and shops. For wholesale orders (3 or more units) and for the first purchase, shipping within Greater Buenos Aires is free; conditions are arranged via WhatsApp.",
+  "Sí. Taller Kappa fabrica mobiliario de hierro para empresas y locales, y estructuras de hierro por encargo para mueblerías, fabricantes de muebles y estudios de arquitectura. En pedidos mayoristas (3 o más unidades) y en la primera compra, el envío dentro de GBA es bonificado; las condiciones se consultan por WhatsApp.": "Yes. Taller Kappa makes iron furniture for companies and shops, and custom iron frames for furniture stores, furniture makers and architecture studios. For wholesale orders (3 or more units) and for the first purchase, shipping within Greater Buenos Aires is free; conditions are arranged via WhatsApp.",
   "¿Emiten factura?": "Do you issue invoices?",
   "¿Se puede pagar en cuotas?": "Can I pay in installments?",
   "¿Se puede pagar el sillón BKF en cuotas?": "Can I pay for the BKF armchair in installments?",
