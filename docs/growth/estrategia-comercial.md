@@ -25,7 +25,7 @@ BKF se trabaja con confianza (reseñas, fotos, precio "desde"), no con más pág
 |---|---|---|---|---|---|
 | Bares, restaurantes, cafeterías y franquicias | Base de Mesa Flat (73 o 105 cm), Banco BKF, Sillón BKF para el salón | Bases Flat entregadas a las tiendas YPF Full; bases y sillas para Shell Select; mobiliario para McDonald's y Burger King | Bases pesadas que no se balancean, por cantidad, con factura A y garantía de por vida en el hierro | Búsqueda (bases), Perfil de Empresa, contacto directo a locales que abren o renuevan | Precio por cantidad (10, 20, 50 bases) y plazo para cada volumen |
 | Mueblerías y tiendas de decoración (reventa) | Sillón BKF y Banco BKF | Fábrica propia, factura A, garantía, diseño reconocido | Producto de diseño con fábrica detrás: reposición directa y a medida | Visita o WhatsApp del dueño, Instagram | Precio mayorista, mínimo de compra, si se deja en exhibición |
-| Fabricantes de muebles y carpinterías | Bases de mesa sueltas y estructuras de hierro por encargo | Estructuras para el mobiliario de McDonald's | La parte de hierro la hace el taller, con sus medidas; ellos ponen la madera o el tapizado | Búsqueda ("base de hierro para mesa de madera" es una sugerencia de Google), contacto directo | Confirmar que se vende la estructura sola; plazos y mínimos |
+| Fabricantes de muebles y carpinterías | Bases de mesa sueltas y estructuras de hierro por encargo | Estructuras para el mobiliario de McDonald's | La parte de hierro la hace el taller, con sus medidas; ellos ponen la madera o el tapizado | Búsqueda ("base de hierro para mesa de madera" es una sugerencia de Google), contacto directo | Plazos y mínimos (la estructura sola sí se vende: confirmado el 25/11/2026) |
 | Estudios de arquitectura e interioristas | BKF (diseño de 1938 de tres arquitectos) y mobiliario a medida para locales | Proyectos corporativos; 3D con medidas reales en el sitio | Especificar un BKF con fábrica y garantía, o hacer a medida la parte de hierro de un proyecto | Contacto directo, Instagram, ficha técnica en PDF (cuando haya fotos) | Fotos reales; si hay descuento para profesionales |
 | Comercios e indumentaria | Mobiliario exhibidor de hierro (percheros, mesas de exhibición) | Locales de Sandro (acabado cromado) | Exhibidores a medida del local | Contacto directo | Fotos de los exhibidores de Sandro, con permiso |
 
@@ -88,9 +88,8 @@ Hola, ¿cómo estás? Soy [nombre], de Taller Kappa. Fabricamos el sillón BKF y
 Para un fabricante o estudio:
 
 ```
-Hola, soy [nombre], de Taller Kappa (San Martín). Hacemos por encargo la parte de hierro de muebles: estructuras para sillas, mesas y bancos, y bases de mesa, con las medidas y el acabado del proyecto. Si tenés un plano o una referencia, te cotizamos: https://tallerkappa.com.ar/mobiliario-comercial/?utm_source=whatsapp&utm_medium=contacto-directo&utm_campaign=b2b-estructuras
+Hola, soy [nombre], de Taller Kappa (San Martín). Hacemos por encargo la parte de hierro de muebles: estructuras para sillas, mesas y bancos, y bases de mesa, con las medidas y el acabado del proyecto. Podés pedir solo la estructura. Si tenés un plano o una referencia, te cotizamos: https://tallerkappa.com.ar/mobiliario-comercial/?utm_source=whatsapp&utm_medium=contacto-directo&utm_campaign=b2b-estructuras
 ```
-[falta: confirmar que se vende la estructura sola]
 
 **Seguimiento:** si no hay respuesta, un solo recordatorio a los 7 días. Si
 piden presupuesto, responder en el día con precio, plazo, forma de pago y

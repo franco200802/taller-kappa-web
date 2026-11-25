@@ -50,8 +50,8 @@ Solo datos que el sitio ya publica (descripciones de hasta 300 caracteres):
   Se cotiza por cantidad, con factura A o B. Las entregamos para las tiendas YPF Full.
 - **Estructuras de hierro por encargo:** Hacemos la parte de hierro de sillas,
   sillones, bancos y mesas con las medidas y el acabado del proyecto, para
-  mueblerías, fabricantes de muebles y estudios de arquitectura. *(Mencionar "se
-  puede pedir solo la estructura" solo si lo confirmás.)*
+  mueblerías, fabricantes de muebles y estudios de arquitectura. Se puede pedir
+  solo la estructura.
 - **Mobiliario comercial a medida:** Mobiliario de hierro y cuero para locales
   gastronómicos, estaciones de servicio, comercios y oficinas. Medidas y colores a
   pedido sin costo adicional. Factura A y B.

@@ -9,7 +9,7 @@
 
 | # | Acción | Objetivo | Quién | Recursos | Cómo se mide | Depende de | Falta confirmar |
 |---|---|---|---|---|---|---|---|
-| 1 | Revisar y publicar `growth/operacion-ventas-nov-2026` | Medición sin pruebas locales; base y mobiliario comercial con salida por cantidad | Dueño (merge) | 30 min | Deploy en Actions; en GA4, sin `localhost` desde ese día | — | Que se vende la estructura sola |
+| 1 | Revisar y publicar `growth/operacion-ventas-nov-2026` | Medición sin pruebas locales; base y mobiliario comercial con salida por cantidad | Dueño (merge) | 30 min | Deploy en Actions; en GA4, sin `localhost` desde ese día | — | Las afirmaciones de `pull-request.md` §1 (la estructura sola ya está confirmada) |
 | 2 | Registrar 7 dimensiones en GA4 y vincular Search Console | Saber qué botón y qué producto generan consultas | Dueño, o Claude con permiso | 15 min | Las dimensiones muestran datos a las 48 h | Acceso a GA4 | — |
 | 3 | Corregir el Perfil de Empresa: teléfono, horario, enlace con UTM, servicios y productos | Que quienes ven el perfil (211 pedidos de cómo llegar en 6 meses) puedan llamar o escribir al número correcto | Dueño, o Claude con permiso | 1 h | Llamadas y clics al sitio del perfil (mensual); sesiones con `utm_campaign=perfil-empresa` | Fotos para los productos | Teléfono y horario reales |
 | 4 | Empezar el registro de consultas | Medir conversaciones, presupuestos y ventas | Dueño | 2 min por consulta | Filas por semana en la planilla | — | — |

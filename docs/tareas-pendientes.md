@@ -31,10 +31,10 @@ Informe, datos y plan en `docs/growth/` (empezar por `README.md`). Rama
 1. **Revisar y publicar la rama.** GA4 deja de contar las pruebas locales (eran
    el 27 % de las páginas vistas) y la Base de Mesa Flat y mobiliario comercial
    tienen salida para pedir por cantidad y para mueblerías, fabricantes y estudios.
-2. **Confirmar antes de publicar:** que se puede vender **solo la estructura** de
-   hierro y que se toman encargos de mueblerías, fabricantes y estudios con plano,
-   boceto o foto (el sitio nuevo lo dice, tomado de tu descripción del Perfil de
-   Empresa). Lista completa de afirmaciones en `docs/growth/pull-request.md` §1.
+2. **Confirmar antes de publicar:** que se toman encargos de mueblerías,
+   fabricantes y estudios con plano, boceto o foto, y el resto de la lista de
+   `docs/growth/pull-request.md` §1. ~~Que se puede vender solo la estructura~~:
+   **confirmado el 25/11/2026.**
 3. **Autorizar (o hacer) los cambios de cuenta:**
    - GA4 (`docs/growth/ga4-configuracion.md`): ocultar el parámetro `text` en los
      clics de salida (**hoy llega a Google el nombre que el cliente escribe en el

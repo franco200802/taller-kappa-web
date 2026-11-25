@@ -12,7 +12,7 @@ Afirmaciones comerciales que la rama publica y que conviene confirmar:
 
 | # | Afirmación | Dónde | Estado | Si no se confirma |
 |---|---|---|---|---|
-| 1 | **"Podés pedir solo la estructura"** / "Se puede pedir solo la estructura" | `/mobiliario-comercial/` (sección y FAQ) | **Nueva.** Sale de tu descripción del Perfil de Empresa ("estructuras metálicas para muebles… para fabricantes de muebles") y del encargo | Sacar esa frase (2 lugares en `MobiliarioComercial.jsx`, 2 en `en.js`) |
+| 1 | **"Podés pedir solo la estructura"** / "Se puede pedir solo la estructura" | `/mobiliario-comercial/` (sección y FAQ) | **Confirmada por el dueño el 25/11/2026** | — |
 | 2 | Estructuras de hierro por encargo para sillas, sillones, bancos y mesas, para mueblerías, fabricantes y estudios, "con un plano, un boceto o una foto de referencia" | `/mobiliario-comercial/`, FAQ general y `llms.txt` | **Nueva** como oferta a esos segmentos | Ajustar el texto a lo que sí se hace |
 | 3 | "Taller Kappa fabricó y entregó bases de mesa Flat para las tiendas YPF Full, con acabado epoxi negro mate" | Ficha de la base, FAQ de la categoría mesas | Ya publicada en `/proyectos/` y confirmada el 1/10/2026; ahora se repite en dos páginas más | Confirmar que se puede seguir nombrando al cliente |
 | 4 | Estructuras para el mobiliario de salón de McDonald's y exhibidores cromados para Sandro | `/mobiliario-comercial/` | Ya publicada en `/proyectos/` (1/10/2026) | Ídem |

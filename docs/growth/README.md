@@ -159,8 +159,8 @@ producción, porque la rama no está publicada.
 - El título nuevo de la base saca "Taller Kappa" para no pasar de 70 caracteres
   (Google muestra el nombre del sitio aparte) y deja "Buenos Aires" al final; el
   h1 sigue igual. Si en 4 semanas la página pierde impresiones, se vuelve atrás.
-- "Se puede pedir solo la estructura" sale de tu descripción del Perfil de
-  Empresa y del encargo. Confirmalo antes de publicar (G).
+- "Se puede pedir solo la estructura": confirmado por el dueño el 25/11/2026.
+  Siguen pendientes las otras afirmaciones de `pull-request.md` §1.
 - Desde el deploy, Lighthouse en local ya no incluye el costo de GA4: las
   mediciones locales pueden dar un poco mejor que producción.
 
@@ -178,7 +178,7 @@ están en [`docs/tareas-pendientes.md`](../tareas-pendientes.md), sección del 2
    Teléfono y horario no se tocan hasta que los confirmes. Además, borrar la
    reseña escrita desde la cuenta que administra el perfil.
 3. **Confirmar datos:** qué teléfono va en Google (11 6124-2498 o el
-   011 4753-0099), horario real (¿8 o 9?), si se vende la estructura sola, y una
+   011 4753-0099), horario real (¿8 o 9?) y una
    sola frase de plazo de entrega (el sitio dice "depende del stock"; la
    documentación vieja dice "5 a 10 días hábiles").
 4. **Decidir precio "desde"** del sillón, el banco y la base, con fecha de

@@ -625,7 +625,7 @@ al tocar el código:
 - **Mueblerías, fabricantes y estudios** en `/mobiliario-comercial/`: sección propia con
   `STRUCTURES_QUOTE_MESSAGE` (`data/contact.js`, `data-cta="mc_estructuras"`). No va en
   `SECTORS` a propósito: esos rubros los escribe el hero después de "Equipamos".
-  La frase "se puede pedir solo la estructura" está pendiente de confirmación del dueño.
+  "Se puede pedir solo la estructura": confirmado por el dueño el 25/11/2026.
 - **Excepción a la regla de §5e** en la ficha de la base: el título es "Base de Mesa de
   Hierro para Bar y Restaurante | Buenos Aires" (sin "| Taller Kappa", para no pasar de
   70 caracteres; Google muestra el nombre del sitio aparte). El h1 no cambió.
